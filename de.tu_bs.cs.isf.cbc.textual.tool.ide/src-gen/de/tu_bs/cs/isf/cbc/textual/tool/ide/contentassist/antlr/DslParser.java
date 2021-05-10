@@ -70,6 +70,8 @@ public class DslParser extends AbstractContentAssistParser {
 					put(grammarAccess.getStrengthWeakStatementAccess().getGroup(), "rule__StrengthWeakStatement__Group__0");
 					put(grammarAccess.getConditionAccess().getGroup(), "rule__Condition__Group__0");
 					put(grammarAccess.getCompositionStatementAccess().getGroup(), "rule__CompositionStatement__Group__0");
+					put(grammarAccess.getJMLAnnotationAccess().getGroup(), "rule__JMLAnnotation__Group__0");
+					put(grammarAccess.getBlockStatementAccess().getGroup(), "rule__BlockStatement__Group__0");
 					put(grammarAccess.getSelectionStatementAccess().getGroup(), "rule__SelectionStatement__Group__0");
 					put(grammarAccess.getSelectionStatementAccess().getGroup_9(), "rule__SelectionStatement__Group_9__0");
 					put(grammarAccess.getSmallRepetitionStatementAccess().getGroup(), "rule__SmallRepetitionStatement__Group__0");
@@ -104,6 +106,12 @@ public class DslParser extends AbstractContentAssistParser {
 					put(grammarAccess.getCompositionStatementAccess().getFirstStatementAssignment_2(), "rule__CompositionStatement__FirstStatementAssignment_2");
 					put(grammarAccess.getCompositionStatementAccess().getIntermediateConditionAssignment_6(), "rule__CompositionStatement__IntermediateConditionAssignment_6");
 					put(grammarAccess.getCompositionStatementAccess().getSecondStatementAssignment_9(), "rule__CompositionStatement__SecondStatementAssignment_9");
+					put(grammarAccess.getJMLAnnotationAccess().getRequiresAssignment_1(), "rule__JMLAnnotation__RequiresAssignment_1");
+					put(grammarAccess.getJMLAnnotationAccess().getAssignableAssignment_4(), "rule__JMLAnnotation__AssignableAssignment_4");
+					put(grammarAccess.getJMLAnnotationAccess().getEnsuresAssignment_7(), "rule__JMLAnnotation__EnsuresAssignment_7");
+					put(grammarAccess.getBlockStatementAccess().getNameAssignment_1(), "rule__BlockStatement__NameAssignment_1");
+					put(grammarAccess.getBlockStatementAccess().getJmlAnnotationAssignment_3(), "rule__BlockStatement__JmlAnnotationAssignment_3");
+					put(grammarAccess.getBlockStatementAccess().getJavaStatementAssignment_5(), "rule__BlockStatement__JavaStatementAssignment_5");
 					put(grammarAccess.getSelectionStatementAccess().getGuardsAssignment_3(), "rule__SelectionStatement__GuardsAssignment_3");
 					put(grammarAccess.getSelectionStatementAccess().getCommandsAssignment_7(), "rule__SelectionStatement__CommandsAssignment_7");
 					put(grammarAccess.getSelectionStatementAccess().getGuardsAssignment_9_2(), "rule__SelectionStatement__GuardsAssignment_9_2");

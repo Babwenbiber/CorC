@@ -18,6 +18,7 @@ import org.eclipse.graphiti.features.context.ICustomContext;
 import org.eclipse.graphiti.mm.pictograms.Shape;
 
 import de.tu_bs.cs.isf.cbc.cbcmodel.AbstractStatement;
+import de.tu_bs.cs.isf.cbc.cbcmodel.BlockStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbCFormula;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Composition3Statement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CompositionStatement;
@@ -35,6 +36,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.SkipStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.SmallRepetitionStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.StrengthWeakStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.AbstractStatementImpl;
+import de.tu_bs.cs.isf.cbc.cbcmodel.impl.BlockStatementImpl;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.Composition3StatementImpl;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.CompositionStatementImpl;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.MethodStatementImpl;
@@ -168,6 +170,16 @@ public class GenerateTextualRepresentation extends MyAbstractAsynchronousCustomF
     
     private String printMethodStatement(String tabs, AbstractStatement statement) {
     		return "\"" + statement.getName() + "\"";
+    }
+    
+    private String printBlockStatement(String tabs, BlockStatement statement) {
+    	StringBuffer buffer = new StringBuffer();
+    	buffer.append("Block ");
+    	buffer.append(statement.getName()+ ":");
+    	buffer.append("\n{(");
+    	buffer.append(statement.getJavaStatement().getName());
+    	buffer.append("\n}");
+    	return buffer.toString();
     }
     
     private String printRepetitionStatement(String tabs, RepetitionStatement statement) {
@@ -348,6 +360,8 @@ public class GenerateTextualRepresentation extends MyAbstractAsynchronousCustomF
     		return printComposition3Statement(tabs, (Composition3Statement) statement);
     	} else if (statement.getClass().equals(StrengthWeakStatementImpl.class)) {
     		return printStrengthWeakStatement(tabs, (StrengthWeakStatement) statement);
+    	} else if (statement.getClass().equals(BlockStatementImpl.class)) {
+    		return printBlockStatement(tabs, (BlockStatement) statement);
     	} else {
     		return "";
     	}

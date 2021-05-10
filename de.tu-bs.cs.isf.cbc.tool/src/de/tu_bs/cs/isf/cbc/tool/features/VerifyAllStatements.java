@@ -8,6 +8,7 @@ import org.eclipse.graphiti.features.context.ICustomContext;
 import org.eclipse.graphiti.mm.pictograms.Shape;
 
 import de.tu_bs.cs.isf.cbc.cbcmodel.AbstractStatement;
+import de.tu_bs.cs.isf.cbc.cbcmodel.BlockStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbCFormula;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Composition3Statement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CompositionStatement;
@@ -91,8 +92,10 @@ public class VerifyAllStatements extends MyAbstractAsynchronousCustomFeature {
 		boolean prove = false;
 		 if (statement instanceof SmallRepetitionStatement) {
 			prove = proveSmallReptitionStatement(statement, vars, conds, renaming, uri, monitor);
-		} else if (statement instanceof CompositionStatement) {
-			prove = proveCompositionStatement(statement, vars, conds, renaming, uri, monitor);
+		 } else if (statement instanceof CompositionStatement) {
+				prove = proveCompositionStatement(statement, vars, conds, renaming, uri, monitor);
+		} else if (statement instanceof BlockStatement) {
+				prove = proveBlockStatement(statement, vars, conds, renaming, uri, monitor);
 		} else if (statement instanceof Composition3Statement) {
 			prove = proveComposition3Statement(statement, vars, conds, renaming, uri, monitor);
 		} else if (statement instanceof SelectionStatement) {
@@ -224,6 +227,23 @@ public class VerifyAllStatements extends MyAbstractAsynchronousCustomFeature {
     		Console.println("Selection statement already true");
     		return true;
     	}
+    }
+    
+    private static boolean proveBlockStatement(AbstractStatement statement, JavaVariables vars, GlobalConditions conds, Renaming renaming, URI uri, IProgressMonitor monitor) {
+    	boolean prove = false;
+    	BlockStatement blockStatement = (BlockStatement) statement;
+    	if (blockStatement.getJavaStatement().getRefinement() != null) {
+    		prove = proveChildStatement(blockStatement.getJavaStatement().getRefinement(), vars, conds, renaming, uri, monitor);
+    	} else {
+    		prove = proveChildStatement(blockStatement.getJavaStatement(), vars, conds, renaming, uri, monitor);
+    	}
+    	
+    	if (prove && true)  {
+    		statement.setProven(true);
+    	} else {
+    		statement.setProven(false);
+    	}
+		return (prove && true);
     }
 
 	private static boolean proveRepetitionStatement(AbstractStatement statement, JavaVariables vars, GlobalConditions conds, Renaming renaming, URI uri, IProgressMonitor monitor) {

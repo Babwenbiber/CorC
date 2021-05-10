@@ -5,12 +5,14 @@ package de.tu_bs.cs.isf.cbc.textual.tool.serializer;
 
 import com.google.inject.Inject;
 import de.tu_bs.cs.isf.cbc.cbcmodel.AbstractStatement;
+import de.tu_bs.cs.isf.cbc.cbcmodel.BlockStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbCFormula;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbCProblem;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbcmodelPackage;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CompositionStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Condition;
 import de.tu_bs.cs.isf.cbc.cbcmodel.GlobalConditions;
+import de.tu_bs.cs.isf.cbc.cbcmodel.JMLAnnotation;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariable;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariables;
 import de.tu_bs.cs.isf.cbc.cbcmodel.MethodStatement;
@@ -51,6 +53,9 @@ public class DslSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 			case CbcmodelPackage.ABSTRACT_STATEMENT:
 				sequence_AbstractStatement_Impl(context, (AbstractStatement) semanticObject); 
 				return; 
+			case CbcmodelPackage.BLOCK_STATEMENT:
+				sequence_BlockStatement(context, (BlockStatement) semanticObject); 
+				return; 
 			case CbcmodelPackage.CB_CFORMULA:
 				sequence_CbCFormula(context, (CbCFormula) semanticObject); 
 				return; 
@@ -65,6 +70,9 @@ public class DslSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 				return; 
 			case CbcmodelPackage.GLOBAL_CONDITIONS:
 				sequence_GlobalConditions(context, (GlobalConditions) semanticObject); 
+				return; 
+			case CbcmodelPackage.JML_ANNOTATION:
+				sequence_JMLAnnotation(context, (JMLAnnotation) semanticObject); 
 				return; 
 			case CbcmodelPackage.JAVA_VARIABLE:
 				sequence_JavaVariable(context, (JavaVariable) semanticObject); 
@@ -120,6 +128,19 @@ public class DslSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getAbstractStatement_ImplAccess().getNameCodeStringParserRuleCall_1_0(), semanticObject.getName());
 		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     AbstractStatement returns BlockStatement
+	 *     BlockStatement returns BlockStatement
+	 *
+	 * Constraint:
+	 *     (name=EString jmlAnnotation=JMLAnnotation? javaStatement=AbstractStatement)
+	 */
+	protected void sequence_BlockStatement(ISerializationContext context, BlockStatement semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	
@@ -214,6 +235,30 @@ public class DslSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 */
 	protected void sequence_GlobalConditions(ISerializationContext context, GlobalConditions semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     JMLAnnotation returns JMLAnnotation
+	 *
+	 * Constraint:
+	 *     (requires=EString assignable=EString ensures=EString)
+	 */
+	protected void sequence_JMLAnnotation(ISerializationContext context, JMLAnnotation semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.JML_ANNOTATION__REQUIRES) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.JML_ANNOTATION__REQUIRES));
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.JML_ANNOTATION__ASSIGNABLE) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.JML_ANNOTATION__ASSIGNABLE));
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.JML_ANNOTATION__ENSURES) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.JML_ANNOTATION__ENSURES));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getJMLAnnotationAccess().getRequiresEStringParserRuleCall_1_0(), semanticObject.getRequires());
+		feeder.accept(grammarAccess.getJMLAnnotationAccess().getAssignableEStringParserRuleCall_4_0(), semanticObject.getAssignable());
+		feeder.accept(grammarAccess.getJMLAnnotationAccess().getEnsuresEStringParserRuleCall_7_0(), semanticObject.getEnsures());
+		feeder.finish();
 	}
 	
 	

@@ -52,7 +52,7 @@ public class DslValidator extends AbstractDslValidator {
   }
   
   @Check
-  public void checkSyntaxOfRetunrStatement(final ReturnStatement statement) {
+  public void checkSyntaxOfReturnStatement(final ReturnStatement statement) {
     boolean _equals = statement.getClass().equals(ReturnStatementImpl.class);
     if (_equals) {
       if (((!Objects.equal(statement.getName(), null)) && (!statement.getName().isEmpty()))) {

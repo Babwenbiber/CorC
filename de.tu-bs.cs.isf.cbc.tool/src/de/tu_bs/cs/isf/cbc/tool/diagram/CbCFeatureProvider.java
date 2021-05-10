@@ -55,6 +55,7 @@ import de.tu_bs.cs.isf.cbc.tool.patterns.ConditionPattern;
 import de.tu_bs.cs.isf.cbc.tool.patterns.ConnectionPattern;
 import de.tu_bs.cs.isf.cbc.tool.patterns.FormulaPattern;
 import de.tu_bs.cs.isf.cbc.tool.patterns.GlobalConditionsPattern;
+import de.tu_bs.cs.isf.cbc.tool.patterns.BlockPattern;
 import de.tu_bs.cs.isf.cbc.tool.patterns.MethodPattern;
 import de.tu_bs.cs.isf.cbc.tool.patterns.MethodRefinementsPattern;
 import de.tu_bs.cs.isf.cbc.tool.patterns.MethodStatementPattern;
@@ -77,6 +78,7 @@ public class CbCFeatureProvider extends DefaultFeatureProviderWithPatterns {
 	public CbCFeatureProvider(IDiagramTypeProvider dtp) {
 		super(dtp);
 		addPattern(new FormulaPattern());
+		addPattern(new BlockPattern());
 		addPattern(new CompositionPattern());
 		addPattern(new Composition3Pattern());
 		addPattern(new SelectionPattern());

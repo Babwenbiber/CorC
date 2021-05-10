@@ -30,6 +30,13 @@ public class DslProposalProvider extends AbstractDslProposalProvider {
   }
   
   @Override
+  public void complete_BlockStatement(final EObject model, final RuleCall ruleCall, final ContentAssistContext context, final ICompletionProposalAcceptor acceptor) {
+    super.complete_BlockStatement(model, ruleCall, context, acceptor);
+    final String proposal = "Block \"<Blockname>\":\n" + "\t{\n\t\t\"<statement>\"\n\t}\n";
+    acceptor.accept(this.createCompletionProposal(proposal, context));
+  }
+  
+  @Override
   public void complete_SelectionStatement(final EObject model, final RuleCall ruleCall, final ContentAssistContext context, final ICompletionProposalAcceptor acceptor) {
     super.complete_SelectionStatement(model, ruleCall, context, acceptor);
     final String proposal = ((("if (\"<guard>\") then\n" + "\t\t{\"<statement>\"}\n") + "\t\telseif (\"<guard>\") then\n") + "\t\t{\"<statement>\"} fi");

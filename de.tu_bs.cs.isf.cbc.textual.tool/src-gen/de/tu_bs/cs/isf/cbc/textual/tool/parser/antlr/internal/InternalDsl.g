@@ -361,11 +361,11 @@ ruleAbstractStatement returns [EObject current=null]
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getAbstractStatementAccess().getSkipStatementParserRuleCall_1());
+			newCompositeNode(grammarAccess.getAbstractStatementAccess().getBlockStatementParserRuleCall_1());
 		}
-		this_SkipStatement_1=ruleSkipStatement
+		this_BlockStatement_1=ruleBlockStatement
 		{
-			$current = $this_SkipStatement_1.current;
+			$current = $this_BlockStatement_1.current;
 			afterParserOrEnumRuleCall();
 		}
 		    |
@@ -379,47 +379,56 @@ ruleAbstractStatement returns [EObject current=null]
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getAbstractStatementAccess().getSelectionStatementParserRuleCall_3());
+			newCompositeNode(grammarAccess.getAbstractStatementAccess().getSkipStatementParserRuleCall_3());
 		}
-		this_SelectionStatement_3=ruleSelectionStatement
+		this_SkipStatement_3=ruleSkipStatement
 		{
-			$current = $this_SelectionStatement_3.current;
+			$current = $this_SkipStatement_3.current;
 			afterParserOrEnumRuleCall();
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getAbstractStatementAccess().getSmallRepetitionStatementParserRuleCall_4());
+			newCompositeNode(grammarAccess.getAbstractStatementAccess().getSelectionStatementParserRuleCall_4());
 		}
-		this_SmallRepetitionStatement_4=ruleSmallRepetitionStatement
+		this_SelectionStatement_4=ruleSelectionStatement
 		{
-			$current = $this_SmallRepetitionStatement_4.current;
+			$current = $this_SelectionStatement_4.current;
 			afterParserOrEnumRuleCall();
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getAbstractStatementAccess().getMethodStatementParserRuleCall_5());
+			newCompositeNode(grammarAccess.getAbstractStatementAccess().getSmallRepetitionStatementParserRuleCall_5());
 		}
-		this_MethodStatement_5=ruleMethodStatement
+		this_SmallRepetitionStatement_5=ruleSmallRepetitionStatement
 		{
-			$current = $this_MethodStatement_5.current;
+			$current = $this_SmallRepetitionStatement_5.current;
 			afterParserOrEnumRuleCall();
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getAbstractStatementAccess().getReturnStatementParserRuleCall_6());
+			newCompositeNode(grammarAccess.getAbstractStatementAccess().getMethodStatementParserRuleCall_6());
 		}
-		this_ReturnStatement_6=ruleReturnStatement
+		this_MethodStatement_6=ruleMethodStatement
 		{
-			$current = $this_ReturnStatement_6.current;
+			$current = $this_MethodStatement_6.current;
 			afterParserOrEnumRuleCall();
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getAbstractStatementAccess().getStrengthWeakStatementParserRuleCall_7());
+			newCompositeNode(grammarAccess.getAbstractStatementAccess().getReturnStatementParserRuleCall_7());
 		}
-		this_StrengthWeakStatement_7=ruleStrengthWeakStatement
+		this_ReturnStatement_7=ruleReturnStatement
 		{
-			$current = $this_StrengthWeakStatement_7.current;
+			$current = $this_ReturnStatement_7.current;
+			afterParserOrEnumRuleCall();
+		}
+		    |
+		{
+			newCompositeNode(grammarAccess.getAbstractStatementAccess().getStrengthWeakStatementParserRuleCall_8());
+		}
+		this_StrengthWeakStatement_8=ruleStrengthWeakStatement
+		{
+			$current = $this_StrengthWeakStatement_8.current;
 			afterParserOrEnumRuleCall();
 		}
 	)
@@ -1312,6 +1321,198 @@ ruleCompositionStatement returns [EObject current=null]
 		otherlv_10='}'
 		{
 			newLeafNode(otherlv_10, grammarAccess.getCompositionStatementAccess().getRightCurlyBracketKeyword_10());
+		}
+	)
+;
+
+// Entry rule entryRuleJMLAnnotation
+entryRuleJMLAnnotation returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getJMLAnnotationRule()); }
+	iv_ruleJMLAnnotation=ruleJMLAnnotation
+	{ $current=$iv_ruleJMLAnnotation.current; }
+	EOF;
+
+// Rule JMLAnnotation
+ruleJMLAnnotation returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		otherlv_0='@1'
+		{
+			newLeafNode(otherlv_0, grammarAccess.getJMLAnnotationAccess().getCommercialAtDigitOneKeyword_0());
+		}
+		(
+			(
+				{
+					newCompositeNode(grammarAccess.getJMLAnnotationAccess().getRequiresEStringParserRuleCall_1_0());
+				}
+				lv_requires_1_0=ruleEString
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getJMLAnnotationRule());
+					}
+					set(
+						$current,
+						"requires",
+						lv_requires_1_0,
+						"de.tu_bs.cs.isf.cbc.textual.tool.Dsl.EString");
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)
+		otherlv_2='$1'
+		{
+			newLeafNode(otherlv_2, grammarAccess.getJMLAnnotationAccess().getDollarSignDigitOneKeyword_2());
+		}
+		otherlv_3='@2'
+		{
+			newLeafNode(otherlv_3, grammarAccess.getJMLAnnotationAccess().getCommercialAtDigitTwoKeyword_3());
+		}
+		(
+			(
+				{
+					newCompositeNode(grammarAccess.getJMLAnnotationAccess().getAssignableEStringParserRuleCall_4_0());
+				}
+				lv_assignable_4_0=ruleEString
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getJMLAnnotationRule());
+					}
+					set(
+						$current,
+						"assignable",
+						lv_assignable_4_0,
+						"de.tu_bs.cs.isf.cbc.textual.tool.Dsl.EString");
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)
+		otherlv_5='$2'
+		{
+			newLeafNode(otherlv_5, grammarAccess.getJMLAnnotationAccess().getDollarSignDigitTwoKeyword_5());
+		}
+		otherlv_6='@3'
+		{
+			newLeafNode(otherlv_6, grammarAccess.getJMLAnnotationAccess().getCommercialAtDigitThreeKeyword_6());
+		}
+		(
+			(
+				{
+					newCompositeNode(grammarAccess.getJMLAnnotationAccess().getEnsuresEStringParserRuleCall_7_0());
+				}
+				lv_ensures_7_0=ruleEString
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getJMLAnnotationRule());
+					}
+					set(
+						$current,
+						"ensures",
+						lv_ensures_7_0,
+						"de.tu_bs.cs.isf.cbc.textual.tool.Dsl.EString");
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)
+		otherlv_8='$3'
+		{
+			newLeafNode(otherlv_8, grammarAccess.getJMLAnnotationAccess().getDollarSignDigitThreeKeyword_8());
+		}
+	)
+;
+
+// Entry rule entryRuleBlockStatement
+entryRuleBlockStatement returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getBlockStatementRule()); }
+	iv_ruleBlockStatement=ruleBlockStatement
+	{ $current=$iv_ruleBlockStatement.current; }
+	EOF;
+
+// Rule BlockStatement
+ruleBlockStatement returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		otherlv_0='Block'
+		{
+			newLeafNode(otherlv_0, grammarAccess.getBlockStatementAccess().getBlockKeyword_0());
+		}
+		(
+			(
+				{
+					newCompositeNode(grammarAccess.getBlockStatementAccess().getNameEStringParserRuleCall_1_0());
+				}
+				lv_name_1_0=ruleEString
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getBlockStatementRule());
+					}
+					set(
+						$current,
+						"name",
+						lv_name_1_0,
+						"de.tu_bs.cs.isf.cbc.textual.tool.Dsl.EString");
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)
+		otherlv_2=':'
+		{
+			newLeafNode(otherlv_2, grammarAccess.getBlockStatementAccess().getColonKeyword_2());
+		}
+		(
+			(
+				{
+					newCompositeNode(grammarAccess.getBlockStatementAccess().getJmlAnnotationJMLAnnotationParserRuleCall_3_0());
+				}
+				lv_jmlAnnotation_3_0=ruleJMLAnnotation
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getBlockStatementRule());
+					}
+					set(
+						$current,
+						"jmlAnnotation",
+						lv_jmlAnnotation_3_0,
+						"de.tu_bs.cs.isf.cbc.textual.tool.Dsl.JMLAnnotation");
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)?
+		otherlv_4='{'
+		{
+			newLeafNode(otherlv_4, grammarAccess.getBlockStatementAccess().getLeftCurlyBracketKeyword_4());
+		}
+		(
+			(
+				{
+					newCompositeNode(grammarAccess.getBlockStatementAccess().getJavaStatementAbstractStatementParserRuleCall_5_0());
+				}
+				lv_javaStatement_5_0=ruleAbstractStatement
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getBlockStatementRule());
+					}
+					set(
+						$current,
+						"javaStatement",
+						lv_javaStatement_5_0,
+						"de.tu_bs.cs.isf.cbc.textual.tool.Dsl.AbstractStatement");
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)
+		otherlv_6='}'
+		{
+			newLeafNode(otherlv_6, grammarAccess.getBlockStatementAccess().getRightCurlyBracketKeyword_6());
 		}
 	)
 ;

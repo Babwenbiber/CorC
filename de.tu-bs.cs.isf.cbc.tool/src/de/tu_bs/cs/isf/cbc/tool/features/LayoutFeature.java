@@ -32,6 +32,7 @@ import org.eclipse.graphiti.ui.services.GraphitiUi;
 import org.eclipse.graphiti.ui.services.IUiLayoutService;
 
 import de.tu_bs.cs.isf.cbc.cbcmodel.AbstractStatement;
+import de.tu_bs.cs.isf.cbc.cbcmodel.BlockStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbCFormula;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CompositionStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Condition;
@@ -147,6 +148,8 @@ public class LayoutFeature extends AbstractCustomFeature {
 		Object businessObject = getBusinessObjectForPictogramElement(ga.getPictogramElement());
 		if (businessObject instanceof CbCFormula) {
 			resizeFormula((CbCFormula) businessObject, ga);
+		} else if (businessObject instanceof BlockStatement) {
+			resizeBlock((BlockStatement) businessObject, ga);
 		} else if (businessObject instanceof CompositionStatement) {
 			resizeComposition((CompositionStatement) businessObject, ga);
 		} else if (businessObject instanceof SelectionStatement) {
@@ -184,6 +187,26 @@ public class LayoutFeature extends AbstractCustomFeature {
 		int width = Math.max(sizePre.getWidth(), sizePost.getWidth());
 		int height = Math.max(sizePre.getHeight(), sizePost.getHeight());
 		gaService.setSize(ga, width * 3 + 10, height + 80);
+	}
+
+	private void resizeBlock(BlockStatement businessObject, GraphicsAlgorithm ga) {
+		Condition pre = businessObject.getPreCondition();
+		Condition post = businessObject.getPostCondition();
+		String newPre = setWordWraps(pre.getName());
+		pre.setName(newPre);
+		String newPost = setWordWraps(post.getName());
+		post.setName(newPost);
+		MultiText preText = (MultiText) featureProvider.getPictogramElementForBusinessObject(pre)
+				.getGraphicsAlgorithm();
+		MultiText postText = (MultiText) featureProvider.getPictogramElementForBusinessObject(post)
+				.getGraphicsAlgorithm();
+		preText.setValue(newPre);
+		postText.setValue(newPost);
+		IDimension sizePre = uiL.calculateTextSize(preText.getValue(), font, true);
+		IDimension sizePost = uiL.calculateTextSize(postText.getValue(), font, true);
+		int width = Math.max(sizePre.getWidth() * 2, sizePost.getWidth() * 2);
+		int height =Math.max(sizePre.getHeight(), sizePost.getHeight());
+		gaService.setSize(ga, width + 10, height * 2 + 150);
 	}
 
 	private void resizeComposition(CompositionStatement businessObject, GraphicsAlgorithm ga) {

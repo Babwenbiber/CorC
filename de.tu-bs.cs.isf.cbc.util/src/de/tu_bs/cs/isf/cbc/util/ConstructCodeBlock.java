@@ -1,6 +1,7 @@
 package de.tu_bs.cs.isf.cbc.util;
 
 import de.tu_bs.cs.isf.cbc.cbcmodel.AbstractStatement;
+import de.tu_bs.cs.isf.cbc.cbcmodel.BlockStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbCFormula;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Composition3Statement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CompositionStatement;
@@ -12,6 +13,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.RepetitionStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.SelectionStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.SmallRepetitionStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.AbstractStatementImpl;
+import de.tu_bs.cs.isf.cbc.cbcmodel.impl.BlockStatementImpl;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.Composition3StatementImpl;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.CompositionStatementImpl;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.MethodStatementImpl;
@@ -193,6 +195,8 @@ public class ConstructCodeBlock {
 			return "";
 		} else if (refinement.getClass().equals(SelectionStatementImpl.class)) {
 			return traverseSelection((SelectionStatement) refinement);
+		} else if (refinement.getClass().equals(BlockStatementImpl.class)) {
+			return traverseBlock((BlockStatement) refinement);
 		} else if (refinement.getClass().equals(CompositionStatementImpl.class)) {
 			return traverseComposition((CompositionStatement) refinement);
 		} else if (refinement.getClass().equals(Composition3StatementImpl.class)) {
@@ -242,6 +246,8 @@ public class ConstructCodeBlock {
 			return refinement.getName() + "();\n";
 		} else if (refinement.getClass().equals(SelectionStatementImpl.class)) {
 			return constructSelection((SelectionStatement) refinement);
+		} else if (refinement.getClass().equals(BlockStatementImpl.class)) {
+			return constructBlock((BlockStatement) refinement);
 		} else if (refinement.getClass().equals(CompositionStatementImpl.class)) {
 			return constructComposition((CompositionStatement) refinement);
 		} else if (refinement.getClass().equals(Composition3StatementImpl.class)) {
@@ -337,6 +343,33 @@ public class ConstructCodeBlock {
 				buffer.append(constructMethodStubOfChildStatement(command));
 			}
 		}
+		return buffer.toString();
+	}
+
+	private static String constructBlock(BlockStatement statement) {
+		StringBuffer buffer = new StringBuffer();
+
+		if (statement.getJavaStatement().getRefinement() != null) {
+			buffer.append(constructCodeBlockOfChildStatement(statement.getJavaStatement().getRefinement()));
+		} else {
+			buffer.append(constructCodeBlockOfChildStatement(statement.getJavaStatement()));
+		}
+
+		for (int i = 0; i < positionIndex; i++) {
+			buffer.append("\t");
+		}
+
+		return buffer.toString();
+	}
+
+	private static String traverseBlock(BlockStatement statement) {
+		StringBuffer buffer = new StringBuffer();
+		if (statement.getJavaStatement().getRefinement() != null) {
+			buffer.append(constructMethodStubOfChildStatement(statement.getJavaStatement().getRefinement()));
+		} else {
+			buffer.append(constructMethodStubOfChildStatement(statement.getJavaStatement()));
+		}
+
 		return buffer.toString();
 	}
 

@@ -28,6 +28,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.Renaming;
 import de.tu_bs.cs.isf.cbc.cbcmodel.ReturnStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.SelectionStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.SkipStatement;
+import de.tu_bs.cs.isf.cbc.cbcmodel.BlockStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.SmallRepetitionStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.StrengthWeakStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.AbstractStatementImpl;
@@ -107,6 +108,10 @@ public class TraverseFormulaAndGenerate {
 					((AbstractStatement) statement.eContainer()).getPostCondition(), vars, conds, renaming, uri,
 					numberFile++, false);
 			ProveWithKey.createProveStatementWithKey(statement, vars, conds, renaming, null, uri, numberFile++, false);
+		
+		} else if (statement instanceof BlockStatement) {
+			BlockStatement blockStatement = (BlockStatement) statement;
+			traverseBlockStatement(blockStatement);
 		}
 	}
 
@@ -161,6 +166,17 @@ public class TraverseFormulaAndGenerate {
 		castStatementAndTraverse(secondStatement);
 	}
 
+	private void traverseBlockStatement(BlockStatement blockStatement) {
+		AbstractStatement statement = blockStatement.getJavaStatement();
+
+		statement.setPreCondition(factory.createCondition());
+		statement.getPreCondition().setName(blockStatement.getPreCondition().getName());
+		statement.setPostCondition(factory.createCondition());
+		statement.getPostCondition().setName(blockStatement.getPostCondition().getName());
+		
+		castStatementAndTraverse(statement);
+	}
+	
 	private Collection<CbCFormula> getLinkedFormulas(AbstractStatement statement) {
 		final Collection<CbCFormula> ret = new HashSet<CbCFormula>();
 		final Collection<CbCFormula> allFormulas = getFormulas();

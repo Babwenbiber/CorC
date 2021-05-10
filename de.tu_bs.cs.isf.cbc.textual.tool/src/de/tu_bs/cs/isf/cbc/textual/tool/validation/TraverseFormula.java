@@ -6,6 +6,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.AbstractStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbCFormula;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CompositionStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.MethodStatement;
+import de.tu_bs.cs.isf.cbc.cbcmodel.BlockStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.ReturnStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.SelectionStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.SkipStatement;
@@ -35,6 +36,9 @@ public class TraverseFormula {
 			if(searchObject.equals(statement)) foundFile = numberFile;
 			numberFile++;
 		} else if(statement instanceof SkipStatement) {
+			if(searchObject.equals(statement)) foundFile = numberFile;
+			numberFile++;
+		} else if(statement instanceof BlockStatement) {
 			if(searchObject.equals(statement)) foundFile = numberFile;
 			numberFile++;
 		} else if(statement instanceof MethodStatement) {

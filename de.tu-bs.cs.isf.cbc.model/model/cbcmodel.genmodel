@@ -43,6 +43,15 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cbcmodel.ecore#//AbstractStatement/comment"/>
     </genClasses>
     <genClasses ecoreClass="cbcmodel.ecore#//SkipStatement"/>
+    <genClasses ecoreClass="cbcmodel.ecore#//JMLAnnotation">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//JMLAnnotation/requires"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//JMLAnnotation/assignable"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//JMLAnnotation/ensures"/>
+    </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//BlockStatement">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//BlockStatement/jmlAnnotation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//BlockStatement/javaStatement"/>
+    </genClasses>
     <genClasses ecoreClass="cbcmodel.ecore#//CompositionStatement">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//CompositionStatement/firstStatement"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//CompositionStatement/secondStatement"/>
