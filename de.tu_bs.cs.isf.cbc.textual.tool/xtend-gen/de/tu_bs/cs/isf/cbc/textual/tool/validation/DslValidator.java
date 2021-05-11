@@ -120,8 +120,8 @@ public class DslValidator extends AbstractDslValidator {
     TraverseFormula traverser = new TraverseFormula();
     traverser.traverseFormula(formula, statement);
     int numberFile = traverser.foundFile;
-    final boolean closedPre = ProveWithKey.checkFileIsProven(statement.eResource().getURI(), numberFile, FilenamePrefix.PRE);
-    final boolean closedPost = ProveWithKey.checkFileIsProven(statement.eResource().getURI(), (numberFile + 1), FilenamePrefix.POST);
+    final boolean closedPre = ProveWithKey.checkFileIsProven(statement.eResource().getURI(), numberFile, FilenamePrefix.PRE_IMPL);
+    final boolean closedPost = ProveWithKey.checkFileIsProven(statement.eResource().getURI(), (numberFile + 1), FilenamePrefix.POST_IMPL);
     final boolean closedStd = ProveWithKey.checkFileIsProven(statement.eResource().getURI(), (numberFile + 2), FilenamePrefix.STATEMENT);
     if ((!closedPre)) {
       this.info("PreCondition of Statement is not proved.", 

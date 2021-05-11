@@ -103,11 +103,12 @@ public class TraverseFormulaAndGenerate {
 		} else if (statement instanceof ReturnStatement) {
 			ProveWithKey.createProveStatementWithKey(statement, vars, conds, renaming, null, uri, numberFile++, false, FilenamePrefix.RETURN);
 		} else if (statement instanceof StrengthWeakStatement) {
-			ProveWithKey.createProvePreImplPreWithKey(((AbstractStatement) statement.eContainer()).getPreCondition(),
- 					statement.getPreCondition(), vars, conds, renaming, uri, numberFile++, false, FilenamePrefix.PRE_IMPL);
-			ProveWithKey.createProvePreImplPreWithKey(statement.getPostCondition(),
-					((AbstractStatement) statement.eContainer()).getPostCondition(), vars, conds, renaming, uri,
-					numberFile++, false, FilenamePrefix.PRE_IMPL);
+
+			ProveWithKey.createProvePreImplPreWithKey(statement.getPreCondition(), 
+					((StrengthWeakStatement)statement).getWeakPreCondition(), vars, conds, renaming, uri, numberFile++, false, FilenamePrefix.PRE_IMPL);
+			ProveWithKey.createProvePostImplPostWithKey(statement.getPostCondition(),
+					((StrengthWeakStatement)statement).getStrongPostCondition(), vars, conds, renaming, uri,
+					numberFile++, false, FilenamePrefix.POST_IMPL);
 			ProveWithKey.createProveStatementWithKey(statement, vars, conds, renaming, null, uri, numberFile++, false, FilenamePrefix.STATEMENT);
 		
 		} else if (statement instanceof BlockStatement) {

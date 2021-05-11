@@ -94,9 +94,9 @@ public class VerifyAllStatements extends MyAbstractAsynchronousCustomFeature {
 		 if (statement instanceof SmallRepetitionStatement) {
 			prove = proveSmallReptitionStatement(statement, vars, conds, renaming, uri, monitor);
 		 } else if (statement instanceof CompositionStatement) {
-				prove = proveCompositionStatement(statement, vars, conds, renaming, uri, monitor);
+			prove = proveCompositionStatement(statement, vars, conds, renaming, uri, monitor);
 		} else if (statement instanceof BlockStatement) {
-				prove = proveBlockStatement(statement, vars, conds, renaming, uri, monitor);
+			prove = proveBlockStatement(statement, vars, conds, renaming, uri, monitor);
 		} else if (statement instanceof Composition3Statement) {
 			prove = proveComposition3Statement(statement, vars, conds, renaming, uri, monitor);
 		} else if (statement instanceof SelectionStatement) {

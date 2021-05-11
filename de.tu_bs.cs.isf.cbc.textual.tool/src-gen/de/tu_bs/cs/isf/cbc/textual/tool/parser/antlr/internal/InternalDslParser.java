@@ -2812,7 +2812,7 @@ public class InternalDslParser extends AbstractInternalAntlrParser {
 
 
 	// $ANTLR start "ruleStrengthWeakStatement"
-	// InternalDsl.g:1034:1: ruleStrengthWeakStatement returns [EObject current=null] : ( () otherlv_1= 'pre:' otherlv_2= '{' ( (lv_preCondition_3_0= ruleCondition ) ) otherlv_4= '}' otherlv_5= '{' ( (lv_name_6_0= ruleCodeString ) ) otherlv_7= '}' otherlv_8= 'post:' otherlv_9= '{' ( (lv_postCondition_10_0= ruleCondition ) ) otherlv_11= '}' ) ;
+	// InternalDsl.g:1034:1: ruleStrengthWeakStatement returns [EObject current=null] : ( () otherlv_1= 'pre:' otherlv_2= '{' ( (lv_weakPreCondition_3_0= ruleCondition ) ) otherlv_4= '}' otherlv_5= '{' ( (lv_name_6_0= ruleCodeString ) ) otherlv_7= '}' otherlv_8= 'post:' otherlv_9= '{' ( (lv_strongPostCondition_10_0= ruleCondition ) ) otherlv_11= '}' ) ;
 	public final EObject ruleStrengthWeakStatement() throws RecognitionException {
 		EObject current = null;
 
@@ -2825,19 +2825,19 @@ public class InternalDslParser extends AbstractInternalAntlrParser {
 		Token otherlv_8=null;
 		Token otherlv_9=null;
 		Token otherlv_11=null;
-		EObject lv_preCondition_3_0 =null;
+		EObject lv_weakPreCondition_3_0 =null;
 		AntlrDatatypeRuleToken lv_name_6_0 =null;
-		EObject lv_postCondition_10_0 =null;
+		EObject lv_strongPostCondition_10_0 =null;
 
 
 			enterRule();
 
 		try {
-			// InternalDsl.g:1040:2: ( ( () otherlv_1= 'pre:' otherlv_2= '{' ( (lv_preCondition_3_0= ruleCondition ) ) otherlv_4= '}' otherlv_5= '{' ( (lv_name_6_0= ruleCodeString ) ) otherlv_7= '}' otherlv_8= 'post:' otherlv_9= '{' ( (lv_postCondition_10_0= ruleCondition ) ) otherlv_11= '}' ) )
-			// InternalDsl.g:1041:2: ( () otherlv_1= 'pre:' otherlv_2= '{' ( (lv_preCondition_3_0= ruleCondition ) ) otherlv_4= '}' otherlv_5= '{' ( (lv_name_6_0= ruleCodeString ) ) otherlv_7= '}' otherlv_8= 'post:' otherlv_9= '{' ( (lv_postCondition_10_0= ruleCondition ) ) otherlv_11= '}' )
+			// InternalDsl.g:1040:2: ( ( () otherlv_1= 'pre:' otherlv_2= '{' ( (lv_weakPreCondition_3_0= ruleCondition ) ) otherlv_4= '}' otherlv_5= '{' ( (lv_name_6_0= ruleCodeString ) ) otherlv_7= '}' otherlv_8= 'post:' otherlv_9= '{' ( (lv_strongPostCondition_10_0= ruleCondition ) ) otherlv_11= '}' ) )
+			// InternalDsl.g:1041:2: ( () otherlv_1= 'pre:' otherlv_2= '{' ( (lv_weakPreCondition_3_0= ruleCondition ) ) otherlv_4= '}' otherlv_5= '{' ( (lv_name_6_0= ruleCodeString ) ) otherlv_7= '}' otherlv_8= 'post:' otherlv_9= '{' ( (lv_strongPostCondition_10_0= ruleCondition ) ) otherlv_11= '}' )
 			{
-			// InternalDsl.g:1041:2: ( () otherlv_1= 'pre:' otherlv_2= '{' ( (lv_preCondition_3_0= ruleCondition ) ) otherlv_4= '}' otherlv_5= '{' ( (lv_name_6_0= ruleCodeString ) ) otherlv_7= '}' otherlv_8= 'post:' otherlv_9= '{' ( (lv_postCondition_10_0= ruleCondition ) ) otherlv_11= '}' )
-			// InternalDsl.g:1042:3: () otherlv_1= 'pre:' otherlv_2= '{' ( (lv_preCondition_3_0= ruleCondition ) ) otherlv_4= '}' otherlv_5= '{' ( (lv_name_6_0= ruleCodeString ) ) otherlv_7= '}' otherlv_8= 'post:' otherlv_9= '{' ( (lv_postCondition_10_0= ruleCondition ) ) otherlv_11= '}'
+			// InternalDsl.g:1041:2: ( () otherlv_1= 'pre:' otherlv_2= '{' ( (lv_weakPreCondition_3_0= ruleCondition ) ) otherlv_4= '}' otherlv_5= '{' ( (lv_name_6_0= ruleCodeString ) ) otherlv_7= '}' otherlv_8= 'post:' otherlv_9= '{' ( (lv_strongPostCondition_10_0= ruleCondition ) ) otherlv_11= '}' )
+			// InternalDsl.g:1042:3: () otherlv_1= 'pre:' otherlv_2= '{' ( (lv_weakPreCondition_3_0= ruleCondition ) ) otherlv_4= '}' otherlv_5= '{' ( (lv_name_6_0= ruleCodeString ) ) otherlv_7= '}' otherlv_8= 'post:' otherlv_9= '{' ( (lv_strongPostCondition_10_0= ruleCondition ) ) otherlv_11= '}'
 			{
 			// InternalDsl.g:1042:3: ()
 			// InternalDsl.g:1043:4: 
@@ -2857,17 +2857,17 @@ public class InternalDslParser extends AbstractInternalAntlrParser {
 
 						newLeafNode(otherlv_2, grammarAccess.getStrengthWeakStatementAccess().getLeftCurlyBracketKeyword_2());
 					
-			// InternalDsl.g:1057:3: ( (lv_preCondition_3_0= ruleCondition ) )
-			// InternalDsl.g:1058:4: (lv_preCondition_3_0= ruleCondition )
+			// InternalDsl.g:1057:3: ( (lv_weakPreCondition_3_0= ruleCondition ) )
+			// InternalDsl.g:1058:4: (lv_weakPreCondition_3_0= ruleCondition )
 			{
-			// InternalDsl.g:1058:4: (lv_preCondition_3_0= ruleCondition )
-			// InternalDsl.g:1059:5: lv_preCondition_3_0= ruleCondition
+			// InternalDsl.g:1058:4: (lv_weakPreCondition_3_0= ruleCondition )
+			// InternalDsl.g:1059:5: lv_weakPreCondition_3_0= ruleCondition
 			{
 
-								newCompositeNode(grammarAccess.getStrengthWeakStatementAccess().getPreConditionConditionParserRuleCall_3_0());
+								newCompositeNode(grammarAccess.getStrengthWeakStatementAccess().getWeakPreConditionConditionParserRuleCall_3_0());
 							
 			pushFollow(FOLLOW_7);
-			lv_preCondition_3_0=ruleCondition();
+			lv_weakPreCondition_3_0=ruleCondition();
 			state._fsp--;
 
 
@@ -2876,8 +2876,8 @@ public class InternalDslParser extends AbstractInternalAntlrParser {
 								}
 								set(
 									current,
-									"preCondition",
-									lv_preCondition_3_0,
+									"weakPreCondition",
+									lv_weakPreCondition_3_0,
 									"de.tu_bs.cs.isf.cbc.textual.tool.Dsl.Condition");
 								afterParserOrEnumRuleCall();
 							
@@ -2933,17 +2933,17 @@ public class InternalDslParser extends AbstractInternalAntlrParser {
 
 						newLeafNode(otherlv_9, grammarAccess.getStrengthWeakStatementAccess().getLeftCurlyBracketKeyword_9());
 					
-			// InternalDsl.g:1115:3: ( (lv_postCondition_10_0= ruleCondition ) )
-			// InternalDsl.g:1116:4: (lv_postCondition_10_0= ruleCondition )
+			// InternalDsl.g:1115:3: ( (lv_strongPostCondition_10_0= ruleCondition ) )
+			// InternalDsl.g:1116:4: (lv_strongPostCondition_10_0= ruleCondition )
 			{
-			// InternalDsl.g:1116:4: (lv_postCondition_10_0= ruleCondition )
-			// InternalDsl.g:1117:5: lv_postCondition_10_0= ruleCondition
+			// InternalDsl.g:1116:4: (lv_strongPostCondition_10_0= ruleCondition )
+			// InternalDsl.g:1117:5: lv_strongPostCondition_10_0= ruleCondition
 			{
 
-								newCompositeNode(grammarAccess.getStrengthWeakStatementAccess().getPostConditionConditionParserRuleCall_10_0());
+								newCompositeNode(grammarAccess.getStrengthWeakStatementAccess().getStrongPostConditionConditionParserRuleCall_10_0());
 							
 			pushFollow(FOLLOW_7);
-			lv_postCondition_10_0=ruleCondition();
+			lv_strongPostCondition_10_0=ruleCondition();
 			state._fsp--;
 
 
@@ -2952,8 +2952,8 @@ public class InternalDslParser extends AbstractInternalAntlrParser {
 								}
 								set(
 									current,
-									"postCondition",
-									lv_postCondition_10_0,
+									"strongPostCondition",
+									lv_strongPostCondition_10_0,
 									"de.tu_bs.cs.isf.cbc.textual.tool.Dsl.Condition");
 								afterParserOrEnumRuleCall();
 							

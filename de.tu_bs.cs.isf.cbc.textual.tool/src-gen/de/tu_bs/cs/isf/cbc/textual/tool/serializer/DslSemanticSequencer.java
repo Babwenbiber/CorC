@@ -432,21 +432,21 @@ public class DslSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 *     StrengthWeakStatement returns StrengthWeakStatement
 	 *
 	 * Constraint:
-	 *     (preCondition=Condition name=CodeString postCondition=Condition)
+	 *     (weakPreCondition=Condition name=CodeString strongPostCondition=Condition)
 	 */
 	protected void sequence_StrengthWeakStatement(ISerializationContext context, StrengthWeakStatement semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.ABSTRACT_STATEMENT__PRE_CONDITION) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.ABSTRACT_STATEMENT__PRE_CONDITION));
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.STRENGTH_WEAK_STATEMENT__WEAK_PRE_CONDITION) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.STRENGTH_WEAK_STATEMENT__WEAK_PRE_CONDITION));
 			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.ABSTRACT_STATEMENT__NAME) == ValueTransient.YES)
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.ABSTRACT_STATEMENT__NAME));
-			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.ABSTRACT_STATEMENT__POST_CONDITION) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.ABSTRACT_STATEMENT__POST_CONDITION));
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.STRENGTH_WEAK_STATEMENT__STRONG_POST_CONDITION) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.STRENGTH_WEAK_STATEMENT__STRONG_POST_CONDITION));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getStrengthWeakStatementAccess().getPreConditionConditionParserRuleCall_3_0(), semanticObject.getPreCondition());
+		feeder.accept(grammarAccess.getStrengthWeakStatementAccess().getWeakPreConditionConditionParserRuleCall_3_0(), semanticObject.getWeakPreCondition());
 		feeder.accept(grammarAccess.getStrengthWeakStatementAccess().getNameCodeStringParserRuleCall_6_0(), semanticObject.getName());
-		feeder.accept(grammarAccess.getStrengthWeakStatementAccess().getPostConditionConditionParserRuleCall_10_0(), semanticObject.getPostCondition());
+		feeder.accept(grammarAccess.getStrengthWeakStatementAccess().getStrongPostConditionConditionParserRuleCall_10_0(), semanticObject.getStrongPostCondition());
 		feeder.finish();
 	}
 	

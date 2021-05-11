@@ -80,9 +80,10 @@ public class VerifyStrengthWeakCorrect extends MyAbstractAsynchronousCustomFeatu
 					}
 					boolean prove1 = false;
 					boolean prove2 = false;
-					prove1 = ProveWithKey.provePreImplPreWithKey(parent.getPreCondition(), statement.getPreCondition(), vars, 
+					System.out.println("strength: parent pre " + parent.getPreCondition().getName() + " child pre " + statement.getWeakPreCondition().getName());
+					prove1 = ProveWithKey.provePreImplPreWithKey(parent.getPreCondition(), statement.getWeakPreCondition(), vars, 
 							conds, renaming, getDiagram().eResource().getURI(), monitor);
-					prove2 = ProveWithKey.provePostImplPostWithKey(parent.getPostCondition(), statement.getPostCondition(), vars,
+					prove2 = ProveWithKey.provePostImplPostWithKey(parent.getPostCondition(), statement.getStrongPostCondition(), vars,
 							conds, renaming, getDiagram().eResource().getURI(), monitor);
 					
 					if (prove1 && prove2) {

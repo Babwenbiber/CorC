@@ -2840,9 +2840,9 @@ rule__StrengthWeakStatement__Group__3__Impl
 	}
 :
 (
-	{ before(grammarAccess.getStrengthWeakStatementAccess().getPreConditionAssignment_3()); }
-	(rule__StrengthWeakStatement__PreConditionAssignment_3)
-	{ after(grammarAccess.getStrengthWeakStatementAccess().getPreConditionAssignment_3()); }
+	{ before(grammarAccess.getStrengthWeakStatementAccess().getWeakPreConditionAssignment_3()); }
+	(rule__StrengthWeakStatement__WeakPreConditionAssignment_3)
+	{ after(grammarAccess.getStrengthWeakStatementAccess().getWeakPreConditionAssignment_3()); }
 )
 ;
 finally {
@@ -3029,9 +3029,9 @@ rule__StrengthWeakStatement__Group__10__Impl
 	}
 :
 (
-	{ before(grammarAccess.getStrengthWeakStatementAccess().getPostConditionAssignment_10()); }
-	(rule__StrengthWeakStatement__PostConditionAssignment_10)
-	{ after(grammarAccess.getStrengthWeakStatementAccess().getPostConditionAssignment_10()); }
+	{ before(grammarAccess.getStrengthWeakStatementAccess().getStrongPostConditionAssignment_10()); }
+	(rule__StrengthWeakStatement__StrongPostConditionAssignment_10)
+	{ after(grammarAccess.getStrengthWeakStatementAccess().getStrongPostConditionAssignment_10()); }
 )
 ;
 finally {
@@ -6256,15 +6256,15 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__StrengthWeakStatement__PreConditionAssignment_3
+rule__StrengthWeakStatement__WeakPreConditionAssignment_3
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 	(
-		{ before(grammarAccess.getStrengthWeakStatementAccess().getPreConditionConditionParserRuleCall_3_0()); }
+		{ before(grammarAccess.getStrengthWeakStatementAccess().getWeakPreConditionConditionParserRuleCall_3_0()); }
 		ruleCondition
-		{ after(grammarAccess.getStrengthWeakStatementAccess().getPreConditionConditionParserRuleCall_3_0()); }
+		{ after(grammarAccess.getStrengthWeakStatementAccess().getWeakPreConditionConditionParserRuleCall_3_0()); }
 	)
 ;
 finally {
@@ -6286,15 +6286,15 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__StrengthWeakStatement__PostConditionAssignment_10
+rule__StrengthWeakStatement__StrongPostConditionAssignment_10
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 	(
-		{ before(grammarAccess.getStrengthWeakStatementAccess().getPostConditionConditionParserRuleCall_10_0()); }
+		{ before(grammarAccess.getStrengthWeakStatementAccess().getStrongPostConditionConditionParserRuleCall_10_0()); }
 		ruleCondition
-		{ after(grammarAccess.getStrengthWeakStatementAccess().getPostConditionConditionParserRuleCall_10_0()); }
+		{ after(grammarAccess.getStrengthWeakStatementAccess().getStrongPostConditionConditionParserRuleCall_10_0()); }
 	)
 ;
 finally {

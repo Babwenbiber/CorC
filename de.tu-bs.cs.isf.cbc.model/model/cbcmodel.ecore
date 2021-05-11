@@ -157,7 +157,12 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="refinements" eType="#//MethodRefinements"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="StrengthWeakStatement" eSuperTypes="#//AbstractStatement"/>
+  <eClassifiers xsi:type="ecore:EClass" name="StrengthWeakStatement" eSuperTypes="#//AbstractStatement">
+	  <eStructuralFeatures xsi:type="ecore:EReference" name="weakPreCondition" lowerBound="1"
+	        eType="#//Condition" containment="true"/>
+	  <eStructuralFeatures xsi:type="ecore:EReference" name="strongPostCondition" lowerBound="1"
+	        eType="#//Condition" containment="true"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MethodRefinements">
     <eStructuralFeatures xsi:type="ecore:EReference" name="productvariants" upperBound="-1"
         eType="#//ProductVariant" containment="true"/>

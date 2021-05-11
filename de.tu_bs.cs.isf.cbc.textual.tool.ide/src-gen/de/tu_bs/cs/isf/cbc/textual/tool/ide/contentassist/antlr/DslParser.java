@@ -98,9 +98,9 @@ public class DslParser extends AbstractContentAssistParser {
 					put(grammarAccess.getAbstractStatement_ImplAccess().getNameAssignment_1(), "rule__AbstractStatement_Impl__NameAssignment_1");
 					put(grammarAccess.getMethodStatementAccess().getNameAssignment_1(), "rule__MethodStatement__NameAssignment_1");
 					put(grammarAccess.getReturnStatementAccess().getNameAssignment_2(), "rule__ReturnStatement__NameAssignment_2");
-					put(grammarAccess.getStrengthWeakStatementAccess().getPreConditionAssignment_3(), "rule__StrengthWeakStatement__PreConditionAssignment_3");
+					put(grammarAccess.getStrengthWeakStatementAccess().getWeakPreConditionAssignment_3(), "rule__StrengthWeakStatement__WeakPreConditionAssignment_3");
 					put(grammarAccess.getStrengthWeakStatementAccess().getNameAssignment_6(), "rule__StrengthWeakStatement__NameAssignment_6");
-					put(grammarAccess.getStrengthWeakStatementAccess().getPostConditionAssignment_10(), "rule__StrengthWeakStatement__PostConditionAssignment_10");
+					put(grammarAccess.getStrengthWeakStatementAccess().getStrongPostConditionAssignment_10(), "rule__StrengthWeakStatement__StrongPostConditionAssignment_10");
 					put(grammarAccess.getConditionAccess().getNameAssignment_1(), "rule__Condition__NameAssignment_1");
 					put(grammarAccess.getSkipStatementAccess().getNameAssignment(), "rule__SkipStatement__NameAssignment");
 					put(grammarAccess.getCompositionStatementAccess().getFirstStatementAssignment_2(), "rule__CompositionStatement__FirstStatementAssignment_2");

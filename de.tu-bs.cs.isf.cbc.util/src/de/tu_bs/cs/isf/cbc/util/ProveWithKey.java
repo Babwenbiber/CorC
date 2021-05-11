@@ -825,7 +825,7 @@ public class ProveWithKey {
 
 	public static boolean provePostImplPostWithKey(Condition postParent, Condition postChild, JavaVariables vars,
 			GlobalConditions conds, Renaming renaming, URI uri, IProgressMonitor monitor) {
-		File location = createProvePreImplPreWithKey(postChild, postParent, vars, conds, renaming, uri, 0, true, FilenamePrefix.POST_IMPL);
+		File location = createProvePostImplPostWithKey(postChild, postParent, vars, conds, renaming, uri, 0, true, FilenamePrefix.POST_IMPL);
 		Console.println("Verify PostChild -> PostParent");
 		return proveWithKey(location, monitor);
 	}
@@ -876,6 +876,52 @@ public class ProveWithKey {
 		return keyFile;
 	}
 
+	public static File createProvePostImplPostWithKey(Condition postParent, Condition postChild, JavaVariables vars,
+			GlobalConditions conds, Renaming renaming, URI uri, int numberFile, boolean override, String name) {
+
+		String programVariablesString = "";
+		if (vars != null) {
+			for (JavaVariable var : vars.getVariables()) {
+				programVariablesString += var.getName() + "; ";
+			}
+		}
+
+		String globalConditionsString = "";
+		if (conds != null) {
+			for (Condition cond : conds.getConditions()) {
+				if (!cond.getName().isEmpty()) {
+					globalConditionsString += " & " + cond.getName();
+				}
+			}
+		}
+
+		IProject thisProject = FileUtil.getProject(uri);
+
+		String postParentString = Parser.getConditionFromCondition(postParent.getName());
+		String postChildString = Parser.getConditionFromCondition(postChild.getName());
+
+		if (postParentString == null || postParentString.length() == 0) {
+			postParentString = "true";
+		}
+		if (postChildString == null || postChildString.length() == 0) {
+			postChildString = "true";
+		}
+
+		if (renaming != null) {
+			globalConditionsString = useRenamingCondition(renaming, globalConditionsString);
+			postParentString = useRenamingCondition(renaming, postParentString);
+			postChildString = useRenamingCondition(renaming, postChildString);
+		}
+
+		String problem = "\\javaSource \"" + thisProject.getLocation() + "/\";" + "\\programVariables {"
+				+ programVariablesString + " Heap heapAtPre;}" + "\\problem {(" + postChildString + " "
+				+ globalConditionsString + ") -> {heapAtPre := heap} (" + postParentString + ")}";
+
+		String location = thisProject.getLocation() + "/src/prove" + uri.trimFileExtension().lastSegment();
+		File keyFile = FileUtil.writeFile(problem, location, numberFile, override, name );
+		return keyFile;
+	}
+	
 	public static boolean provePreImplPreWithKey(String preParent, String preChild,
 			de.tu_bs.cs.isf.taxonomy.model.taxonomy.JavaVariables vars,
 			de.tu_bs.cs.isf.taxonomy.model.taxonomy.GlobalConditions conds,

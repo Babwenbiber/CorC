@@ -619,8 +619,8 @@ public class DslGrammarAccess extends AbstractGrammarElementFinder {
 		private final Action cStrengthWeakStatementAction_0 = (Action)cGroup.eContents().get(0);
 		private final Keyword cPreKeyword_1 = (Keyword)cGroup.eContents().get(1);
 		private final Keyword cLeftCurlyBracketKeyword_2 = (Keyword)cGroup.eContents().get(2);
-		private final Assignment cPreConditionAssignment_3 = (Assignment)cGroup.eContents().get(3);
-		private final RuleCall cPreConditionConditionParserRuleCall_3_0 = (RuleCall)cPreConditionAssignment_3.eContents().get(0);
+		private final Assignment cWeakPreConditionAssignment_3 = (Assignment)cGroup.eContents().get(3);
+		private final RuleCall cWeakPreConditionConditionParserRuleCall_3_0 = (RuleCall)cWeakPreConditionAssignment_3.eContents().get(0);
 		private final Keyword cRightCurlyBracketKeyword_4 = (Keyword)cGroup.eContents().get(4);
 		private final Keyword cLeftCurlyBracketKeyword_5 = (Keyword)cGroup.eContents().get(5);
 		private final Assignment cNameAssignment_6 = (Assignment)cGroup.eContents().get(6);
@@ -628,19 +628,19 @@ public class DslGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cRightCurlyBracketKeyword_7 = (Keyword)cGroup.eContents().get(7);
 		private final Keyword cPostKeyword_8 = (Keyword)cGroup.eContents().get(8);
 		private final Keyword cLeftCurlyBracketKeyword_9 = (Keyword)cGroup.eContents().get(9);
-		private final Assignment cPostConditionAssignment_10 = (Assignment)cGroup.eContents().get(10);
-		private final RuleCall cPostConditionConditionParserRuleCall_10_0 = (RuleCall)cPostConditionAssignment_10.eContents().get(0);
+		private final Assignment cStrongPostConditionAssignment_10 = (Assignment)cGroup.eContents().get(10);
+		private final RuleCall cStrongPostConditionConditionParserRuleCall_10_0 = (RuleCall)cStrongPostConditionAssignment_10.eContents().get(0);
 		private final Keyword cRightCurlyBracketKeyword_11 = (Keyword)cGroup.eContents().get(11);
 		
 		//StrengthWeakStatement:
 		//	{StrengthWeakStatement}
-		//	'pre:' '{' preCondition=Condition '}'
+		//	'pre:' '{' weakPreCondition=Condition '}'
 		//	'{' name=CodeString '}'
-		//	'post:' '{' postCondition=Condition '}';
+		//	'post:' '{' strongPostCondition=Condition '}';
 		@Override public ParserRule getRule() { return rule; }
 		
-		//{StrengthWeakStatement} 'pre:' '{' preCondition=Condition '}' '{' name=CodeString '}' 'post:' '{'
-		//postCondition=Condition '}'
+		//{StrengthWeakStatement} 'pre:' '{' weakPreCondition=Condition '}' '{' name=CodeString '}' 'post:' '{'
+		//strongPostCondition=Condition '}'
 		public Group getGroup() { return cGroup; }
 		
 		//{StrengthWeakStatement}
@@ -652,11 +652,11 @@ public class DslGrammarAccess extends AbstractGrammarElementFinder {
 		//'{'
 		public Keyword getLeftCurlyBracketKeyword_2() { return cLeftCurlyBracketKeyword_2; }
 		
-		//preCondition=Condition
-		public Assignment getPreConditionAssignment_3() { return cPreConditionAssignment_3; }
+		//weakPreCondition=Condition
+		public Assignment getWeakPreConditionAssignment_3() { return cWeakPreConditionAssignment_3; }
 		
 		//Condition
-		public RuleCall getPreConditionConditionParserRuleCall_3_0() { return cPreConditionConditionParserRuleCall_3_0; }
+		public RuleCall getWeakPreConditionConditionParserRuleCall_3_0() { return cWeakPreConditionConditionParserRuleCall_3_0; }
 		
 		//'}'
 		public Keyword getRightCurlyBracketKeyword_4() { return cRightCurlyBracketKeyword_4; }
@@ -679,11 +679,11 @@ public class DslGrammarAccess extends AbstractGrammarElementFinder {
 		//'{'
 		public Keyword getLeftCurlyBracketKeyword_9() { return cLeftCurlyBracketKeyword_9; }
 		
-		//postCondition=Condition
-		public Assignment getPostConditionAssignment_10() { return cPostConditionAssignment_10; }
+		//strongPostCondition=Condition
+		public Assignment getStrongPostConditionAssignment_10() { return cStrongPostConditionAssignment_10; }
 		
 		//Condition
-		public RuleCall getPostConditionConditionParserRuleCall_10_0() { return cPostConditionConditionParserRuleCall_10_0; }
+		public RuleCall getStrongPostConditionConditionParserRuleCall_10_0() { return cStrongPostConditionConditionParserRuleCall_10_0; }
 		
 		//'}'
 		public Keyword getRightCurlyBracketKeyword_11() { return cRightCurlyBracketKeyword_11; }
@@ -1655,9 +1655,9 @@ public class DslGrammarAccess extends AbstractGrammarElementFinder {
 	
 	//StrengthWeakStatement:
 	//	{StrengthWeakStatement}
-	//	'pre:' '{' preCondition=Condition '}'
+	//	'pre:' '{' weakPreCondition=Condition '}'
 	//	'{' name=CodeString '}'
-	//	'post:' '{' postCondition=Condition '}';
+	//	'post:' '{' strongPostCondition=Condition '}';
 	public StrengthWeakStatementElements getStrengthWeakStatementAccess() {
 		return pStrengthWeakStatement;
 	}

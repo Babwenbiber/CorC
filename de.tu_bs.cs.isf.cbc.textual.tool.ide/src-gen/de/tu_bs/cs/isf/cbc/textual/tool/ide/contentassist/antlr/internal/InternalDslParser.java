@@ -8467,29 +8467,29 @@ public class InternalDslParser extends AbstractInternalContentAssistParser {
 
 
 	// $ANTLR start "rule__StrengthWeakStatement__Group__3__Impl"
-	// InternalDsl.g:2837:1: rule__StrengthWeakStatement__Group__3__Impl : ( ( rule__StrengthWeakStatement__PreConditionAssignment_3 ) ) ;
+	// InternalDsl.g:2837:1: rule__StrengthWeakStatement__Group__3__Impl : ( ( rule__StrengthWeakStatement__WeakPreConditionAssignment_3 ) ) ;
 	public final void rule__StrengthWeakStatement__Group__3__Impl() throws RecognitionException {
 
 				int stackSize = keepStackSize();
 			
 		try {
-			// InternalDsl.g:2841:2: ( ( ( rule__StrengthWeakStatement__PreConditionAssignment_3 ) ) )
-			// InternalDsl.g:2842:2: ( ( rule__StrengthWeakStatement__PreConditionAssignment_3 ) )
+			// InternalDsl.g:2841:2: ( ( ( rule__StrengthWeakStatement__WeakPreConditionAssignment_3 ) ) )
+			// InternalDsl.g:2842:2: ( ( rule__StrengthWeakStatement__WeakPreConditionAssignment_3 ) )
 			{
-			// InternalDsl.g:2842:2: ( ( rule__StrengthWeakStatement__PreConditionAssignment_3 ) )
-			// InternalDsl.g:2843:2: ( rule__StrengthWeakStatement__PreConditionAssignment_3 )
+			// InternalDsl.g:2842:2: ( ( rule__StrengthWeakStatement__WeakPreConditionAssignment_3 ) )
+			// InternalDsl.g:2843:2: ( rule__StrengthWeakStatement__WeakPreConditionAssignment_3 )
 			{
-			 before(grammarAccess.getStrengthWeakStatementAccess().getPreConditionAssignment_3()); 
-			// InternalDsl.g:2844:2: ( rule__StrengthWeakStatement__PreConditionAssignment_3 )
-			// InternalDsl.g:2844:3: rule__StrengthWeakStatement__PreConditionAssignment_3
+			 before(grammarAccess.getStrengthWeakStatementAccess().getWeakPreConditionAssignment_3()); 
+			// InternalDsl.g:2844:2: ( rule__StrengthWeakStatement__WeakPreConditionAssignment_3 )
+			// InternalDsl.g:2844:3: rule__StrengthWeakStatement__WeakPreConditionAssignment_3
 			{
 			pushFollow(FOLLOW_2);
-			rule__StrengthWeakStatement__PreConditionAssignment_3();
+			rule__StrengthWeakStatement__WeakPreConditionAssignment_3();
 			state._fsp--;
 
 			}
 
-			 after(grammarAccess.getStrengthWeakStatementAccess().getPreConditionAssignment_3()); 
+			 after(grammarAccess.getStrengthWeakStatementAccess().getWeakPreConditionAssignment_3()); 
 			}
 
 			}
@@ -8987,29 +8987,29 @@ public class InternalDslParser extends AbstractInternalContentAssistParser {
 
 
 	// $ANTLR start "rule__StrengthWeakStatement__Group__10__Impl"
-	// InternalDsl.g:3026:1: rule__StrengthWeakStatement__Group__10__Impl : ( ( rule__StrengthWeakStatement__PostConditionAssignment_10 ) ) ;
+	// InternalDsl.g:3026:1: rule__StrengthWeakStatement__Group__10__Impl : ( ( rule__StrengthWeakStatement__StrongPostConditionAssignment_10 ) ) ;
 	public final void rule__StrengthWeakStatement__Group__10__Impl() throws RecognitionException {
 
 				int stackSize = keepStackSize();
 			
 		try {
-			// InternalDsl.g:3030:2: ( ( ( rule__StrengthWeakStatement__PostConditionAssignment_10 ) ) )
-			// InternalDsl.g:3031:2: ( ( rule__StrengthWeakStatement__PostConditionAssignment_10 ) )
+			// InternalDsl.g:3030:2: ( ( ( rule__StrengthWeakStatement__StrongPostConditionAssignment_10 ) ) )
+			// InternalDsl.g:3031:2: ( ( rule__StrengthWeakStatement__StrongPostConditionAssignment_10 ) )
 			{
-			// InternalDsl.g:3031:2: ( ( rule__StrengthWeakStatement__PostConditionAssignment_10 ) )
-			// InternalDsl.g:3032:2: ( rule__StrengthWeakStatement__PostConditionAssignment_10 )
+			// InternalDsl.g:3031:2: ( ( rule__StrengthWeakStatement__StrongPostConditionAssignment_10 ) )
+			// InternalDsl.g:3032:2: ( rule__StrengthWeakStatement__StrongPostConditionAssignment_10 )
 			{
-			 before(grammarAccess.getStrengthWeakStatementAccess().getPostConditionAssignment_10()); 
-			// InternalDsl.g:3033:2: ( rule__StrengthWeakStatement__PostConditionAssignment_10 )
-			// InternalDsl.g:3033:3: rule__StrengthWeakStatement__PostConditionAssignment_10
+			 before(grammarAccess.getStrengthWeakStatementAccess().getStrongPostConditionAssignment_10()); 
+			// InternalDsl.g:3033:2: ( rule__StrengthWeakStatement__StrongPostConditionAssignment_10 )
+			// InternalDsl.g:3033:3: rule__StrengthWeakStatement__StrongPostConditionAssignment_10
 			{
 			pushFollow(FOLLOW_2);
-			rule__StrengthWeakStatement__PostConditionAssignment_10();
+			rule__StrengthWeakStatement__StrongPostConditionAssignment_10();
 			state._fsp--;
 
 			}
 
-			 after(grammarAccess.getStrengthWeakStatementAccess().getPostConditionAssignment_10()); 
+			 after(grammarAccess.getStrengthWeakStatementAccess().getStrongPostConditionAssignment_10()); 
 			}
 
 			}
@@ -18003,9 +18003,9 @@ public class InternalDslParser extends AbstractInternalContentAssistParser {
 
 
 
-	// $ANTLR start "rule__StrengthWeakStatement__PreConditionAssignment_3"
-	// InternalDsl.g:6259:1: rule__StrengthWeakStatement__PreConditionAssignment_3 : ( ruleCondition ) ;
-	public final void rule__StrengthWeakStatement__PreConditionAssignment_3() throws RecognitionException {
+	// $ANTLR start "rule__StrengthWeakStatement__WeakPreConditionAssignment_3"
+	// InternalDsl.g:6259:1: rule__StrengthWeakStatement__WeakPreConditionAssignment_3 : ( ruleCondition ) ;
+	public final void rule__StrengthWeakStatement__WeakPreConditionAssignment_3() throws RecognitionException {
 
 				int stackSize = keepStackSize();
 			
@@ -18016,12 +18016,12 @@ public class InternalDslParser extends AbstractInternalContentAssistParser {
 			// InternalDsl.g:6264:2: ( ruleCondition )
 			// InternalDsl.g:6265:3: ruleCondition
 			{
-			 before(grammarAccess.getStrengthWeakStatementAccess().getPreConditionConditionParserRuleCall_3_0()); 
+			 before(grammarAccess.getStrengthWeakStatementAccess().getWeakPreConditionConditionParserRuleCall_3_0()); 
 			pushFollow(FOLLOW_2);
 			ruleCondition();
 			state._fsp--;
 
-			 after(grammarAccess.getStrengthWeakStatementAccess().getPreConditionConditionParserRuleCall_3_0()); 
+			 after(grammarAccess.getStrengthWeakStatementAccess().getWeakPreConditionConditionParserRuleCall_3_0()); 
 			}
 
 			}
@@ -18038,7 +18038,7 @@ public class InternalDslParser extends AbstractInternalContentAssistParser {
 
 		}
 	}
-	// $ANTLR end "rule__StrengthWeakStatement__PreConditionAssignment_3"
+	// $ANTLR end "rule__StrengthWeakStatement__WeakPreConditionAssignment_3"
 
 
 
@@ -18081,9 +18081,9 @@ public class InternalDslParser extends AbstractInternalContentAssistParser {
 
 
 
-	// $ANTLR start "rule__StrengthWeakStatement__PostConditionAssignment_10"
-	// InternalDsl.g:6289:1: rule__StrengthWeakStatement__PostConditionAssignment_10 : ( ruleCondition ) ;
-	public final void rule__StrengthWeakStatement__PostConditionAssignment_10() throws RecognitionException {
+	// $ANTLR start "rule__StrengthWeakStatement__StrongPostConditionAssignment_10"
+	// InternalDsl.g:6289:1: rule__StrengthWeakStatement__StrongPostConditionAssignment_10 : ( ruleCondition ) ;
+	public final void rule__StrengthWeakStatement__StrongPostConditionAssignment_10() throws RecognitionException {
 
 				int stackSize = keepStackSize();
 			
@@ -18094,12 +18094,12 @@ public class InternalDslParser extends AbstractInternalContentAssistParser {
 			// InternalDsl.g:6294:2: ( ruleCondition )
 			// InternalDsl.g:6295:3: ruleCondition
 			{
-			 before(grammarAccess.getStrengthWeakStatementAccess().getPostConditionConditionParserRuleCall_10_0()); 
+			 before(grammarAccess.getStrengthWeakStatementAccess().getStrongPostConditionConditionParserRuleCall_10_0()); 
 			pushFollow(FOLLOW_2);
 			ruleCondition();
 			state._fsp--;
 
-			 after(grammarAccess.getStrengthWeakStatementAccess().getPostConditionConditionParserRuleCall_10_0()); 
+			 after(grammarAccess.getStrengthWeakStatementAccess().getStrongPostConditionConditionParserRuleCall_10_0()); 
 			}
 
 			}
@@ -18116,7 +18116,7 @@ public class InternalDslParser extends AbstractInternalContentAssistParser {
 
 		}
 	}
-	// $ANTLR end "rule__StrengthWeakStatement__PostConditionAssignment_10"
+	// $ANTLR end "rule__StrengthWeakStatement__StrongPostConditionAssignment_10"
 
 
 

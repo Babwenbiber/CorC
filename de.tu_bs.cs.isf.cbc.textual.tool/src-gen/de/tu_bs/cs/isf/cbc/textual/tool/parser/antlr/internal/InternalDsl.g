@@ -1057,17 +1057,17 @@ ruleStrengthWeakStatement returns [EObject current=null]
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getStrengthWeakStatementAccess().getPreConditionConditionParserRuleCall_3_0());
+					newCompositeNode(grammarAccess.getStrengthWeakStatementAccess().getWeakPreConditionConditionParserRuleCall_3_0());
 				}
-				lv_preCondition_3_0=ruleCondition
+				lv_weakPreCondition_3_0=ruleCondition
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getStrengthWeakStatementRule());
 					}
 					set(
 						$current,
-						"preCondition",
-						lv_preCondition_3_0,
+						"weakPreCondition",
+						lv_weakPreCondition_3_0,
 						"de.tu_bs.cs.isf.cbc.textual.tool.Dsl.Condition");
 					afterParserOrEnumRuleCall();
 				}
@@ -1115,17 +1115,17 @@ ruleStrengthWeakStatement returns [EObject current=null]
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getStrengthWeakStatementAccess().getPostConditionConditionParserRuleCall_10_0());
+					newCompositeNode(grammarAccess.getStrengthWeakStatementAccess().getStrongPostConditionConditionParserRuleCall_10_0());
 				}
-				lv_postCondition_10_0=ruleCondition
+				lv_strongPostCondition_10_0=ruleCondition
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getStrengthWeakStatementRule());
 					}
 					set(
 						$current,
-						"postCondition",
-						lv_postCondition_10_0,
+						"strongPostCondition",
+						lv_strongPostCondition_10_0,
 						"de.tu_bs.cs.isf.cbc.textual.tool.Dsl.Condition");
 					afterParserOrEnumRuleCall();
 				}

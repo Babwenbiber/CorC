@@ -66,9 +66,9 @@ ReturnStatement returns ReturnStatement:
 		
 StrengthWeakStatement returns StrengthWeakStatement:
 	{StrengthWeakStatement}
-	'pre:' '{' preCondition=Condition '}'
+	'pre:' '{' weakPreCondition=Condition '}'
 		'{' name=CodeString '}'
-		'post:' '{' postCondition=Condition '}'
+		'post:' '{' strongPostCondition=Condition '}'
 ;
 		
 

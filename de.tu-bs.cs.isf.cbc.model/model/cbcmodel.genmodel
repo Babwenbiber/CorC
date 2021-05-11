@@ -123,7 +123,11 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//CbCProblem/renaming"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//CbCProblem/refinements"/>
     </genClasses>
-    <genClasses ecoreClass="cbcmodel.ecore#//StrengthWeakStatement"/>
+    <genClasses ecoreClass="cbcmodel.ecore#//StrengthWeakStatement">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//StrengthWeakStatement/weakPreCondition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//StrengthWeakStatement/strongPostCondition"/>
+    </genClasses>
+    
     <genClasses ecoreClass="cbcmodel.ecore#//MethodRefinements">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//MethodRefinements/productvariants"/>
     </genClasses>
