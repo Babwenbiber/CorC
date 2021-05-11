@@ -14,6 +14,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.Renaming;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.AbstractStatementImpl;
 import de.tu_bs.cs.isf.cbc.tool.helper.UpdateConditionsOfChildren;
 import de.tu_bs.cs.isf.cbc.util.Console;
+import de.tu_bs.cs.isf.cbc.util.FilenamePrefix;
 import de.tu_bs.cs.isf.cbc.util.ProveWithKey;
 import de.tu_bs.cs.isf.taxonomy.graphiti.features.MyAbstractAsynchronousCustomFeature;
 import de.tu_bs.cs.isf.toolkit.support.compare.CompareMethodBodies;
@@ -88,7 +89,7 @@ public class GenerateIntermediateConditionFeature2 extends MyAbstractAsynchronou
 				String weakestPre = "";
 
 				if (CompareMethodBodies.readAndTestMethodBodyWithJaMoPP2(statement.getName())) {
-					weakestPre = ProveWithKey.proveUseWeakestPreWithKey(statement, vars, conds, renaming, getDiagram().eResource().getURI(), monitor);
+					weakestPre = ProveWithKey.proveUseWeakestPreWithKey(statement, vars, conds, renaming, getDiagram().eResource().getURI(), monitor, FilenamePrefix.COMPOSITION);
 				} else {
 					Console.println("Statement is not in correct format.");
 				}

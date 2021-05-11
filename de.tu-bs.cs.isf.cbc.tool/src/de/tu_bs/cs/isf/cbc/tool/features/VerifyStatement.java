@@ -18,6 +18,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.ReturnStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.SkipStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.AbstractStatementImpl;
 import de.tu_bs.cs.isf.cbc.util.Console;
+import de.tu_bs.cs.isf.cbc.util.FilenamePrefix;
 import de.tu_bs.cs.isf.cbc.util.ProveWithKey;
 import de.tu_bs.cs.isf.taxonomy.graphiti.features.MyAbstractAsynchronousCustomFeature;
 import de.tu_bs.cs.isf.toolkit.support.compare.CompareMethodBodies;
@@ -99,7 +100,7 @@ public class VerifyStatement extends MyAbstractAsynchronousCustomFeature {
 
 				if (CompareMethodBodies.readAndTestMethodBodyWithJaMoPP2(statement.getName())) {
 					prove = ProveWithKey.proveStatementWithKey(statement, vars, conds, renaming, variants,
-							getDiagram().eResource().getURI(), monitor);
+							getDiagram().eResource().getURI(), monitor, FilenamePrefix.STATEMENT);
 				} else {
 					Console.println("Statement is not in correct format.");
 				}

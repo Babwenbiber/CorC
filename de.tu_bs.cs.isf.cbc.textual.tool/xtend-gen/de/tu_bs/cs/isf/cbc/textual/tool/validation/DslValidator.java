@@ -10,6 +10,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.CbCFormula;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbcmodelPackage;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Condition;
 import de.tu_bs.cs.isf.cbc.cbcmodel.MethodStatement;
+import de.tu_bs.cs.isf.cbc.cbcmodel.RepetitionStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.ReturnStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.SelectionStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.SkipStatement;
@@ -19,6 +20,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.impl.AbstractStatementImpl;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.ReturnStatementImpl;
 import de.tu_bs.cs.isf.cbc.textual.tool.validation.AbstractDslValidator;
 import de.tu_bs.cs.isf.cbc.textual.tool.validation.TraverseFormula;
+import de.tu_bs.cs.isf.cbc.util.FilenamePrefix;
 import de.tu_bs.cs.isf.cbc.util.ProveWithKey;
 import de.tu_bs.cs.isf.toolkit.support.compare.CompareMethodBodies;
 import org.eclipse.xtext.validation.Check;
@@ -88,7 +90,7 @@ public class DslValidator extends AbstractDslValidator {
       TraverseFormula traverser = new TraverseFormula();
       traverser.traverseFormula(formula, statement);
       int numberFile = traverser.foundFile;
-      final boolean closed = ProveWithKey.checkFileIsProven(statement.eResource().getURI(), numberFile);
+      final boolean closed = ProveWithKey.checkFileIsProven(statement.eResource().getURI(), numberFile, FilenamePrefix.STATEMENT);
       if ((!closed)) {
         this.info("Statement is not proved.", 
           CbcmodelPackage.Literals.ABSTRACT_STATEMENT__PROVEN, 
@@ -103,13 +105,14 @@ public class DslValidator extends AbstractDslValidator {
     TraverseFormula traverser = new TraverseFormula();
     traverser.traverseFormula(formula, statement);
     int numberFile = traverser.foundFile;
-    final boolean closed = ProveWithKey.checkFileIsProven(statement.eResource().getURI(), numberFile);
+    final boolean closed = ProveWithKey.checkFileIsProven(statement.eResource().getURI(), numberFile, FilenamePrefix.RETURN);
     if ((!closed)) {
       this.info("ReturnStatement is not proved.", 
         CbcmodelPackage.Literals.ABSTRACT_STATEMENT__PROVEN, 
         DslValidator.NOT_PROVED);
     }
   }
+    
   
   @Check(CheckType.EXPENSIVE)
   public void checkProveOfStrengthWeakStatement(final StrengthWeakStatement statement) {
@@ -117,9 +120,9 @@ public class DslValidator extends AbstractDslValidator {
     TraverseFormula traverser = new TraverseFormula();
     traverser.traverseFormula(formula, statement);
     int numberFile = traverser.foundFile;
-    final boolean closedPre = ProveWithKey.checkFileIsProven(statement.eResource().getURI(), numberFile);
-    final boolean closedPost = ProveWithKey.checkFileIsProven(statement.eResource().getURI(), (numberFile + 1));
-    final boolean closedStd = ProveWithKey.checkFileIsProven(statement.eResource().getURI(), (numberFile + 2));
+    final boolean closedPre = ProveWithKey.checkFileIsProven(statement.eResource().getURI(), numberFile, FilenamePrefix.PRE);
+    final boolean closedPost = ProveWithKey.checkFileIsProven(statement.eResource().getURI(), (numberFile + 1), FilenamePrefix.POST);
+    final boolean closedStd = ProveWithKey.checkFileIsProven(statement.eResource().getURI(), (numberFile + 2), FilenamePrefix.STATEMENT);
     if ((!closedPre)) {
       this.info("PreCondition of Statement is not proved.", 
         CbcmodelPackage.Literals.ABSTRACT_STATEMENT__PROVEN, 
@@ -143,8 +146,8 @@ public class DslValidator extends AbstractDslValidator {
     TraverseFormula traverser = new TraverseFormula();
     traverser.traverseFormula(formula, statement);
     int numberFile = traverser.foundFile;
-    final boolean closedPre = ProveWithKey.checkFileIsProven(statement.eResource().getURI(), numberFile);
-    final boolean closedPost = ProveWithKey.checkFileIsProven(statement.eResource().getURI(), (numberFile + 1));
+    final boolean closedPre = ProveWithKey.checkFileIsProven(statement.eResource().getURI(), numberFile, FilenamePrefix.METHOD);
+    final boolean closedPost = ProveWithKey.checkFileIsProven(statement.eResource().getURI(), (numberFile + 1), FilenamePrefix.METHOD);
     if ((!closedPre)) {
       this.info("PreCondition of MethodStatement is not proved.", 
         CbcmodelPackage.Literals.ABSTRACT_STATEMENT__PROVEN, 
@@ -163,7 +166,7 @@ public class DslValidator extends AbstractDslValidator {
     TraverseFormula traverser = new TraverseFormula();
     traverser.traverseFormula(formula, statement);
     int numberFile = traverser.foundFile;
-    final boolean closed = ProveWithKey.checkFileIsProven(statement.eResource().getURI(), numberFile);
+    final boolean closed = ProveWithKey.checkFileIsProven(statement.eResource().getURI(), numberFile, FilenamePrefix.SKIP);
     if ((!closed)) {
       this.info("SkipStatement is not proved.", 
         CbcmodelPackage.Literals.ABSTRACT_STATEMENT__PROVEN, 
@@ -177,9 +180,9 @@ public class DslValidator extends AbstractDslValidator {
     TraverseFormula traverser = new TraverseFormula();
     traverser.traverseFormula(formula, statement);
     int numberFile = traverser.foundFile;
-    boolean closedPre = ProveWithKey.checkFileIsProven(statement.eResource().getURI(), numberFile);
-    boolean closedPost = ProveWithKey.checkFileIsProven(statement.eResource().getURI(), (numberFile + 1));
-    boolean closedVariant = ProveWithKey.checkFileIsProven(statement.eResource().getURI(), (numberFile + 2));
+    boolean closedPre = ProveWithKey.checkFileIsProven(statement.eResource().getURI(), numberFile, FilenamePrefix.REPETITION + FilenamePrefix.PRE);
+    boolean closedPost = ProveWithKey.checkFileIsProven(statement.eResource().getURI(), (numberFile + 1), FilenamePrefix.REPETITION  + FilenamePrefix.POST) ;
+    boolean closedVariant = ProveWithKey.checkFileIsProven(statement.eResource().getURI(), (numberFile + 2), FilenamePrefix.REPETITION + FilenamePrefix.VARIANT2);
     if ((!closedPre)) {
       this.info("PreCondition of RepetitionStatement is not proved.", 
         CbcmodelPackage.Literals.SMALL_REPETITION_STATEMENT__PRE_PROVEN, 
@@ -203,7 +206,7 @@ public class DslValidator extends AbstractDslValidator {
     TraverseFormula traverser = new TraverseFormula();
     traverser.traverseFormula(formula, statement);
     int numberFile = traverser.foundFile;
-    boolean closed = ProveWithKey.checkFileIsProven(statement.eResource().getURI(), numberFile);
+    boolean closed = ProveWithKey.checkFileIsProven(statement.eResource().getURI(), numberFile, FilenamePrefix.SELECTION);
     if ((!closed)) {
       this.info("PreCondition of SelectionStatement is not proved.", 
         CbcmodelPackage.Literals.SELECTION_STATEMENT__PRE_PROVE, 

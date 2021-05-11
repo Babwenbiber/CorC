@@ -12,6 +12,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariables;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Renaming;
 import de.tu_bs.cs.isf.cbc.cbcmodel.SelectionStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.SelectionStatementImpl;
+import de.tu_bs.cs.isf.cbc.util.FilenamePrefix;
 import de.tu_bs.cs.isf.cbc.util.ProveWithKey;
 import de.tu_bs.cs.isf.taxonomy.graphiti.features.MyAbstractAsynchronousCustomFeature;
 
@@ -79,7 +80,8 @@ public class VerifyPreSelectionStatement extends MyAbstractAsynchronousCustomFea
 					}
 				}
 				boolean prove = false;
-				prove = ProveWithKey.provePreSelWithKey(statement.getGuards(), parent.getPreCondition(), vars, conds, renaming, getDiagram().eResource().getURI(), monitor);
+				prove = ProveWithKey.provePreSelWithKey(statement.getGuards(), parent.getPreCondition(), vars,
+						conds, renaming, getDiagram().eResource().getURI(), monitor, FilenamePrefix.SELECTION);
 				if (prove) {
 					statement.setPreProve(true);
 				} else {

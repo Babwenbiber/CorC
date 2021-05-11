@@ -84,8 +84,8 @@ public class FileUtil {
 		FileUtil.applicationUri = applicationUri;
 	}
 
-	public static File writeFile(String problem, String location, int numberFile, boolean override) {
-		File keyFile = new File(location + "/prove" + numberFile + ".key");
+	public static File writeFile(String problem, String location, int numberFile, boolean override, String proveName) {
+		File keyFile = new File(location + "/prove" + numberFile + proveName + ".key");
 		File keyHelperFile = new File(location + "/helper.key");
 
 		if (!keyFile.exists() || override) {
@@ -114,7 +114,7 @@ public class FileUtil {
 		}
 		return null;
 	}
-
+	
 	public static IProject getProject(URI uri) {
 		uri = uri.trimFragment();
 		String uriPath = uri.toPlatformString(true);

@@ -6,6 +6,7 @@ import org.eclipse.graphiti.features.context.ICustomContext;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.mm.pictograms.Shape;
 
+import de.tu_bs.cs.isf.cbc.util.FilenamePrefix;
 import de.tu_bs.cs.isf.cbc.util.ProveWithKey;
 import de.tu_bs.cs.isf.taxonomy.model.taxonomy.Algorithm;
 import de.tu_bs.cs.isf.taxonomy.model.taxonomy.GlobalConditions;
@@ -92,7 +93,8 @@ public class VerifyPostImplPost extends MyAbstractAsynchronousCustomFeature {
 					parentMethod = firstMethod;
 					childMethod = secondMethod;
 				}
-				ProveWithKey.provePostImplPostWithKey(parentMethod.getPostCondition(), childMethod.getPostCondition(), vars, conds, renaming, getDiagram().eResource().getURI(), monitor);
+				ProveWithKey.provePostImplPostWithKey(parentMethod.getPostCondition(), childMethod.getPostCondition(), vars, 
+						conds, renaming, getDiagram().eResource().getURI(), monitor, FilenamePrefix.POST_IMPL );
 			} else if (first instanceof Algorithm) {
 				Algorithm firstAlgo = (Algorithm) first;
 				Algorithm secondAlgo = (Algorithm) second;
@@ -109,7 +111,8 @@ public class VerifyPostImplPost extends MyAbstractAsynchronousCustomFeature {
 					monitor.done();
 					return;
 				}
-				ProveWithKey.provePostImplPostWithKey(parentAlgo.getPostCondition(), childAlgo.getPostCondition(), vars, conds, renaming, getDiagram().eResource().getURI(), monitor);
+				ProveWithKey.provePostImplPostWithKey(parentAlgo.getPostCondition(), childAlgo.getPostCondition(), vars,
+						conds, renaming, getDiagram().eResource().getURI(), monitor, FilenamePrefix.POST_IMPL);
 			}
 		}
 		monitor.done();

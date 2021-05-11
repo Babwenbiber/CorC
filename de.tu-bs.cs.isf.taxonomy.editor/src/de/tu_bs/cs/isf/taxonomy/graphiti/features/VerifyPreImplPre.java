@@ -6,6 +6,7 @@ import org.eclipse.graphiti.features.context.ICustomContext;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.mm.pictograms.Shape;
 
+import de.tu_bs.cs.isf.cbc.util.FilenamePrefix;
 import de.tu_bs.cs.isf.cbc.util.ProveWithKey;
 import de.tu_bs.cs.isf.taxonomy.model.taxonomy.Algorithm;
 import de.tu_bs.cs.isf.taxonomy.model.taxonomy.GlobalConditions;
@@ -92,7 +93,8 @@ public class VerifyPreImplPre extends MyAbstractAsynchronousCustomFeature {
 					parentMethod = firstMethod;
 					childMethod = secondMethod;
 				}
-				ProveWithKey.provePreImplPreWithKey(parentMethod.getPreCondition(), childMethod.getPreCondition(), vars, conds, renaming, getDiagram().eResource().getURI(), monitor);
+				ProveWithKey.provePreImplPreWithKey(parentMethod.getPreCondition(), childMethod.getPreCondition(), vars,
+						conds, renaming, getDiagram().eResource().getURI(), monitor, FilenamePrefix.PRE_IMPL);
 			} else if (first instanceof Algorithm) {
 				Algorithm firstAlgo = (Algorithm) first;
 				Algorithm secondAlgo = (Algorithm) second;
@@ -109,7 +111,8 @@ public class VerifyPreImplPre extends MyAbstractAsynchronousCustomFeature {
 					monitor.done();
 					return;
 				}
-				ProveWithKey.provePreImplPreWithKey(parentAlgo.getPreCondition(), childAlgo.getPreCondition(), vars, conds, renaming, getDiagram().eResource().getURI(), monitor);
+				ProveWithKey.provePreImplPreWithKey(parentAlgo.getPreCondition(), childAlgo.getPreCondition(), vars,
+						conds, renaming, getDiagram().eResource().getURI(), monitor, FilenamePrefix.PRE_IMPL);
 			}
 		}
 		monitor.done();
