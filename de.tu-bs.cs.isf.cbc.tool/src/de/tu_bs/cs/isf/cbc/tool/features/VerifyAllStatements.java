@@ -14,6 +14,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.Composition3Statement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CompositionStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Condition;
 import de.tu_bs.cs.isf.cbc.cbcmodel.GlobalConditions;
+import de.tu_bs.cs.isf.cbc.cbcmodel.JavaStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariables;
 import de.tu_bs.cs.isf.cbc.cbcmodel.ProductVariant;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Renaming;
@@ -191,7 +192,26 @@ public class VerifyAllStatements extends MyAbstractAsynchronousCustomFeature {
 		if (!statement.isProven()) {
 			boolean prove = false;
 			EList<ProductVariant> variants = null;
-			prove = ProveWithKey.proveStatementWithKey(statement, vars, conds, renaming, variants, uri, monitor, "abstract");
+			prove = ProveWithKey.proveStatementWithKey(statement, vars, conds, renaming, variants, uri, monitor, FilenamePrefix.ABSTRACT_STATEMENT);
+			if (prove) {
+				statement.setProven(true);
+			} else {
+				statement.setProven(false);
+			}
+	    	return prove;
+		} else {
+			Console.println("Abstract statement: " + statement.getName() +" already true");
+			return true;
+		}
+    }
+	
+
+	private static boolean proveJavaStatement(JavaStatement statement, JavaVariables vars, GlobalConditions conds, 
+			Renaming renaming, URI uri, IProgressMonitor monitor) {
+		if (!statement.isProven()) {
+			boolean prove = false;
+			EList<ProductVariant> variants = null;
+			prove = ProveWithKey.proveJavaStatementWithKey(statement, vars, conds, renaming, variants, uri, monitor, FilenamePrefix.JAVA_STATEMENT );
 			if (prove) {
 				statement.setProven(true);
 			} else {
@@ -233,11 +253,9 @@ public class VerifyAllStatements extends MyAbstractAsynchronousCustomFeature {
     private static boolean proveBlockStatement(AbstractStatement statement, JavaVariables vars, GlobalConditions conds, Renaming renaming, URI uri, IProgressMonitor monitor) {
     	boolean prove = false;
     	BlockStatement blockStatement = (BlockStatement) statement;
-    	if (blockStatement.getJavaStatement().getRefinement() != null) {
-    		prove = proveChildStatement(blockStatement.getJavaStatement().getRefinement(), vars, conds, renaming, uri, monitor);
-    	} else {
-    		prove = proveChildStatement(blockStatement.getJavaStatement(), vars, conds, renaming, uri, monitor);
-    	}
+    	
+		prove = proveJavaStatement(blockStatement.getJavaStatement(), vars, conds, renaming, uri, monitor);
+    	
     	
     	if (prove && true)  {
     		statement.setProven(true);

@@ -349,11 +349,9 @@ public class ConstructCodeBlock {
 	private static String constructBlock(BlockStatement statement) {
 		StringBuffer buffer = new StringBuffer();
 
-		if (statement.getJavaStatement().getRefinement() != null) {
-			buffer.append(constructCodeBlockOfChildStatement(statement.getJavaStatement().getRefinement()));
-		} else {
-			buffer.append(constructCodeBlockOfChildStatement(statement.getJavaStatement()));
-		}
+		
+		buffer.append(statement.getJavaStatement());
+		
 
 		for (int i = 0; i < positionIndex; i++) {
 			buffer.append("\t");
@@ -364,11 +362,9 @@ public class ConstructCodeBlock {
 
 	private static String traverseBlock(BlockStatement statement) {
 		StringBuffer buffer = new StringBuffer();
-		if (statement.getJavaStatement().getRefinement() != null) {
-			buffer.append(constructMethodStubOfChildStatement(statement.getJavaStatement().getRefinement()));
-		} else {
-			buffer.append(constructMethodStubOfChildStatement(statement.getJavaStatement()));
-		}
+
+		buffer.append(statement.getJavaStatement());
+		
 
 		return buffer.toString();
 	}

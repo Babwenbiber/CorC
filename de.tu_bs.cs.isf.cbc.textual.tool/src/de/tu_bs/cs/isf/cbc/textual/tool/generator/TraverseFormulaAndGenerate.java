@@ -20,6 +20,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.CbcmodelFactory;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CompositionStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Condition;
 import de.tu_bs.cs.isf.cbc.cbcmodel.GlobalConditions;
+import de.tu_bs.cs.isf.cbc.cbcmodel.JavaStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariable;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariables;
 import de.tu_bs.cs.isf.cbc.cbcmodel.MethodStatement;
@@ -103,16 +104,21 @@ public class TraverseFormulaAndGenerate {
 		} else if (statement instanceof ReturnStatement) {
 			ProveWithKey.createProveStatementWithKey(statement, vars, conds, renaming, null, uri, numberFile++, false, FilenamePrefix.RETURN);
 		} else if (statement instanceof StrengthWeakStatement) {
-
+			StrengthWeakStatement swStatement = (StrengthWeakStatement)statement;
 			ProveWithKey.createProvePreImplPreWithKey(statement.getPreCondition(), 
-					((StrengthWeakStatement)statement).getWeakPreCondition(), vars, conds, renaming, uri, numberFile++, false, FilenamePrefix.PRE_IMPL);
+					swStatement.getWeakPreCondition(), vars, conds, renaming, uri, numberFile++, false, FilenamePrefix.PRE_IMPL);
 			ProveWithKey.createProvePostImplPostWithKey(statement.getPostCondition(),
-					((StrengthWeakStatement)statement).getStrongPostCondition(), vars, conds, renaming, uri,
+					swStatement.getStrongPostCondition(), vars, conds, renaming, uri,
 					numberFile++, false, FilenamePrefix.POST_IMPL);
 			ProveWithKey.createProveStatementWithKey(statement, vars, conds, renaming, null, uri, numberFile++, false, FilenamePrefix.STATEMENT);
 		
 		} else if (statement instanceof BlockStatement) {
+	
 			BlockStatement blockStatement = (BlockStatement) statement;
+			ProveWithKey.createProveRequiresWithKey(statement.getPreCondition(), 
+					blockStatement.getJmlAnnotation().getRequires(), vars, conds, renaming, uri, numberFile++, false, FilenamePrefix.PRE_IMPL);
+			ProveWithKey.createProveEnsuresWithKey(statement.getPostCondition(),
+					blockStatement.getJmlAnnotation().getEnsures(), vars, conds, renaming, uri, numberFile++, false, FilenamePrefix.POST_IMPL);
 			traverseBlockStatement(blockStatement);
 		}
 	}
@@ -170,14 +176,14 @@ public class TraverseFormulaAndGenerate {
 	}
 
 	private void traverseBlockStatement(BlockStatement blockStatement) {
-		AbstractStatement statement = blockStatement.getJavaStatement();
+		JavaStatement statement = blockStatement.getJavaStatement();
 
 		statement.setPreCondition(factory.createCondition());
-		statement.getPreCondition().setName(blockStatement.getPreCondition().getName());
+		statement.getPreCondition().setName(blockStatement.getJmlAnnotation().getRequires());
 		statement.setPostCondition(factory.createCondition());
-		statement.getPostCondition().setName(blockStatement.getPostCondition().getName());
+		statement.getPostCondition().setName(blockStatement.getJmlAnnotation().getEnsures());
 		
-		castStatementAndTraverse(statement);
+		ProveWithKey.createProveJavaStatementWithKey(statement, vars, conds, renaming, null, uri, numberFile++, false, FilenamePrefix.JAVA_STATEMENT);
 	}
 	
 	private Collection<CbCFormula> getLinkedFormulas(AbstractStatement statement) {

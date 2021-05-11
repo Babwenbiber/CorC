@@ -40,7 +40,7 @@ public class TraverseFormula {
 			numberFile++;
 		} else if(statement instanceof BlockStatement) {
 			if(searchObject.equals(statement)) foundFile = numberFile;
-			numberFile++;
+			numberFile += 3;
 		} else if(statement instanceof MethodStatement) {
 			if(searchObject.equals(statement)) foundFile = numberFile;
 			numberFile += 2;

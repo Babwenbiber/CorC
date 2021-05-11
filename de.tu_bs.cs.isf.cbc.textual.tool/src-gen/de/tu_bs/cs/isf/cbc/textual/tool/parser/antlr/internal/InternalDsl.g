@@ -1325,6 +1325,42 @@ ruleCompositionStatement returns [EObject current=null]
 	)
 ;
 
+// Entry rule entryRuleJavaStatement
+entryRuleJavaStatement returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getJavaStatementRule()); }
+	iv_ruleJavaStatement=ruleJavaStatement
+	{ $current=$iv_ruleJavaStatement.current; }
+	EOF;
+
+// Rule JavaStatement
+ruleJavaStatement returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		(
+			{
+				newCompositeNode(grammarAccess.getJavaStatementAccess().getNameEStringParserRuleCall_0());
+			}
+			lv_name_0_0=ruleEString
+			{
+				if ($current==null) {
+					$current = createModelElementForParent(grammarAccess.getJavaStatementRule());
+				}
+				set(
+					$current,
+					"name",
+					lv_name_0_0,
+					"de.tu_bs.cs.isf.cbc.textual.tool.Dsl.EString");
+				afterParserOrEnumRuleCall();
+			}
+		)
+	)
+;
+
 // Entry rule entryRuleJMLAnnotation
 entryRuleJMLAnnotation returns [EObject current=null]:
 	{ newCompositeNode(grammarAccess.getJMLAnnotationRule()); }
@@ -1494,9 +1530,9 @@ ruleBlockStatement returns [EObject current=null]
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getBlockStatementAccess().getJavaStatementAbstractStatementParserRuleCall_5_0());
+					newCompositeNode(grammarAccess.getBlockStatementAccess().getJavaStatementJavaStatementParserRuleCall_5_0());
 				}
-				lv_javaStatement_5_0=ruleAbstractStatement
+				lv_javaStatement_5_0=ruleJavaStatement
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getBlockStatementRule());
@@ -1505,7 +1541,7 @@ ruleBlockStatement returns [EObject current=null]
 						$current,
 						"javaStatement",
 						lv_javaStatement_5_0,
-						"de.tu_bs.cs.isf.cbc.textual.tool.Dsl.AbstractStatement");
+						"de.tu_bs.cs.isf.cbc.textual.tool.Dsl.JavaStatement");
 					afterParserOrEnumRuleCall();
 				}
 			)

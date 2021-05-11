@@ -33,6 +33,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.CbCFormula;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CompositionTechnique;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Condition;
 import de.tu_bs.cs.isf.cbc.cbcmodel.GlobalConditions;
+import de.tu_bs.cs.isf.cbc.cbcmodel.JavaStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariable;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariables;
 import de.tu_bs.cs.isf.cbc.cbcmodel.ProductVariant;
@@ -73,6 +74,29 @@ public class ProveWithKey {
 				File location = createProveStatementWithKey(statement, vars, conds, renaming, refinements, uri, i,
 						true, name);
 				Console.println("Verify Pre -> {Statement} Post");
+
+				if (!proveWithKey(location, monitor)) {
+					proven = false;
+				}
+			}
+			return proven;
+		}
+	}
+	
+	public static boolean proveJavaStatementWithKey(JavaStatement statement, JavaVariables vars, GlobalConditions conds,
+			Renaming renaming, EList<ProductVariant> variants, URI uri, IProgressMonitor monitor, String name) {
+		if (variants == null || variants.size() == 0) {
+			File location = createProveJavaStatementWithKey(statement, vars, conds, renaming, null, uri, 0, true, name);
+			Console.println("Verify Pre -> {JavaStatement} Post");
+			return proveWithKey(location, monitor);
+		} else {
+			boolean proven = true;
+			for (int i = 0; i < variants.size(); i++) {
+				ProductVariant variant = (ProductVariant) variants.get(i);
+				List<String> refinements = Lists.newArrayList(variant.getRefinementChain().split(","));
+				File location = createProveJavaStatementWithKey(statement, vars, conds, renaming, refinements, uri, i,
+						true, name);
+				Console.println("Verify Pre -> {JavaStatement} Post");
 
 				if (!proveWithKey(location, monitor)) {
 					proven = false;
@@ -139,6 +163,93 @@ public class ProveWithKey {
 			post = composeContractForCbCDiagram(formula.getCompositionTechnique(), refinements, post,
 					Parser.KEYWORD_JML_POST, returnVariable, vars);
 		}
+
+		List<String> unmodifiedVariables = Parser.getUnmodifiedVars(modifiables, vars.getVariables());
+
+		if (pre == null || pre.length() == 0) {
+			pre = "true";
+		}
+		if (post == null || post.length() == 0) {
+			post = "true";
+		}
+
+		if (renaming != null) {
+			globalConditionsString = useRenamingCondition(renaming, globalConditionsString);
+			pre = useRenamingCondition(renaming, pre);
+			post = useRenamingCondition(renaming, post);
+			stat = useRenamingStatement(renaming, stat);
+		}
+
+		for (String var : unmodifiedVariables) {
+			String varName = var.substring(var.indexOf(" ") + 1);
+			programVariablesString += var + "_old; ";
+			assignmentString += "||" + varName + "_old:=" + varName;
+			post += "&" + varName + "=" + varName + "_old";
+			// if variable is an Array add <created> condition for key
+			if (var.contains("[]")) {
+				conditionArraysCreated += " & " + varName + "_old.<created>=TRUE";
+			}
+		}
+
+		if (refinements != null && refinements.size() > 0 && stat.contains("original(")) {
+			String[] splittedRefinement = refinements.get(0).split("\\.");
+			if (Character.isLowerCase(splittedRefinement[0].charAt(0))) {
+				stat = stat.replaceFirst("original", splittedRefinement[0] + ".generated_" + splittedRefinement[1]);
+			} else {
+				String className = FileUtil.generateComposedClass(thisProject, refinements, vars);
+				stat = stat.replaceFirst("original", className + ".generated_" + splittedRefinement[1]);
+			}
+		}
+
+		String problem = "\\javaSource \"" + thisProject.getLocation() + "/\";" + "\\include \"helper.key\";"
+				+ "\\programVariables {" + programVariablesString + " Heap heapAtPre;}" + "\\problem {(" + pre + " "
+				+ globalConditionsString + conditionArraysCreated + " & wellFormed(heap) ) -> {heapAtPre := heap"
+				+ assignmentString + "} \\<{" + stat + "}\\> (" + post + ")}";
+
+		String location = thisProject.getLocation() + "/src/prove" + uri.trimFileExtension().lastSegment();
+		File keyFile = FileUtil.writeFile(problem, location, numberFile, override, name);
+		return keyFile;
+	}
+	
+	public static File createProveJavaStatementWithKey(JavaStatement statement, JavaVariables vars,
+			GlobalConditions conds, Renaming renaming, List<String> refinements, URI uri, int numberFile,
+			boolean override, String name) {
+		FileUtil.setApplicationUri(uri);
+		String programVariablesString = "";
+		String conditionArraysCreated = "";
+		JavaVariable returnVariable = null;
+		if (vars != null) {
+			for (JavaVariable var : vars.getVariables()) {
+				programVariablesString += var.getName() + "; ";
+				// if variable is an Array add <created> condition for key
+				if (var.getName().contains("[]")) {
+					String varName = var.getName().substring(var.getName().indexOf(" ") + 1);
+					conditionArraysCreated += " & " + varName + ".<created>=TRUE";
+				}
+				if (var.getKind() == VariableKind.RETURN) {
+					returnVariable = var;
+				}
+
+			}
+		}
+
+		String globalConditionsString = "";
+		if (conds != null) {
+			for (Condition cond : conds.getConditions()) {
+				if (!cond.getName().isEmpty()) {
+					globalConditionsString += " & " + cond.getName();
+				}
+			}
+		}
+
+		IProject thisProject = FileUtil.getProject(uri);
+
+		String assignmentString = "";
+		
+		String pre = Parser.getConditionFromCondition(statement.getPreCondition().getName());
+		String post = Parser.getConditionFromCondition(statement.getPostCondition().getName());
+		List<String> modifiables = Parser.getModifiedVarsFromCondition(statement.getPostCondition().getName());
+		String stat = statement.getName();
 
 		List<String> unmodifiedVariables = Parser.getUnmodifiedVars(modifiables, vars.getVariables());
 
@@ -832,7 +943,20 @@ public class ProveWithKey {
 
 	public static File createProvePreImplPreWithKey(Condition preParent, Condition preChild, JavaVariables vars,
 			GlobalConditions conds, Renaming renaming, URI uri, int numberFile, boolean override, String name) {
+		
+		return createProvePreWithKey(Parser.getConditionFromCondition(preParent.getName()), 
+				Parser.getConditionFromCondition(preChild.getName()), vars, conds, renaming, uri, numberFile, override, name);
+		
+	}
+	
+	public static File createProveRequiresWithKey(Condition preParent, String requires, JavaVariables vars,
+			GlobalConditions conds, Renaming renaming, URI uri, int numberFile, boolean override, String name) {
 
+		return createProvePreWithKey(Parser.getConditionFromCondition(preParent.getName()), requires, vars, conds, renaming, uri, numberFile, override, name);
+	}
+	
+	public static File createProvePreWithKey(String preParent, String preChild, JavaVariables vars,
+			GlobalConditions conds, Renaming renaming, URI uri, int numberFile, boolean override, String name) {
 		String programVariablesString = "";
 		if (vars != null) {
 			for (JavaVariable var : vars.getVariables()) {
@@ -851,25 +975,22 @@ public class ProveWithKey {
 
 		IProject thisProject = FileUtil.getProject(uri);
 
-		String preParentString = Parser.getConditionFromCondition(preParent.getName());
-		String preChildString = Parser.getConditionFromCondition(preChild.getName());
-
-		if (preParentString == null || preParentString.length() == 0) {
-			preParentString = "true";
+		if (preParent == null || preParent.length() == 0) {
+			preParent = "true";
 		}
-		if (preChildString == null || preChildString.length() == 0) {
-			preChildString = "true";
+		if (preChild == null || preChild.length() == 0) {
+			preChild = "true";
 		}
 
 		if (renaming != null) {
 			globalConditionsString = useRenamingCondition(renaming, globalConditionsString);
-			preParentString = useRenamingCondition(renaming, preParentString);
-			preChildString = useRenamingCondition(renaming, preChildString);
+			preParent = useRenamingCondition(renaming, preParent);
+			preChild = useRenamingCondition(renaming, preChild);
 		}
 
 		String problem = "\\javaSource \"" + thisProject.getLocation() + "/\";" + "\\programVariables {"
-				+ programVariablesString + " Heap heapAtPre;}" + "\\problem {(" + preParentString + " "
-				+ globalConditionsString + ") -> {heapAtPre := heap} (" + preChildString + ")}";
+				+ programVariablesString + " Heap heapAtPre;}" + "\\problem {(" + preParent + " "
+				+ globalConditionsString + ") -> {heapAtPre := heap} (" + preChild + ")}";
 
 		String location = thisProject.getLocation() + "/src/prove" + uri.trimFileExtension().lastSegment();
 		File keyFile = FileUtil.writeFile(problem, location, numberFile, override, name );
@@ -877,6 +998,20 @@ public class ProveWithKey {
 	}
 
 	public static File createProvePostImplPostWithKey(Condition postParent, Condition postChild, JavaVariables vars,
+			GlobalConditions conds, Renaming renaming, URI uri, int numberFile, boolean override, String name) {
+		
+		return createProvePostWithKey(Parser.getConditionFromCondition(postParent.getName()), 
+				Parser.getConditionFromCondition(postChild.getName()), vars, conds, renaming, uri, numberFile, override, name);
+		
+	}
+	
+	public static File createProveEnsuresWithKey(Condition postParent, String ensures, JavaVariables vars,
+			GlobalConditions conds, Renaming renaming, URI uri, int numberFile, boolean override, String name) {
+
+		return createProvePostWithKey(Parser.getConditionFromCondition(postParent.getName()), ensures, vars, conds, renaming, uri, numberFile, override, name);
+	}
+	
+	public static File createProvePostWithKey(String postParent, String postChild, JavaVariables vars,
 			GlobalConditions conds, Renaming renaming, URI uri, int numberFile, boolean override, String name) {
 
 		String programVariablesString = "";
@@ -897,25 +1032,23 @@ public class ProveWithKey {
 
 		IProject thisProject = FileUtil.getProject(uri);
 
-		String postParentString = Parser.getConditionFromCondition(postParent.getName());
-		String postChildString = Parser.getConditionFromCondition(postChild.getName());
 
-		if (postParentString == null || postParentString.length() == 0) {
-			postParentString = "true";
+		if (postParent == null || postParent.length() == 0) {
+			postParent = "true";
 		}
-		if (postChildString == null || postChildString.length() == 0) {
-			postChildString = "true";
+		if (postChild == null || postChild.length() == 0) {
+			postChild = "true";
 		}
 
 		if (renaming != null) {
 			globalConditionsString = useRenamingCondition(renaming, globalConditionsString);
-			postParentString = useRenamingCondition(renaming, postParentString);
-			postChildString = useRenamingCondition(renaming, postChildString);
+			postParent = useRenamingCondition(renaming, postParent);
+			postChild = useRenamingCondition(renaming, postChild);
 		}
 
 		String problem = "\\javaSource \"" + thisProject.getLocation() + "/\";" + "\\programVariables {"
-				+ programVariablesString + " Heap heapAtPre;}" + "\\problem {(" + postChildString + " "
-				+ globalConditionsString + ") -> {heapAtPre := heap} (" + postParentString + ")}";
+				+ programVariablesString + " Heap heapAtPre;}" + "\\problem {(" + postChild + " "
+				+ globalConditionsString + ") -> {heapAtPre := heap} (" + postParent + ")}";
 
 		String location = thisProject.getLocation() + "/src/prove" + uri.trimFileExtension().lastSegment();
 		File keyFile = FileUtil.writeFile(problem, location, numberFile, override, name );

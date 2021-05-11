@@ -797,6 +797,21 @@ public class DslGrammarAccess extends AbstractGrammarElementFinder {
 		//'}'
 		public Keyword getRightCurlyBracketKeyword_10() { return cRightCurlyBracketKeyword_10; }
 	}
+	public class JavaStatementElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.tu_bs.cs.isf.cbc.textual.tool.Dsl.JavaStatement");
+		private final Assignment cNameAssignment = (Assignment)rule.eContents().get(1);
+		private final RuleCall cNameEStringParserRuleCall_0 = (RuleCall)cNameAssignment.eContents().get(0);
+		
+		//JavaStatement:
+		//	name=EString;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//name=EString
+		public Assignment getNameAssignment() { return cNameAssignment; }
+		
+		//EString
+		public RuleCall getNameEStringParserRuleCall_0() { return cNameEStringParserRuleCall_0; }
+	}
 	public class JMLAnnotationElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.tu_bs.cs.isf.cbc.textual.tool.Dsl.JMLAnnotation");
 		private final Group cGroup = (Group)rule.eContents().get(1);
@@ -869,16 +884,16 @@ public class DslGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cJmlAnnotationJMLAnnotationParserRuleCall_3_0 = (RuleCall)cJmlAnnotationAssignment_3.eContents().get(0);
 		private final Keyword cLeftCurlyBracketKeyword_4 = (Keyword)cGroup.eContents().get(4);
 		private final Assignment cJavaStatementAssignment_5 = (Assignment)cGroup.eContents().get(5);
-		private final RuleCall cJavaStatementAbstractStatementParserRuleCall_5_0 = (RuleCall)cJavaStatementAssignment_5.eContents().get(0);
+		private final RuleCall cJavaStatementJavaStatementParserRuleCall_5_0 = (RuleCall)cJavaStatementAssignment_5.eContents().get(0);
 		private final Keyword cRightCurlyBracketKeyword_6 = (Keyword)cGroup.eContents().get(6);
 		
 		//BlockStatement:
 		//	'Block' name=EString ':'
 		//	jmlAnnotation=JMLAnnotation?
-		//	'{' javaStatement=AbstractStatement '}';
+		//	'{' javaStatement=JavaStatement '}';
 		@Override public ParserRule getRule() { return rule; }
 		
-		//'Block' name=EString ':' jmlAnnotation=JMLAnnotation? '{' javaStatement=AbstractStatement '}'
+		//'Block' name=EString ':' jmlAnnotation=JMLAnnotation? '{' javaStatement=JavaStatement '}'
 		public Group getGroup() { return cGroup; }
 		
 		//'Block'
@@ -902,11 +917,11 @@ public class DslGrammarAccess extends AbstractGrammarElementFinder {
 		//'{'
 		public Keyword getLeftCurlyBracketKeyword_4() { return cLeftCurlyBracketKeyword_4; }
 		
-		//javaStatement=AbstractStatement
+		//javaStatement=JavaStatement
 		public Assignment getJavaStatementAssignment_5() { return cJavaStatementAssignment_5; }
 		
-		//AbstractStatement
-		public RuleCall getJavaStatementAbstractStatementParserRuleCall_5_0() { return cJavaStatementAbstractStatementParserRuleCall_5_0; }
+		//JavaStatement
+		public RuleCall getJavaStatementJavaStatementParserRuleCall_5_0() { return cJavaStatementJavaStatementParserRuleCall_5_0; }
 		
 		//'}'
 		public Keyword getRightCurlyBracketKeyword_6() { return cRightCurlyBracketKeyword_6; }
@@ -1455,6 +1470,7 @@ public class DslGrammarAccess extends AbstractGrammarElementFinder {
 	private final ConditionElements pCondition;
 	private final SkipStatementElements pSkipStatement;
 	private final CompositionStatementElements pCompositionStatement;
+	private final JavaStatementElements pJavaStatement;
 	private final JMLAnnotationElements pJMLAnnotation;
 	private final BlockStatementElements pBlockStatement;
 	private final SelectionStatementElements pSelectionStatement;
@@ -1490,6 +1506,7 @@ public class DslGrammarAccess extends AbstractGrammarElementFinder {
 		this.pCondition = new ConditionElements();
 		this.pSkipStatement = new SkipStatementElements();
 		this.pCompositionStatement = new CompositionStatementElements();
+		this.pJavaStatement = new JavaStatementElements();
 		this.pJMLAnnotation = new JMLAnnotationElements();
 		this.pBlockStatement = new BlockStatementElements();
 		this.pSelectionStatement = new SelectionStatementElements();
@@ -1699,6 +1716,16 @@ public class DslGrammarAccess extends AbstractGrammarElementFinder {
 		return getCompositionStatementAccess().getRule();
 	}
 	
+	//JavaStatement:
+	//	name=EString;
+	public JavaStatementElements getJavaStatementAccess() {
+		return pJavaStatement;
+	}
+	
+	public ParserRule getJavaStatementRule() {
+		return getJavaStatementAccess().getRule();
+	}
+	
 	//JMLAnnotation:
 	//	"@1" requires=EString "$1"
 	//	"@2" assignable=EString "$2"
@@ -1714,7 +1741,7 @@ public class DslGrammarAccess extends AbstractGrammarElementFinder {
 	//BlockStatement:
 	//	'Block' name=EString ':'
 	//	jmlAnnotation=JMLAnnotation?
-	//	'{' javaStatement=AbstractStatement '}';
+	//	'{' javaStatement=JavaStatement '}';
 	public BlockStatementElements getBlockStatementAccess() {
 		return pBlockStatement;
 	}

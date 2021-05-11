@@ -38,7 +38,17 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SkipStatement" eSuperTypes="#//AbstractStatement"/>
   
-	<eClassifiers xsi:type="ecore:EClass" name="JMLAnnotation">
+  <eClassifiers xsi:type="ecore:EClass" name="JavaStatement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="postCondition" eType="#//Condition"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="preCondition" eType="#//Condition"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="proven" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="comment" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  
+  <eClassifiers xsi:type="ecore:EClass" name="JMLAnnotation">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="requires" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
             <eStructuralFeatures xsi:type="ecore:EAttribute" name="assignable" lowerBound="1"
@@ -49,7 +59,7 @@
   
   <eClassifiers xsi:type="ecore:EClass" name="BlockStatement" eSuperTypes="#//AbstractStatement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="javaStatement" lowerBound="1"
-        eType="#//AbstractStatement" containment="true"/>
+        eType="#//JavaStatement" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="jmlAnnotation" lowerBound="1"
         eType="#//JMLAnnotation" containment="true"/>
   </eClassifiers>

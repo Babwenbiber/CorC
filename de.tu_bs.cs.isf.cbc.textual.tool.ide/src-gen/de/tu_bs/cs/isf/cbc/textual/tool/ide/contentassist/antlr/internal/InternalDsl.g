@@ -406,6 +406,31 @@ finally {
 	restoreStackSize(stackSize);
 }
 
+// Entry rule entryRuleJavaStatement
+entryRuleJavaStatement
+:
+{ before(grammarAccess.getJavaStatementRule()); }
+	 ruleJavaStatement
+{ after(grammarAccess.getJavaStatementRule()); } 
+	 EOF 
+;
+
+// Rule JavaStatement
+ruleJavaStatement 
+	@init {
+		int stackSize = keepStackSize();
+	}
+	:
+	(
+		{ before(grammarAccess.getJavaStatementAccess().getNameAssignment()); }
+		(rule__JavaStatement__NameAssignment)
+		{ after(grammarAccess.getJavaStatementAccess().getNameAssignment()); }
+	)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
 // Entry rule entryRuleJMLAnnotation
 entryRuleJMLAnnotation
 :
@@ -6380,6 +6405,21 @@ finally {
 	restoreStackSize(stackSize);
 }
 
+rule__JavaStatement__NameAssignment
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+	(
+		{ before(grammarAccess.getJavaStatementAccess().getNameEStringParserRuleCall_0()); }
+		ruleEString
+		{ after(grammarAccess.getJavaStatementAccess().getNameEStringParserRuleCall_0()); }
+	)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
 rule__JMLAnnotation__RequiresAssignment_1
 	@init {
 		int stackSize = keepStackSize();
@@ -6461,9 +6501,9 @@ rule__BlockStatement__JavaStatementAssignment_5
 	}
 :
 	(
-		{ before(grammarAccess.getBlockStatementAccess().getJavaStatementAbstractStatementParserRuleCall_5_0()); }
-		ruleAbstractStatement
-		{ after(grammarAccess.getBlockStatementAccess().getJavaStatementAbstractStatementParserRuleCall_5_0()); }
+		{ before(grammarAccess.getBlockStatementAccess().getJavaStatementJavaStatementParserRuleCall_5_0()); }
+		ruleJavaStatement
+		{ after(grammarAccess.getBlockStatementAccess().getJavaStatementJavaStatementParserRuleCall_5_0()); }
 	)
 ;
 finally {

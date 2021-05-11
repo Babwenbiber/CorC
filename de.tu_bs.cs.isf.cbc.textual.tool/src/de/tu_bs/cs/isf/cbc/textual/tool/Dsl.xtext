@@ -87,6 +87,10 @@ CompositionStatement returns CompositionStatement:
 		'{' secondStatement=AbstractStatement '}'
 	;
 
+JavaStatement returns JavaStatement:
+	name=EString
+;
+
 JMLAnnotation returns JMLAnnotation:
 	"@1" requires=EString "$1"
 	"@2" assignable=EString "$2"
@@ -96,7 +100,7 @@ JMLAnnotation returns JMLAnnotation:
 BlockStatement returns BlockStatement:
 		'Block' name=EString ':'
 			(jmlAnnotation=JMLAnnotation)?
-			'{' javaStatement=AbstractStatement '}'
+			'{' javaStatement=JavaStatement '}'
 	;
 
 SelectionStatement returns SelectionStatement:

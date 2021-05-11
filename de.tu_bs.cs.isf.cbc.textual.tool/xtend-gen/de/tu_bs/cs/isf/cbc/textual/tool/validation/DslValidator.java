@@ -6,6 +6,7 @@ package de.tu_bs.cs.isf.cbc.textual.tool.validation;
 import com.google.common.base.Objects;
 import com.google.common.collect.Iterators;
 import de.tu_bs.cs.isf.cbc.cbcmodel.AbstractStatement;
+import de.tu_bs.cs.isf.cbc.cbcmodel.BlockStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbCFormula;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbcmodelPackage;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Condition;
@@ -84,13 +85,14 @@ public class DslValidator extends AbstractDslValidator {
   
   @Check(CheckType.EXPENSIVE)
   public void checkProveOfStatement(final AbstractStatement statement) {
-    boolean _equals = statement.getClass().equals(AbstractStatementImpl.class);
+boolean _equals = statement.getClass().equals(AbstractStatementImpl.class);
     if (_equals) {
       CbCFormula formula = Iterators.<CbCFormula>filter(statement.eResource().getAllContents(), CbCFormula.class).next();
       TraverseFormula traverser = new TraverseFormula();
       traverser.traverseFormula(formula, statement);
       int numberFile = traverser.foundFile;
-      final boolean closed = ProveWithKey.checkFileIsProven(statement.eResource().getURI(), numberFile, FilenamePrefix.STATEMENT);
+	  System.out.println("validating statement with numFile " + numberFile + " statement is " + statement.getName());
+	  final boolean closed = ProveWithKey.checkFileIsProven(statement.eResource().getURI(), numberFile, FilenamePrefix.STATEMENT);
       if ((!closed)) {
         this.info("Statement is not proved.", 
           CbcmodelPackage.Literals.ABSTRACT_STATEMENT__PROVEN, 
@@ -113,6 +115,33 @@ public class DslValidator extends AbstractDslValidator {
     }
   }
     
+  
+  @Check(CheckType.EXPENSIVE)
+  public void checkProveOfBlockStatement(final BlockStatement statement) {
+	  System.out.println("validating block");
+    CbCFormula formula = Iterators.<CbCFormula>filter(statement.eResource().getAllContents(), CbCFormula.class).next();
+    TraverseFormula traverser = new TraverseFormula();
+    traverser.traverseFormula(formula, statement);
+    int numberFile = traverser.foundFile;
+    final boolean closedPre = ProveWithKey.checkFileIsProven(statement.eResource().getURI(), numberFile, FilenamePrefix.PRE_IMPL);
+    final boolean closedPost = ProveWithKey.checkFileIsProven(statement.eResource().getURI(), (numberFile + 1), FilenamePrefix.POST_IMPL);
+    final boolean closedStd = ProveWithKey.checkFileIsProven(statement.eResource().getURI(), (numberFile + 2), FilenamePrefix.JAVA_STATEMENT);
+    if ((!closedPre)) {
+      this.info("PreCondition of Statement is not proved.", 
+        CbcmodelPackage.Literals.ABSTRACT_STATEMENT__PROVEN, 
+        DslValidator.NOT_PROVED);
+    }
+    if ((!closedPost)) {
+      this.info("PostCondition of Statement is not proved.", 
+        CbcmodelPackage.Literals.ABSTRACT_STATEMENT__PROVEN, 
+        DslValidator.NOT_PROVED);
+    }
+    if ((!closedStd)) {
+      this.info("Statement is not proved.", 
+        CbcmodelPackage.Literals.ABSTRACT_STATEMENT__PROVEN, 
+        DslValidator.NOT_PROVED);
+    }
+  }
   
   @Check(CheckType.EXPENSIVE)
   public void checkProveOfStrengthWeakStatement(final StrengthWeakStatement statement) {

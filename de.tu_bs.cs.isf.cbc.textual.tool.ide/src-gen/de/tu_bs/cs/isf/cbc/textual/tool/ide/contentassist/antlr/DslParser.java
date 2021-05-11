@@ -106,6 +106,7 @@ public class DslParser extends AbstractContentAssistParser {
 					put(grammarAccess.getCompositionStatementAccess().getFirstStatementAssignment_2(), "rule__CompositionStatement__FirstStatementAssignment_2");
 					put(grammarAccess.getCompositionStatementAccess().getIntermediateConditionAssignment_6(), "rule__CompositionStatement__IntermediateConditionAssignment_6");
 					put(grammarAccess.getCompositionStatementAccess().getSecondStatementAssignment_9(), "rule__CompositionStatement__SecondStatementAssignment_9");
+					put(grammarAccess.getJavaStatementAccess().getNameAssignment(), "rule__JavaStatement__NameAssignment");
 					put(grammarAccess.getJMLAnnotationAccess().getRequiresAssignment_1(), "rule__JMLAnnotation__RequiresAssignment_1");
 					put(grammarAccess.getJMLAnnotationAccess().getAssignableAssignment_4(), "rule__JMLAnnotation__AssignableAssignment_4");
 					put(grammarAccess.getJMLAnnotationAccess().getEnsuresAssignment_7(), "rule__JMLAnnotation__EnsuresAssignment_7");

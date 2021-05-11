@@ -48,6 +48,13 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//JMLAnnotation/assignable"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//JMLAnnotation/ensures"/>
     </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//JavaStatement">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cbcmodel.ecore#//JavaStatement/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//JavaStatement/postCondition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//JavaStatement/preCondition"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cbcmodel.ecore#//JavaStatement/proven"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cbcmodel.ecore#//JavaStatement/comment"/>
+    </genClasses>
     <genClasses ecoreClass="cbcmodel.ecore#//BlockStatement">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//BlockStatement/jmlAnnotation"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//BlockStatement/javaStatement"/>
