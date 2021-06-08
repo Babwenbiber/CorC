@@ -1,12 +1,12 @@
 package de.tu_bs.cs.isf.toolkit.support;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
+//import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
+//import java.io.InputStream;
+//import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -34,8 +34,8 @@ import de.tu_bs.cs.isf.toolkit.support.compare.CompareMethodBodies;
 import de.tu_bs.cs.isf.toolkit.support.compare.CompareMethodBodies.Decision;
 import de.tu_bs.cs.isf.toolkit.support.output.Console;
 import de.tu_bs.cs.isf.toolkit.support.output.ManageProject;
-import de.tubs.carsten.robot.monkey.RobotMonkey;
-import de.tubs.carsten.robot.util.SimianResult;
+//import de.tubs.carsten.robot.monkey.RobotMonkey;
+//import de.tubs.carsten.robot.util.SimianResult;
 
 /**
  * Class to start and execute the toolkit construction
@@ -734,7 +734,7 @@ public class ToolkitConstruction {
 	 * @param files	the input classes of the taxonomy
 	 */
 	private static boolean proveWithKey(List<IFile> files) {
-		RobotMonkey monkey = new RobotMonkey("Test", true);
+//		RobotMonkey monkey = new RobotMonkey("Test", true);
 		String content = "";
 		for (IFile iFile : files) {
 			File file = iFile.getLocation().toFile();
@@ -754,15 +754,15 @@ public class ToolkitConstruction {
 			 
 			
 		}
-		try {
-			InputStream program = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
-			SimianResult res =  monkey.test(program, "Test");
-			if (res.isClosed()) {
-				return true;
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			InputStream program = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
+////			SimianResult res =  monkey.test(program, "Test");
+////			if (res.isClosed()) {
+////				return true;
+////			}
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 		return false;
 	}
 }
