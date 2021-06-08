@@ -19,6 +19,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.impl.ReturnStatementImpl
 import de.tu_bs.cs.isf.cbc.cbcmodel.MethodStatement
 import de.tu_bs.cs.isf.cbc.cbcmodel.SkipStatement
 import de.tu_bs.cs.isf.cbc.cbcmodel.StrengthWeakStatement
+import de.tu_bs.cs.isf.cbc.util.FilenamePrefix
 
 /**
  * This class contains custom validation rules. 
@@ -74,7 +75,7 @@ class DslValidator extends AbstractDslValidator {
 			var TraverseFormula traverser = new TraverseFormula();
 			traverser.traverseFormula(formula, statement);
 			var int numberFile = traverser.foundFile;
-			val boolean closed = ProveWithKey.checkFileIsProven(statement.eResource.URI, numberFile);
+			val boolean closed = ProveWithKey.checkFileIsProven(statement.eResource.URI, numberFile, FilenamePrefix.STATEMENT);
 			if (!closed) {
 				info("Statement is not proved.", 
 						CbcmodelPackage.Literals.ABSTRACT_STATEMENT__PROVEN,
@@ -89,7 +90,7 @@ class DslValidator extends AbstractDslValidator {
 		var TraverseFormula traverser = new TraverseFormula();
 		traverser.traverseFormula(formula, statement);
 		var int numberFile = traverser.foundFile;
-		val boolean closed = ProveWithKey.checkFileIsProven(statement.eResource.URI, numberFile);
+		val boolean closed = ProveWithKey.checkFileIsProven(statement.eResource.URI, numberFile, FilenamePrefix.RETURN);
 		if (!closed) {
 			info("ReturnStatement is not proved.", 
 					CbcmodelPackage.Literals.ABSTRACT_STATEMENT__PROVEN,
@@ -103,9 +104,9 @@ class DslValidator extends AbstractDslValidator {
 		var TraverseFormula traverser = new TraverseFormula();
 		traverser.traverseFormula(formula, statement);
 		var int numberFile = traverser.foundFile;
-		val boolean closedPre = ProveWithKey.checkFileIsProven(statement.eResource.URI, numberFile);
-		val boolean closedPost = ProveWithKey.checkFileIsProven(statement.eResource.URI, numberFile + 1);
-		val boolean closedStd = ProveWithKey.checkFileIsProven(statement.eResource.URI, numberFile + 2);
+		val boolean closedPre = ProveWithKey.checkFileIsProven(statement.eResource.URI, numberFile, FilenamePrefix.PRE);
+		val boolean closedPost = ProveWithKey.checkFileIsProven(statement.eResource.URI, numberFile + 1, FilenamePrefix.POST);
+		val boolean closedStd = ProveWithKey.checkFileIsProven(statement.eResource.URI, numberFile + 2, FilenamePrefix.STATEMENT);
 		if (!closedPre) {
 			info("PreCondition of Statement is not proved.", 
 					CbcmodelPackage.Literals.ABSTRACT_STATEMENT__PROVEN,
@@ -129,8 +130,8 @@ class DslValidator extends AbstractDslValidator {
 		var TraverseFormula traverser = new TraverseFormula();
 		traverser.traverseFormula(formula, statement);
 		var int numberFile = traverser.foundFile;
-		val boolean closedPre = ProveWithKey.checkFileIsProven(statement.eResource.URI, numberFile);
-		val boolean closedPost = ProveWithKey.checkFileIsProven(statement.eResource.URI, numberFile+1);
+		val boolean closedPre = ProveWithKey.checkFileIsProven(statement.eResource.URI, numberFile, FilenamePrefix.PRE);
+		val boolean closedPost = ProveWithKey.checkFileIsProven(statement.eResource.URI, numberFile+1, FilenamePrefix.POST);
 		if (!closedPre) {
 			info("PreCondition of MethodStatement is not proved.", 
 					CbcmodelPackage.Literals.ABSTRACT_STATEMENT__PROVEN,
@@ -149,7 +150,7 @@ class DslValidator extends AbstractDslValidator {
 		var TraverseFormula traverser = new TraverseFormula();
 		traverser.traverseFormula(formula, statement);
 		var int numberFile = traverser.foundFile;
-		val boolean closed = ProveWithKey.checkFileIsProven(statement.eResource.URI, numberFile);
+		val boolean closed = ProveWithKey.checkFileIsProven(statement.eResource.URI, numberFile, FilenamePrefix.SKIP);
 		if (!closed) {
 			info("SkipStatement is not proved.", 
 					CbcmodelPackage.Literals.ABSTRACT_STATEMENT__PROVEN,
@@ -163,9 +164,9 @@ class DslValidator extends AbstractDslValidator {
 		var TraverseFormula traverser = new TraverseFormula();
 		traverser.traverseFormula(formula, statement);
 		var int numberFile = traverser.foundFile;
-		var boolean closedPre = ProveWithKey.checkFileIsProven(statement.eResource.URI, numberFile);
-		var boolean closedPost = ProveWithKey.checkFileIsProven(statement.eResource.URI, numberFile+1);
-		var boolean closedVariant = ProveWithKey.checkFileIsProven(statement.eResource.URI, numberFile+2);
+		var boolean closedPre = ProveWithKey.checkFileIsProven(statement.eResource.URI, numberFile, FilenamePrefix.PRE);
+		var boolean closedPost = ProveWithKey.checkFileIsProven(statement.eResource.URI, numberFile+1, FilenamePrefix.POST);
+		var boolean closedVariant = ProveWithKey.checkFileIsProven(statement.eResource.URI, numberFile+2, FilenamePrefix.VARIANT2);
 		if (!closedPre) {
 			info('PreCondition of RepetitionStatement is not proved.', 
 					CbcmodelPackage.Literals.SMALL_REPETITION_STATEMENT__PRE_PROVEN,
@@ -189,7 +190,7 @@ class DslValidator extends AbstractDslValidator {
 		var TraverseFormula traverser = new TraverseFormula();
 		traverser.traverseFormula(formula, statement);
 		var int numberFile = traverser.foundFile;
-		var boolean closed = ProveWithKey.checkFileIsProven(statement.eResource.URI, numberFile);
+		var boolean closed = ProveWithKey.checkFileIsProven(statement.eResource.URI, numberFile, FilenamePrefix.SELECTION);
 		if (!closed) {
 			info('PreCondition of SelectionStatement is not proved.', 
 					CbcmodelPackage.Literals.SELECTION_STATEMENT__PRE_PROVE,
