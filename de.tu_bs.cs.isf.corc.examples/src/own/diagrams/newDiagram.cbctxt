@@ -1,0 +1,7 @@
+Formula "<foobar>"
+	pre: {"i=1"}
+	{"i=i+1;"}
+	post: {"i=1"}
+	
+JavaVariables
+	variables {"int i;"}

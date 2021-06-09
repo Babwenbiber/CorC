@@ -14,7 +14,6 @@ Require-Bundle: org.eclipse.core.resources,
  org.eclipse.emf.common,
  org.eclipse.ui.console,
  org.eclipse.ui,
- de.tu-bs.cs.isf.keyConnection,
  org.emftext.language.java;bundle-version="1.4.0",
  org.emftext.language.java.resource.java;bundle-version="1.4.0"
 Export-Package: de.tu_bs.cs.isf.toolkit.support,

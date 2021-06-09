@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ASCII"?>
+<cbcmodel:CbCProblem xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cbcmodel="http://www.example.org/cbcmodel">
+  <cbcformula name="&lt;formula>">
+    <statement xsi:type="cbcmodel:BlockStatement" name="&lt;Blockname>">
+      <postCondition name="i>6"/>
+      <preCondition name="i=2"/>
+      <javaStatement name="i=10; int j = 5; i=j+5;">
+        <postCondition name="i>8"/>
+        <preCondition name="i>1"/>
+      </javaStatement>
+      <jmlAnnotation requires="i>1" assignable="i" ensures="i>8"/>
+    </statement>
+    <preCondition name="i=2"/>
+    <postCondition name="i>6"/>
+  </cbcformula>
+  <javaVariable>
+    <variables name="int i"/>
+  </javaVariable>
+</cbcmodel:CbCProblem>

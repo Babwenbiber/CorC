@@ -9,6 +9,7 @@
 			default="true"
 			extensions="cbctxt"
 			id="de.tu_bs.cs.isf.cbc.textual.tool.Dsl"
+			matchingStrategy="de.tu_bs.cs.isf.cbc.textual.tool.ui.DslExecutableExtensionFactory:org.eclipse.xtext.xbase.ui.editor.JavaEditorInputMatcher"
 			name="Dsl Editor">
 		</editor>
 	</extension>
@@ -26,11 +27,11 @@
 		<handler
 			class="de.tu_bs.cs.isf.cbc.textual.tool.ui.DslExecutableExtensionFactory:org.eclipse.xtext.ui.editor.handler.ValidateActionHandler"
 			commandId="de.tu_bs.cs.isf.cbc.textual.tool.Dsl.validate">
-		<activeWhen>
-			<reference
+			<activeWhen>
+				<reference
 					definitionId="de.tu_bs.cs.isf.cbc.textual.tool.Dsl.Editor.opened">
-			</reference>
-		</activeWhen>
+				</reference>
+			</activeWhen>
 		</handler>
 		<!-- copy qualified name -->
 		<handler
@@ -58,20 +59,20 @@
 			<and>
 				<reference definitionId="isActiveEditorAnInstanceOfXtextEditor"/>
 				<with variable="activeEditor">
-					<test property="org.eclipse.xtext.ui.editor.XtextEditor.languageName" 
-						value="de.tu_bs.cs.isf.cbc.textual.tool.Dsl" 
+					<test property="org.eclipse.xtext.ui.editor.XtextEditor.languageName"
+						value="de.tu_bs.cs.isf.cbc.textual.tool.Dsl"
 						forcePluginActivation="true"/>
-				</with>		
+				</with>
 			</and>
 		</definition>
 		<definition id="de.tu_bs.cs.isf.cbc.textual.tool.Dsl.XtextEditor.opened">
 			<and>
 				<reference definitionId="isXtextEditorActive"/>
 				<with variable="activeEditor">
-					<test property="org.eclipse.xtext.ui.editor.XtextEditor.languageName" 
-						value="de.tu_bs.cs.isf.cbc.textual.tool.Dsl" 
+					<test property="org.eclipse.xtext.ui.editor.XtextEditor.languageName"
+						value="de.tu_bs.cs.isf.cbc.textual.tool.Dsl"
 						forcePluginActivation="true"/>
-				</with>		
+				</with>
 			</and>
 		</definition>
 	</extension>
@@ -119,42 +120,42 @@
 	</extension>
 	<extension
 		point="org.eclipse.ui.commands">
-	<command
+		<command
 			description="Trigger expensive validation"
 			id="de.tu_bs.cs.isf.cbc.textual.tool.Dsl.validate"
 			name="Validate">
-	</command>
-	<!-- copy qualified name -->
-	<command
+		</command>
+		<!-- copy qualified name -->
+		<command
 			id="org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedName"
 			categoryId="org.eclipse.ui.category.edit"
 			description="Copy the qualified name for the selected element"
 			name="Copy Qualified Name">
-	</command>
-	<command
+		</command>
+		<command
 			id="org.eclipse.xtext.ui.editor.copyqualifiedname.OutlineCopyQualifiedName"
 			categoryId="org.eclipse.ui.category.edit"
 			description="Copy the qualified name for the selected element"
 			name="Copy Qualified Name">
-	</command>
+		</command>
 	</extension>
 	<extension point="org.eclipse.ui.menus">
 		<menuContribution
 			locationURI="popup:#TextEditorContext?after=group.edit">
-			 <command
-				 commandId="de.tu_bs.cs.isf.cbc.textual.tool.Dsl.validate"
-				 style="push"
-				 tooltip="Trigger expensive validation">
-			<visibleWhen checkEnabled="false">
-				<reference
-					definitionId="de.tu_bs.cs.isf.cbc.textual.tool.Dsl.Editor.opened">
-				</reference>
-			</visibleWhen>
-		</command>
+			<command
+				commandId="de.tu_bs.cs.isf.cbc.textual.tool.Dsl.validate"
+				style="push"
+				tooltip="Trigger expensive validation">
+				<visibleWhen checkEnabled="false">
+					<reference
+						definitionId="de.tu_bs.cs.isf.cbc.textual.tool.Dsl.Editor.opened">
+					</reference>
+				</visibleWhen>
+			</command>
 		</menuContribution>
 		<!-- copy qualified name -->
 		<menuContribution locationURI="popup:#TextEditorContext?after=copy">
-			<command commandId="org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedName" 
+			<command commandId="org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedName"
 				style="push" tooltip="Copy Qualified Name">
 				<visibleWhen checkEnabled="false">
 					<reference definitionId="de.tu_bs.cs.isf.cbc.textual.tool.Dsl.Editor.opened" />
@@ -170,7 +171,7 @@
 			</command>
 		</menuContribution>
 		<menuContribution locationURI="popup:org.eclipse.xtext.ui.outline?after=additions">
-			<command commandId="org.eclipse.xtext.ui.editor.copyqualifiedname.OutlineCopyQualifiedName" 
+			<command commandId="org.eclipse.xtext.ui.editor.copyqualifiedname.OutlineCopyQualifiedName"
 				style="push" tooltip="Copy Qualified Name">
 				<visibleWhen checkEnabled="false">
 					<and>
@@ -203,6 +204,15 @@
 				</reference>
 			</activeWhen>
 		</handler>
+	</extension>
+	<extension point="org.eclipse.core.contenttype.contentTypes">
+		<content-type
+			base-type="org.eclipse.core.runtime.text"
+			file-extensions="cbctxt"
+			id="de.tu_bs.cs.isf.cbc.textual.tool.Dsl.contenttype"
+			name="Dsl File"
+			priority="normal">
+		</content-type>
 	</extension>
 	<!-- adding resource factories -->
 	<extension
@@ -291,7 +301,7 @@
 	<!-- Quick Outline -->
 	<extension
 		point="org.eclipse.ui.handlers">
-		<handler 
+		<handler
 			class="de.tu_bs.cs.isf.cbc.textual.tool.ui.DslExecutableExtensionFactory:org.eclipse.xtext.ui.editor.outline.quickoutline.ShowQuickOutlineActionHandler"
 			commandId="org.eclipse.xtext.ui.editor.outline.QuickOutline">
 			<activeWhen>
@@ -351,7 +361,7 @@
 	</extension>
 	<!-- Rename Refactoring -->
 	<extension point="org.eclipse.ui.handlers">
-		<handler 
+		<handler
 			class="de.tu_bs.cs.isf.cbc.textual.tool.ui.DslExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.DefaultRenameElementHandler"
 			commandId="org.eclipse.xtext.ui.refactoring.RenameElement">
 			<activeWhen>
@@ -383,17 +393,181 @@
 			<keywordReference id="de.tu_bs.cs.isf.cbc.textual.tool.ui.keyword_Dsl"/>
 		</page>
 	</extension>
+	<!-- Type Hierarchy  -->
+	<extension point="org.eclipse.ui.handlers">
+		<handler
+			class="de.tu_bs.cs.isf.cbc.textual.tool.ui.DslExecutableExtensionFactory:org.eclipse.xtext.xbase.ui.hierarchy.OpenTypeHierarchyHandler"
+			commandId="org.eclipse.xtext.xbase.ui.hierarchy.OpenTypeHierarchy">
+			<activeWhen>
+				<reference
+					definitionId="de.tu_bs.cs.isf.cbc.textual.tool.Dsl.Editor.opened">
+				</reference>
+			</activeWhen>
+		</handler>
+		<handler
+			class="de.tu_bs.cs.isf.cbc.textual.tool.ui.DslExecutableExtensionFactory:org.eclipse.xtext.xbase.ui.hierarchy.QuickTypeHierarchyHandler"
+			commandId="org.eclipse.jdt.ui.edit.text.java.open.hierarchy">
+			<activeWhen>
+				<reference
+					definitionId="de.tu_bs.cs.isf.cbc.textual.tool.Dsl.Editor.opened">
+				</reference>
+			</activeWhen>
+		</handler>
+	</extension>
+	<extension point="org.eclipse.ui.menus">
+		<menuContribution
+			locationURI="popup:#TextEditorContext?after=group.open">
+			<command commandId="org.eclipse.xtext.xbase.ui.hierarchy.OpenTypeHierarchy"
+				style="push"
+				tooltip="Open Type Hierarchy">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="de.tu_bs.cs.isf.cbc.textual.tool.Dsl.Editor.opened"/>
+				</visibleWhen>
+			</command>
+		</menuContribution>
+		<menuContribution
+			locationURI="popup:#TextEditorContext?after=group.open">
+			<command commandId="org.eclipse.jdt.ui.edit.text.java.open.hierarchy"
+				style="push"
+				tooltip="Quick Type Hierarchy">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="de.tu_bs.cs.isf.cbc.textual.tool.Dsl.Editor.opened"/>
+				</visibleWhen>
+			</command>
+		</menuContribution>
+	</extension>
+	<!-- Call Hierachy -->
+	<extension point="org.eclipse.ui.handlers">
+		<handler
+			class="de.tu_bs.cs.isf.cbc.textual.tool.ui.DslExecutableExtensionFactory:org.eclipse.xtext.xbase.ui.hierarchy.OpenCallHierachyHandler"
+			commandId="org.eclipse.xtext.xbase.ui.hierarchy.OpenCallHierarchy">
+			<activeWhen>
+				<reference
+					definitionId="de.tu_bs.cs.isf.cbc.textual.tool.Dsl.Editor.opened">
+				</reference>
+			</activeWhen>
+		</handler>
+	</extension>
+	<extension point="org.eclipse.ui.menus">
+		<menuContribution
+			locationURI="popup:#TextEditorContext?after=group.open">
+			<command commandId="org.eclipse.xtext.xbase.ui.hierarchy.OpenCallHierarchy"
+				style="push"
+				tooltip="Open Call Hierarchy">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="de.tu_bs.cs.isf.cbc.textual.tool.Dsl.Editor.opened"/>
+				</visibleWhen>
+			</command>
+		</menuContribution>
+	</extension>
+	<extension point="org.eclipse.core.runtime.adapters">
+		<factory class="de.tu_bs.cs.isf.cbc.textual.tool.ui.DslExecutableExtensionFactory:org.eclipse.xtext.builder.smap.StratumBreakpointAdapterFactory"
+			adaptableType="de.tu_bs.cs.isf.cbc.textual.tool.ui.editor.DslEditor">
+			<adapter type="org.eclipse.debug.ui.actions.IToggleBreakpointsTarget"/>
+		</factory>
+	</extension>
+	<extension point="org.eclipse.ui.editorActions">
+		<editorContribution targetID="de.tu_bs.cs.isf.cbc.textual.tool.Dsl"
+			id="de.tu_bs.cs.isf.cbc.textual.tool.Dsl.rulerActions">
+			<action
+				label="Not Used"
+				class="de.tu_bs.cs.isf.cbc.textual.tool.ui.DslExecutableExtensionFactory:org.eclipse.debug.ui.actions.RulerToggleBreakpointActionDelegate"
+				style="push"
+				actionID="RulerDoubleClick"
+				id="de.tu_bs.cs.isf.cbc.textual.tool.Dsl.doubleClickBreakpointAction"/>
+		</editorContribution>
+	</extension>
+	<extension point="org.eclipse.ui.popupMenus">
+		<viewerContribution
+			targetID="de.tu_bs.cs.isf.cbc.textual.tool.Dsl.RulerContext"
+			id="de.tu_bs.cs.isf.cbc.textual.tool.Dsl.RulerPopupActions">
+			<action
+				label="Toggle Breakpoint"
+				class="de.tu_bs.cs.isf.cbc.textual.tool.ui.DslExecutableExtensionFactory:org.eclipse.debug.ui.actions.RulerToggleBreakpointActionDelegate"
+				menubarPath="debug"
+				id="de.tu_bs.cs.isf.cbc.textual.tool.Dsl.rulerContextMenu.toggleBreakpointAction">
+			</action>
+			<action
+				label="Not used"
+				class="de.tu_bs.cs.isf.cbc.textual.tool.ui.DslExecutableExtensionFactory:org.eclipse.debug.ui.actions.RulerEnableDisableBreakpointActionDelegate"
+				menubarPath="debug"
+				id="de.tu_bs.cs.isf.cbc.textual.tool.Dsl.rulerContextMenu.enableDisableBreakpointAction">
+			</action>
+			<action
+				label="Breakpoint Properties"
+				helpContextId="breakpoint_properties_action_context"
+				class="de.tu_bs.cs.isf.cbc.textual.tool.ui.DslExecutableExtensionFactory:org.eclipse.jdt.debug.ui.actions.JavaBreakpointPropertiesRulerActionDelegate"
+				menubarPath="group.properties"
+				id="de.tu_bs.cs.isf.cbc.textual.tool.Dsl.rulerContextMenu.openBreapointPropertiesAction">
+			</action>
+		</viewerContribution>
+	</extension>
+	<!-- Introduce Local Variable Refactoring -->
+	<extension point="org.eclipse.ui.handlers">
+		<handler
+			class="de.tu_bs.cs.isf.cbc.textual.tool.ui.DslExecutableExtensionFactory:org.eclipse.xtext.xbase.ui.refactoring.ExtractVariableHandler"
+			commandId="org.eclipse.xtext.xbase.ui.refactoring.ExtractLocalVariable">
+			<activeWhen>
+				<reference
+					definitionId="de.tu_bs.cs.isf.cbc.textual.tool.Dsl.Editor.opened">
+				</reference>
+			</activeWhen>
+		</handler>
+	</extension>
+	<extension point="org.eclipse.ui.menus">
+		<menuContribution
+			locationURI="popup:#TextEditorContext?after=group.edit">
+			<command commandId="org.eclipse.xtext.xbase.ui.refactoring.ExtractLocalVariable"
+				style="push">
+				<visibleWhen checkEnabled="false">
+					<reference
+						definitionId="de.tu_bs.cs.isf.cbc.textual.tool.Dsl.Editor.opened">
+					</reference>
+				</visibleWhen>
+			</command>
+		</menuContribution>
+	</extension>
+	<!-- Open implementation -->
+	<extension point="org.eclipse.ui.handlers">
+		<handler
+			class="de.tu_bs.cs.isf.cbc.textual.tool.ui.DslExecutableExtensionFactory:org.eclipse.xtext.xbase.ui.navigation.OpenImplementationHandler"
+			commandId="org.eclipse.xtext.xbase.ui.OpenImplementationCommand">
+			<activeWhen>
+				<reference
+					definitionId="de.tu_bs.cs.isf.cbc.textual.tool.Dsl.Editor.opened">
+				</reference>
+			</activeWhen>
+		</handler>
+	</extension>
+	<extension point="org.eclipse.ui.menus">
+		<menuContribution
+			locationURI="menu:navigate?after=open.ext4">
+			<command commandId="org.eclipse.xtext.xbase.ui.OpenImplementationCommand">
+				<visibleWhen checkEnabled="false">
+					<reference
+						definitionId="de.tu_bs.cs.isf.cbc.textual.tool.Dsl.Editor.opened">
+					</reference>
+				</visibleWhen>
+			</command>
+		</menuContribution>
+	</extension>
 	<extension point="org.eclipse.compare.contentViewers">
 		<viewer id="de.tu_bs.cs.isf.cbc.textual.tool.Dsl.compare.contentViewers"
 			class="de.tu_bs.cs.isf.cbc.textual.tool.ui.DslExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
 			extensions="cbctxt">
 		</viewer>
+		<contentTypeBinding
+			contentTypeId="de.tu_bs.cs.isf.cbc.textual.tool.Dsl.contenttype"
+			contentViewerId="de.tu_bs.cs.isf.cbc.textual.tool.Dsl.compare.contentViewers" />
 	</extension>
 	<extension point="org.eclipse.compare.contentMergeViewers">
 		<viewer id="de.tu_bs.cs.isf.cbc.textual.tool.Dsl.compare.contentMergeViewers"
 			class="de.tu_bs.cs.isf.cbc.textual.tool.ui.DslExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
 			extensions="cbctxt" label="Dsl Compare">
 		</viewer>
+		<contentTypeBinding
+			contentTypeId="de.tu_bs.cs.isf.cbc.textual.tool.Dsl.contenttype"
+			contentMergeViewerId="de.tu_bs.cs.isf.cbc.textual.tool.Dsl.compare.contentMergeViewers" />
 	</extension>
 	<extension point="org.eclipse.ui.editors.documentProviders">
 		<provider id="de.tu_bs.cs.isf.cbc.textual.tool.Dsl.editors.documentProviders"

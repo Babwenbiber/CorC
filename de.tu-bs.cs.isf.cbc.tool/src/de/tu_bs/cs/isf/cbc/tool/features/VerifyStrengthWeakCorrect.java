@@ -11,7 +11,6 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.GlobalConditions;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariables;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Renaming;
 import de.tu_bs.cs.isf.cbc.cbcmodel.StrengthWeakStatement;
-import de.tu_bs.cs.isf.cbc.util.ProveWithKey;
 import de.tu_bs.cs.isf.taxonomy.graphiti.features.MyAbstractAsynchronousCustomFeature;
 
 /**
@@ -80,17 +79,17 @@ public class VerifyStrengthWeakCorrect extends MyAbstractAsynchronousCustomFeatu
 					}
 					boolean prove1 = false;
 					boolean prove2 = false;
-					System.out.println("strength: parent pre " + parent.getPreCondition().getName() + " child pre " + statement.getWeakPreCondition().getName());
-					prove1 = ProveWithKey.provePreImplPreWithKey(parent.getPreCondition(), statement.getWeakPreCondition(), vars, 
-							conds, renaming, getDiagram().eResource().getURI(), monitor);
-					prove2 = ProveWithKey.provePostImplPostWithKey(parent.getPostCondition(), statement.getStrongPostCondition(), vars,
-							conds, renaming, getDiagram().eResource().getURI(), monitor);
-					
-					if (prove1 && prove2) {
-						statement.setProven(true);
-					} else {
-						statement.setProven(false);
-					}
+//					System.out.println("strength: parent pre " + parent.getPreCondition().getName() + " child pre " + statement.getWeakPreCondition().getName());
+//					prove1 = ProveWithKey.provePreImplPreWithKey(parent.getPreCondition(), statement.getWeakPreCondition(), vars,
+//							conds, renaming, getDiagram().eResource().getURI(), monitor);
+//					prove2 = ProveWithKey.provePostImplPostWithKey(parent.getPostCondition(), statement.getStrongPostCondition(), vars,
+//							conds, renaming, getDiagram().eResource().getURI(), monitor);
+//
+//					if (prove1 && prove2) {
+//						statement.setProven(true);
+//					} else {
+//						statement.setProven(false);
+//					}
 					updatePictogramElement(((Shape)pes[0]).getContainer());
 				}
 			}

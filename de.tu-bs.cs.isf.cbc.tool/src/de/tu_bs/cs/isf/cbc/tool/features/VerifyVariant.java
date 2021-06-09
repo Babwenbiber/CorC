@@ -16,7 +16,6 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.SmallRepetitionStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.RepetitionStatementImpl;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.SmallRepetitionStatementImpl;
 import de.tu_bs.cs.isf.cbc.util.ConstructCodeBlock;
-import de.tu_bs.cs.isf.cbc.util.ProveWithKey;
 import de.tu_bs.cs.isf.taxonomy.graphiti.features.MyAbstractAsynchronousCustomFeature;
 
 /**
@@ -92,27 +91,27 @@ public class VerifyVariant extends MyAbstractAsynchronousCustomFeature {
 					invariant = repStatement.getInvariant();
 				}
 //				if (CompareMethodBodies.readAndTestMethodBodyWithJaMoPP2(code)) {
-					prove = ProveWithKey.proveVariantWithKey(code, invariant, vars, conds, renaming, getDiagram().eResource().getURI(), monitor);
+//					prove = ProveWithKey.proveVariantWithKey(code, invariant, vars, conds, renaming, getDiagram().eResource().getURI(), monitor);
 //				} else {
 //					System.out.println("Statement is not in correct format.");
 //				}
-				if (prove) {
-					if (statement instanceof RepetitionStatement) {
-						RepetitionStatement repStatement = (RepetitionStatement) statement;
-						repStatement.setVariantProven(true);
-					} else if (statement instanceof SmallRepetitionStatement) {
-						SmallRepetitionStatement repStatement = (SmallRepetitionStatement) statement;
-						repStatement.setVariantProven(true);
-					}
-				} else {
-					if (statement instanceof RepetitionStatement) {
-						RepetitionStatement repStatement = (RepetitionStatement) statement;
-						repStatement.setVariantProven(false);
-					} else if (statement instanceof SmallRepetitionStatement) {
-						SmallRepetitionStatement repStatement = (SmallRepetitionStatement) statement;
-						repStatement.setVariantProven(false);
-					}
-				}
+//				if (prove) {
+//					if (statement instanceof RepetitionStatement) {
+//						RepetitionStatement repStatement = (RepetitionStatement) statement;
+//						repStatement.setVariantProven(true);
+//					} else if (statement instanceof SmallRepetitionStatement) {
+//						SmallRepetitionStatement repStatement = (SmallRepetitionStatement) statement;
+//						repStatement.setVariantProven(true);
+//					}
+//				} else {
+//					if (statement instanceof RepetitionStatement) {
+//						RepetitionStatement repStatement = (RepetitionStatement) statement;
+//						repStatement.setVariantProven(false);
+//					} else if (statement instanceof SmallRepetitionStatement) {
+//						SmallRepetitionStatement repStatement = (SmallRepetitionStatement) statement;
+//						repStatement.setVariantProven(false);
+//					}
+//				}
 				updatePictogramElement(((Shape)pes[0]).getContainer());
 			}
 		}

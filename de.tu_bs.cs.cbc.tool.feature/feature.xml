@@ -52,13 +52,6 @@
          unpack="false"/>
 
    <plugin
-         id="de.tu-bs.cs.isf.keyConnection"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="de.tu-bs.cs.isf.taxonomy.editor"
          download-size="0"
          install-size="0"
