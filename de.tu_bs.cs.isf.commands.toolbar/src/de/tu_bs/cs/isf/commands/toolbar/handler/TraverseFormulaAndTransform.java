@@ -63,7 +63,7 @@ public class TraverseFormulaAndTransform {
 	
 	private static void traverseSelectionStatement(SelectionStatement selectionStatement) {
 		for (int i = 0; i < selectionStatement.getCommands().size(); i++) {
-			AbstractStatement childStatement = selectionStatement.getCommands().get(i);
+			AbstractStatement childStatement = (AbstractStatement) selectionStatement.getCommands().get(i);
 			
 			AbstractStatement abstractStatement = factory.createAbstractStatement();
 			abstractStatement.setName("SelectionStatement" + i);

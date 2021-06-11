@@ -81,7 +81,10 @@ public class FileUtil {
 	}
 
 	public static void setApplicationUri(URI applicationUri) {
-		FileUtil.applicationUri = applicationUri;
+//		FileUtil.applicationUri = applicationUri;
+		String[] segments = {"Users", "frede", "runtume-New_configuration", "myproj"};
+		FileUtil.applicationUri = URI.createHierarchicalURI(
+				segments, null, null);
 	}
 
 	public static File writeFile(String problem, String location, int numberFile, boolean override, String proveName) {
@@ -118,15 +121,18 @@ public class FileUtil {
 	public static IProject getProject(URI uri) {
 		uri = uri.trimFragment();
 		String uriPath = uri.toPlatformString(true);
+		String uriFileString = uri.toFileString();
+		uriPath= uri.toString();
 
 		uriPath = uriPath.substring(1, uriPath.length());
 		int positionOfSlash = uriPath.indexOf('/') + 1;
 		uriPath = uriPath.substring(positionOfSlash, uriPath.length());
 		IProject thisProject = null;
 		for (IProject p : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
-			if (p.getFile(new Path(uriPath)).exists()) {
-				thisProject = p;
-			}
+			return p;
+//			if (p.getFile(new Path(uriPath)).exists()) {
+//				thisProject = p;
+//			}
 		}
 		return thisProject;
 	}

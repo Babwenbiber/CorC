@@ -28,37 +28,39 @@ class DslGenerator extends AbstractGenerator {
 
 	
 	override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
-		var JavaVariables vars = null
-		var GlobalConditions conds = null
-		var Renaming renaming = null
-		if (resource.allContents.filter(JavaVariables).hasNext) {
-			vars = resource.allContents.filter(JavaVariables).next
-		}
-		if (resource.allContents.filter(GlobalConditions).hasNext) {
-			conds = resource.allContents.filter(GlobalConditions).next
-		}
-		if (resource.allContents.filter(Renaming).hasNext) {
-			renaming = resource.allContents.filter(Renaming).next
-		}
-		var formula = resource.allContents.filter(CbCFormula).next;
-		val TraverseFormulaAndGenerate traverser = new TraverseFormulaAndGenerate(vars, conds, renaming, resource.URI, formula, resource)
-		formula = traverser.traverseFormulaAndGenerate()
-
-		val ResourceSet rs = new ResourceSetImpl();
-		val String workspace = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString();
-		var URI uri = resource.URI;
-		uri = uri.trimFragment();
-		uri = uri.trimFileExtension();
-		uri = uri.appendFileExtension("cbcmodel");
-		val Resource r = rs.createResource(URI.createFileURI(workspace + uri.toPlatformString(true)));
-		r.getContents().addAll(resource.contents);
-		val problem = r.contents.get(0) as CbCProblem
-		problem.cbcformula = formula;
-		try {
-			r.save(Collections.EMPTY_MAP);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+				System.out.println("lessgo doGenerate");
+		
+//		var JavaVariables vars = null
+//		var GlobalConditions conds = null
+//		var Renaming renaming = null
+//		if (resource.allContents.filter(JavaVariables).hasNext) {
+//			vars = resource.allContents.filter(JavaVariables).next
+//		}
+//		if (resource.allContents.filter(GlobalConditions).hasNext) {
+//			conds = resource.allContents.filter(GlobalConditions).next
+//		}
+//		if (resource.allContents.filter(Renaming).hasNext) {
+//			renaming = resource.allContents.filter(Renaming).next
+//		}
+//		var formula = resource.allContents.filter(CbCFormula).next;
+//		val TraverseFormulaAndGenerate traverser = new TraverseFormulaAndGenerate(vars, conds, renaming, resource.URI, formula, resource)
+//		formula = traverser.traverseFormulaAndGenerate()
+//
+//		val ResourceSet rs = new ResourceSetImpl();
+//		val String workspace = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString();
+//		var URI uri = resource.URI;
+//		uri = uri.trimFragment();
+//		uri = uri.trimFileExtension();
+//		uri = uri.appendFileExtension("cbcmodel");
+//		val Resource r = rs.createResource(URI.createFileURI(workspace + uri.toPlatformString(true)));
+//		r.getContents().addAll(resource.contents);
+//		val problem = r.contents.get(0) as CbCProblem
+//		problem.cbcformula = formula;
+//		try {
+//			r.save(Collections.EMPTY_MAP);
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 	}
 	
 }

@@ -71,7 +71,7 @@ public class TraverseFormula {
 		if(searchObject.equals(selectionStatement)) foundFile = numberFile;
 		numberFile++;
 		for (int i = 0; i < selectionStatement.getCommands().size(); i++) {
-			AbstractStatement childStatement = selectionStatement.getCommands().get(i);
+			AbstractStatement childStatement = (AbstractStatement) selectionStatement.getCommands().get(i);
 			castStatementAndTraverse(childStatement, searchObject);
 		}
 	}

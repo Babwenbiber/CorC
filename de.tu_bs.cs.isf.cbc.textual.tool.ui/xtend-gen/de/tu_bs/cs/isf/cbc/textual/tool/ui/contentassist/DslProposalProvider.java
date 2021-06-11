@@ -3,7 +3,6 @@
  */
 package de.tu_bs.cs.isf.cbc.textual.tool.ui.contentassist;
 
-import de.tu_bs.cs.isf.cbc.textual.tool.ui.contentassist.AbstractDslProposalProvider;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.RuleCall;
 import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext;
@@ -26,13 +25,6 @@ public class DslProposalProvider extends AbstractDslProposalProvider {
   public void complete_SmallRepetitionStatement(final EObject model, final RuleCall ruleCall, final ContentAssistContext context, final ICompletionProposalAcceptor acceptor) {
     super.complete_SmallRepetitionStatement(model, ruleCall, context, acceptor);
     final String proposal = (("while (\"<guard>\") do\n" + "\t\tinv: [\"<invariant>\"] var: [\"<variant>\"]\n") + "\t\t{\"<statement>\"} od");
-    acceptor.accept(this.createCompletionProposal(proposal, context));
-  }
-  
-  @Override
-  public void complete_BlockStatement(final EObject model, final RuleCall ruleCall, final ContentAssistContext context, final ICompletionProposalAcceptor acceptor) {
-    super.complete_BlockStatement(model, ruleCall, context, acceptor);
-    final String proposal = "Block \"<Blockname>\":\n" + "\t{\n\t\t\"<statement>\"\n\t}\n";
     acceptor.accept(this.createCompletionProposal(proposal, context));
   }
   

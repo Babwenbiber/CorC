@@ -45,28 +45,27 @@ public class TraverseFormulaAndGenerate {
 	private URI uri;
 	private int numberFile;
 	private CbCFormula formula;
-	private Resource resource;
 	private CbcmodelFactory factory;
 
-	TraverseFormulaAndGenerate(JavaVariables vars, GlobalConditions conds, Renaming renaming, URI uri,
-			CbCFormula formula, Resource resource) {
+	public TraverseFormulaAndGenerate(JavaVariables vars, GlobalConditions conds, Renaming renaming, URI uri,
+			CbCFormula formula) {
 		this.vars = vars;
 		this.conds = conds;
 		this.renaming = renaming;
 		this.uri = uri;
 		this.numberFile = 0;
 		this.formula = formula;
-		this.resource = resource;
 		this.factory = CbcmodelFactory.eINSTANCE;
 	}
 
-	public CbCFormula traverseFormulaAndGenerate() {
-		AbstractStatement statement = formula.getStatement();
+	public CbCFormula traverseFormulaAndGenerate() {		AbstractStatement statement = formula.getStatement();
 		statement.setPreCondition(factory.createCondition());
 		statement.getPreCondition().setName(formula.getPreCondition().getName());
 		statement.setPostCondition(factory.createCondition());
 		statement.getPostCondition().setName(formula.getPostCondition().getName());
+		System.out.println("lessgo Traverse");
 		castStatementAndTraverse(statement);
+		
 		return formula;
 	}
 
@@ -147,8 +146,8 @@ public class TraverseFormulaAndGenerate {
 		ProveWithKey.createProvePreSelWithKey(selectionStatement.getGuards(), selectionStatement.getPreCondition(),
 				vars, conds, renaming, uri, numberFile++, false, FilenamePrefix.SELECTION);
 		for (int i = 0; i < selectionStatement.getCommands().size(); i++) {
-			AbstractStatement childStatement = selectionStatement.getCommands().get(i);
-			Condition childGuard = selectionStatement.getGuards().get(i);
+			AbstractStatement childStatement = (AbstractStatement) selectionStatement.getCommands().get(i);
+			Condition childGuard = (Condition) selectionStatement.getGuards().get(i);
 
 			childStatement.setPreCondition(factory.createCondition());
 			childStatement.getPreCondition().setName(
@@ -201,7 +200,6 @@ public class TraverseFormulaAndGenerate {
 
 	private Collection<CbCFormula> getFormulas() {
 		Collection<CbCFormula> result = Collections.emptyList();
-		URI uri = resource.getURI();
 		URI uriTrimmed = uri.trimFragment();
 		if (uriTrimmed.isPlatformResource()) {
 			String platformString = uriTrimmed.toPlatformString(true);
@@ -227,7 +225,7 @@ public class TraverseFormulaAndGenerate {
 		for (JavaVariable var1 : vars1.getVariables()) {
 			boolean isNew = true;
 			for (JavaVariable var2 : vars2.getVariables()) {
-				if (var1.getName().equals(var2.getName()) && var1.getKind().equals(var2.getKind())) {
+				if (var1.getName().equals(var2.getName()) /*&& var1.getKind().equals(var2.getKind())*/) {
 					isNew = false;
 				}
 			}
