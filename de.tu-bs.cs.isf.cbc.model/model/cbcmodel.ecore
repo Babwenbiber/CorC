@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+referenceResource="platform:/resource//org.eclipse.xtext.common.types/model/JavaVMTypes.genmodel"
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="cbcmodel" nsURI="http://www.example.org/cbcmodel" nsPrefix="cbcmodel">
   <eClassifiers xsi:type="ecore:EClass" name="CbCFormula">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -37,9 +38,8 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="comment" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SkipStatement" eSuperTypes="#//AbstractStatement"/>
-  
   <eClassifiers xsi:type="ecore:EClass" name="JavaStatement">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="name" upperBound="-1" eType="ecore:EClass http://www.eclipse.org/xtext/xbase/Xbase#//XExpression"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="postCondition" eType="#//Condition"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="preCondition" eType="#//Condition"
@@ -47,23 +47,20 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="proven" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="comment" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  
   <eClassifiers xsi:type="ecore:EClass" name="JMLAnnotation">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="requires" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-            <eStructuralFeatures xsi:type="ecore:EAttribute" name="assignable" lowerBound="1"
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="assignable" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-            <eStructuralFeatures xsi:type="ecore:EAttribute" name="ensures" lowerBound="1"
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ensures" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  
   <eClassifiers xsi:type="ecore:EClass" name="BlockStatement" eSuperTypes="#//AbstractStatement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="javaStatement" lowerBound="1"
         eType="#//JavaStatement" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="jmlAnnotation" lowerBound="1"
         eType="#//JMLAnnotation" containment="true"/>
   </eClassifiers>
-  
   <eClassifiers xsi:type="ecore:EClass" name="CompositionStatement" eSuperTypes="#//AbstractStatement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="firstStatement" lowerBound="1"
         eType="#//AbstractStatement" containment="true"/>
@@ -168,10 +165,10 @@
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="StrengthWeakStatement" eSuperTypes="#//AbstractStatement">
-	  <eStructuralFeatures xsi:type="ecore:EReference" name="weakPreCondition" lowerBound="1"
-	        eType="#//Condition" containment="true"/>
-	  <eStructuralFeatures xsi:type="ecore:EReference" name="strongPostCondition" lowerBound="1"
-	        eType="#//Condition" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="weakPreCondition" lowerBound="1"
+        eType="#//Condition" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="strongPostCondition" lowerBound="1"
+        eType="#//Condition" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MethodRefinements">
     <eStructuralFeatures xsi:type="ecore:EReference" name="productvariants" upperBound="-1"

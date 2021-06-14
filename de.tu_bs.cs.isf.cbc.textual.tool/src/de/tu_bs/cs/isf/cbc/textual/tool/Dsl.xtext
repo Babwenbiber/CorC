@@ -12,9 +12,9 @@ CbCProblem returns CbCProblem:
 CbCFormula returns CbCFormula:
 	'Formula'
 	name=EString
-		'pre:' '{' preCondition=Condition '}'
+		'Pre:' '{' preCondition=Condition '}'
 		'{' statement=AbstractStatement '}'
-		'post:' '{' postCondition=Condition '}'
+		'Post:' '{' postCondition=Condition '}'
 	;
 
 AbstractStatement returns AbstractStatement:
@@ -62,13 +62,13 @@ MethodStatement returns MethodStatement:
 		
 ReturnStatement returns ReturnStatement:
 	{ReturnStatement}
-		'cbcReturn' name=CodeString;
+		'Return' name=CodeString;
 		
 StrengthWeakStatement returns StrengthWeakStatement:
 	{StrengthWeakStatement}
-	'pre:' '{' weakPreCondition=Condition '}'
+	'Pre:' '{' weakPreCondition=Condition '}'
 		'{' name=CodeString '}'
-		'post:' '{' strongPostCondition=Condition '}'
+		'Post:' '{' strongPostCondition=Condition '}'
 ;
 		
 
@@ -83,18 +83,18 @@ SkipStatement returns SkipStatement:
 CompositionStatement returns CompositionStatement:
 	{CompositionStatement}
 		'{' firstStatement=AbstractStatement '}'
-		'intm:' '[' intermediateCondition=Condition ']'
+		'Intm:' '[' intermediateCondition=Condition ']'
 		'{' secondStatement=AbstractStatement '}'
 	;
 
 JavaStatement returns JavaStatement:
-	name=EString
+	name+=XExpression (name+=XExpression)*
 ;
 
 JMLAnnotation returns JMLAnnotation:
-	"@1" requires=EString "$1"
-	"@2" assignable=EString "$2"
-	"@3" ensures=EString "$3"
+	"@requires" requires=EString ";"
+	"@ensures" ensures=EString ";"
+	"@assignable" assignable=EString ";"
 ;
 
 BlockStatement returns BlockStatement:
@@ -105,8 +105,8 @@ BlockStatement returns BlockStatement:
 
 SelectionStatement returns SelectionStatement:
 	{SelectionStatement}
-		'cbcIf' '(' guards+=Condition ')' 'then' '{' commands+=AbstractStatement '}'
-		('cbcElseif' '(' guards+=Condition ')' 'then' '{' commands+=AbstractStatement '}')* 'fi'
+		'If' '(' guards+=Condition ')' 'Then' '{' commands+=AbstractStatement '}'
+		('Elseif' '(' guards+=Condition ')' 'Then' '{' commands+=AbstractStatement '}')* 'Fi'
 	;
 
 //RepetitionStatement returns RepetitionStatement:
@@ -130,10 +130,10 @@ SelectionStatement returns SelectionStatement:
 
 SmallRepetitionStatement returns SmallRepetitionStatement:
 	{SmallRepetitionStatement}
-		'cbcWhile' '(' guard=Condition ')' 'cbcDo'
-		'cbcInv:' '[' invariant=Condition ']'
-		'cbcVar:' '[' variant=Variant ']'
-		'{' loopStatement=AbstractStatement '}' 'od'
+		'While' '(' guard=Condition ')' 'Do'
+		'Inv:' '[' invariant=Condition ']'
+		'Var:' '[' variant=Variant ']'
+		'{' loopStatement=AbstractStatement '}' 'Od'
 	;
 
 EInt returns ecore::EInt:
@@ -147,7 +147,7 @@ Variant returns Variant:
 JavaVariables returns JavaVariables:
 	{JavaVariables}
 	'JavaVariables'
-	('variables' '{' variables+=JavaVariable ( "," variables+=JavaVariable)* '}')?;
+	('Variables' '{' variables+=JavaVariable ( "," variables+=JavaVariable)* '}')?;
 
 JavaVariable returns JavaVariable:
 	{JavaVariable}
@@ -156,18 +156,18 @@ JavaVariable returns JavaVariable:
 GlobalConditions returns GlobalConditions:
 	{GlobalConditions}
 	'GlobalConditions'
-	('conditions' '{' conditions+=Condition ( "," conditions+=Condition)* '}')?;
+	('Conditions' '{' conditions+=Condition ( "," conditions+=Condition)* '}')?;
 	
 Renaming returns Renaming:
 	{Renaming}
 	'Renaming'
-	('renames' '{' rename+=Rename (rename+=Rename)* '}')?;
+	('Renames' '{' rename+=Rename (rename+=Rename)* '}')?;
 
 Rename returns Rename:
 	{Rename}
 	'{'
-	'cbcType' type=EString
-	'cbcFunction' function=EString
-	'cbcNewName' newName=EString
+	'Type' type=EString
+	'Function' function=EString
+	'NewName' newName=EString
 	'}'
 	;
