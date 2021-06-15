@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-referenceResource="platform:/resource//org.eclipse.xtext.common.types/model/JavaVMTypes.genmodel"
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="cbcmodel" nsURI="http://www.example.org/cbcmodel" nsPrefix="cbcmodel">
   <eClassifiers xsi:type="ecore:EClass" name="CbCFormula">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -39,7 +38,8 @@ referenceResource="platform:/resource//org.eclipse.xtext.common.types/model/Java
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SkipStatement" eSuperTypes="#//AbstractStatement"/>
   <eClassifiers xsi:type="ecore:EClass" name="JavaStatement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="name" upperBound="-1" eType="ecore:EClass http://www.eclipse.org/xtext/xbase/Xbase#//XExpression"/>
+	<eStructuralFeatures xsi:type="ecore:EReference" name="name" upperBound="-1" eType="ecore:EClass ../../org.eclipse.xtext.xbase/model/Xbase.ecore#//XExpression"
+        containment="true"/>   
     <eStructuralFeatures xsi:type="ecore:EReference" name="postCondition" eType="#//Condition"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="preCondition" eType="#//Condition"
