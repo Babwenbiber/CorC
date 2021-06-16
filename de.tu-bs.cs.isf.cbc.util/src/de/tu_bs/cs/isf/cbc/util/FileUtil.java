@@ -81,17 +81,17 @@ public class FileUtil {
 	}
 
 	public static void setApplicationUri(URI applicationUri) {
-//		FileUtil.applicationUri = applicationUri;
-		String[] segments = {"Users", "frede", "runtume-New_configuration", "myproj"};
-		FileUtil.applicationUri = URI.createHierarchicalURI(
-				segments, null, null);
+		FileUtil.applicationUri = applicationUri;
+//		String[] segments = {"Users", "frede", "runtume-New_configuration", "myproj"};
+//		FileUtil.applicationUri = URI.createHierarchicalURI(
+//				segments, null, null);
 	}
 
 	public static File writeFile(String problem, String location, int numberFile, boolean override, String proveName) {
 		File keyFile = new File(location + "/prove" + numberFile + proveName + ".key");
 		File keyHelperFile = new File(location + "/helper.key");
 
-		if (!keyFile.exists() || override) {
+		if (true || !keyFile.exists() || override) {
 			try {
 				keyFile.getParentFile().mkdirs();
 				keyFile.createNewFile();

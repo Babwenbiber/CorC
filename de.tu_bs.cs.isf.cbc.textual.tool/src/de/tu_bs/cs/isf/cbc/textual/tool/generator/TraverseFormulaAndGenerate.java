@@ -45,20 +45,23 @@ public class TraverseFormulaAndGenerate {
 	private URI uri;
 	private int numberFile;
 	private CbCFormula formula;
+	private Resource resource;
 	private CbcmodelFactory factory;
 
-	public TraverseFormulaAndGenerate(JavaVariables vars, GlobalConditions conds, Renaming renaming, URI uri,
-			CbCFormula formula) {
+	TraverseFormulaAndGenerate(JavaVariables vars, GlobalConditions conds, Renaming renaming, URI uri,
+			CbCFormula formula, Resource resource) {
 		this.vars = vars;
 		this.conds = conds;
 		this.renaming = renaming;
 		this.uri = uri;
 		this.numberFile = 0;
 		this.formula = formula;
+		this.resource = resource;
 		this.factory = CbcmodelFactory.eINSTANCE;
 	}
 
-	public CbCFormula traverseFormulaAndGenerate() {		AbstractStatement statement = formula.getStatement();
+	public CbCFormula traverseFormulaAndGenerate() {		
+		AbstractStatement statement = formula.getStatement();
 		statement.setPreCondition(factory.createCondition());
 		statement.getPreCondition().setName(formula.getPreCondition().getName());
 		statement.setPostCondition(factory.createCondition());
@@ -94,9 +97,9 @@ public class TraverseFormulaAndGenerate {
 				List<Condition> conds = mergeGlobalConditions(this.conds, condsFormula);
 				List<Rename> renaming = mergeRenaming(this.renaming, renamingFormula);
 				ProveWithKey.createProveMethodFormulaWithKey(formula.getPreCondition(), statement.getPreCondition(),
-						vars, conds, renaming, uri, numberFile++, false, FilenamePrefix.METHOD);
+						vars, conds, renaming, uri, numberFile++, false, FilenamePrefix.PRE_IMPL);
 				ProveWithKey.createProveMethodFormulaWithKey(statement.getPostCondition(), formula.getPostCondition(),
-						vars, conds, renaming, uri, numberFile++, false, FilenamePrefix.METHOD);
+						vars, conds, renaming, uri, numberFile++, false, FilenamePrefix.POST_IMPL);
 			}
 		} else if (statement instanceof SkipStatement) {
 			ProveWithKey.createProveStatementWithKey(statement, vars, conds, renaming, null, uri, numberFile++, false, FilenamePrefix.SKIP);
@@ -104,17 +107,17 @@ public class TraverseFormulaAndGenerate {
 			ProveWithKey.createProveStatementWithKey(statement, vars, conds, renaming, null, uri, numberFile++, false, FilenamePrefix.RETURN);
 		} else if (statement instanceof StrengthWeakStatement) {
 			StrengthWeakStatement swStatement = (StrengthWeakStatement)statement;
-			ProveWithKey.createProvePreImplPreWithKey(statement.getPreCondition(), 
+			ProveWithKey.createProvePreImplPreWithKey(statement.getPreCondition(),
 					swStatement.getWeakPreCondition(), vars, conds, renaming, uri, numberFile++, false, FilenamePrefix.PRE_IMPL);
 			ProveWithKey.createProvePostImplPostWithKey(statement.getPostCondition(),
 					swStatement.getStrongPostCondition(), vars, conds, renaming, uri,
 					numberFile++, false, FilenamePrefix.POST_IMPL);
 			ProveWithKey.createProveStatementWithKey(statement, vars, conds, renaming, null, uri, numberFile++, false, FilenamePrefix.STATEMENT);
-		
+
 		} else if (statement instanceof BlockStatement) {
-	
+
 			BlockStatement blockStatement = (BlockStatement) statement;
-			ProveWithKey.createProveRequiresWithKey(statement.getPreCondition(), 
+			ProveWithKey.createProveRequiresWithKey(statement.getPreCondition(),
 					blockStatement.getJmlAnnotation().getRequires(), vars, conds, renaming, uri, numberFile++, false, FilenamePrefix.PRE_IMPL);
 			ProveWithKey.createProveEnsuresWithKey(statement.getPostCondition(),
 					blockStatement.getJmlAnnotation().getEnsures(), vars, conds, renaming, uri, numberFile++, false, FilenamePrefix.POST_IMPL);
@@ -123,7 +126,6 @@ public class TraverseFormulaAndGenerate {
 	}
 
 	private void traverseRepetitionStatement(SmallRepetitionStatement repetitionStatement) {
-		String name = "repetition";
 		AbstractStatement loopStatement = repetitionStatement.getLoopStatement();
 		loopStatement.setPreCondition(factory.createCondition());
 		loopStatement.getPreCondition().setName("(" + repetitionStatement.getInvariant().getName() + ") & ("
@@ -131,13 +133,13 @@ public class TraverseFormulaAndGenerate {
 		loopStatement.setPostCondition(factory.createCondition());
 		loopStatement.getPostCondition().setName(repetitionStatement.getInvariant().getName());
 		ProveWithKey.createProvePreWithKey(repetitionStatement.getInvariant(), repetitionStatement.getPreCondition(),
-				vars, conds, renaming, uri, numberFile++, false, name);
+				vars, conds, renaming, uri, numberFile++, false, FilenamePrefix.PRE_IMPL);
 		ProveWithKey.createProvePostWithKey(repetitionStatement.getInvariant(), repetitionStatement.getGuard(),
-				repetitionStatement.getPostCondition(), vars, conds, renaming, uri, numberFile++, false, name);
+				repetitionStatement.getPostCondition(), vars, conds, renaming, uri, numberFile++, false, FilenamePrefix.POST_IMPL);
 		String code = ConstructCodeBlock.constructCodeBlockAndVerify3(repetitionStatement);
 		ProveWithKey.createProveVariant2WithKey(code, repetitionStatement.getInvariant(),
 				repetitionStatement.getGuard(), repetitionStatement.getVariant(), vars, conds, renaming, uri,
-				numberFile++, false, name);
+				numberFile++, false, FilenamePrefix.VARIANT2);
 
 		castStatementAndTraverse(loopStatement);
 	}
@@ -146,8 +148,8 @@ public class TraverseFormulaAndGenerate {
 		ProveWithKey.createProvePreSelWithKey(selectionStatement.getGuards(), selectionStatement.getPreCondition(),
 				vars, conds, renaming, uri, numberFile++, false, FilenamePrefix.SELECTION);
 		for (int i = 0; i < selectionStatement.getCommands().size(); i++) {
-			AbstractStatement childStatement = (AbstractStatement) selectionStatement.getCommands().get(i);
-			Condition childGuard = (Condition) selectionStatement.getGuards().get(i);
+			AbstractStatement childStatement = selectionStatement.getCommands().get(i);
+			Condition childGuard = selectionStatement.getGuards().get(i);
 
 			childStatement.setPreCondition(factory.createCondition());
 			childStatement.getPreCondition().setName(
@@ -200,6 +202,7 @@ public class TraverseFormulaAndGenerate {
 
 	private Collection<CbCFormula> getFormulas() {
 		Collection<CbCFormula> result = Collections.emptyList();
+		URI uri = resource.getURI();
 		URI uriTrimmed = uri.trimFragment();
 		if (uriTrimmed.isPlatformResource()) {
 			String platformString = uriTrimmed.toPlatformString(true);
@@ -209,6 +212,7 @@ public class TraverseFormulaAndGenerate {
 				result = GetCbCFileUtil.getCbCFormulas(project);
 			}
 		}
+
 		return result;
 	}
 

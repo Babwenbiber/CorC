@@ -12,9 +12,9 @@ CbCProblem returns CbCProblem:
 CbCFormula returns CbCFormula:
 	'Formula'
 	name=EString
-		'Pre:' '{' preCondition=Condition '}'
+		'Pre:' '(' preCondition=Condition ')'
 		'{' statement=AbstractStatement '}'
-		'Post:' '{' postCondition=Condition '}'
+		'Post:' '(' postCondition=Condition ')'
 	;
 
 AbstractStatement returns AbstractStatement:
@@ -66,9 +66,9 @@ ReturnStatement returns ReturnStatement:
 		
 StrengthWeakStatement returns StrengthWeakStatement:
 	{StrengthWeakStatement}
-	'Pre:' '{' weakPreCondition=Condition '}'
+	'Pre:' '(' weakPreCondition=Condition ')'
 		'{' name=CodeString '}'
-		'Post:' '{' strongPostCondition=Condition '}'
+		'Post:' '(' strongPostCondition=Condition ')'
 ;
 		
 
@@ -83,12 +83,12 @@ SkipStatement returns SkipStatement:
 CompositionStatement returns CompositionStatement:
 	{CompositionStatement}
 		'{' firstStatement=AbstractStatement '}'
-		'Intm:' '[' intermediateCondition=Condition ']'
+		'Intm:' '(' intermediateCondition=Condition ')'
 		'{' secondStatement=AbstractStatement '}'
 	;
 
 JavaStatement returns JavaStatement:
-	name+=XExpression (name+=XExpression)*
+	name+=XPrimaryExpression (name+=XPrimaryExpression)*
 ;
 
 JMLAnnotation returns JMLAnnotation:
@@ -131,8 +131,8 @@ SelectionStatement returns SelectionStatement:
 SmallRepetitionStatement returns SmallRepetitionStatement:
 	{SmallRepetitionStatement}
 		'While' '(' guard=Condition ')' 'Do'
-		'Inv:' '[' invariant=Condition ']'
-		'Var:' '[' variant=Variant ']'
+		'Inv:' '(' invariant=Condition ')'
+		'Var:' '(' variant=Variant ')'
 		'{' loopStatement=AbstractStatement '}' 'Od'
 	;
 
@@ -147,7 +147,7 @@ Variant returns Variant:
 JavaVariables returns JavaVariables:
 	{JavaVariables}
 	'JavaVariables'
-	('Variables' '{' variables+=JavaVariable ( "," variables+=JavaVariable)* '}')?;
+	('Variables' '[' variables+=JavaVariable ( "," variables+=JavaVariable)* ']')?;
 
 JavaVariable returns JavaVariable:
 	{JavaVariable}
@@ -156,12 +156,12 @@ JavaVariable returns JavaVariable:
 GlobalConditions returns GlobalConditions:
 	{GlobalConditions}
 	'GlobalConditions'
-	('Conditions' '{' conditions+=Condition ( "," conditions+=Condition)* '}')?;
+	('Conditions' '[' conditions+=Condition ( "," conditions+=Condition)* ']')?;
 	
 Renaming returns Renaming:
 	{Renaming}
 	'Renaming'
-	('Renames' '{' rename+=Rename (rename+=Rename)* '}')?;
+	('Renames' '[' rename+=Rename (rename+=Rename)* ']')?;
 
 Rename returns Rename:
 	{Rename}

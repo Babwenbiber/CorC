@@ -62,25 +62,26 @@ class DslJvmModelInferrer extends AbstractModelInferrer {
 	def dispatch void infer(CbCProblem element, IJvmDeclaredTypeAcceptor acceptor, boolean isPreIndexingPhase) {
 		// Here you explain how your model is mapped to Java elements, by writing the actual translation code.
 		
-		acceptor.accept(element.toClass("de.tu_bs.cs.isf.cbc.cbcmodel")) [
+//		acceptor.accept(element.toClass("de.tu_bs.cs.isf.cbc.cbcmodel")) [
+//			
+//			var JavaVariables vars = element.getJavaVariable();
+//			var GlobalConditions conds = element.getGlobalcondition();
+//			var Renaming renaming = element.getRenaming();
+//			var CbCFormula formula = element.getCbcformula();
+//			var String path = ResourcesPlugin.getWorkspace().getRoot().getLocation().toString() + "/myproj/javaCbc.cbctxt";
+//			System.out.println("path sis "+path);			
+//
+////			var URI uri = URI.createHierarchicalURI(path.split("/"), null, null);
+//			var URI uri = URI.createPlatformResourceURI(ResourcesPlugin.getWorkspace().getRoot().getLocation().toString());
+//			val TraverseFormulaAndGenerate traverser = new TraverseFormulaAndGenerate(vars, conds, renaming, uri, formula);
+//			formula = traverser.traverseFormulaAndGenerate();
+//			val ResourceSet rs = new ResourceSetImpl();
+//			val String workspace = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString();
+//			uri = uri.trimFragment();
+//			uri = uri.trimFileExtension();
+//			uri = uri.appendFileExtension("cbcmodel");
 			
-			var JavaVariables vars = element.getJavaVariable();
-			var GlobalConditions conds = element.getGlobalcondition();
-			var Renaming renaming = element.getRenaming();
-			var CbCFormula formula = element.getCbcformula();
-			var String path = ResourcesPlugin.getWorkspace().getRoot().getLocation().toString() + "/myproj/newDiagram.cbctxt";
-			System.out.println("path sis "+path);			
-
-			var URI uri = URI.createHierarchicalURI(path.split("/"), null, null);
-			val TraverseFormulaAndGenerate traverser = new TraverseFormulaAndGenerate(vars, conds, renaming, uri, formula);
-			formula = traverser.traverseFormulaAndGenerate();
-			val ResourceSet rs = new ResourceSetImpl();
-			val String workspace = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString();
-			uri = uri.trimFragment();
-			uri = uri.trimFileExtension();
-			uri = uri.appendFileExtension("cbcmodel");
-			
-		]
+//		]
 		
 		// An implementation for the initial hello world example could look like this:
 //		acceptor.accept(element.toClass("my.company.greeting.MyGreetings")) [
