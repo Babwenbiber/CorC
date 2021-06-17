@@ -8,9 +8,11 @@ de.tu-bs.cs.isf.taxonomy.model.edit/
 de.tu-bs.cs.isf.taxonomy.model.editor/
 de.tu-bs.cs.isf.taxonomy.model/src-gen/
 de.tu_bs.cs.isf.cbc.textual.tool/xtend-gen/
+de.tu_bs.cs.isf.cbc.textual.tool/xtend-gen/**
 de.tu_bs.cs.isf.cbc.textual.tool/src-gen/
-*/src-gen/
-*/xtend-gen/
+de.tu_bs.cs.isf.cbc.textual.tool/src-gen/**
+*/src-gen/**
+*/xtend-gen/**
 
 ##############################
 ## Java
