@@ -22,13 +22,10 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xtext.xbase.XAssignment;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 //import org.key_project.util.collection.ImmutableSet;
-import org.eclipse.xtext.xbase.XExpression;
-import org.eclipse.xtext.xbase.impl.XIfExpressionImpl;
 
 import com.google.common.collect.Lists;
 
@@ -253,21 +250,23 @@ public class ProveWithKey {
 		String pre = Parser.getConditionFromCondition(statement.getPreCondition().getName());
 		String post = Parser.getConditionFromCondition(statement.getPostCondition().getName());
 		List<String> modifiables = Parser.getModifiedVarsFromCondition(statement.getPostCondition().getName());
-		String stat = "";
-		for (XExpression e: statement.getName()) {
-			if (e instanceof XAssignment) {
-				stat += ((XAssignment) e).getFeature().getIdentifier();
-			} else if (e instanceof XIfExpressionImpl) { 
-				TreeIterator<EObject> iterator = ((XIfExpressionImpl) e).eAllContents();
-				while(iterator.hasNext()) {
-					stat += iterator.getClass().getName();
-					iterator.next();
-				}
-				
-			} else {
-				stat += e.toString();
-			}
-		}
+//		String stat = "";
+//		for (XExpression e: statement.getName()) {
+//			if (e instanceof XAssignment) {
+//				stat += ((XAssignment) e).getFeature().getIdentifier();
+//			} else if (e instanceof XIfExpressionImpl) { 
+//				TreeIterator<EObject> iterator = ((XIfExpressionImpl) e).eAllContents();
+//				while(iterator.hasNext()) {
+//					stat += iterator.getClass().getName();
+//					iterator.next();
+//				}
+//				
+//			} else {
+//				stat += e.toString();
+//			}
+//		}
+		String stat = NodeModelUtils.getTokenText(NodeModelUtils.findActualNodeFor(statement));
+		System.out.println("stat is " + stat);
 
 		List<String> unmodifiedVariables = Parser.getUnmodifiedVars(modifiables, vars.getVariables());
 
