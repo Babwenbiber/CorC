@@ -18,7 +18,11 @@ class DslProposalProvider extends AbstractDslProposalProvider {
 		// call implementation of superclass
 		super.complete_CompositionStatement(model, ruleCall, context, acceptor)
 		// compute the plain proposal
-			val String proposal = "{\"<statement>\"} intm: [\"<condition>\"] {\"<statement>\"}";
+			val String proposal = "{\n"
+				+ "\t<statement>\n"
+				+ "} Intm: (\"<condition>\") {\n"
+				+ "\t<statement>\n"
+				+ "}";
 
 		acceptor.accept(createCompletionProposal(proposal, context))
     }
@@ -28,9 +32,11 @@ class DslProposalProvider extends AbstractDslProposalProvider {
 		// call implementation of superclass
 		super.complete_SmallRepetitionStatement(model, ruleCall, context, acceptor)
 		// compute the plain proposal
-			val String proposal = "while (\"<guard>\") do\n" 
-			+ "\t\tinv: [\"<invariant>\"] var: [\"<variant>\"]\n"
-			+ "\t\t{\"<statement>\"} od";
+			val String proposal = "While (\"<guard>\") Do\n" 
+			+ "\t\tInv: [\"<invariant>\"] Var: [\"<variant>\"]\n"
+			+ "\t\t{\n"
+			+ "\t\t\t<statement>\n"
+			+ "\t\t} Od";
 
 		acceptor.accept(createCompletionProposal(proposal, context))
     }
@@ -40,10 +46,29 @@ class DslProposalProvider extends AbstractDslProposalProvider {
 		// call implementation of superclass
 		super.complete_SelectionStatement(model, ruleCall, context, acceptor)
 		// compute the plain proposal
-			val String proposal = "if (\"<guard>\") then\n" 
-			+ "\t\t{\"<statement>\"}\n"
-			+ "\t\telseif (\"<guard>\") then\n" 
-			+ "\t\t{\"<statement>\"} fi";
+			val String proposal = "If (\"<guard>\") Then\n" 
+			+ "\t\t{<statement>}\n"
+			+ "\t\tElseif (\"<guard>\") then\n" 
+			+ "\t\t{<statement>} Fi";
+
+		acceptor.accept(createCompletionProposal(proposal, context))
+    }
+    
+        override void complete_BlockStatement(EObject model, RuleCall ruleCall, ContentAssistContext context,
+		ICompletionProposalAcceptor acceptor) {
+		// call implementation of superclass
+		System.out.println("offset is " + context.getOffset())
+		System.out.println("prefix is " + context.getPrefix())
+		super.complete_SelectionStatement(model, ruleCall, context, acceptor)
+		// compute the plain proposal
+			val String proposal = "Block \"<name>\":\n" 
+			+ "@requires \"<precondition>\";\n"
+			+ "@ensure \"<postcondition>\";\n"
+			+ "@assignable \"<modifiable>\";\n"
+			+ "{\n"
+			+ "\t\t<statement>\n"
+			+ "}";
+			
 
 		acceptor.accept(createCompletionProposal(proposal, context))
     }
@@ -54,9 +79,9 @@ class DslProposalProvider extends AbstractDslProposalProvider {
 		super.complete_CbCFormula(model, ruleCall, context, acceptor)
 		// compute the plain proposal
 			val String proposal = "Formula \"<formula>\"\n"
-			+ "\tpre: {\"<condition>\"}\n" 
-			+ "\t{\"<statement>\"}\n"
-			+ "\tpost: {\"<condition>\"}";
+			+ "\tPre: {\"<condition>\"}\n" 
+			+ "\t{<statement>}\n"
+			+ "\tPost: {\"<condition>\"}";
 
 		acceptor.accept(createCompletionProposal(proposal, context))
     }
@@ -66,9 +91,9 @@ class DslProposalProvider extends AbstractDslProposalProvider {
 		// call implementation of superclass
 		super.complete_StrengthWeakStatement(model, ruleCall, context, acceptor)
 		// compute the plain proposal
-			val String proposal = "pre: {\"<condition>\"}\n" 
-			+ "\t\t{\"<statement>\"}\n"
-			+ "\t\tpost: {\"<condition>\"}";
+			val String proposal = "Pre: {\"<condition>\"}\n" 
+			+ "\t\t{<statement>}\n"
+			+ "\t\tPost: {\"<condition>\"}";
 
 		acceptor.accept(createCompletionProposal(proposal, context))
     }
@@ -79,7 +104,7 @@ class DslProposalProvider extends AbstractDslProposalProvider {
 		super.complete_JavaVariables(model, ruleCall, context, acceptor)
 		// compute the plain proposal
 			val String proposal = "JavaVariables\n"
-			+ "\tvariables {\"<variable>\", \"<variable>\"}\n";
+			+ "\tVariables {\"<variable>\", \"<variable>\"}\n";
 
 		acceptor.accept(createCompletionProposal(proposal, context))
     }
@@ -90,7 +115,7 @@ class DslProposalProvider extends AbstractDslProposalProvider {
 		super.complete_GlobalConditions(model, ruleCall, context, acceptor)
 		// compute the plain proposal
 			val String proposal = "GlobalConditions\n"
-			+ "\tconditions {\"<condition>\", \"<condition>\"}\n";
+			+ "\tConditions {\"<condition>\", \"<condition>\"}\n";
 
 		acceptor.accept(createCompletionProposal(proposal, context))
     }
@@ -101,10 +126,10 @@ class DslProposalProvider extends AbstractDslProposalProvider {
 		super.complete_Renaming(model, ruleCall, context, acceptor)
 		// compute the plain proposal
 			val String proposal = "Renaming\n"
-			+ "\trenames {\n"
-			+ "\t\t{type \"<type>\""
-			+ " function \"<functionName>\""
-			+ " newName \"<newName>\"}\n"
+			+ "\tRenames {\n"
+			+ "\t\t{Type \"<type>\""
+			+ " Function \"<functionName>\""
+			+ " NewName \"<newName>\"}\n"
 			+ "\t}";
 
 		acceptor.accept(createCompletionProposal(proposal, context))
@@ -115,9 +140,9 @@ class DslProposalProvider extends AbstractDslProposalProvider {
 		// call implementation of superclass
 		super.complete_Rename(model, ruleCall, context, acceptor)
 		// compute the plain proposal
-			val String proposal = "{type \"<type>\""
-			+ " function \"<functionName>\""
-			+ " newName \"<newName>\"}";
+			val String proposal = "{Type \"<type>\""
+			+ " Function \"<functionName>\""
+			+ " NewName \"<newName>\"}";
 
 		acceptor.accept(createCompletionProposal(proposal, context))
     }

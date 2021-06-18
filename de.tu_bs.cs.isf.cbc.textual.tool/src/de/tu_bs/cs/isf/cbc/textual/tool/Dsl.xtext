@@ -88,12 +88,12 @@ CompositionStatement returns CompositionStatement:
 	;
 
 JavaStatement returns JavaStatement:
-	name+=XPrimaryExpression (name+=XPrimaryExpression)*
+	(name+=XExpression)+
 ;
 
 JMLAnnotation returns JMLAnnotation:
-	"@requires" requires=EString ";"
-	"@ensures" ensures=EString ";"
+	"@requires" requires=EString ";" &
+	"@ensures" ensures=EString ";" &
 	"@assignable" assignable=EString ";"
 ;
 
@@ -108,25 +108,6 @@ SelectionStatement returns SelectionStatement:
 		'If' '(' guards+=Condition ')' 'Then' '{' commands+=AbstractStatement '}'
 		('Elseif' '(' guards+=Condition ')' 'Then' '{' commands+=AbstractStatement '}')* 'Fi'
 	;
-
-//RepetitionStatement returns RepetitionStatement:
-//	{RepetitionStatement}
-//		'{' startStatement=AbstractStatement '}'
-//		'while' '(' guard=Condition ')' 'do'
-//		'inv:' '[' invariant=Condition ']'
-//		'var:' '[' variant=Variant ']'
-//		'{' loopStatement=AbstractStatement '}' 'od'
-//		'{' endStatement=AbstractStatement '}'
-//	;
-
-//Composition3Statement returns Composition3Statement:
-//	{Composition3Statement}
-//		'compo3' '{' firstStatement=AbstractStatement ')'
-//		'intm1:' '[' firstIntermediateCondition=Condition ']'
-//		'{' secondStatement=AbstractStatement ')'
-//		'intm2:' '[' secondIntermediateCondition=Condition ']'
-//		'{' thirdStatement=AbstractStatement ')' '3opmoc'
-//	;
 
 SmallRepetitionStatement returns SmallRepetitionStatement:
 	{SmallRepetitionStatement}
