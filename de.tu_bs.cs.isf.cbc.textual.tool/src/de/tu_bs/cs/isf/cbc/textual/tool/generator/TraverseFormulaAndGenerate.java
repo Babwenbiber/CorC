@@ -1,6 +1,7 @@
 package de.tu_bs.cs.isf.cbc.textual.tool.generator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -23,6 +24,9 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.GlobalConditions;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariable;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariables;
+import de.tu_bs.cs.isf.cbc.cbcmodel.JdlBracedExpression;
+import de.tu_bs.cs.isf.cbc.cbcmodel.JdlExpression;
+import de.tu_bs.cs.isf.cbc.cbcmodel.JdlExpressions;
 import de.tu_bs.cs.isf.cbc.cbcmodel.MethodStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Rename;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Renaming;
@@ -32,7 +36,11 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.SkipStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.BlockStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.SmallRepetitionStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.StrengthWeakStatement;
+import de.tu_bs.cs.isf.cbc.cbcmodel.customimpl.JdlBracedExpressionCustomImpl;
+import de.tu_bs.cs.isf.cbc.cbcmodel.customimpl.JdlExpressionsCustomImpl;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.AbstractStatementImpl;
+import de.tu_bs.cs.isf.cbc.cbcmodel.impl.JdlBracedExpressionImpl;
+import de.tu_bs.cs.isf.cbc.cbcmodel.util.CbcmodelAdapterFactory;
 import de.tu_bs.cs.isf.cbc.util.ConstructCodeBlock;
 import de.tu_bs.cs.isf.cbc.util.FilenamePrefix;
 import de.tu_bs.cs.isf.cbc.util.ProveWithKey;
@@ -128,8 +136,16 @@ public class TraverseFormulaAndGenerate {
 	private void traverseRepetitionStatement(SmallRepetitionStatement repetitionStatement) {
 		AbstractStatement loopStatement = repetitionStatement.getLoopStatement();
 		loopStatement.setPreCondition(factory.createCondition());
-		loopStatement.getPreCondition().setName("(" + repetitionStatement.getInvariant().getName() + ") & ("
-				+ repetitionStatement.getGuard().getName() + ")");
+		
+		JdlExpressions bracedExpression1 = new JdlBracedExpressionCustomImpl().getExpressions();
+//		bracedExpression1.setExpressions(repetitionStatement.getInvariant().getName());
+//		JdlBracedExpression bracedExpression1 = new JdlBracedExpressionCustomImpl(.getExpressions());
+//		bracedExpression1.setExpressions(repetitionStatement.getGuard().getName());
+//		JdlExpressions expression = new JdlExpressionsCustomImpl();
+//		List list = Arrays.asList(new JdlExpression[] {bracedExpression1, bracedExpression2});
+//		expression.setExpressions7
+//		loopStatement.getPreCondition().setName("(" + repetitionStatement.getInvariant().getName() + ") & ("
+//				+  + ")");
 		loopStatement.setPostCondition(factory.createCondition());
 		loopStatement.getPostCondition().setName(repetitionStatement.getInvariant().getName());
 		ProveWithKey.createProvePreWithKey(repetitionStatement.getInvariant(), repetitionStatement.getPreCondition(),
@@ -152,8 +168,8 @@ public class TraverseFormulaAndGenerate {
 			Condition childGuard = selectionStatement.getGuards().get(i);
 
 			childStatement.setPreCondition(factory.createCondition());
-			childStatement.getPreCondition().setName(
-					"(" + selectionStatement.getPreCondition().getName() + ") & (" + childGuard.getName() + ")");
+//			childStatement.getPreCondition().setName(
+//					"(" + selectionStatement.getPreCondition().getName() + ") & (" + childGuard.getName() + ")");
 			childStatement.setPostCondition(factory.createCondition());
 			childStatement.getPostCondition().setName(selectionStatement.getPostCondition().getName());
 			castStatementAndTraverse(childStatement);
@@ -179,10 +195,10 @@ public class TraverseFormulaAndGenerate {
 	private void traverseBlockStatement(BlockStatement blockStatement) {
 		JavaStatement statement = blockStatement.getJavaStatement();
 
-		statement.setPreCondition(factory.createCondition());
-		statement.getPreCondition().setName(blockStatement.getJmlAnnotation().getRequires());
-		statement.setPostCondition(factory.createCondition());
-		statement.getPostCondition().setName(blockStatement.getJmlAnnotation().getEnsures());
+//		statement.setPreCondition(factory.createCondition());
+//		statement.getPreCondition().setName(blockStatement.getJmlAnnotation().getRequires());
+//		statement.setPostCondition(factory.createCondition());
+//		statement.getPostCondition().setName(blockStatement.getJmlAnnotation().getEnsures());
 		
 		ProveWithKey.createProveJavaStatementWithKey(statement, vars, conds, renaming, null, uri, numberFile++, false, FilenamePrefix.JAVA_STATEMENT);
 	}

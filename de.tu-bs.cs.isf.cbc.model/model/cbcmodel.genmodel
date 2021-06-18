@@ -33,7 +33,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cbcmodel.ecore#//CbCFormula/methodName"/>
     </genClasses>
     <genClasses ecoreClass="cbcmodel.ecore#//Condition">
-      <genFeatures createChild="false" ecoreFeature="ecore:EReference cbcmodel.ecore#//Condition/name"/>
+      <genFeatures children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//Condition/name"/>
     </genClasses>
     <genClasses ecoreClass="cbcmodel.ecore#//AbstractStatement">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cbcmodel.ecore#//AbstractStatement/name"/>
@@ -141,6 +141,20 @@
     </genClasses>
     <genClasses ecoreClass="cbcmodel.ecore#//ProductVariant">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cbcmodel.ecore#//ProductVariant/refinementChain"/>
+    </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//JdlExpression">
+       <genFeatures createChild="true" ecoreFeature="ecore:EAttribute cbcmodel.ecore#//JdlOperation/left"/>
+       <genFeatures createChild="true" ecoreFeature="ecore:EAttribute cbcmodel.ecore#//JdlOperation/ops"/>
+       <genFeatures createChild="true" ecoreFeature="ecore:EAttribute cbcmodel.ecore#//JdlOperation/rights"/>
+    </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//JdlTerminalExpression">
+    </genClasses>
+  	<genClasses ecoreClass="cbcmodel.ecore#//JdlOperation">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cbcmodel.ecore#//JdlOperation/name"/>
+    </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//JdlIterator">
+    </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//JdlBracedExpression">
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

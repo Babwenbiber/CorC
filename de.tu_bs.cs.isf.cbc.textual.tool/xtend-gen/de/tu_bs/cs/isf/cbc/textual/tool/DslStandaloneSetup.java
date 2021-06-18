@@ -7,8 +7,9 @@ package de.tu_bs.cs.isf.cbc.textual.tool;
  * Initialization support for running Xtext languages without Equinox extension registry.
  */
 @SuppressWarnings("all")
-public class DslStandaloneSetup extends DslStandaloneSetupGenerated {
+public class DslStandaloneSetup /* implements DslStandaloneSetupGenerated  */{
   public static void doSetup() {
-    new DslStandaloneSetup().createInjectorAndDoEMFRegistration();
+    throw new Error("Unresolved compilation problems:"
+      + "\nThe method createInjectorAndDoEMFRegistration() is undefined for the type DslStandaloneSetup");
   }
 }

@@ -26,6 +26,8 @@ Workflow {
 			name = "de.tu_bs.cs.isf.cbc.textual.tool.Dsl"
 			fileExtensions = "cbctxt"
 			referencedResource = "platform:/resource/de.tu-bs.cs.isf.cbc.model/model/cbcmodel.genmodel"
+			referencedResource = "platform:/resource/jbase/model/custom/Jbase.genmodel"
+			xbaseSupport = jbase.mwe2.generator.JbaseGeneratorFragment2 {}
 			
 			fragment = ecore2xtext.Ecore2XtextValueConverterServiceFragment2 auto-inject {}
 

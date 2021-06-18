@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -138,7 +139,7 @@ public class ProveWithKey {
 		String globalConditionsString = "";
 		if (conds != null) {
 			for (Condition cond : conds.getConditions()) {
-				if (!cond.getName().isEmpty()) {
+				if (cond.getName()!=null) {
 					globalConditionsString += " & " + cond.getName();
 				}
 			}
@@ -148,12 +149,24 @@ public class ProveWithKey {
 		CbCFormula formula = getCbCFormula(statement);
 
 		String assignmentString = "";
-		String preFormula = Parser.getConditionFromCondition(formula.getStatement().getPreCondition().getName());
-		String postFormula = Parser.getConditionFromCondition(formula.getStatement().getPostCondition().getName());
-		String pre = Parser.getConditionFromCondition(statement.getPreCondition().getName());
-		String post = Parser.getConditionFromCondition(statement.getPostCondition().getName());
-		List<String> modifiables = Parser.getModifiedVarsFromCondition(statement.getPostCondition().getName());
+//		String preFormula = Parser.getConditionFromCondition(formula.getStatement().getPreCondition().getName());
+//		String postFormula = Parser.getConditionFromCondition(formula.getStatement().getPostCondition().getName());
+//		String pre = Parser.getConditionFromCondition(statement.getPreCondition().getName());
+//		String post = Parser.getConditionFromCondition(statement.getPostCondition().getName());
+		
+		String preFormula = Parser.getStringFromEObject(formula.getStatement().getPreCondition().getName());
+		String postFormula = Parser.getStringFromEObject(formula.getStatement().getPostCondition());
+		String pre = Parser.getStringFromEObject(statement.getPreCondition());
+		String post= Parser.getStringFromEObject(statement.getPostCondition());
 		String stat = statement.getName();
+
+		
+		
+		//.getConditionFromCondition(statement.getPreCondition().getName());
+		//Parser.getStringFromEObject(statement.getPreCondition());
+//		String post = Parser.getConditionFromCondition(statement.getPostCondition().getName());
+//		List<String> modifiables = Parser.getModifiedVarsFromCondition(statement.getPostCondition().getName());
+		List<String> modifiables = Arrays.asList(new String[] {""});
 
 		if (refinements != null && pre.equals(preFormula)) {
 			pre = composeContractForCbCDiagram(formula.getCompositionTechnique(), refinements, pre,
@@ -237,7 +250,7 @@ public class ProveWithKey {
 		String globalConditionsString = "";
 		if (conds != null) {
 			for (Condition cond : conds.getConditions()) {
-				if (!cond.getName().isEmpty()) {
+				if (cond.getName()!=null){
 					globalConditionsString += " & " + cond.getName();
 				}
 			}
@@ -247,9 +260,15 @@ public class ProveWithKey {
 
 		String assignmentString = "";
 		
-		String pre = Parser.getConditionFromCondition(statement.getPreCondition().getName());
-		String post = Parser.getConditionFromCondition(statement.getPostCondition().getName());
-		List<String> modifiables = Parser.getModifiedVarsFromCondition(statement.getPostCondition().getName());
+		String pre = Parser.getStringFromEObject(statement.getPreCondition());
+		String post = Parser.getStringFromEObject(statement.getPostCondition());
+		List<String> modifiables = Arrays.asList(new String[] {""});
+		
+		//.getConditionFromCondition(statement.getPreCondition().getName());
+		//Parser.getStringFromEObject(statement.getPreCondition());
+//		String post = Parser.getConditionFromCondition(statement.getPostCondition().getName());
+//		List<String> modifiables = Parser.getModifiedVarsFromCondition(statement.getPostCondition().getName());
+		
 //		String stat = "";
 //		for (XExpression e: statement.getName()) {
 //			if (e instanceof XAssignment) {
@@ -336,7 +355,7 @@ public class ProveWithKey {
 		String globalConditionsString = "";
 		if (conds != null) {
 			for (Condition cond : conds.getConditions()) {
-				if (!cond.getName().isEmpty()) {
+				if (cond.getName()!=null){
 					globalConditionsString += " & " + cond.getName();
 				}
 			}
@@ -345,8 +364,8 @@ public class ProveWithKey {
 		IProject thisProject = getProject(uri);
 
 		String assignmentString = "";
-		String pre = statement.getPreCondition().getName();
-		String post = statement.getPostCondition().getName();
+		String pre = Parser.getStringFromEObject(statement.getPreCondition());
+		String post = Parser.getStringFromEObject(statement.getPostCondition());
 		String stat = statement.getName();
 
 		if (pre == null || pre.length() == 0) {
@@ -686,7 +705,7 @@ public class ProveWithKey {
 		String globalConditionsString = "";
 		if (conds != null) {
 			for (Condition cond : conds.getConditions()) {
-				if (!cond.getName().isEmpty()) {
+				if (cond.getName()!=null) {
 					globalConditionsString += " & " + cond.getName();
 				}
 			}
@@ -694,8 +713,8 @@ public class ProveWithKey {
 
 		IProject thisProject = FileUtil.getProject(uri);
 
-		String preString = Parser.getConditionFromCondition(preCondition.getName());
-		String invariantString = invariant.getName();
+		String invariantString = Parser.getStringFromEObject(invariant);
+		String preString = Parser.getStringFromEObject(preCondition);
 
 		if (preString == null || preString.length() == 0) {
 			preString = "true";
@@ -741,7 +760,7 @@ public class ProveWithKey {
 		String globalConditionsString = "";
 		if (conds != null) {
 			for (Condition cond : conds.getConditions()) {
-				if (!cond.getName().isEmpty()) {
+				if (cond.getName()!=null) {
 					globalConditionsString += " & " + cond.getName();
 				}
 			}
@@ -749,9 +768,10 @@ public class ProveWithKey {
 
 		IProject thisProject = FileUtil.getProject(uri);
 
-		String postString = Parser.getConditionFromCondition(postCondition.getName());
-		String guardString = guard.getName();
-		String invariantString = invariant.getName();
+		String postString = Parser.getStringFromEObject(postCondition);
+		String guardString = Parser.getStringFromEObject(guard);
+		String invariantString = Parser.getStringFromEObject(invariant);
+
 
 		if (postString == null || postString.length() == 0) {
 			postString = "true";
@@ -798,7 +818,7 @@ public class ProveWithKey {
 		String globalConditionsString = "";
 		if (conds != null) {
 			for (Condition cond : conds.getConditions()) {
-				if (!cond.getName().isEmpty()) {
+				if (cond.getName()!=null){
 					globalConditionsString += " & " + cond.getName();
 				}
 			}
@@ -806,7 +826,7 @@ public class ProveWithKey {
 
 		IProject thisProject = FileUtil.getProject(uri);
 
-		String preString = Parser.getConditionFromCondition(preCondition.getName());
+		String preString = Parser.getStringFromEObject(preCondition);
 		String guardString;
 		if (guards != null && guards.get(0) != null) {
 			guardString = "((" + guards.get(0).getName() + ")";
@@ -856,7 +876,7 @@ public class ProveWithKey {
 		String globalConditionsString = "";
 		if (conds != null) {
 			for (Condition cond : conds.getConditions()) {
-				if (!cond.getName().isEmpty()) {
+				if (cond.getName()!=null) {
 					globalConditionsString += " & " + cond.getName();
 				}
 			}
@@ -864,7 +884,7 @@ public class ProveWithKey {
 
 		IProject thisProject = FileUtil.getProject(uri);
 
-		String invariantString = invariant.getName();
+		String invariantString = Parser.getStringFromEObject(invariant);
 
 		if (invariantString == null || invariantString.length() == 0) {
 			invariantString = "true";
@@ -905,7 +925,7 @@ public class ProveWithKey {
 		String globalConditionsString = "";
 		if (conds != null) {
 			for (Condition cond : conds.getConditions()) {
-				if (!cond.getName().isEmpty()) {
+				if (cond.getName()!=null) {
 					globalConditionsString += " & " + cond.getName();
 				}
 			}
@@ -913,13 +933,13 @@ public class ProveWithKey {
 
 		IProject thisProject = FileUtil.getProject(uri);
 
-		String invariantString = invariant.getName();
+		String invariantString = Parser.getStringFromEObject(invariant);
 
 		if (invariantString == null || invariantString.length() == 0) {
 			invariantString = "true";
 		}
 
-		String guardString = guard.getName();
+		String guardString = Parser.getStringFromEObject(guard);
 
 		if (guardString == null || guardString.length() == 0) {
 			guardString = "true";
@@ -961,15 +981,15 @@ public class ProveWithKey {
 	public static File createProvePreImplPreWithKey(Condition preParent, Condition preChild, JavaVariables vars,
 			GlobalConditions conds, Renaming renaming, URI uri, int numberFile, boolean override, String name) {
 		
-		return createProvePreWithKey(Parser.getConditionFromCondition(preParent.getName()), 
-				Parser.getConditionFromCondition(preChild.getName()), vars, conds, renaming, uri, numberFile, override, name);
+		return createProvePreWithKey(Parser.getStringFromEObject(preParent), 
+				Parser.getStringFromEObject(preChild), vars, conds, renaming, uri, numberFile, override, name);
 		
 	}
 	
 	public static File createProveRequiresWithKey(Condition preParent, String requires, JavaVariables vars,
 			GlobalConditions conds, Renaming renaming, URI uri, int numberFile, boolean override, String name) {
 
-		return createProvePreWithKey(Parser.getConditionFromCondition(preParent.getName()), requires, vars, conds, renaming, uri, numberFile, override, name);
+		return createProvePreWithKey(Parser.getStringFromEObject(preParent), requires, vars, conds, renaming, uri, numberFile, override, name);
 	}
 	
 	public static File createProvePreWithKey(String preParent, String preChild, JavaVariables vars,
@@ -984,7 +1004,7 @@ public class ProveWithKey {
 		String globalConditionsString = "";
 		if (conds != null) {
 			for (Condition cond : conds.getConditions()) {
-				if (!cond.getName().isEmpty()) {
+				if (cond.getName()!=null){
 					globalConditionsString += " & " + cond.getName();
 				}
 			}
@@ -1017,15 +1037,15 @@ public class ProveWithKey {
 	public static File createProvePostImplPostWithKey(Condition postParent, Condition postChild, JavaVariables vars,
 			GlobalConditions conds, Renaming renaming, URI uri, int numberFile, boolean override, String name) {
 		
-		return createProvePostWithKey(Parser.getConditionFromCondition(postParent.getName()), 
-				Parser.getConditionFromCondition(postChild.getName()), vars, conds, renaming, uri, numberFile, override, name);
+		return createProvePostWithKey(Parser.getStringFromEObject(postParent), 
+				Parser.getStringFromEObject(postChild), vars, conds, renaming, uri, numberFile, override, name);
 		
 	}
 	
 	public static File createProveEnsuresWithKey(Condition postParent, String ensures, JavaVariables vars,
 			GlobalConditions conds, Renaming renaming, URI uri, int numberFile, boolean override, String name) {
 
-		return createProvePostWithKey(Parser.getConditionFromCondition(postParent.getName()), ensures, vars, conds, renaming, uri, numberFile, override, name);
+		return createProvePostWithKey(Parser.getStringFromEObject(postParent), ensures, vars, conds, renaming, uri, numberFile, override, name);
 	}
 	
 	public static File createProvePostWithKey(String postParent, String postChild, JavaVariables vars,
@@ -1041,7 +1061,7 @@ public class ProveWithKey {
 		String globalConditionsString = "";
 		if (conds != null) {
 			for (Condition cond : conds.getConditions()) {
-				if (!cond.getName().isEmpty()) {
+				if (cond.getName()!=null) {
 					globalConditionsString += " & " + cond.getName();
 				}
 			}
@@ -1166,7 +1186,7 @@ public class ProveWithKey {
 		String globalConditionsString = "";
 		if (conds != null) {
 			for (Condition cond : conds) {
-				if (!cond.getName().isEmpty()) {
+				if (cond.getName()!=null){
 					globalConditionsString += " & " + cond.getName();
 				}
 			}
@@ -1174,8 +1194,8 @@ public class ProveWithKey {
 
 		IProject thisProject = FileUtil.getProject(uri);
 
-		String firstString = first.getName();
-		String secondString = Parser.getConditionFromCondition(second.getName());
+		String firstString = Parser.getStringFromEObject(first);
+		String secondString = Parser.getStringFromEObject(second);
 
 		if (firstString == null || firstString.length() == 0) {
 			firstString = "true";
@@ -1218,7 +1238,7 @@ public class ProveWithKey {
 		String globalConditionsString = "";
 		if (conds != null) {
 			for (Condition cond : conds.getConditions()) {
-				if (!cond.getName().isEmpty()) {
+				if (cond.getName()!=null) {
 					globalConditionsString += " & " + cond.getName();
 				}
 			}
@@ -1226,9 +1246,10 @@ public class ProveWithKey {
 
 		IProject thisProject = FileUtil.getProject(uri);
 
-		List<String> modifiableVariables = Parser.getUnmodifiedVars(
-				Parser.getModifiedVarsFromCondition(statement.getPostCondition().getName()), vars.getVariables());
-		String post = Parser.getConditionFromCondition(statement.getPostCondition().getName());
+//		List<String> modifiableVariables = Parser.getUnmodifiedVars(
+//				Parser.getModifiedVarsFromCondition(statement.getPostCondition().getName()), vars.getVariables());
+		List<String> modifiableVariables = Arrays.asList(new String[] {});
+		String post = Parser.getStringFromEObject(statement.getPostCondition());
 		String stat = statement.getName();
 
 		if (post == null || post.length() == 0) {

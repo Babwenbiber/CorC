@@ -10,5 +10,5 @@ package de.tu_bs.cs.isf.cbc.textual.tool.scoping;
  * on how and when to use it.
  */
 @SuppressWarnings("all")
-public class DslScopeProvider extends AbstractDslScopeProvider {
+public class DslScopeProvider /* implements AbstractDslScopeProvider  */{
 }
