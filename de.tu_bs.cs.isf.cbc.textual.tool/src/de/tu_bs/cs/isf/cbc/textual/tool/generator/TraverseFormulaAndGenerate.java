@@ -146,6 +146,7 @@ public class TraverseFormulaAndGenerate {
 //		expression.setExpressions7
 //		loopStatement.getPreCondition().setName("(" + repetitionStatement.getInvariant().getName() + ") & ("
 //				+  + ")");
+//		CbcmodelFactory.eINSTANCE.createCondition
 		loopStatement.setPostCondition(factory.createCondition());
 		loopStatement.getPostCondition().setName(repetitionStatement.getInvariant().getName());
 		ProveWithKey.createProvePreWithKey(repetitionStatement.getInvariant(), repetitionStatement.getPreCondition(),

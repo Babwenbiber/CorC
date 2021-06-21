@@ -4,8 +4,7 @@
     editorDirectory="/de.tu-bs.cs.isf.cbc.model.editor/src-gen" modelPluginID="de.tu-bs.cs.isf.cbc.model"
     forceOverwrite="true" modelName="Cbcmodel" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
     testsDirectory="/de.tu-bs.cs.isf.cbc.model.tests/src-gen" importerID="org.eclipse.emf.importer.ecore"
-    complianceLevel="8.0" copyrightFields="false" usedGenPackages="platform:/resource/org.eclipse.xtext.xbase/model/Xbase.genmodel#//xbase
-    platform:/resource/org.eclipse.xtext.common.types/model/JavaVMTypes.genmodel#//types"
+    complianceLevel="8.0" copyrightFields="false" usedGenPackages="../../org.eclipse.xtext.xbase/model/Xbase.genmodel#//xbase ../../org.eclipse.xtext.common.types/model/JavaVMTypes.genmodel#//types"
     operationReflection="true" importOrganizing="true">
   <foreignModel>cbcmodel.ecore</foreignModel>
   <genPackages prefix="Cbcmodel" basePackage="de.tu_bs.cs.isf.cbc" disposableProviderFactory="true"
@@ -46,21 +45,21 @@
     </genClasses>
     <genClasses ecoreClass="cbcmodel.ecore#//SkipStatement"/>
     <genClasses ecoreClass="cbcmodel.ecore#//JavaStatement">
-       <genFeatures createChild="false" ecoreFeature="ecore:EReference cbcmodel.ecore#//JavaStatement/name"/>
-       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//JavaStatement/postCondition"/>
-       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//JavaStatement/preCondition"/>
-       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cbcmodel.ecore#//JavaStatement/proven"/>
-       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cbcmodel.ecore#//JavaStatement/comment"/>
-     </genClasses>
-     <genClasses ecoreClass="cbcmodel.ecore#//JMLAnnotation">
-       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute cbcmodel.ecore#//JMLAnnotation/requires"/>
-       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute cbcmodel.ecore#//JMLAnnotation/assignable"/>
-       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute cbcmodel.ecore#//JMLAnnotation/ensures"/>
-     </genClasses>
-     <genClasses ecoreClass="cbcmodel.ecore#//BlockStatement">
-       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//BlockStatement/javaStatement"/>
-       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//BlockStatement/jmlAnnotation"/>
-     </genClasses>
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference cbcmodel.ecore#//JavaStatement/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//JavaStatement/postCondition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//JavaStatement/preCondition"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cbcmodel.ecore#//JavaStatement/proven"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cbcmodel.ecore#//JavaStatement/comment"/>
+    </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//JMLAnnotation">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute cbcmodel.ecore#//JMLAnnotation/requires"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute cbcmodel.ecore#//JMLAnnotation/assignable"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute cbcmodel.ecore#//JMLAnnotation/ensures"/>
+    </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//BlockStatement">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//BlockStatement/javaStatement"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//BlockStatement/jmlAnnotation"/>
+    </genClasses>
     <genClasses ecoreClass="cbcmodel.ecore#//CompositionStatement">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//CompositionStatement/firstStatement"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//CompositionStatement/secondStatement"/>
@@ -143,18 +142,15 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cbcmodel.ecore#//ProductVariant/refinementChain"/>
     </genClasses>
     <genClasses ecoreClass="cbcmodel.ecore#//JdlExpression">
-       <genFeatures createChild="true" ecoreFeature="ecore:EAttribute cbcmodel.ecore#//JdlOperation/left"/>
-       <genFeatures createChild="true" ecoreFeature="ecore:EAttribute cbcmodel.ecore#//JdlOperation/ops"/>
-       <genFeatures createChild="true" ecoreFeature="ecore:EAttribute cbcmodel.ecore#//JdlOperation/rights"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//JdlExpression/left"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//JdlExpression/ops"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//JdlExpression/rights"/>
     </genClasses>
-    <genClasses ecoreClass="cbcmodel.ecore#//JdlTerminalExpression">
-    </genClasses>
-  	<genClasses ecoreClass="cbcmodel.ecore#//JdlOperation">
+    <genClasses ecoreClass="cbcmodel.ecore#//JdlTerminalExpression"/>
+    <genClasses ecoreClass="cbcmodel.ecore#//JdlOperation">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cbcmodel.ecore#//JdlOperation/name"/>
     </genClasses>
-    <genClasses ecoreClass="cbcmodel.ecore#//JdlIterator">
-    </genClasses>
-    <genClasses ecoreClass="cbcmodel.ecore#//JdlBracedExpression">
-    </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//JdlIterator"/>
+    <genClasses ecoreClass="cbcmodel.ecore#//JdlBracedExpression"/>
   </genPackages>
 </genmodel:GenModel>
