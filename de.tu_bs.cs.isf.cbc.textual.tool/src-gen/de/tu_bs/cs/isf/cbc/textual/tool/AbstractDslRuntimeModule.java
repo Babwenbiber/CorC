@@ -17,6 +17,7 @@ import de.tu_bs.cs.isf.cbc.textual.tool.serializer.DslSyntacticSequencer;
 import de.tu_bs.cs.isf.cbc.textual.tool.services.DslGrammarAccess;
 import de.tu_bs.cs.isf.cbc.textual.tool.validation.DslValidator;
 import java.util.Properties;
+import jbase.DefaultJbaseRuntimeModule;
 import org.eclipse.xtext.Constants;
 import org.eclipse.xtext.IGrammarAccess;
 import org.eclipse.xtext.common.services.Ecore2XtextTerminalConverters;
@@ -53,7 +54,6 @@ import org.eclipse.xtext.serializer.sequencer.ISemanticSequencer;
 import org.eclipse.xtext.serializer.sequencer.ISyntacticSequencer;
 import org.eclipse.xtext.service.SingletonBinding;
 import org.eclipse.xtext.validation.IResourceValidator;
-import org.eclipse.xtext.xbase.DefaultXbaseRuntimeModule;
 import org.eclipse.xtext.xbase.annotations.validation.DerivedStateAwareResourceValidator;
 import org.eclipse.xtext.xbase.imports.RewritableImportSection;
 import org.eclipse.xtext.xbase.jvmmodel.IJvmModelInferrer;
@@ -72,7 +72,7 @@ import org.eclipse.xtext.xbase.validation.LogicalContainerAwareFeatureNameValida
  * Manual modifications go to {@link DslRuntimeModule}.
  */
 @SuppressWarnings("all")
-public abstract class AbstractDslRuntimeModule extends DefaultXbaseRuntimeModule {
+public abstract class AbstractDslRuntimeModule extends DefaultJbaseRuntimeModule {
 
 	protected Properties properties = null;
 

@@ -5,18 +5,20 @@ package de.tu_bs.cs.isf.cbc.textual.tool.validation;
 
 import java.util.ArrayList;
 import java.util.List;
+import jbase.validation.JbaseValidator;
 import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.xtext.xbase.validation.XbaseValidator;
 
-public abstract class AbstractDslValidator extends XbaseValidator {
+public abstract class AbstractDslValidator extends JbaseValidator {
 	
 	@Override
 	protected List<EPackage> getEPackages() {
 		List<EPackage> result = new ArrayList<EPackage>(super.getEPackages());
 		result.add(EPackage.Registry.INSTANCE.getEPackage("http://www.example.org/cbcmodel"));
 		result.add(EPackage.Registry.INSTANCE.getEPackage("http://www.eclipse.org/xtext/xbase/Xbase"));
-		result.add(EPackage.Registry.INSTANCE.getEPackage("http://www.eclipse.org/xtext/common/JavaVMTypes"));
 		result.add(EPackage.Registry.INSTANCE.getEPackage("http://www.eclipse.org/xtext/xbase/Xtype"));
+		result.add(EPackage.Registry.INSTANCE.getEPackage("http://www.eclipse.org/xtext/common/JavaVMTypes"));
+		result.add(EPackage.Registry.INSTANCE.getEPackage("http://www.Jbase.jbase"));
+		result.add(EPackage.Registry.INSTANCE.getEPackage("http://www.eclipse.org/Xtext/Xbase/XAnnotations"));
 		return result;
 	}
 }

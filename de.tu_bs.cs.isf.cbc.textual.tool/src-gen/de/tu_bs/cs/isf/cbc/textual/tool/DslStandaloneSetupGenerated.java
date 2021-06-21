@@ -5,19 +5,19 @@ package de.tu_bs.cs.isf.cbc.textual.tool;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import jbase.JbaseStandaloneSetup;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.ISetup;
 import org.eclipse.xtext.resource.IResourceFactory;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
-import org.eclipse.xtext.xbase.XbaseStandaloneSetup;
 
 @SuppressWarnings("all")
 public class DslStandaloneSetupGenerated implements ISetup {
 
 	@Override
 	public Injector createInjectorAndDoEMFRegistration() {
-		XbaseStandaloneSetup.doSetup();
+		JbaseStandaloneSetup.doSetup();
 
 		Injector injector = createInjector();
 		register(injector);

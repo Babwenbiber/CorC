@@ -3,7 +3,7 @@
  */
 package de.tu_bs.cs.isf.cbc.textual.tool.scoping;
 
-import org.eclipse.xtext.xbase.scoping.batch.XbaseBatchScopeProvider;
+import jbase.scoping.JbaseScopeProvider;
 
-public abstract class AbstractDslScopeProvider extends XbaseBatchScopeProvider {
+public abstract class AbstractDslScopeProvider extends JbaseScopeProvider {
 }
