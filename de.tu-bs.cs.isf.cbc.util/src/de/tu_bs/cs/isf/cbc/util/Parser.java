@@ -11,8 +11,6 @@ import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 
 import com.google.common.collect.Lists;
 
@@ -154,8 +152,7 @@ public class Parser {
 	}
 
 	public String destructConditionAndReplace(Condition condition) throws ParserException {
-		String input = "";
-		//condition.getName();
+		String input = condition.getName();
 		String[] inputTokens = new String[0];
 		if (input.contains("&")) {
 			input = input.replace("&", "|");
@@ -295,11 +292,6 @@ public class Parser {
 		return condition;
 	}
 
-	public static String getStringFromEObject(EObject object) {
-		System.out.println("parsing object " + object.toString());
-		return NodeModelUtils.getTokenText(NodeModelUtils.findActualNodeFor(object));
-	}
-	
 	public static List<String> getUnmodifiedVars(List<String> modifiedVars, EList<JavaVariable> declaredVariables) {
 		List<String> unmodifiedVariables = Lists.newArrayList();
 		if (!modifiedVars.contains("\\everything")) {

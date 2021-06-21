@@ -15,7 +15,6 @@ import de.tu_bs.cs.isf.cbc.textual.tool.ui.labeling.DslDescriptionLabelProvider;
 import de.tu_bs.cs.isf.cbc.textual.tool.ui.labeling.DslLabelProvider;
 import de.tu_bs.cs.isf.cbc.textual.tool.ui.outline.DslOutlineTreeProvider;
 import de.tu_bs.cs.isf.cbc.textual.tool.ui.quickfix.DslQuickfixProvider;
-import jbase.ui.DefaultJbaseUiModule;
 import org.eclipse.compare.IViewerCreator;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -90,6 +89,7 @@ import org.eclipse.xtext.ui.refactoring.ui.IRenameSupport;
 import org.eclipse.xtext.ui.refactoring.ui.RefactoringPreferences;
 import org.eclipse.xtext.ui.resource.ResourceServiceDescriptionLabelProvider;
 import org.eclipse.xtext.ui.shared.Access;
+import org.eclipse.xtext.xbase.ui.DefaultXbaseUiModule;
 import org.eclipse.xtext.xbase.ui.editor.XbaseDocumentProvider;
 import org.eclipse.xtext.xbase.ui.generator.trace.XbaseOpenGeneratedFileHandler;
 import org.eclipse.xtext.xbase.ui.jvmmodel.findrefs.JvmModelFindReferenceHandler;
@@ -109,7 +109,7 @@ import org.eclipse.xtext.xbase.ui.refactoring.XbaseReferenceUpdater;
  * Manual modifications go to {@link DslUiModule}.
  */
 @SuppressWarnings("all")
-public abstract class AbstractDslUiModule extends DefaultJbaseUiModule {
+public abstract class AbstractDslUiModule extends DefaultXbaseUiModule {
 
 	public AbstractDslUiModule(AbstractUIPlugin plugin) {
 		super(plugin);

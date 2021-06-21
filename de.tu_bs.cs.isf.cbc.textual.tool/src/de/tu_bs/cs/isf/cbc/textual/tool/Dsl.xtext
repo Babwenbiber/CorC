@@ -1,4 +1,4 @@
-grammar de.tu_bs.cs.isf.cbc.textual.tool.Dsl with  jbase.Jbase//org.eclipse.xtext.xbase.Xbase// org.eclipse.xtext.common.Terminals
+grammar de.tu_bs.cs.isf.cbc.textual.tool.Dsl with  org.eclipse.xtext.xbase.Xbase// org.eclipse.xtext.common.Terminals
 
 import "http://www.eclipse.org/emf/2002/Ecore" as ecore
 import "http://www.example.org/cbcmodel"
@@ -74,8 +74,7 @@ StrengthWeakStatement returns StrengthWeakStatement:
 
 Condition returns Condition:
 	{Condition}
-	name=JdlExpression
-	;
+	name=EString;
 
 SkipStatement returns SkipStatement:
 		 name=';'
@@ -89,7 +88,7 @@ CompositionStatement returns CompositionStatement:
 	;
 
 JavaStatement returns JavaStatement:
-	(name+=XJStatementOrBlock)+
+	(name+=XExpression)+
 ;
 
 JMLAnnotation returns JMLAnnotation:
@@ -153,22 +152,3 @@ Rename returns Rename:
 	'NewName' newName=EString
 	'}'
 	;
-	
-
-//JdlOperation:
-//	{JdlOperation}
-//	name=("&" | "|" | "=>")
-//;
-//
-//JdlExpression returns Condition:
-//	{Condition} left=JdlTerminalExpression (=>ops+="&" rights+=JdlTerminalExpression)*
-//;
-//
-//JdlTerminalExpression returns Condition:
-//	JdlExpression  |  {Condition} ID
-//;
-
-//JdlIterator returns JdlExpression:
-//	{JdlIterator}
-//	"(\foreach" JdlExpression ")"
-//;

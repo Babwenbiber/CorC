@@ -17,20 +17,6 @@ import org.eclipse.xtext.generator.IGeneratorContext;
 public class DslGenerator extends AbstractGenerator {
   @Override
   public void doGenerate(final Resource resource, final IFileSystemAccess2 fsa, final IGeneratorContext context) {
-    throw new Error("Unresolved compilation problems:"
-      + "\nJavaVariables cannot be resolved to a type."
-      + "\nGlobalConditions cannot be resolved to a type."
-      + "\nRenaming cannot be resolved to a type."
-      + "\nCbCProblem cannot be resolved to a type."
-      + "\nThe method or field JavaVariables is undefined"
-      + "\nThe method or field JavaVariables is undefined"
-      + "\nThe method or field GlobalConditions is undefined"
-      + "\nThe method or field GlobalConditions is undefined"
-      + "\nThe method or field Renaming is undefined"
-      + "\nThe method or field Renaming is undefined"
-      + "\nThe method or field CbCFormula is undefined"
-      + "\nTraverseFormulaAndGenerate cannot be resolved."
-      + "\nThe method traverseFormulaAndGenerate() is undefined for the type TraverseFormulaAndGenerate"
-      + "\ncbcformula cannot be resolved");
+    System.out.println("lessgo doGenerate");
   }
 }
