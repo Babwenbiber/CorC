@@ -142,5 +142,48 @@
     <genClasses ecoreClass="cbcmodel.ecore#//ProductVariant">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cbcmodel.ecore#//ProductVariant/refinementChain"/>
     </genClasses>
+    
+    <genClasses ecoreClass="cbcmodel.ecore#//Model">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//Model/expression"/>
+    </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//VariableOrMethodName">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cbcmodel.ecore#//VariableOrMethodName/name"/>
+    </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//Expression">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cbcmodel.ecore#//Expression/foreach"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//Expression/type"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//Expression/var"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//Expression/right"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cbcmodel.ecore#//Expression/exists"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cbcmodel.ecore#//Expression/isTrue"/>
+    </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//Lower">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//Lower/left"/>
+    </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//Greater">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//Greater/left"/>
+    </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//Equal">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//Equal/left"/>
+    </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//LowerEqual">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//LowerEqual/left"/>
+    </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//GreaterEqual">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//GreaterEqual/left"/>
+    </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//Impl">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//Impl/left"/>
+    </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//And">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//And/left"/>
+    </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//Or">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//Or/left"/>
+    </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//FunctionCall">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//FunctionCall/func"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//FunctionCall/args"/>
+    </genClasses>
   </genPackages>
 </genmodel:GenModel>

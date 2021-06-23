@@ -20,20 +20,20 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute JdlDsl.ecore#//Expression/exists"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute JdlDsl.ecore#//Expression/isTrue"/>
     </genClasses>
-    <genClasses ecoreClass="JdlDsl.ecore#//lower">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference JdlDsl.ecore#//lower/left"/>
+    <genClasses ecoreClass="JdlDsl.ecore#//Lower">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference JdlDsl.ecore#//Lower/left"/>
     </genClasses>
-    <genClasses ecoreClass="JdlDsl.ecore#//greater">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference JdlDsl.ecore#//greater/left"/>
+    <genClasses ecoreClass="JdlDsl.ecore#//Greater">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference JdlDsl.ecore#//Greater/left"/>
     </genClasses>
-    <genClasses ecoreClass="JdlDsl.ecore#//equal">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference JdlDsl.ecore#//equal/left"/>
+    <genClasses ecoreClass="JdlDsl.ecore#//Equal">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference JdlDsl.ecore#//Equal/left"/>
     </genClasses>
-    <genClasses ecoreClass="JdlDsl.ecore#//lowerEqual">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference JdlDsl.ecore#//lowerEqual/left"/>
+    <genClasses ecoreClass="JdlDsl.ecore#//LowerEqual">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference JdlDsl.ecore#//LowerEqual/left"/>
     </genClasses>
-    <genClasses ecoreClass="JdlDsl.ecore#//greaterEqual">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference JdlDsl.ecore#//greaterEqual/left"/>
+    <genClasses ecoreClass="JdlDsl.ecore#//GreaterEqual">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference JdlDsl.ecore#//GreaterEqual/left"/>
     </genClasses>
     <genClasses ecoreClass="JdlDsl.ecore#//Impl">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference JdlDsl.ecore#//Impl/left"/>

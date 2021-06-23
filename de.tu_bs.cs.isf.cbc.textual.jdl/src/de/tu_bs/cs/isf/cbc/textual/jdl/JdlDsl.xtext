@@ -23,7 +23,7 @@ Exists returns Expression:
 ;
 
 Relation returns Expression:
-	Implication ( ({lower.left=current} "<" | {greater.left=current} ">" | {equal.left=current} "=" | {lowerEqual.left=current} "<=" | {greaterEqual.left=current} ">=") right=Implication)*;
+	Implication ( ({Lower.left=current} "<" | {Greater.left=current} ">" | {Equal.left=current} "=" | {LowerEqual.left=current} "<=" | {GreaterEqual.left=current} ">=") right=Implication)*;
 
 Implication returns Expression:
 	Concat (( {Impl.left=current} '=>') right=Concat)*;
