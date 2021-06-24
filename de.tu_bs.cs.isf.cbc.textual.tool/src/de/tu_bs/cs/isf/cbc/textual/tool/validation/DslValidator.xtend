@@ -59,13 +59,13 @@ class DslValidator extends AbstractDslValidator {
 	
 	@Check
 	def checkSyntaxOfCondition(Condition condition) {
-		if (condition.name != null && !condition.name.isEmpty && !condition.name.contains("forall") && !condition.name.contains("exists")) {
-			if (!CompareMethodBodies.readAndTestAssertWithJaMoPP(condition.name.replaceAll("->", "&"))) {
-				warning('Condition has not the correct syntax.', 
-					CbcmodelPackage.Literals.CONDITION__NAME,
-					INVALID_NAME)
-			}
-		}
+//		if (condition.condition != null && !condition.condition.isEmpty && !condition.name.contains("forall") && !condition.name.contains("exists")) {
+//			if (!CompareMethodBodies.readAndTestAssertWithJaMoPP(condition.name.replaceAll("->", "&"))) {
+//				warning('Condition has not the correct syntax.', 
+//					CbcmodelPackage.Literals.CONDITION__NAME,
+//					INVALID_NAME)
+//			}
+//		}
 	}
 	
 	@Check(CheckType.EXPENSIVE)

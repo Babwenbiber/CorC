@@ -5,17 +5,13 @@ package de.tu_bs.cs.isf.cbc.textual.tool.ui.labeling;
 
 import com.google.inject.Inject;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbCFormula;
-import de.tu_bs.cs.isf.cbc.cbcmodel.CompositionStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Condition;
-import de.tu_bs.cs.isf.cbc.cbcmodel.SelectionStatement;
-import de.tu_bs.cs.isf.cbc.cbcmodel.SmallRepetitionStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Variant;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.AbstractStatementImpl;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.CompositionStatementImpl;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.MethodStatementImpl;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.SelectionStatementImpl;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.SmallRepetitionStatementImpl;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.xtext.ui.label.DefaultEObjectLabelProvider;
 
@@ -31,103 +27,8 @@ public class DslLabelProvider extends DefaultEObjectLabelProvider {
     super(delegate);
   }
   
-  public String text(final Condition condition) {
-    String _xifexpression = null;
-    EObject _eContainer = condition.eContainer();
-    if ((_eContainer instanceof SmallRepetitionStatement)) {
-      String _xblockexpression = null;
-      {
-        EObject _eContainer_1 = condition.eContainer();
-        SmallRepetitionStatement statement = ((SmallRepetitionStatement) _eContainer_1);
-        String _xifexpression_1 = null;
-        boolean _equals = statement.getInvariant().equals(condition);
-        if (_equals) {
-          String _name = condition.getName();
-          _xifexpression_1 = ("invariant: " + _name);
-        } else {
-          String _xifexpression_2 = null;
-          boolean _equals_1 = statement.getGuard().equals(condition);
-          if (_equals_1) {
-            String _name_1 = condition.getName();
-            _xifexpression_2 = ("guard: " + _name_1);
-          }
-          _xifexpression_1 = _xifexpression_2;
-        }
-        _xblockexpression = _xifexpression_1;
-      }
-      _xifexpression = _xblockexpression;
-    } else {
-      String _xifexpression_1 = null;
-      EObject _eContainer_1 = condition.eContainer();
-      if ((_eContainer_1 instanceof CompositionStatement)) {
-        String _xblockexpression_1 = null;
-        {
-          EObject _eContainer_2 = condition.eContainer();
-          CompositionStatement statement = ((CompositionStatement) _eContainer_2);
-          String _xifexpression_2 = null;
-          boolean _equals = statement.getIntermediateCondition().equals(condition);
-          if (_equals) {
-            String _name = condition.getName();
-            _xifexpression_2 = ("intm: " + _name);
-          }
-          _xblockexpression_1 = _xifexpression_2;
-        }
-        _xifexpression_1 = _xblockexpression_1;
-      } else {
-        String _xifexpression_2 = null;
-        EObject _eContainer_2 = condition.eContainer();
-        if ((_eContainer_2 instanceof SelectionStatement)) {
-          String _xblockexpression_2 = null;
-          {
-            EObject _eContainer_3 = condition.eContainer();
-            SelectionStatement statement = ((SelectionStatement) _eContainer_3);
-            String _xifexpression_3 = null;
-            boolean _contains = statement.getGuards().contains(condition);
-            if (_contains) {
-              String _xblockexpression_3 = null;
-              {
-                int i = statement.getGuards().indexOf(condition);
-                String _name = condition.getName();
-                _xblockexpression_3 = ((("guard" + Integer.valueOf(i)) + ": ") + _name);
-              }
-              _xifexpression_3 = _xblockexpression_3;
-            }
-            _xblockexpression_2 = _xifexpression_3;
-          }
-          _xifexpression_2 = _xblockexpression_2;
-        } else {
-          String _xifexpression_3 = null;
-          EObject _eContainer_3 = condition.eContainer();
-          if ((_eContainer_3 instanceof CbCFormula)) {
-            String _xblockexpression_3 = null;
-            {
-              EObject _eContainer_4 = condition.eContainer();
-              CbCFormula formula = ((CbCFormula) _eContainer_4);
-              String _xifexpression_4 = null;
-              boolean _equals = formula.getPreCondition().equals(condition);
-              if (_equals) {
-                String _name = condition.getName();
-                _xifexpression_4 = ("pre: " + _name);
-              } else {
-                String _xifexpression_5 = null;
-                boolean _equals_1 = formula.getPostCondition().equals(condition);
-                if (_equals_1) {
-                  String _name_1 = condition.getName();
-                  _xifexpression_5 = ("post: " + _name_1);
-                }
-                _xifexpression_4 = _xifexpression_5;
-              }
-              _xblockexpression_3 = _xifexpression_4;
-            }
-            _xifexpression_3 = _xblockexpression_3;
-          }
-          _xifexpression_2 = _xifexpression_3;
-        }
-        _xifexpression_1 = _xifexpression_2;
-      }
-      _xifexpression = _xifexpression_1;
-    }
-    return _xifexpression;
+  public Object text(final Condition condition) {
+    return null;
   }
   
   public String text(final Variant variant) {

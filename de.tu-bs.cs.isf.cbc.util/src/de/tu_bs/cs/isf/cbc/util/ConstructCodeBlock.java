@@ -96,10 +96,10 @@ public class ConstructCodeBlock {
 		withInvariants = true;
 
 		String modifiableVariables = Parser
-				.getModifieableVarsFromCondition(formula.getStatement().getPostCondition().getName());
-		String postCondition = Parser.getConditionFromCondition(formula.getStatement().getPostCondition().getName());
+				.getModifieableVarsFromCondition( Parser.getStringFromObject(formula.getStatement().getPostCondition().getCondition()));
+		String postCondition = Parser.getConditionFromCondition( Parser.getStringFromObject(formula.getStatement().getPostCondition().getCondition()));
 
-		String pre = createConditionJMLString(formula.getStatement().getPreCondition().getName(), renaming,
+		String pre = createConditionJMLString( Parser.getStringFromObject(formula.getStatement().getPreCondition().getCondition()), renaming,
 				Parser.KEYWORD_JML_PRE);
 		String post = createConditionJMLString(postCondition, renaming, Parser.KEYWORD_JML_POST);
 
@@ -138,10 +138,10 @@ public class ConstructCodeBlock {
 		withInvariants = false;
 
 		String modifiableVariables = Parser
-				.getModifieableVarsFromCondition(formula.getStatement().getPostCondition().getName());
-		String postCondition = Parser.getConditionFromCondition(formula.getStatement().getPostCondition().getName());
+				.getModifieableVarsFromCondition( Parser.getStringFromObject(formula.getStatement().getPostCondition().getCondition()));
+		String postCondition = Parser.getConditionFromCondition( Parser.getStringFromObject(formula.getStatement().getPostCondition().getCondition()));
 
-		String pre = createConditionJMLString(formula.getStatement().getPreCondition().getName(), renaming,
+		String pre = createConditionJMLString( Parser.getStringFromObject(formula.getStatement().getPreCondition().getCondition()), renaming,
 				Parser.KEYWORD_JML_PRE);
 		String post = createConditionJMLString(postCondition, renaming, Parser.KEYWORD_JML_POST);
 
@@ -270,7 +270,7 @@ public class ConstructCodeBlock {
 		StringBuffer buffer = new StringBuffer();
 
 		if (!statement.getCommands().isEmpty()) {
-			String guard = statement.getGuards().get(0).getName();
+			String guard =  Parser.getStringFromObject(statement.getGuards().get(0).getCondition());
 
 			guard = rewriteGuardToJavaCode(guard);
 
@@ -301,7 +301,7 @@ public class ConstructCodeBlock {
 		}
 
 		for (int i = 1; i < statement.getCommands().size(); i++) {
-			String guard = statement.getGuards().get(i).getName();
+			String guard =  Parser.getStringFromObject(statement.getGuards().get(i).getCondition());
 			// guard = guard.replaceAll("\\s=\\s", "==");
 			guard = rewriteGuardToJavaCode(guard);
 			buffer.append(" else if (" + guard + ") {\n");
@@ -470,7 +470,7 @@ public class ConstructCodeBlock {
 			}
 			
 			if (withInvariants) {
-				String invariant = statement.getInvariant().getName();
+				String invariant =  Parser.getStringFromObject(statement.getInvariant().getCondition());
 				invariant = Parser.rewriteConditionToJML(invariant);
 				invariant = useRenamingCondition(invariant);
 				
@@ -485,7 +485,7 @@ public class ConstructCodeBlock {
 				buffer.append("//@ decreases " + statement.getVariant().getName() + ";\n");
 			}
 			
-			String guard = statement.getGuard().getName();
+			String guard =  Parser.getStringFromObject(statement.getGuard().getCondition());
 
 			// guard = guard.replaceAll("\\s=\\s", "==");
 			guard = rewriteGuardToJavaCode(guard);
@@ -554,7 +554,7 @@ public class ConstructCodeBlock {
 		StringBuffer buffer = new StringBuffer();
 		if (handleInnerLoops) {
 			if (withInvariants) {
-				String invariant = statement.getInvariant().getName();
+				String invariant =  Parser.getStringFromObject(statement.getInvariant().getCondition());
 				invariant = Parser.rewriteConditionToJML(invariant);
 				invariant = useRenamingCondition(invariant);
 				buffer.append("//@ loop_invariant " + invariant.replaceAll("\\r\\n", "") + ";\n");
@@ -563,7 +563,7 @@ public class ConstructCodeBlock {
 				}
 				buffer.append("//@ decreases " + statement.getVariant().getName() + ";\n");
 			}
-			String guard = statement.getGuard().getName();
+			String guard =  Parser.getStringFromObject(statement.getGuard().getCondition());
 			// guard = guard.replaceAll("\\s=\\s", "==");
 			guard = rewriteGuardToJavaCode(guard);
 			for (int i = 0; i < positionIndex; i++) {

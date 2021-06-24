@@ -22,9 +22,9 @@ public class TraverseFormulaAndTransform {
 		AbstractStatement abstractStatement = factory.createAbstractStatement();
 		abstractStatement.setName("Statement");
 		abstractStatement.setPreCondition(factory.createCondition());
-		abstractStatement.getPreCondition().setName(formula.getPreCondition().getName());
+		abstractStatement.getPreCondition().setCondition(formula.getPreCondition().getCondition());
 		abstractStatement.setPostCondition(factory.createCondition());
-		abstractStatement.getPostCondition().setName(formula.getPostCondition().getName());
+		abstractStatement.getPostCondition().setCondition(formula.getPostCondition().getCondition());
 		formula.setStatement(abstractStatement);
 		abstractStatement.setRefinement(refinedStatement);
 		castStatementAndTraverse(refinedStatement);
@@ -53,9 +53,9 @@ public class TraverseFormulaAndTransform {
 		AbstractStatement abstractStatement = factory.createAbstractStatement();
 		abstractStatement.setName("LoopStatement");
 		abstractStatement.setPreCondition(factory.createCondition());
-		abstractStatement.getPreCondition().setName(loopStatement.getPreCondition().getName());
+		abstractStatement.getPreCondition().setCondition(loopStatement.getPreCondition().getCondition());
 		abstractStatement.setPostCondition(factory.createCondition());
-		abstractStatement.getPostCondition().setName(loopStatement.getPostCondition().getName());
+		abstractStatement.getPostCondition().setCondition(loopStatement.getPostCondition().getCondition());
 		repetitionStatement.setLoopStatement(abstractStatement);
 		abstractStatement.setRefinement(loopStatement);
 		castStatementAndTraverse(loopStatement);
@@ -68,9 +68,9 @@ public class TraverseFormulaAndTransform {
 			AbstractStatement abstractStatement = factory.createAbstractStatement();
 			abstractStatement.setName("SelectionStatement" + i);
 			abstractStatement.setPreCondition(factory.createCondition());
-			abstractStatement.getPreCondition().setName(childStatement.getPreCondition().getName());
+			abstractStatement.getPreCondition().setCondition(childStatement.getPreCondition().getCondition());
 			abstractStatement.setPostCondition(factory.createCondition());
-			abstractStatement.getPostCondition().setName(childStatement.getPostCondition().getName());
+			abstractStatement.getPostCondition().setCondition(childStatement.getPostCondition().getCondition());
 			selectionStatement.getCommands().set(i, abstractStatement);
 			abstractStatement.setRefinement(childStatement);
 			castStatementAndTraverse(childStatement);
@@ -84,9 +84,9 @@ public class TraverseFormulaAndTransform {
 		AbstractStatement abstractStatement = factory.createAbstractStatement();
 		abstractStatement.setName("FirstStatement");
 		abstractStatement.setPreCondition(factory.createCondition());
-		abstractStatement.getPreCondition().setName(firstStatement.getPreCondition().getName());
+		abstractStatement.getPreCondition().setCondition(firstStatement.getPreCondition().getCondition());
 		abstractStatement.setPostCondition(factory.createCondition());
-		abstractStatement.getPostCondition().setName(firstStatement.getPostCondition().getName());
+		abstractStatement.getPostCondition().setCondition(firstStatement.getPostCondition().getCondition());
 		compositionStatement.setFirstStatement(abstractStatement);
 		abstractStatement.setRefinement(firstStatement);
 		castStatementAndTraverse(firstStatement);
@@ -94,9 +94,9 @@ public class TraverseFormulaAndTransform {
 		abstractStatement = factory.createAbstractStatement();
 		abstractStatement.setName("SecondStatement");
 		abstractStatement.setPreCondition(factory.createCondition());
-		abstractStatement.getPreCondition().setName(secondStatement.getPreCondition().getName());
+		abstractStatement.getPreCondition().setCondition(secondStatement.getPreCondition().getCondition());
 		abstractStatement.setPostCondition(factory.createCondition());
-		abstractStatement.getPostCondition().setName(secondStatement.getPostCondition().getName());
+		abstractStatement.getPostCondition().setCondition(secondStatement.getPostCondition().getCondition());
 		compositionStatement.setSecondStatement(abstractStatement);
 		abstractStatement.setRefinement(secondStatement);
 		castStatementAndTraverse(secondStatement);
@@ -107,9 +107,9 @@ public class TraverseFormulaAndTransform {
 		abstractStatement.setName(statement.getName());
 		statement.setName("Statement");
 		abstractStatement.setPreCondition(factory.createCondition());
-		abstractStatement.getPreCondition().setName(statement.getPreCondition().getName());
+		abstractStatement.getPreCondition().setCondition(statement.getPreCondition().getCondition());
 		abstractStatement.setPostCondition(factory.createCondition());
-		abstractStatement.getPostCondition().setName(statement.getPostCondition().getName());
+		abstractStatement.getPostCondition().setCondition(statement.getPostCondition().getCondition());
 		statement.setRefinement(abstractStatement);
 	}
 

@@ -48,6 +48,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.impl.SmallRepetitionStatementImpl;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.StrengthWeakStatementImpl;
 import de.tu_bs.cs.isf.cbc.tool.model.CbcModelUtil;
 import de.tu_bs.cs.isf.cbc.util.FileUtil;
+import de.tu_bs.cs.isf.cbc.util.Parser;
 import de.tu_bs.cs.isf.taxonomy.graphiti.features.MyAbstractAsynchronousCustomFeature;
 
 /**
@@ -149,14 +150,14 @@ public class GenerateTextualRepresentation extends MyAbstractAsynchronousCustomF
     	StringBuffer buffer = new StringBuffer();
     	String tabs = "\t";
     	buffer.append("Formula \"" + formula.getName() + "\"\n");
-    	buffer.append("pre: {\"" + formula.getStatement().getPreCondition().getName() + "\"}\n");
+    	buffer.append("pre: {\"" + Parser.getStringFromObject(formula.getStatement().getPreCondition().getCondition()) + "\"}\n");
     	if (formula.getStatement().getRefinement() != null) {
     		buffer.append("{\n" + tabs + chooseStatement(tabs, formula.getStatement()) + "\n}\n");
     	} else {
     		buffer.append("{\n\"" + tabs + formula.getStatement().getName() + "\"\n" + tabs + "}\n");
     	}
     	
-    	buffer.append("post: {\"" + formula.getStatement().getPostCondition().getName() + "\"}\n\n");
+    	buffer.append("post: {\"" +  Parser.getStringFromObject(formula.getStatement().getPostCondition().getCondition()) + "\"}\n\n");
     	return buffer.toString();
     }
     
@@ -192,12 +193,12 @@ public class GenerateTextualRepresentation extends MyAbstractAsynchronousCustomF
     	}
     	buffer.append("\n" + tabs + "}\n");
     	
-    	buffer.append(tabs + "intm: [\"" + statement.getInvariant().getName() + "\"]\n");
+    	buffer.append(tabs + "intm: [\"" +  Parser.getStringFromObject(statement.getInvariant().getCondition()) + "\"]\n");
     	
     	buffer.append(tabs + "{\n" + tabs + "\t");
     	buffer.append("{\n" + tabs + "\t\t");
-		buffer.append("while (\"" + statement.getGuard().getName() + "\") do\n");
-		buffer.append(tabs + "\t\t" + "inv: [\"" + statement.getInvariant().getName() + "\"]");
+		buffer.append("while (\"" +  Parser.getStringFromObject(statement.getGuard().getCondition()) + "\") do\n");
+		buffer.append(tabs + "\t\t" + "inv: [\"" +  Parser.getStringFromObject(statement.getInvariant().getCondition()) + "\"]");
 		buffer.append(" var: [\"" + statement.getVariant().getName() + "\"]\n");
 		buffer.append(tabs + "\t\t" + "{\n"+ tabs + "\t\t\t");
 		if (statement.getLoopStatement().getRefinement() != null) {
@@ -208,7 +209,8 @@ public class GenerateTextualRepresentation extends MyAbstractAsynchronousCustomF
     	buffer.append("\n" + tabs + "\t\t" + "} od");
     	buffer.append("\n" + tabs + "\t" + "}\n");
     	
-    	buffer.append(tabs + "\t" + "intm: [\"(" + statement.getInvariant().getName() + ") & !(" + statement.getGuard().getName() + ")\"]\n");
+    	buffer.append(tabs + "\t" + "intm: [\"(" +  Parser.getStringFromObject(statement.getInvariant().getCondition()) + ") & !("
+    			+ Parser.getStringFromObject(statement.getGuard().getCondition()) + ")\"]\n");
     	
     	buffer.append(tabs + "\t" + "{\n" + tabs + "\t\t");
     	if (statement.getEndStatement().getRefinement() != null) {
@@ -224,8 +226,8 @@ public class GenerateTextualRepresentation extends MyAbstractAsynchronousCustomF
     
     private String printSmallRepetitionStatement(String tabs, SmallRepetitionStatement statement) {
     	StringBuffer buffer = new StringBuffer();
-		buffer.append("while (\"" + statement.getGuard().getName() + "\") do\n");
-		buffer.append(tabs + "inv: [\"" + statement.getInvariant().getName() + "\"]");
+		buffer.append("while (\"" +  Parser.getStringFromObject(statement.getGuard().getCondition()) + "\") do\n");
+		buffer.append(tabs + "inv: [\"" +  Parser.getStringFromObject(statement.getInvariant().getCondition()) + "\"]");
 		buffer.append(" var: [\"" + statement.getVariant().getName() + "\"]\n");
 		buffer.append(tabs + "{\n"+ tabs + "\t");
 		if (statement.getLoopStatement().getRefinement() != null) {
@@ -247,7 +249,7 @@ public class GenerateTextualRepresentation extends MyAbstractAsynchronousCustomF
     		buffer.append("\"" + statement.getFirstStatement().getName() + "\"");
     	}
     	buffer.append("\n" + tabs + "}\n");
-    	buffer.append(tabs + "intm: [\"" + statement.getIntermediateCondition().getName() + "\"]\n");
+    	buffer.append(tabs + "intm: [\"" +  Parser.getStringFromObject(statement.getIntermediateCondition().getCondition()) + "\"]\n");
     	buffer.append(tabs + "{\n" + tabs + "\t");
     	if (statement.getSecondStatement().getRefinement() != null) {
     		buffer.append(chooseStatement(tabs + "\t", statement.getSecondStatement()));
@@ -261,7 +263,7 @@ public class GenerateTextualRepresentation extends MyAbstractAsynchronousCustomF
     private String printSelectionStatement(String tabs, SelectionStatement statement) {
     	StringBuffer buffer = new StringBuffer();
     	if (!statement.getGuards().isEmpty()) {
-    		buffer.append("if (\"" + statement.getGuards().get(0).getName() + "\") then\n");
+    		buffer.append("if (\"" +  Parser.getStringFromObject(statement.getGuards().get(0).getCondition()) + "\") then\n");
     		buffer.append(tabs + "{\n"+ tabs + "\t");
     		if (statement.getCommands().get(0).getRefinement() != null) {
     			buffer.append(chooseStatement(tabs + "\t", statement.getCommands().get(0)));
@@ -269,7 +271,7 @@ public class GenerateTextualRepresentation extends MyAbstractAsynchronousCustomF
         		buffer.append("\"" + statement.getCommands().get(0).getName() + "\"");
         	}
         	for (int i = 1; i < statement.getGuards().size(); i++) {
-        		buffer.append("\n" + tabs + "} elseif (\"" + statement.getGuards().get(i).getName() + "\") then\n");
+        		buffer.append("\n" + tabs + "} elseif (\"" +  Parser.getStringFromObject(statement.getGuards().get(i).getCondition()) + "\") then\n");
         		buffer.append(tabs + "{\n"+ tabs + "\t");
         		if (statement.getCommands().get(i).getRefinement() != null) {
         			buffer.append(chooseStatement(tabs + "\t", statement.getCommands().get(i)));
@@ -293,14 +295,14 @@ public class GenerateTextualRepresentation extends MyAbstractAsynchronousCustomF
     private String printStrengthWeakStatement(String tabs, StrengthWeakStatement statement) {
     	StringBuffer buffer = new StringBuffer();
     	buffer.append("pre:{\"");
-    	buffer.append(statement.getPreCondition().getName() + "\"}");
+    	buffer.append( Parser.getStringFromObject(statement.getPreCondition().getCondition()) + "\"}");
     	buffer.append("\n" + tabs + "{");
     	if(statement.getRefinement() != null) {
     		buffer.append(statement.getRefinement().getName());
     	}
     	buffer.append("}");
     	buffer.append("\n" + tabs + "post:{\"");
-    	buffer.append(statement.getPostCondition().getName() + "\"}");
+    	buffer.append( Parser.getStringFromObject(statement.getPostCondition().getCondition()) + "\"}");
     	return buffer.toString();
 	}
     
@@ -313,7 +315,7 @@ public class GenerateTextualRepresentation extends MyAbstractAsynchronousCustomF
     		buffer.append("\"" + statement.getFirstStatement().getName() + "\"");
     	}
     	buffer.append("\n" + tabs + "}\n");
-    	buffer.append(tabs + "intm: [\"" + statement.getFirstIntermediateCondition().getName() + "\"]\n");
+    	buffer.append(tabs + "intm: [\"" +  Parser.getStringFromObject(statement.getFirstIntermediateCondition().getCondition()) + "\"]\n");
     	
     	buffer.append(tabs + "{\n" + tabs + "\t");
     	buffer.append("{\n" + tabs + "\t\t");
@@ -324,7 +326,7 @@ public class GenerateTextualRepresentation extends MyAbstractAsynchronousCustomF
     	}
     	buffer.append("\n" + tabs + "\t" + "}\n");
     	
-    	buffer.append(tabs +"\t" + "intm: [\"" + statement.getFirstIntermediateCondition().getName() + "\"]\n");
+    	buffer.append(tabs +"\t" + "intm: [\"" +  Parser.getStringFromObject(statement.getFirstIntermediateCondition().getCondition()) + "\"]\n");
     	
     	buffer.append(tabs + "\t" + "{\n" + tabs + "\t\t");
     	if (statement.getThirdStatement().getRefinement() != null) {
@@ -385,11 +387,11 @@ public class GenerateTextualRepresentation extends MyAbstractAsynchronousCustomF
     	StringBuffer buffer = new StringBuffer();
     	buffer.append("GlobalConditions\n\tconditions {");
     	if (!conditions.getConditions().isEmpty()) {
-    		buffer.append("\"" + conditions.getConditions().get(0).getName() + "\"");
+    		buffer.append("\"" +  Parser.getStringFromObject(conditions.getConditions().get(0).getCondition()) + "\"");
     	}
     	for (int i = 1; i < conditions.getConditions().size(); i++) {
     		Condition condition = conditions.getConditions().get(i);
-    		buffer.append(", \"" + condition.getName() + "\"");
+    		buffer.append(", \"" +  Parser.getStringFromObject(condition.getCondition()) + "\"");
     	}
     	buffer.append("}\n\n");
     	return buffer.toString();

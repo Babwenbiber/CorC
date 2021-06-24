@@ -127,11 +127,12 @@ public class ImplementMethodinCorcFeature extends AbstractCustomFeature {
 		statement.setName("statement");
 		formula.setStatement(statement);
 		Condition preCondition = CbcmodelFactory.eINSTANCE.createCondition();
-		preCondition.setName(method.getPreCondition());
-		statement.setPreCondition(preCondition);
-		Condition postCondition = CbcmodelFactory.eINSTANCE.createCondition();
-		postCondition.setName(method.getPostCondition());
-		statement.setPostCondition(postCondition);
+		//TODO:
+//		preCondition.setName(method.getPreCondition());
+//		statement.setPreCondition(preCondition);
+//		Condition postCondition = CbcmodelFactory.eINSTANCE.createCondition();
+//		postCondition.setName(method.getPostCondition());
+//		statement.setPostCondition(postCondition);
 		
 		//link selected Method to the corcimpl, so drilldown can open it:
 		if (method.getCorCImpl() != null && !method.getCorCImpl().isEmpty()) {

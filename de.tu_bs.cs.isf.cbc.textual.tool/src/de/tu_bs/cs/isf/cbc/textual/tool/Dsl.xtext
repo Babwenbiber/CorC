@@ -72,9 +72,8 @@ StrengthWeakStatement returns StrengthWeakStatement:
 ;
 		
 
-Condition returns Condition:
-	{Condition}
-	name=EString;
+Condition:
+	{Condition} condition=Expression;
 
 SkipStatement returns SkipStatement:
 		 name=';'
@@ -92,9 +91,8 @@ JavaStatement returns JavaStatement:
 ;
 
 JMLAnnotation returns JMLAnnotation:
-	"@requires" requires=EString ";" &
-	"@ensures" ensures=EString ";" &
-	"@assignable" assignable=EString ";"
+	"@requires" requires=Condition ";" &
+	"@ensures" ensures=Condition ";"
 ;
 
 BlockStatement returns BlockStatement:
@@ -152,3 +150,33 @@ Rename returns Rename:
 	'NewName' newName=EString
 	'}'
 	;
+
+Expression:
+	Foreach;
+	
+VariableOrMethodName:
+	name=ID;
+	
+Foreach returns Expression:
+	Exists | (foreach="(\\foreach" type=JvmTypeReference var=VariableOrMethodName ";" right=Exists ")")
+;
+
+Exists returns Expression:
+	Relation | (exists="(\\exists" type=JvmTypeReference var=VariableOrMethodName ";" right=Relation ")")
+;
+
+Relation returns Expression:
+	Implication ( ({Lower.left=current} "<" | {Greater.left=current} ">" | {Equal.left=current} "=" | {LowerEqual.left=current} "<=" | {GreaterEqual.left=current} ">=") right=Implication)*;
+
+Implication returns Expression:
+	Concat (( {Impl.left=current} '=>') right=Concat)*;
+
+Concat returns Expression:
+	PrimaryExpression (({And.left=current} '&' | {Or.left=current} '|') right=PrimaryExpression)*;
+
+PrimaryExpression returns Expression:
+    {Expression} => ('false' | isTrue?='true') |
+	'(' Expression ')' |
+	{FunctionCall} func=VariableOrMethodName ('(' (args+=Expression (',' args+=Expression)* )?')')? |
+	{Expression} Number
+	 ;

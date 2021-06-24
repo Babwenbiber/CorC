@@ -33,8 +33,10 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.BlockStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.SmallRepetitionStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.StrengthWeakStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.AbstractStatementImpl;
+import de.tu_bs.cs.isf.cbc.cbcmodel.singleton.CbCFormulaSingleton;
 import de.tu_bs.cs.isf.cbc.util.ConstructCodeBlock;
 import de.tu_bs.cs.isf.cbc.util.FilenamePrefix;
+import de.tu_bs.cs.isf.cbc.util.Parser;
 import de.tu_bs.cs.isf.cbc.util.ProveWithKey;
 
 public class TraverseFormulaAndGenerate {
@@ -58,14 +60,16 @@ public class TraverseFormulaAndGenerate {
 		this.formula = formula;
 		this.resource = resource;
 		this.factory = CbcmodelFactory.eINSTANCE;
+		
+		CbCFormulaSingleton.init(formula);
 	}
 
 	public CbCFormula traverseFormulaAndGenerate() {		
 		AbstractStatement statement = formula.getStatement();
 		statement.setPreCondition(factory.createCondition());
-		statement.getPreCondition().setName(formula.getPreCondition().getName());
+		statement.getPreCondition().setCondition(formula.getPreCondition().getCondition());
 		statement.setPostCondition(factory.createCondition());
-		statement.getPostCondition().setName(formula.getPostCondition().getName());
+		statement.getPostCondition().setCondition(formula.getPostCondition().getCondition());
 		System.out.println("lessgo Traverse");
 		castStatementAndTraverse(statement);
 		
@@ -96,9 +100,9 @@ public class TraverseFormulaAndGenerate {
 				List<JavaVariable> vars = mergeJavaVariables(this.vars, varsFormula);
 				List<Condition> conds = mergeGlobalConditions(this.conds, condsFormula);
 				List<Rename> renaming = mergeRenaming(this.renaming, renamingFormula);
-				ProveWithKey.createProveMethodFormulaWithKey(formula.getPreCondition(), statement.getPreCondition(),
+				ProveWithKey.createProveMethodFormulaWithKey(Parser.getStringFromObject(formula.getPreCondition()), Parser.getStringFromObject(statement.getPreCondition()),
 						vars, conds, renaming, uri, numberFile++, false, FilenamePrefix.PRE_IMPL);
-				ProveWithKey.createProveMethodFormulaWithKey(statement.getPostCondition(), formula.getPostCondition(),
+				ProveWithKey.createProveMethodFormulaWithKey(Parser.getStringFromObject(statement.getPostCondition()), Parser.getStringFromObject(formula.getPostCondition()),
 						vars, conds, renaming, uri, numberFile++, false, FilenamePrefix.POST_IMPL);
 			}
 		} else if (statement instanceof SkipStatement) {
@@ -107,55 +111,55 @@ public class TraverseFormulaAndGenerate {
 			ProveWithKey.createProveStatementWithKey(statement, vars, conds, renaming, null, uri, numberFile++, false, FilenamePrefix.RETURN);
 		} else if (statement instanceof StrengthWeakStatement) {
 			StrengthWeakStatement swStatement = (StrengthWeakStatement)statement;
-			ProveWithKey.createProvePreImplPreWithKey(statement.getPreCondition(),
-					swStatement.getWeakPreCondition(), vars, conds, renaming, uri, numberFile++, false, FilenamePrefix.PRE_IMPL);
-			ProveWithKey.createProvePostImplPostWithKey(statement.getPostCondition(),
-					swStatement.getStrongPostCondition(), vars, conds, renaming, uri,
+			ProveWithKey.createProvePreImplPreWithKey(Parser.getStringFromObject(statement.getPreCondition()),
+					Parser.getStringFromObject(swStatement.getWeakPreCondition()), vars, conds, renaming, uri, numberFile++, false, FilenamePrefix.PRE_IMPL);
+			ProveWithKey.createProvePostImplPostWithKey(Parser.getStringFromObject(statement.getPostCondition()),
+					Parser.getStringFromObject(swStatement.getStrongPostCondition()), vars, conds, renaming, uri,
 					numberFile++, false, FilenamePrefix.POST_IMPL);
 			ProveWithKey.createProveStatementWithKey(statement, vars, conds, renaming, null, uri, numberFile++, false, FilenamePrefix.STATEMENT);
 
 		} else if (statement instanceof BlockStatement) {
 
 			BlockStatement blockStatement = (BlockStatement) statement;
-			ProveWithKey.createProveRequiresWithKey(statement.getPreCondition(),
-					blockStatement.getJmlAnnotation().getRequires(), vars, conds, renaming, uri, numberFile++, false, FilenamePrefix.PRE_IMPL);
-			ProveWithKey.createProveEnsuresWithKey(statement.getPostCondition(),
-					blockStatement.getJmlAnnotation().getEnsures(), vars, conds, renaming, uri, numberFile++, false, FilenamePrefix.POST_IMPL);
+			ProveWithKey.createProveRequiresWithKey(Parser.getStringFromObject(statement.getPreCondition()),
+					Parser.getStringFromObject(blockStatement.getJmlAnnotation().getRequires()), vars, conds, renaming, uri, numberFile++, false, FilenamePrefix.PRE_IMPL);
+			ProveWithKey.createProveEnsuresWithKey(Parser.getStringFromObject(statement.getPostCondition()),
+					Parser.getStringFromObject(blockStatement.getJmlAnnotation().getEnsures()), vars, conds, renaming, uri, numberFile++, false, FilenamePrefix.POST_IMPL);
 			traverseBlockStatement(blockStatement);
 		}
 	}
 
 	private void traverseRepetitionStatement(SmallRepetitionStatement repetitionStatement) {
 		AbstractStatement loopStatement = repetitionStatement.getLoopStatement();
-		loopStatement.setPreCondition(factory.createCondition());
-		loopStatement.getPreCondition().setName("(" + repetitionStatement.getInvariant().getName() + ") & ("
-				+ repetitionStatement.getGuard().getName() + ")");
-		loopStatement.setPostCondition(factory.createCondition());
-		loopStatement.getPostCondition().setName(repetitionStatement.getInvariant().getName());
-		ProveWithKey.createProvePreWithKey(repetitionStatement.getInvariant(), repetitionStatement.getPreCondition(),
+//		loopStatement.setPreCondition(factory.createCondition());
+//		loopStatement.getPreCondition().getCondition("(" + repetitionStatement.getInvariant().getCondition() + ") & ("
+//				+ repetitionStatement.getGuard().getCondition() + ")");
+//		loopStatement.setPostCondition(factory.createCondition());
+//		loopStatement.getPostCondition().getCondition(repetitionStatement.getInvariant().getCondition());
+		ProveWithKey.createProvePreWithKey(Parser.getStringFromObject(repetitionStatement.getInvariant()), Parser.getStringFromObject(repetitionStatement.getPreCondition()),
 				vars, conds, renaming, uri, numberFile++, false, FilenamePrefix.PRE_IMPL);
-		ProveWithKey.createProvePostWithKey(repetitionStatement.getInvariant(), repetitionStatement.getGuard(),
-				repetitionStatement.getPostCondition(), vars, conds, renaming, uri, numberFile++, false, FilenamePrefix.POST_IMPL);
+		ProveWithKey.createProvePostWithKey(Parser.getStringFromObject(repetitionStatement.getInvariant()), Parser.getStringFromObject(repetitionStatement.getGuard()),
+				Parser.getStringFromObject(repetitionStatement.getPostCondition()), vars, conds, renaming, uri, numberFile++, false, FilenamePrefix.POST_IMPL);
 		String code = ConstructCodeBlock.constructCodeBlockAndVerify3(repetitionStatement);
-		ProveWithKey.createProveVariant2WithKey(code, repetitionStatement.getInvariant(),
-				repetitionStatement.getGuard(), repetitionStatement.getVariant(), vars, conds, renaming, uri,
+		ProveWithKey.createProveVariant2WithKey(code, Parser.getStringFromObject(repetitionStatement.getInvariant()),
+				Parser.getStringFromObject(repetitionStatement.getGuard()), repetitionStatement.getVariant(), vars, conds, renaming, uri,
 				numberFile++, false, FilenamePrefix.VARIANT2);
 
 		castStatementAndTraverse(loopStatement);
 	}
 
 	private void traverseSelectionStatement(SelectionStatement selectionStatement) {
-		ProveWithKey.createProvePreSelWithKey(selectionStatement.getGuards(), selectionStatement.getPreCondition(),
+		ProveWithKey.createProvePreSelWithKey(selectionStatement.getGuards(), Parser.getStringFromObject(selectionStatement.getPreCondition()),
 				vars, conds, renaming, uri, numberFile++, false, FilenamePrefix.SELECTION);
 		for (int i = 0; i < selectionStatement.getCommands().size(); i++) {
 			AbstractStatement childStatement = selectionStatement.getCommands().get(i);
 			Condition childGuard = selectionStatement.getGuards().get(i);
-
-			childStatement.setPreCondition(factory.createCondition());
-			childStatement.getPreCondition().setName(
-					"(" + selectionStatement.getPreCondition().getName() + ") & (" + childGuard.getName() + ")");
-			childStatement.setPostCondition(factory.createCondition());
-			childStatement.getPostCondition().setName(selectionStatement.getPostCondition().getName());
+			//TODO:
+//			childStatement.setPreCondition(factory.createCondition());
+//			childStatement.getPreCondition().setName(
+//					"(" + selectionStatement.getPreCondition().getName() + ") & (" + childGuard.getName() + ")");
+//			childStatement.setPostCondition(factory.createCondition());
+//			childStatement.getPostCondition().setName(selectionStatement.getPostCondition().getName());
 			castStatementAndTraverse(childStatement);
 		}
 	}
@@ -165,13 +169,14 @@ public class TraverseFormulaAndGenerate {
 		AbstractStatement secondStatement = compositionStatement.getSecondStatement();
 
 		firstStatement.setPreCondition(factory.createCondition());
-		firstStatement.getPreCondition().setName(compositionStatement.getPreCondition().getName());
+		firstStatement.getPreCondition().setCondition(compositionStatement.getPreCondition().getCondition());
+//		firstStatement.setPreCondition(compositionStatement.getPreCondition());
 		firstStatement.setPostCondition(factory.createCondition());
-		firstStatement.getPostCondition().setName(compositionStatement.getIntermediateCondition().getName());
+		firstStatement.getPostCondition().setCondition(compositionStatement.getIntermediateCondition().getCondition());
 		secondStatement.setPreCondition(factory.createCondition());
-		secondStatement.getPreCondition().setName(compositionStatement.getIntermediateCondition().getName());
+		secondStatement.getPreCondition().setCondition(compositionStatement.getIntermediateCondition().getCondition());
 		secondStatement.setPostCondition(factory.createCondition());
-		secondStatement.getPostCondition().setName(compositionStatement.getPostCondition().getName());
+		secondStatement.getPostCondition().setCondition(compositionStatement.getPostCondition().getCondition());
 		castStatementAndTraverse(firstStatement);
 		castStatementAndTraverse(secondStatement);
 	}
@@ -180,9 +185,9 @@ public class TraverseFormulaAndGenerate {
 		JavaStatement statement = blockStatement.getJavaStatement();
 
 		statement.setPreCondition(factory.createCondition());
-		statement.getPreCondition().setName(blockStatement.getJmlAnnotation().getRequires());
+		statement.getPreCondition().setCondition(blockStatement.getJmlAnnotation().getRequires().getCondition());
 		statement.setPostCondition(factory.createCondition());
-		statement.getPostCondition().setName(blockStatement.getJmlAnnotation().getEnsures());
+		statement.getPostCondition().setCondition(blockStatement.getJmlAnnotation().getEnsures().getCondition());
 		
 		ProveWithKey.createProveJavaStatementWithKey(statement, vars, conds, renaming, null, uri, numberFile++, false, FilenamePrefix.JAVA_STATEMENT);
 	}
@@ -254,7 +259,7 @@ public class TraverseFormulaAndGenerate {
 		for (Condition cond1 : conds1.getConditions()) {
 			boolean isNew = true;
 			for (Condition cond2 : conds2.getConditions()) {
-				if (cond1.getName().equals(cond2.getName())) {
+				if (cond1.getCondition().equals(cond2.getCondition())) {
 					isNew = false;
 				}
 			}

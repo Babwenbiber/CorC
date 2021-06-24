@@ -5,18 +5,28 @@ package de.tu_bs.cs.isf.cbc.textual.tool.serializer;
 
 import com.google.inject.Inject;
 import de.tu_bs.cs.isf.cbc.cbcmodel.AbstractStatement;
+import de.tu_bs.cs.isf.cbc.cbcmodel.And;
 import de.tu_bs.cs.isf.cbc.cbcmodel.BlockStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbCFormula;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbCProblem;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbcmodelPackage;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CompositionStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Condition;
+import de.tu_bs.cs.isf.cbc.cbcmodel.Equal;
+import de.tu_bs.cs.isf.cbc.cbcmodel.Expression;
+import de.tu_bs.cs.isf.cbc.cbcmodel.FunctionCall;
 import de.tu_bs.cs.isf.cbc.cbcmodel.GlobalConditions;
+import de.tu_bs.cs.isf.cbc.cbcmodel.Greater;
+import de.tu_bs.cs.isf.cbc.cbcmodel.GreaterEqual;
+import de.tu_bs.cs.isf.cbc.cbcmodel.Impl;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JMLAnnotation;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariable;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariables;
+import de.tu_bs.cs.isf.cbc.cbcmodel.Lower;
+import de.tu_bs.cs.isf.cbc.cbcmodel.LowerEqual;
 import de.tu_bs.cs.isf.cbc.cbcmodel.MethodStatement;
+import de.tu_bs.cs.isf.cbc.cbcmodel.Or;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Rename;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Renaming;
 import de.tu_bs.cs.isf.cbc.cbcmodel.ReturnStatement;
@@ -24,6 +34,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.SelectionStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.SkipStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.SmallRepetitionStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.StrengthWeakStatement;
+import de.tu_bs.cs.isf.cbc.cbcmodel.VariableOrMethodName;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Variant;
 import de.tu_bs.cs.isf.cbc.textual.tool.services.DslGrammarAccess;
 import java.util.Set;
@@ -120,6 +131,9 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 			case CbcmodelPackage.ABSTRACT_STATEMENT:
 				sequence_AbstractStatement_Impl(context, (AbstractStatement) semanticObject); 
 				return; 
+			case CbcmodelPackage.AND:
+				sequence_Concat(context, (And) semanticObject); 
+				return; 
 			case CbcmodelPackage.BLOCK_STATEMENT:
 				sequence_BlockStatement(context, (BlockStatement) semanticObject); 
 				return; 
@@ -135,8 +149,26 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 			case CbcmodelPackage.CONDITION:
 				sequence_Condition(context, (Condition) semanticObject); 
 				return; 
+			case CbcmodelPackage.EQUAL:
+				sequence_Relation(context, (Equal) semanticObject); 
+				return; 
+			case CbcmodelPackage.EXPRESSION:
+				sequence_Exists_Foreach_PrimaryExpression(context, (Expression) semanticObject); 
+				return; 
+			case CbcmodelPackage.FUNCTION_CALL:
+				sequence_PrimaryExpression(context, (FunctionCall) semanticObject); 
+				return; 
 			case CbcmodelPackage.GLOBAL_CONDITIONS:
 				sequence_GlobalConditions(context, (GlobalConditions) semanticObject); 
+				return; 
+			case CbcmodelPackage.GREATER:
+				sequence_Relation(context, (Greater) semanticObject); 
+				return; 
+			case CbcmodelPackage.GREATER_EQUAL:
+				sequence_Relation(context, (GreaterEqual) semanticObject); 
+				return; 
+			case CbcmodelPackage.IMPL:
+				sequence_Implication(context, (Impl) semanticObject); 
 				return; 
 			case CbcmodelPackage.JML_ANNOTATION:
 				sequence_JMLAnnotation(context, (JMLAnnotation) semanticObject); 
@@ -150,8 +182,17 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 			case CbcmodelPackage.JAVA_VARIABLES:
 				sequence_JavaVariables(context, (JavaVariables) semanticObject); 
 				return; 
+			case CbcmodelPackage.LOWER:
+				sequence_Relation(context, (Lower) semanticObject); 
+				return; 
+			case CbcmodelPackage.LOWER_EQUAL:
+				sequence_Relation(context, (LowerEqual) semanticObject); 
+				return; 
 			case CbcmodelPackage.METHOD_STATEMENT:
 				sequence_MethodStatement(context, (MethodStatement) semanticObject); 
+				return; 
+			case CbcmodelPackage.OR:
+				sequence_Concat(context, (Or) semanticObject); 
 				return; 
 			case CbcmodelPackage.RENAME:
 				sequence_Rename(context, (Rename) semanticObject); 
@@ -173,6 +214,9 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 				return; 
 			case CbcmodelPackage.STRENGTH_WEAK_STATEMENT:
 				sequence_StrengthWeakStatement(context, (StrengthWeakStatement) semanticObject); 
+				return; 
+			case CbcmodelPackage.VARIABLE_OR_METHOD_NAME:
+				sequence_VariableOrMethodName(context, (VariableOrMethodName) semanticObject); 
 				return; 
 			case CbcmodelPackage.VARIANT:
 				sequence_Variant(context, (Variant) semanticObject); 
@@ -625,19 +669,119 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	
 	/**
 	 * Contexts:
+	 *     Expression returns And
+	 *     Foreach returns And
+	 *     Exists returns And
+	 *     Relation returns And
+	 *     Relation.Lower_1_0_0_0 returns And
+	 *     Relation.Greater_1_0_1_0 returns And
+	 *     Relation.Equal_1_0_2_0 returns And
+	 *     Relation.LowerEqual_1_0_3_0 returns And
+	 *     Relation.GreaterEqual_1_0_4_0 returns And
+	 *     Implication returns And
+	 *     Implication.Impl_1_0_0 returns And
+	 *     Concat returns And
+	 *     Concat.And_1_0_0_0 returns And
+	 *     Concat.Or_1_0_1_0 returns And
+	 *     PrimaryExpression returns And
+	 *
+	 * Constraint:
+	 *     (left=Concat_And_1_0_0_0 right=PrimaryExpression)
+	 */
+	protected void sequence_Concat(ISerializationContext context, And semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.AND__LEFT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.AND__LEFT));
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.EXPRESSION__RIGHT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.EXPRESSION__RIGHT));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getConcatAccess().getAndLeftAction_1_0_0_0(), semanticObject.getLeft());
+		feeder.accept(grammarAccess.getConcatAccess().getRightPrimaryExpressionParserRuleCall_1_1_0(), semanticObject.getRight());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Expression returns Or
+	 *     Foreach returns Or
+	 *     Exists returns Or
+	 *     Relation returns Or
+	 *     Relation.Lower_1_0_0_0 returns Or
+	 *     Relation.Greater_1_0_1_0 returns Or
+	 *     Relation.Equal_1_0_2_0 returns Or
+	 *     Relation.LowerEqual_1_0_3_0 returns Or
+	 *     Relation.GreaterEqual_1_0_4_0 returns Or
+	 *     Implication returns Or
+	 *     Implication.Impl_1_0_0 returns Or
+	 *     Concat returns Or
+	 *     Concat.And_1_0_0_0 returns Or
+	 *     Concat.Or_1_0_1_0 returns Or
+	 *     PrimaryExpression returns Or
+	 *
+	 * Constraint:
+	 *     (left=Concat_Or_1_0_1_0 right=PrimaryExpression)
+	 */
+	protected void sequence_Concat(ISerializationContext context, Or semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.OR__LEFT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.OR__LEFT));
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.EXPRESSION__RIGHT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.EXPRESSION__RIGHT));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getConcatAccess().getOrLeftAction_1_0_1_0(), semanticObject.getLeft());
+		feeder.accept(grammarAccess.getConcatAccess().getRightPrimaryExpressionParserRuleCall_1_1_0(), semanticObject.getRight());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
 	 *     Condition returns Condition
 	 *
 	 * Constraint:
-	 *     name=EString
+	 *     condition=Expression
 	 */
 	protected void sequence_Condition(ISerializationContext context, Condition semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.CONDITION__NAME) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.CONDITION__NAME));
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.CONDITION__CONDITION) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.CONDITION__CONDITION));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getConditionAccess().getNameEStringParserRuleCall_1_0(), semanticObject.getName());
+		feeder.accept(grammarAccess.getConditionAccess().getConditionExpressionParserRuleCall_0(), semanticObject.getCondition());
 		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Expression returns Expression
+	 *     Foreach returns Expression
+	 *     Exists returns Expression
+	 *     Relation returns Expression
+	 *     Relation.Lower_1_0_0_0 returns Expression
+	 *     Relation.Greater_1_0_1_0 returns Expression
+	 *     Relation.Equal_1_0_2_0 returns Expression
+	 *     Relation.LowerEqual_1_0_3_0 returns Expression
+	 *     Relation.GreaterEqual_1_0_4_0 returns Expression
+	 *     Implication returns Expression
+	 *     Implication.Impl_1_0_0 returns Expression
+	 *     Concat returns Expression
+	 *     Concat.And_1_0_0_0 returns Expression
+	 *     Concat.Or_1_0_1_0 returns Expression
+	 *     PrimaryExpression returns Expression
+	 *
+	 * Constraint:
+	 *     (
+	 *         (foreach='(\foreach' type=JvmTypeReference var=VariableOrMethodName right=Exists) | 
+	 *         (exists='(\exists' type=JvmTypeReference var=VariableOrMethodName right=Relation) | 
+	 *         isTrue?='true'
+	 *     )?
+	 */
+	protected void sequence_Exists_Foreach_PrimaryExpression(ISerializationContext context, Expression semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	
@@ -650,6 +794,41 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	 */
 	protected void sequence_GlobalConditions(ISerializationContext context, GlobalConditions semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Expression returns Impl
+	 *     Foreach returns Impl
+	 *     Exists returns Impl
+	 *     Relation returns Impl
+	 *     Relation.Lower_1_0_0_0 returns Impl
+	 *     Relation.Greater_1_0_1_0 returns Impl
+	 *     Relation.Equal_1_0_2_0 returns Impl
+	 *     Relation.LowerEqual_1_0_3_0 returns Impl
+	 *     Relation.GreaterEqual_1_0_4_0 returns Impl
+	 *     Implication returns Impl
+	 *     Implication.Impl_1_0_0 returns Impl
+	 *     Concat returns Impl
+	 *     Concat.And_1_0_0_0 returns Impl
+	 *     Concat.Or_1_0_1_0 returns Impl
+	 *     PrimaryExpression returns Impl
+	 *
+	 * Constraint:
+	 *     (left=Implication_Impl_1_0_0 right=Concat)
+	 */
+	protected void sequence_Implication(ISerializationContext context, Impl semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.IMPL__LEFT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.IMPL__LEFT));
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.EXPRESSION__RIGHT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.EXPRESSION__RIGHT));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getImplicationAccess().getImplLeftAction_1_0_0(), semanticObject.getLeft());
+		feeder.accept(grammarAccess.getImplicationAccess().getRightConcatParserRuleCall_1_1_0(), semanticObject.getRight());
+		feeder.finish();
 	}
 	
 	
@@ -722,6 +901,207 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getMethodStatementAccess().getNameEStringParserRuleCall_1_0(), semanticObject.getName());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Expression returns FunctionCall
+	 *     Foreach returns FunctionCall
+	 *     Exists returns FunctionCall
+	 *     Relation returns FunctionCall
+	 *     Relation.Lower_1_0_0_0 returns FunctionCall
+	 *     Relation.Greater_1_0_1_0 returns FunctionCall
+	 *     Relation.Equal_1_0_2_0 returns FunctionCall
+	 *     Relation.LowerEqual_1_0_3_0 returns FunctionCall
+	 *     Relation.GreaterEqual_1_0_4_0 returns FunctionCall
+	 *     Implication returns FunctionCall
+	 *     Implication.Impl_1_0_0 returns FunctionCall
+	 *     Concat returns FunctionCall
+	 *     Concat.And_1_0_0_0 returns FunctionCall
+	 *     Concat.Or_1_0_1_0 returns FunctionCall
+	 *     PrimaryExpression returns FunctionCall
+	 *
+	 * Constraint:
+	 *     (func=VariableOrMethodName (args+=Expression args+=Expression*)?)
+	 */
+	protected void sequence_PrimaryExpression(ISerializationContext context, FunctionCall semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Expression returns Equal
+	 *     Foreach returns Equal
+	 *     Exists returns Equal
+	 *     Relation returns Equal
+	 *     Relation.Lower_1_0_0_0 returns Equal
+	 *     Relation.Greater_1_0_1_0 returns Equal
+	 *     Relation.Equal_1_0_2_0 returns Equal
+	 *     Relation.LowerEqual_1_0_3_0 returns Equal
+	 *     Relation.GreaterEqual_1_0_4_0 returns Equal
+	 *     Implication returns Equal
+	 *     Implication.Impl_1_0_0 returns Equal
+	 *     Concat returns Equal
+	 *     Concat.And_1_0_0_0 returns Equal
+	 *     Concat.Or_1_0_1_0 returns Equal
+	 *     PrimaryExpression returns Equal
+	 *
+	 * Constraint:
+	 *     (left=Relation_Equal_1_0_2_0 right=Implication)
+	 */
+	protected void sequence_Relation(ISerializationContext context, Equal semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.EQUAL__LEFT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.EQUAL__LEFT));
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.EXPRESSION__RIGHT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.EXPRESSION__RIGHT));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getRelationAccess().getEqualLeftAction_1_0_2_0(), semanticObject.getLeft());
+		feeder.accept(grammarAccess.getRelationAccess().getRightImplicationParserRuleCall_1_1_0(), semanticObject.getRight());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Expression returns Greater
+	 *     Foreach returns Greater
+	 *     Exists returns Greater
+	 *     Relation returns Greater
+	 *     Relation.Lower_1_0_0_0 returns Greater
+	 *     Relation.Greater_1_0_1_0 returns Greater
+	 *     Relation.Equal_1_0_2_0 returns Greater
+	 *     Relation.LowerEqual_1_0_3_0 returns Greater
+	 *     Relation.GreaterEqual_1_0_4_0 returns Greater
+	 *     Implication returns Greater
+	 *     Implication.Impl_1_0_0 returns Greater
+	 *     Concat returns Greater
+	 *     Concat.And_1_0_0_0 returns Greater
+	 *     Concat.Or_1_0_1_0 returns Greater
+	 *     PrimaryExpression returns Greater
+	 *
+	 * Constraint:
+	 *     (left=Relation_Greater_1_0_1_0 right=Implication)
+	 */
+	protected void sequence_Relation(ISerializationContext context, Greater semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.GREATER__LEFT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.GREATER__LEFT));
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.EXPRESSION__RIGHT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.EXPRESSION__RIGHT));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getRelationAccess().getGreaterLeftAction_1_0_1_0(), semanticObject.getLeft());
+		feeder.accept(grammarAccess.getRelationAccess().getRightImplicationParserRuleCall_1_1_0(), semanticObject.getRight());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Expression returns GreaterEqual
+	 *     Foreach returns GreaterEqual
+	 *     Exists returns GreaterEqual
+	 *     Relation returns GreaterEqual
+	 *     Relation.Lower_1_0_0_0 returns GreaterEqual
+	 *     Relation.Greater_1_0_1_0 returns GreaterEqual
+	 *     Relation.Equal_1_0_2_0 returns GreaterEqual
+	 *     Relation.LowerEqual_1_0_3_0 returns GreaterEqual
+	 *     Relation.GreaterEqual_1_0_4_0 returns GreaterEqual
+	 *     Implication returns GreaterEqual
+	 *     Implication.Impl_1_0_0 returns GreaterEqual
+	 *     Concat returns GreaterEqual
+	 *     Concat.And_1_0_0_0 returns GreaterEqual
+	 *     Concat.Or_1_0_1_0 returns GreaterEqual
+	 *     PrimaryExpression returns GreaterEqual
+	 *
+	 * Constraint:
+	 *     (left=Relation_GreaterEqual_1_0_4_0 right=Implication)
+	 */
+	protected void sequence_Relation(ISerializationContext context, GreaterEqual semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.GREATER_EQUAL__LEFT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.GREATER_EQUAL__LEFT));
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.EXPRESSION__RIGHT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.EXPRESSION__RIGHT));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getRelationAccess().getGreaterEqualLeftAction_1_0_4_0(), semanticObject.getLeft());
+		feeder.accept(grammarAccess.getRelationAccess().getRightImplicationParserRuleCall_1_1_0(), semanticObject.getRight());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Expression returns Lower
+	 *     Foreach returns Lower
+	 *     Exists returns Lower
+	 *     Relation returns Lower
+	 *     Relation.Lower_1_0_0_0 returns Lower
+	 *     Relation.Greater_1_0_1_0 returns Lower
+	 *     Relation.Equal_1_0_2_0 returns Lower
+	 *     Relation.LowerEqual_1_0_3_0 returns Lower
+	 *     Relation.GreaterEqual_1_0_4_0 returns Lower
+	 *     Implication returns Lower
+	 *     Implication.Impl_1_0_0 returns Lower
+	 *     Concat returns Lower
+	 *     Concat.And_1_0_0_0 returns Lower
+	 *     Concat.Or_1_0_1_0 returns Lower
+	 *     PrimaryExpression returns Lower
+	 *
+	 * Constraint:
+	 *     (left=Relation_Lower_1_0_0_0 right=Implication)
+	 */
+	protected void sequence_Relation(ISerializationContext context, Lower semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.LOWER__LEFT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.LOWER__LEFT));
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.EXPRESSION__RIGHT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.EXPRESSION__RIGHT));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getRelationAccess().getLowerLeftAction_1_0_0_0(), semanticObject.getLeft());
+		feeder.accept(grammarAccess.getRelationAccess().getRightImplicationParserRuleCall_1_1_0(), semanticObject.getRight());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Expression returns LowerEqual
+	 *     Foreach returns LowerEqual
+	 *     Exists returns LowerEqual
+	 *     Relation returns LowerEqual
+	 *     Relation.Lower_1_0_0_0 returns LowerEqual
+	 *     Relation.Greater_1_0_1_0 returns LowerEqual
+	 *     Relation.Equal_1_0_2_0 returns LowerEqual
+	 *     Relation.LowerEqual_1_0_3_0 returns LowerEqual
+	 *     Relation.GreaterEqual_1_0_4_0 returns LowerEqual
+	 *     Implication returns LowerEqual
+	 *     Implication.Impl_1_0_0 returns LowerEqual
+	 *     Concat returns LowerEqual
+	 *     Concat.And_1_0_0_0 returns LowerEqual
+	 *     Concat.Or_1_0_1_0 returns LowerEqual
+	 *     PrimaryExpression returns LowerEqual
+	 *
+	 * Constraint:
+	 *     (left=Relation_LowerEqual_1_0_3_0 right=Implication)
+	 */
+	protected void sequence_Relation(ISerializationContext context, LowerEqual semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.LOWER_EQUAL__LEFT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.LOWER_EQUAL__LEFT));
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.EXPRESSION__RIGHT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.EXPRESSION__RIGHT));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getRelationAccess().getLowerEqualLeftAction_1_0_3_0(), semanticObject.getLeft());
+		feeder.accept(grammarAccess.getRelationAccess().getRightImplicationParserRuleCall_1_1_0(), semanticObject.getRight());
 		feeder.finish();
 	}
 	
@@ -862,6 +1242,24 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 		feeder.accept(grammarAccess.getStrengthWeakStatementAccess().getWeakPreConditionConditionParserRuleCall_3_0(), semanticObject.getWeakPreCondition());
 		feeder.accept(grammarAccess.getStrengthWeakStatementAccess().getNameCodeStringParserRuleCall_6_0(), semanticObject.getName());
 		feeder.accept(grammarAccess.getStrengthWeakStatementAccess().getStrongPostConditionConditionParserRuleCall_10_0(), semanticObject.getStrongPostCondition());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     VariableOrMethodName returns VariableOrMethodName
+	 *
+	 * Constraint:
+	 *     name=ID
+	 */
+	protected void sequence_VariableOrMethodName(ISerializationContext context, VariableOrMethodName semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.VARIABLE_OR_METHOD_NAME__NAME) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.VARIABLE_OR_METHOD_NAME__NAME));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getVariableOrMethodNameAccess().getNameIDTerminalRuleCall_0(), semanticObject.getName());
 		feeder.finish();
 	}
 	
