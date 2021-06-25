@@ -172,16 +172,17 @@ public class LayoutFeature extends AbstractCustomFeature {
 	private void resizeFormula(CbCFormula businessObject, GraphicsAlgorithm ga) {
 		Condition pre = businessObject.getStatement().getPreCondition();
 		Condition post = businessObject.getStatement().getPostCondition();
-		String newPre = setWordWraps(pre.getName());
-		pre.setName(newPre);
-		String newPost = setWordWraps(post.getName());
-		post.setName(newPost);
+		//TODO:
+//		String newPre = setWordWraps(pre.getName());
+//		pre.setName(newPre);
+//		String newPost = setWordWraps(post.getName());
+//		post.setName(newPost);
 		MultiText preText = (MultiText) featureProvider.getPictogramElementForBusinessObject(pre)
 				.getGraphicsAlgorithm();
 		MultiText postText = (MultiText) featureProvider.getPictogramElementForBusinessObject(post)
 				.getGraphicsAlgorithm();
-		preText.setValue(newPre);
-		postText.setValue(newPost);
+//		preText.setValue(newPre);
+//		postText.setValue(newPost);
 		IDimension sizePre = uiL.calculateTextSize(preText.getValue(), font, true);
 		IDimension sizePost = uiL.calculateTextSize(postText.getValue(), font, true);
 		int width = Math.max(sizePre.getWidth(), sizePost.getWidth());
@@ -192,16 +193,17 @@ public class LayoutFeature extends AbstractCustomFeature {
 	private void resizeBlock(BlockStatement businessObject, GraphicsAlgorithm ga) {
 		Condition pre = businessObject.getPreCondition();
 		Condition post = businessObject.getPostCondition();
-		String newPre = setWordWraps(pre.getName());
-		pre.setName(newPre);
-		String newPost = setWordWraps(post.getName());
-		post.setName(newPost);
+		//TODO:
+//		String newPre = setWordWraps(pre.getName());
+//		pre.setName(newPre);
+//		String newPost = setWordWraps(post.getName());
+//		post.setName(newPost);
 		MultiText preText = (MultiText) featureProvider.getPictogramElementForBusinessObject(pre)
 				.getGraphicsAlgorithm();
 		MultiText postText = (MultiText) featureProvider.getPictogramElementForBusinessObject(post)
 				.getGraphicsAlgorithm();
-		preText.setValue(newPre);
-		postText.setValue(newPost);
+//		preText.setValue(newPre);
+//		postText.setValue(newPost);
 		IDimension sizePre = uiL.calculateTextSize(preText.getValue(), font, true);
 		IDimension sizePost = uiL.calculateTextSize(postText.getValue(), font, true);
 		int width = Math.max(sizePre.getWidth() * 2, sizePost.getWidth() * 2);
@@ -213,21 +215,21 @@ public class LayoutFeature extends AbstractCustomFeature {
 		Condition pre = businessObject.getFirstStatement().getPreCondition();
 		Condition post = businessObject.getSecondStatement().getPostCondition();
 		Condition interm = businessObject.getIntermediateCondition();
-		String newPre = setWordWraps(pre.getName());
-		pre.setName(newPre);
-		String newPost = setWordWraps(post.getName());
-		post.setName(newPost);
-		String newInterm = setWordWraps(interm.getName());
-		interm.setName(newInterm);
+//		String newPre = setWordWraps(pre.getName());
+//		pre.setName(newPre);
+//		String newPost = setWordWraps(post.getName());
+//		post.setName(newPost);
+//		String newInterm = setWordWraps(interm.getName());
+//		interm.setName(newInterm);
 		MultiText preText = (MultiText) featureProvider.getPictogramElementForBusinessObject(pre)
 				.getGraphicsAlgorithm();
 		MultiText postText = (MultiText) featureProvider.getPictogramElementForBusinessObject(post)
 				.getGraphicsAlgorithm();
 		MultiText intermText = (MultiText) featureProvider.getPictogramElementForBusinessObject(interm)
 				.getGraphicsAlgorithm();
-		preText.setValue(newPre);
-		postText.setValue(newPost);
-		intermText.setValue(newInterm);
+//		preText.setValue(newPre);
+//		postText.setValue(newPost);
+//		intermText.setValue(newInterm);
 		IDimension sizePre = uiL.calculateTextSize(preText.getValue(), font, true);
 		IDimension sizePost = uiL.calculateTextSize(postText.getValue(), font, true);
 		IDimension sizeInterm = uiL.calculateTextSize(intermText.getValue(), font, true);
@@ -244,21 +246,21 @@ public class LayoutFeature extends AbstractCustomFeature {
 			Condition pre = businessObject.getCommands().get(i).getPreCondition();
 			Condition post = businessObject.getCommands().get(i).getPostCondition();
 			Condition guard = businessObject.getGuards().get(i);
-			String newPre = setWordWraps(pre.getName());
-			pre.setName(newPre);
-			String newPost = setWordWraps(post.getName());
-			post.setName(newPost);
-			String newGuard = setWordWraps(guard.getName());
-			guard.setName(newGuard);
+//			String newPre = setWordWraps(pre.getName());
+//			pre.setName(newPre);
+//			String newPost = setWordWraps(post.getName());
+//			post.setName(newPost);
+//			String newGuard = setWordWraps(guard.getName());
+//			guard.setName(newGuard);
 			MultiText preText = (MultiText) featureProvider.getPictogramElementForBusinessObject(pre)
 					.getGraphicsAlgorithm();
 			MultiText postText = (MultiText) featureProvider.getPictogramElementForBusinessObject(post)
 					.getGraphicsAlgorithm();
 			MultiText guardText = (MultiText) featureProvider.getPictogramElementForBusinessObject(guard)
 					.getGraphicsAlgorithm();
-			preText.setValue(newPre);
-			postText.setValue(newPost);
-			guardText.setValue(newGuard);
+//			preText.setValue(newPre);
+//			postText.setValue(newPost);
+//			guardText.setValue(newGuard);
 			IDimension sizePre = uiL.calculateTextSize(preText.getValue(), font, true);
 			IDimension sizePost = uiL.calculateTextSize(postText.getValue(), font, true);
 			IDimension sizeGuard = uiL.calculateTextSize(guardText.getValue(), font, true);
@@ -276,16 +278,16 @@ public class LayoutFeature extends AbstractCustomFeature {
 		Condition invariant = businessObject.getInvariant();
 		Condition guard = businessObject.getGuard();
 		Variant variant = businessObject.getVariant();
-		String newPre = setWordWraps(pre.getName());
-		pre.setName(newPre);
-		String newPost = setWordWraps(post.getName());
-		post.setName(newPost);
-		String newInvariant = setWordWraps(invariant.getName());
-		invariant.setName(newInvariant);
-		String newGuard = setWordWraps(guard.getName());
-		guard.setName(newGuard);
-		String newVariant = setWordWraps(variant.getName());
-		variant.setName(newVariant);
+//		String newPre = setWordWraps(pre.getName());
+//		pre.setName(newPre);
+//		String newPost = setWordWraps(post.getName());
+//		post.setName(newPost);
+//		String newInvariant = setWordWraps(invariant.getName());
+//		invariant.setName(newInvariant);
+//		String newGuard = setWordWraps(guard.getName());
+//		guard.setName(newGuard);
+//		String newVariant = setWordWraps(variant.getName());
+//		variant.setName(newVariant);
 		MultiText preText = (MultiText) featureProvider.getPictogramElementForBusinessObject(pre)
 				.getGraphicsAlgorithm();
 		MultiText postText = (MultiText) featureProvider.getPictogramElementForBusinessObject(post)
@@ -296,11 +298,11 @@ public class LayoutFeature extends AbstractCustomFeature {
 				.getGraphicsAlgorithm();
 		MultiText variantText = (MultiText) featureProvider.getPictogramElementForBusinessObject(variant)
 				.getGraphicsAlgorithm();
-		preText.setValue(newPre);
-		postText.setValue(newPost);
-		invariantText.setValue(newInvariant);
-		guardText.setValue(newGuard);
-		variantText.setValue(newVariant);
+//		preText.setValue(newPre);
+//		postText.setValue(newPost);
+//		invariantText.setValue(newInvariant);
+//		guardText.setValue(newGuard);
+//		variantText.setValue(newVariant);
 		IDimension sizePre = uiL.calculateTextSize(preText.getValue(), font, true);
 		IDimension sizePost = uiL.calculateTextSize(postText.getValue(), font, true);
 		IDimension sizeInvariant = uiL.calculateTextSize(invariantText.getValue(), font, true);
@@ -357,16 +359,16 @@ public class LayoutFeature extends AbstractCustomFeature {
 	private void resizeSkip(SkipStatement businessObject, GraphicsAlgorithm ga) {
 		Condition pre = businessObject.getPreCondition();
 		Condition post = businessObject.getPostCondition();
-		String newPre = setWordWraps(pre.getName());
-		pre.setName(newPre);
-		String newPost = setWordWraps(post.getName());
-		post.setName(newPost);
+//		String newPre = setWordWraps(pre.getName());
+//		pre.setName(newPre);
+//		String newPost = setWordWraps(post.getName());
+//		post.setName(newPost);
 		MultiText preText = (MultiText) featureProvider.getPictogramElementForBusinessObject(pre)
 				.getGraphicsAlgorithm();
 		MultiText postText = (MultiText) featureProvider.getPictogramElementForBusinessObject(post)
 				.getGraphicsAlgorithm();
-		preText.setValue(newPre);
-		postText.setValue(newPost);
+//		preText.setValue(newPre);
+//		postText.setValue(newPost);
 		IDimension sizePre = uiL.calculateTextSize(preText.getValue(), font, true);
 		IDimension sizePost = uiL.calculateTextSize(postText.getValue(), font, true);
 		int width = Math.max(sizePre.getWidth(), sizePost.getWidth());
@@ -377,10 +379,10 @@ public class LayoutFeature extends AbstractCustomFeature {
 	private void resizeStatement(AbstractStatement businessObject, GraphicsAlgorithm ga) {
 		Condition pre = businessObject.getPreCondition();
 		Condition post = businessObject.getPostCondition();
-		String newPre = setWordWraps(pre.getName());
-		pre.setName(newPre);
-		String newPost = setWordWraps(post.getName());
-		post.setName(newPost);
+//		String newPre = setWordWraps(pre.getName());
+//		pre.setName(newPre);
+//		String newPost = setWordWraps(post.getName());
+//		post.setName(newPost);
 		MultiText preText = (MultiText)
 		featureProvider.getPictogramElementForBusinessObject(pre).getGraphicsAlgorithm();
 		MultiText postText = (MultiText)
@@ -391,8 +393,8 @@ public class LayoutFeature extends AbstractCustomFeature {
 				statementText = (MultiText) pe.getGraphicsAlgorithm();
 			}
 		}
-		preText.setValue(newPre);
-		postText.setValue(newPost);
+//		preText.setValue(newPre);
+//		postText.setValue(newPost);
 		IDimension sizePre = uiL.calculateTextSize(preText.getValue(), font, true);
 		IDimension sizePost = uiL.calculateTextSize(postText.getValue(), font, true);
 		IDimension sizeStatment = uiL.calculateTextSize(statementText.getValue(), font, true);

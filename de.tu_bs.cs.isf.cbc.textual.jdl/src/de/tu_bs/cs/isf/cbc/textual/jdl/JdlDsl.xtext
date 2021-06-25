@@ -1,0 +1,39 @@
+grammar de.tu_bs.cs.isf.cbc.textual.jdl.JdlDsl with
+                                      org.eclipse.xtext.xbase.Xbase
+
+generate jdlDsl "http://www.tu_bs.de/cs/isf/cbc/textual/jdl/JdlDsl"
+
+import "http://www.eclipse.org/emf/2002/Ecore" as ecore
+
+Model:
+	expression=Expression;	
+
+VariableOrMethodName:
+	name=ID;
+
+Expression:
+	Foreach;
+	
+Foreach returns Expression:
+	Exists | (foreach="(\\foreach" type=JvmTypeReference var=VariableOrMethodName ";" right=Exists ")")
+;
+
+Exists returns Expression:
+	Relation | (exists="(\\exists" type=JvmTypeReference var=VariableOrMethodName ";" right=Relation ")")
+;
+
+Relation returns Expression:
+	Implication ( ({Lower.left=current} "<" | {Greater.left=current} ">" | {Equal.left=current} "=" | {LowerEqual.left=current} "<=" | {GreaterEqual.left=current} ">=") right=Implication)*;
+
+Implication returns Expression:
+	Concat (( {Impl.left=current} '=>') right=Concat)*;
+
+Concat returns Expression:
+	PrimaryExpression (({And.left=current} '&' | {Or.left=current} '|') right=PrimaryExpression)*;
+
+PrimaryExpression returns Expression:
+    {Expression} => ('false' | isTrue?='true') |
+	'(' Expression ')' |
+	{FunctionCall} func=VariableOrMethodName ('(' (args+=Expression (',' args+=Expression)* )?')')? |
+	{Expression} Number
+	 ;

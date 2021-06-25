@@ -1,4 +1,4 @@
-grammar de.tu_bs.cs.isf.cbc.textual.tool.Dsl with  jbase.Jbase//org.eclipse.xtext.xbase.Xbase// org.eclipse.xtext.common.Terminals
+grammar de.tu_bs.cs.isf.cbc.textual.tool.Dsl with jbase.Jbase //org.eclipse.xtext.xbase.Xbase// org.eclipse.xtext.common.Terminals
 
 import "http://www.eclipse.org/emf/2002/Ecore" as ecore
 import "http://www.example.org/cbcmodel"
@@ -72,10 +72,8 @@ StrengthWeakStatement returns StrengthWeakStatement:
 ;
 		
 
-Condition returns Condition:
-	{Condition}
-	name=JdlExpression
-	;
+Condition:
+	{Condition} condition=Expression;
 
 SkipStatement returns SkipStatement:
 		 name=';'
@@ -93,9 +91,8 @@ JavaStatement returns JavaStatement:
 ;
 
 JMLAnnotation returns JMLAnnotation:
-	"@requires" requires=EString ";" &
-	"@ensures" ensures=EString ";" &
-	"@assignable" assignable=EString ";"
+	"@requires" requires=Condition ";" &
+	"@ensures" ensures=Condition ";"
 ;
 
 BlockStatement returns BlockStatement:
@@ -153,22 +150,33 @@ Rename returns Rename:
 	'NewName' newName=EString
 	'}'
 	;
+
+Expression:
+	Foreach;
 	
+VariableOrMethodName:
+	name=ID;
+	
+Foreach returns Expression:
+	Exists | (foreach="(\\foreach" type=JvmTypeReference var=VariableOrMethodName ";" right=Exists ")")
+;
 
-//JdlOperation:
-//	{JdlOperation}
-//	name=("&" | "|" | "=>")
-//;
-//
-//JdlExpression returns Condition:
-//	{Condition} left=JdlTerminalExpression (=>ops+="&" rights+=JdlTerminalExpression)*
-//;
-//
-//JdlTerminalExpression returns Condition:
-//	JdlExpression  |  {Condition} ID
-//;
+Exists returns Expression:
+	Relation | (exists="(\\exists" type=JvmTypeReference var=VariableOrMethodName ";" right=Relation ")")
+;
 
-//JdlIterator returns JdlExpression:
-//	{JdlIterator}
-//	"(\foreach" JdlExpression ")"
-//;
+Relation returns Expression:
+	Implication ( ({Lower.left=current} "<" | {Greater.left=current} ">" | {Equal.left=current} "=" | {LowerEqual.left=current} "<=" | {GreaterEqual.left=current} ">=") right=Implication)*;
+
+Implication returns Expression:
+	Concat (( {Impl.left=current} '->') right=Concat)*;
+
+Concat returns Expression:
+	PrimaryExpression (({And.left=current} '&' | {Or.left=current} '|') right=PrimaryExpression)*;
+
+PrimaryExpression returns Expression:
+    {Expression} => ('false' | isTrue?='true') |
+	'(' Expression ')' |
+	{FunctionCall} func=VariableOrMethodName ('(' (args+=Expression (',' args+=Expression)* )?')')? |
+	{Expression} Number
+	 ;

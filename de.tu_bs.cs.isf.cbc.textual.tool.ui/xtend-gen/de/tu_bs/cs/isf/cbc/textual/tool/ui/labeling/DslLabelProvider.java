@@ -4,6 +4,14 @@
 package de.tu_bs.cs.isf.cbc.textual.tool.ui.labeling;
 
 import com.google.inject.Inject;
+import de.tu_bs.cs.isf.cbc.cbcmodel.CbCFormula;
+import de.tu_bs.cs.isf.cbc.cbcmodel.Condition;
+import de.tu_bs.cs.isf.cbc.cbcmodel.Variant;
+import de.tu_bs.cs.isf.cbc.cbcmodel.impl.AbstractStatementImpl;
+import de.tu_bs.cs.isf.cbc.cbcmodel.impl.CompositionStatementImpl;
+import de.tu_bs.cs.isf.cbc.cbcmodel.impl.MethodStatementImpl;
+import de.tu_bs.cs.isf.cbc.cbcmodel.impl.SelectionStatementImpl;
+import de.tu_bs.cs.isf.cbc.cbcmodel.impl.SmallRepetitionStatementImpl;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.xtext.ui.label.DefaultEObjectLabelProvider;
 
@@ -19,75 +27,39 @@ public class DslLabelProvider extends DefaultEObjectLabelProvider {
     super(delegate);
   }
   
-  public String text(final /* Condition */Object condition) {
-    throw new Error("Unresolved compilation problems:"
-      + "\nSmallRepetitionStatement cannot be resolved to a type."
-      + "\nSmallRepetitionStatement cannot be resolved to a type."
-      + "\nCompositionStatement cannot be resolved to a type."
-      + "\nCompositionStatement cannot be resolved to a type."
-      + "\nSelectionStatement cannot be resolved to a type."
-      + "\nSelectionStatement cannot be resolved to a type."
-      + "\nCbCFormula cannot be resolved to a type."
-      + "\nCbCFormula cannot be resolved to a type."
-      + "\neContainer cannot be resolved"
-      + "\neContainer cannot be resolved"
-      + "\ninvariant cannot be resolved"
-      + "\nequals cannot be resolved"
-      + "\nname cannot be resolved"
-      + "\nguard cannot be resolved"
-      + "\nequals cannot be resolved"
-      + "\nname cannot be resolved"
-      + "\neContainer cannot be resolved"
-      + "\neContainer cannot be resolved"
-      + "\nintermediateCondition cannot be resolved"
-      + "\nequals cannot be resolved"
-      + "\nname cannot be resolved"
-      + "\neContainer cannot be resolved"
-      + "\neContainer cannot be resolved"
-      + "\nguards cannot be resolved"
-      + "\ncontains cannot be resolved"
-      + "\nguards cannot be resolved"
-      + "\nindexOf cannot be resolved"
-      + "\nname cannot be resolved"
-      + "\neContainer cannot be resolved"
-      + "\neContainer cannot be resolved"
-      + "\npreCondition cannot be resolved"
-      + "\nequals cannot be resolved"
-      + "\nname cannot be resolved"
-      + "\npostCondition cannot be resolved"
-      + "\nequals cannot be resolved"
-      + "\nname cannot be resolved");
+  public Object text(final Condition condition) {
+    return null;
   }
   
-  public String text(final /* Variant */Object variant) {
-    throw new Error("Unresolved compilation problems:"
-      + "\nname cannot be resolved");
+  public String text(final Variant variant) {
+    String _name = variant.getName();
+    return ("variant: " + _name);
   }
   
-  public String text(final /* SmallRepetitionStatementImpl */Object std) {
+  public String text(final SmallRepetitionStatementImpl std) {
     return "Repetition Statement";
   }
   
-  public String text(final /* CompositionStatementImpl */Object std) {
+  public String text(final CompositionStatementImpl std) {
     return "Composition Statement";
   }
   
-  public String text(final /* SelectionStatementImpl */Object std) {
+  public String text(final SelectionStatementImpl std) {
     return "Selection Statement";
   }
   
-  public String text(final /* MethodStatementImpl */Object std) {
-    throw new Error("Unresolved compilation problems:"
-      + "\nname cannot be resolved");
+  public String text(final MethodStatementImpl std) {
+    String _name = std.getName();
+    return ("MethodStatement: " + _name);
   }
   
-  public String text(final /* AbstractStatementImpl */Object std) {
-    throw new Error("Unresolved compilation problems:"
-      + "\nname cannot be resolved");
+  public String text(final AbstractStatementImpl std) {
+    String _name = std.getName();
+    return ("Statement: " + _name);
   }
   
-  public String text(final /* CbCFormula */Object formula) {
-    throw new Error("Unresolved compilation problems:"
-      + "\nname cannot be resolved");
+  public String text(final CbCFormula formula) {
+    String _name = formula.getName();
+    return ("Formula: " + _name);
   }
 }

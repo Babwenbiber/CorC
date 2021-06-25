@@ -32,7 +32,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cbcmodel.ecore#//CbCFormula/methodName"/>
     </genClasses>
     <genClasses ecoreClass="cbcmodel.ecore#//Condition">
-      <genFeatures children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//Condition/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//Condition/condition"/>
     </genClasses>
     <genClasses ecoreClass="cbcmodel.ecore#//AbstractStatement">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cbcmodel.ecore#//AbstractStatement/name"/>
@@ -52,9 +52,8 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cbcmodel.ecore#//JavaStatement/comment"/>
     </genClasses>
     <genClasses ecoreClass="cbcmodel.ecore#//JMLAnnotation">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute cbcmodel.ecore#//JMLAnnotation/requires"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute cbcmodel.ecore#//JMLAnnotation/assignable"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute cbcmodel.ecore#//JMLAnnotation/ensures"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//JMLAnnotation/requires"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//JMLAnnotation/ensures"/>
     </genClasses>
     <genClasses ecoreClass="cbcmodel.ecore#//BlockStatement">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//BlockStatement/javaStatement"/>
@@ -141,16 +140,44 @@
     <genClasses ecoreClass="cbcmodel.ecore#//ProductVariant">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cbcmodel.ecore#//ProductVariant/refinementChain"/>
     </genClasses>
-    <genClasses ecoreClass="cbcmodel.ecore#//JdlExpression">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//JdlExpression/left"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//JdlExpression/ops"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//JdlExpression/rights"/>
+    <genClasses ecoreClass="cbcmodel.ecore#//VariableOrMethodName">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cbcmodel.ecore#//VariableOrMethodName/name"/>
     </genClasses>
-    <genClasses ecoreClass="cbcmodel.ecore#//JdlTerminalExpression"/>
-    <genClasses ecoreClass="cbcmodel.ecore#//JdlOperation">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cbcmodel.ecore#//JdlOperation/name"/>
+    <genClasses ecoreClass="cbcmodel.ecore#//Expression">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cbcmodel.ecore#//Expression/foreach"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//Expression/type"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//Expression/var"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//Expression/right"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cbcmodel.ecore#//Expression/exists"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cbcmodel.ecore#//Expression/isTrue"/>
     </genClasses>
-    <genClasses ecoreClass="cbcmodel.ecore#//JdlIterator"/>
-    <genClasses ecoreClass="cbcmodel.ecore#//JdlBracedExpression"/>
+    <genClasses ecoreClass="cbcmodel.ecore#//Lower">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//Lower/left"/>
+    </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//Greater">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//Greater/left"/>
+    </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//Equal">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//Equal/left"/>
+    </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//LowerEqual">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//LowerEqual/left"/>
+    </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//GreaterEqual">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//GreaterEqual/left"/>
+    </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//Impl">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//Impl/left"/>
+    </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//And">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//And/left"/>
+    </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//Or">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//Or/left"/>
+    </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//FunctionCall">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//FunctionCall/func"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//FunctionCall/args"/>
+    </genClasses>
   </genPackages>
 </genmodel:GenModel>

@@ -61,6 +61,7 @@ public class GenerateIntermediateConditionFeature extends AbstractCustomFeature 
  
     @Override
     public void execute(ICustomContext context) {
+    	//TODO:
         PictogramElement[] pes = context.getPictogramElements();
         if (pes != null && pes.length == 1) {
             Object bo = getBusinessObjectForPictogramElement(pes[0]);
@@ -75,7 +76,8 @@ public class GenerateIntermediateConditionFeature extends AbstractCustomFeature 
 				} catch (ParserException e) {
 					e.printStackTrace();
 				}
-                comboStatement.getIntermediateCondition().setName(preConditionString);
+//                comboStatement.getIntermediateCondition().setCondition(preConditionString);
+                comboStatement.getIntermediateCondition().setCondition(statement.getPostCondition().getCondition());
                 UpdateConditionsOfChildren.updateConditionsofChildren(comboStatement.getIntermediateCondition());
                 updatePictogramElement(pes[0]);
             }
