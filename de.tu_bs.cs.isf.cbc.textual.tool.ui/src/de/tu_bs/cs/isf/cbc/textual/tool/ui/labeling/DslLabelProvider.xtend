@@ -33,32 +33,33 @@ class DslLabelProvider extends DefaultEObjectLabelProvider {
 	// Labels and icons can be computed like this:
 	
 	def text(Condition condition) {
-		if (condition.eContainer instanceof SmallRepetitionStatement) {
-			var statement = condition.eContainer as SmallRepetitionStatement
-			if (statement.invariant.equals(condition)) {
-				'invariant: ' + condition.name
-			} else if (statement.guard.equals(condition)) {
-				'guard: ' + condition.name
-			}
-		} else if (condition.eContainer instanceof CompositionStatement) {
-			var statement = condition.eContainer as CompositionStatement
-			if (statement.intermediateCondition.equals(condition)) {
-				'intm: ' + condition.name
-			}
-		} else if (condition.eContainer instanceof SelectionStatement) {
-			var statement = condition.eContainer as SelectionStatement
-			if (statement.guards.contains(condition)) {
-				var int i = statement.guards.indexOf(condition)
-				'guard' + i +  ': ' + condition.name
-			}
-		} else if (condition.eContainer instanceof CbCFormula) {
-			var formula = condition.eContainer as CbCFormula
-			if (formula.preCondition.equals(condition)) {
-				'pre: ' + condition.name
-			} else if (formula.postCondition.equals(condition)) {
-				'post: ' + condition.name
-			}
-		} 
+		//TODO:
+//		if (condition.eContainer instanceof SmallRepetitionStatement) {
+//			var statement = condition.eContainer as SmallRepetitionStatement
+//			if (statement.invariant.equals(condition)) {
+//				'invariant: ' + condition.name
+//			} else if (statement.guard.equals(condition)) {
+//				'guard: ' + condition.name
+//			}
+//		} else if (condition.eContainer instanceof CompositionStatement) {
+//			var statement = condition.eContainer as CompositionStatement
+//			if (statement.intermediateCondition.equals(condition)) {
+//				'intm: ' + condition.name
+//			}
+//		} else if (condition.eContainer instanceof SelectionStatement) {
+//			var statement = condition.eContainer as SelectionStatement
+//			if (statement.guards.contains(condition)) {
+//				var int i = statement.guards.indexOf(condition)
+//				'guard' + i +  ': ' + condition.name
+//			}
+//		} else if (condition.eContainer instanceof CbCFormula) {
+//			var formula = condition.eContainer as CbCFormula
+//			if (formula.preCondition.equals(condition)) {
+//				'pre: ' + condition.name
+//			} else if (formula.postCondition.equals(condition)) {
+//				'post: ' + condition.name
+//			}
+//		} 
 	}
 	
 	def text(Variant variant) {

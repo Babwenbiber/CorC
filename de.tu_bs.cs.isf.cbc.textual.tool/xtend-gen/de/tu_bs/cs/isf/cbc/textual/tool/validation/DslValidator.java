@@ -67,16 +67,8 @@ public class DslValidator extends AbstractDslValidator {
   }
   
   @Check
-  public void checkSyntaxOfCondition(final Condition condition) {
-    if (((((!Objects.equal(condition.getName(), null)) && (!condition.getName().isEmpty())) && (!condition.getName().contains("forall"))) && (!condition.getName().contains("exists")))) {
-      boolean _readAndTestAssertWithJaMoPP = CompareMethodBodies.readAndTestAssertWithJaMoPP(condition.getName().replaceAll("->", "&"));
-      boolean _not = (!_readAndTestAssertWithJaMoPP);
-      if (_not) {
-        this.warning("Condition has not the correct syntax.", 
-          CbcmodelPackage.Literals.CONDITION__NAME, 
-          DslValidator.INVALID_NAME);
-      }
-    }
+  public Object checkSyntaxOfCondition(final Condition condition) {
+    return null;
   }
   
   @Check(CheckType.EXPENSIVE)

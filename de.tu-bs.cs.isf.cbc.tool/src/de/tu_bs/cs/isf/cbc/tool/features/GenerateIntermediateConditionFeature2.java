@@ -94,7 +94,8 @@ public class GenerateIntermediateConditionFeature2 extends MyAbstractAsynchronou
 					Console.println("Statement is not in correct format.");
 				}
 				if (compoStatement != null) {
-					compoStatement.getIntermediateCondition().setName(weakestPre);
+					//TODO:
+//					compoStatement.getIntermediateCondition().setName(weakestPre);
 					UpdateConditionsOfChildren.updateConditionsofChildren(compoStatement.getIntermediateCondition());
 					updatePictogramElement(pes[0]);
 					updatePictogramElement(((Shape)pes[0]).getContainer());

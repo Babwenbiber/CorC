@@ -11,6 +11,8 @@ import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 
 import com.google.common.collect.Lists;
 
@@ -152,7 +154,7 @@ public class Parser {
 	}
 
 	public String destructConditionAndReplace(Condition condition) throws ParserException {
-		String input = condition.getName();
+		String input = NodeModelUtils.getTokenText(NodeModelUtils.findActualNodeFor(condition.getCondition()));
 		String[] inputTokens = new String[0];
 		if (input.contains("&")) {
 			input = input.replace("&", "|");
@@ -393,6 +395,11 @@ public class Parser {
 		return methodStub;
 	}
 
+	
+	public static String getStringFromObject(EObject object) {
+		return NodeModelUtils.getTokenText(NodeModelUtils.findActualNodeFor(object));
+	}
+	
 	// public static void main(String[] args) {
 	//
 	// AbstractStatement st = CbcmodelFactory.eINSTANCE.createAbstractStatement();

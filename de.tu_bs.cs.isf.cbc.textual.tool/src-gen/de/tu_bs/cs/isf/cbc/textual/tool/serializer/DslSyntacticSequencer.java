@@ -11,6 +11,7 @@ import org.eclipse.xtext.IGrammarAccess;
 import org.eclipse.xtext.RuleCall;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.serializer.analysis.GrammarAlias.AbstractElementAlias;
+import org.eclipse.xtext.serializer.analysis.GrammarAlias.AlternativeAlias;
 import org.eclipse.xtext.serializer.analysis.GrammarAlias.GroupAlias;
 import org.eclipse.xtext.serializer.analysis.GrammarAlias.TokenAlias;
 import org.eclipse.xtext.serializer.analysis.ISyntacticSequencerPDAProvider.ISynNavigable;
@@ -21,6 +22,9 @@ import org.eclipse.xtext.serializer.sequencer.AbstractSyntacticSequencer;
 public class DslSyntacticSequencer extends AbstractSyntacticSequencer {
 
 	protected DslGrammarAccess grammarAccess;
+	protected AbstractElementAlias match_PrimaryExpression_FalseKeyword_0_1_0_0_or_NumberParserRuleCall_3_1;
+	protected AbstractElementAlias match_PrimaryExpression_LeftParenthesisKeyword_1_0_a;
+	protected AbstractElementAlias match_PrimaryExpression_LeftParenthesisKeyword_1_0_p;
 	protected AbstractElementAlias match_XAnnotation___LeftParenthesisKeyword_3_0_RightParenthesisKeyword_3_2__q;
 	protected AbstractElementAlias match_XExpressionInClosure_SemicolonKeyword_1_1_q;
 	protected AbstractElementAlias match_XFunctionTypeRef___LeftParenthesisKeyword_0_0_RightParenthesisKeyword_0_2__q;
@@ -31,6 +35,9 @@ public class DslSyntacticSequencer extends AbstractSyntacticSequencer {
 	@Inject
 	protected void init(IGrammarAccess access) {
 		grammarAccess = (DslGrammarAccess) access;
+		match_PrimaryExpression_FalseKeyword_0_1_0_0_or_NumberParserRuleCall_3_1 = new AlternativeAlias(false, false, new TokenAlias(false, false, grammarAccess.getPrimaryExpressionAccess().getFalseKeyword_0_1_0_0()), new TokenAlias(false, false, grammarAccess.getPrimaryExpressionAccess().getNumberParserRuleCall_3_1()));
+		match_PrimaryExpression_LeftParenthesisKeyword_1_0_a = new TokenAlias(true, true, grammarAccess.getPrimaryExpressionAccess().getLeftParenthesisKeyword_1_0());
+		match_PrimaryExpression_LeftParenthesisKeyword_1_0_p = new TokenAlias(true, false, grammarAccess.getPrimaryExpressionAccess().getLeftParenthesisKeyword_1_0());
 		match_XAnnotation___LeftParenthesisKeyword_3_0_RightParenthesisKeyword_3_2__q = new GroupAlias(false, true, new TokenAlias(false, false, grammarAccess.getXAnnotationAccess().getLeftParenthesisKeyword_3_0()), new TokenAlias(false, false, grammarAccess.getXAnnotationAccess().getRightParenthesisKeyword_3_2()));
 		match_XExpressionInClosure_SemicolonKeyword_1_1_q = new TokenAlias(false, true, grammarAccess.getXExpressionInClosureAccess().getSemicolonKeyword_1_1());
 		match_XFunctionTypeRef___LeftParenthesisKeyword_0_0_RightParenthesisKeyword_0_2__q = new GroupAlias(false, true, new TokenAlias(false, false, grammarAccess.getXFunctionTypeRefAccess().getLeftParenthesisKeyword_0_0()), new TokenAlias(false, false, grammarAccess.getXFunctionTypeRefAccess().getRightParenthesisKeyword_0_2()));
@@ -43,6 +50,8 @@ public class DslSyntacticSequencer extends AbstractSyntacticSequencer {
 	protected String getUnassignedRuleCallToken(EObject semanticObject, RuleCall ruleCall, INode node) {
 		if (ruleCall.getRule() == grammarAccess.getArrayBracketsRule())
 			return getArrayBracketsToken(semanticObject, ruleCall, node);
+		else if (ruleCall.getRule() == grammarAccess.getNumberRule())
+			return getNumberToken(semanticObject, ruleCall, node);
 		else if (ruleCall.getRule() == grammarAccess.getOpSingleAssignRule())
 			return getOpSingleAssignToken(semanticObject, ruleCall, node);
 		return "";
@@ -57,6 +66,16 @@ public class DslSyntacticSequencer extends AbstractSyntacticSequencer {
 		if (node != null)
 			return getTokenText(node);
 		return "[ ]";
+	}
+	
+	/**
+	 * Number hidden():
+	 * 	HEX | (INT | DECIMAL) ('.' (INT | DECIMAL))?;
+	 */
+	protected String getNumberToken(EObject semanticObject, RuleCall ruleCall, INode node) {
+		if (node != null)
+			return getTokenText(node);
+		return "0x";
 	}
 	
 	/**
@@ -76,7 +95,13 @@ public class DslSyntacticSequencer extends AbstractSyntacticSequencer {
 		List<INode> transitionNodes = collectNodes(fromNode, toNode);
 		for (AbstractElementAlias syntax : transition.getAmbiguousSyntaxes()) {
 			List<INode> syntaxNodes = getNodesFor(transitionNodes, syntax);
-			if (match_XAnnotation___LeftParenthesisKeyword_3_0_RightParenthesisKeyword_3_2__q.equals(syntax))
+			if (match_PrimaryExpression_FalseKeyword_0_1_0_0_or_NumberParserRuleCall_3_1.equals(syntax))
+				emit_PrimaryExpression_FalseKeyword_0_1_0_0_or_NumberParserRuleCall_3_1(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_PrimaryExpression_LeftParenthesisKeyword_1_0_a.equals(syntax))
+				emit_PrimaryExpression_LeftParenthesisKeyword_1_0_a(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_PrimaryExpression_LeftParenthesisKeyword_1_0_p.equals(syntax))
+				emit_PrimaryExpression_LeftParenthesisKeyword_1_0_p(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_XAnnotation___LeftParenthesisKeyword_3_0_RightParenthesisKeyword_3_2__q.equals(syntax))
 				emit_XAnnotation___LeftParenthesisKeyword_3_0_RightParenthesisKeyword_3_2__q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_XExpressionInClosure_SemicolonKeyword_1_1_q.equals(syntax))
 				emit_XExpressionInClosure_SemicolonKeyword_1_1_q(semanticObject, getLastNavigableState(), syntaxNodes);
@@ -92,6 +117,60 @@ public class DslSyntacticSequencer extends AbstractSyntacticSequencer {
 		}
 	}
 
+	/**
+	 * Ambiguous syntax:
+	 *     'false' | Number
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     (rule start) '('* (ambiguity) (rule start)
+	 */
+	protected void emit_PrimaryExpression_FalseKeyword_0_1_0_0_or_NumberParserRuleCall_3_1(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Ambiguous syntax:
+	 *     '('*
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     (rule start) (ambiguity) ('false' | Number) (rule start)
+	 *     (rule start) (ambiguity) exists='(\exists'
+	 *     (rule start) (ambiguity) foreach='(\foreach'
+	 *     (rule start) (ambiguity) func=VariableOrMethodName
+	 *     (rule start) (ambiguity) isTrue?='true'
+	 *     (rule start) (ambiguity) {And.left=}
+	 *     (rule start) (ambiguity) {Equal.left=}
+	 *     (rule start) (ambiguity) {Greater.left=}
+	 *     (rule start) (ambiguity) {GreaterEqual.left=}
+	 *     (rule start) (ambiguity) {Impl.left=}
+	 *     (rule start) (ambiguity) {Lower.left=}
+	 *     (rule start) (ambiguity) {LowerEqual.left=}
+	 *     (rule start) (ambiguity) {Or.left=}
+	 */
+	protected void emit_PrimaryExpression_LeftParenthesisKeyword_1_0_a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Ambiguous syntax:
+	 *     '('+
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     (rule start) (ambiguity) exists='(\exists'
+	 *     (rule start) (ambiguity) foreach='(\foreach'
+	 *     (rule start) (ambiguity) {And.left=}
+	 *     (rule start) (ambiguity) {Equal.left=}
+	 *     (rule start) (ambiguity) {Greater.left=}
+	 *     (rule start) (ambiguity) {GreaterEqual.left=}
+	 *     (rule start) (ambiguity) {Impl.left=}
+	 *     (rule start) (ambiguity) {Lower.left=}
+	 *     (rule start) (ambiguity) {LowerEqual.left=}
+	 *     (rule start) (ambiguity) {Or.left=}
+	 */
+	protected void emit_PrimaryExpression_LeftParenthesisKeyword_1_0_p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
 	/**
 	 * Ambiguous syntax:
 	 *     ('(' ')')?

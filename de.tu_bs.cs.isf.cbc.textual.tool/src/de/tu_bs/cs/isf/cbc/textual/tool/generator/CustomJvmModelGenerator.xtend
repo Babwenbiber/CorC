@@ -18,7 +18,7 @@ import org.eclipse.xtext.generator.IFileSystemAccess
 class CustomJvmModelGenerator implements IGenerator{
 
 	override void doGenerate(Resource resource, IFileSystemAccess fsa) {
-		System.out.println("lessgo doGenerate");
+		System.out.println("lessgo doGenerate1");
 		
 		var JavaVariables vars = null
 		var GlobalConditions conds = null

@@ -8,10 +8,14 @@ Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Export-Package: de.tu_bs.cs.isf.cbc.cbcmodel,
+Export-Package: .,
+ de.tu_bs.cs.isf.cbc.cbcmodel,
  de.tu_bs.cs.isf.cbc.cbcmodel.impl,
+ de.tu_bs.cs.isf.cbc.cbcmodel.singleton,
+ de.tu_bs.cs.isf.cbc.cbcmodel.string_saver,
  de.tu_bs.cs.isf.cbc.cbcmodel.util
 Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.xtext,
  org.eclipse.emf.ecore;visibility:=reexport,
  org.eclipse.xtext.xbase;visibility:=reexport,
  org.eclipse.xtext.common.types;visibility:=reexport
