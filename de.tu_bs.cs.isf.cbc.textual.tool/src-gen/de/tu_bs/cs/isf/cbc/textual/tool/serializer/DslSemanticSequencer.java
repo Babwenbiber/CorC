@@ -750,7 +750,7 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.CONDITION__CONDITION));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getConditionAccess().getConditionExpressionParserRuleCall_0(), semanticObject.getCondition());
+		feeder.accept(grammarAccess.getConditionAccess().getConditionExpressionParserRuleCall_1_0(), semanticObject.getCondition());
 		feeder.finish();
 	}
 	
@@ -837,7 +837,7 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	 *     JMLAnnotation returns JMLAnnotation
 	 *
 	 * Constraint:
-	 *     (requires=EString | ensures=EString | assignable=EString)+
+	 *     (requires=Condition | ensures=Condition)+
 	 */
 	protected void sequence_JMLAnnotation(ISerializationContext context, JMLAnnotation semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

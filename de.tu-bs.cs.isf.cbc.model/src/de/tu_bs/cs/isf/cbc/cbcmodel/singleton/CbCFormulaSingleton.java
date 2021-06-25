@@ -1,9 +1,11 @@
 package de.tu_bs.cs.isf.cbc.cbcmodel.singleton;
+
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbCFormula;
+import de.tu_bs.cs.isf.cbc.cbcmodel.string_saver.CbCFormulaExtension;
 
 public class CbCFormulaSingleton {
 
-	 private CbCFormula formula;
+	 private CbCFormulaExtension formula;
 	 private static final CbCFormulaSingleton OBJ = new CbCFormulaSingleton(); 
      
      private CbCFormulaSingleton() { 
@@ -15,10 +17,10 @@ public class CbCFormulaSingleton {
 //     } 
      
      public static void init(CbCFormula formula) {
-    	 OBJ.formula = formula;
+    	 OBJ.formula = new CbCFormulaExtension(formula);
      }
      
-     public static CbCFormula getCbCFormula() {
+     public static CbCFormulaExtension getCbCFormula() {
     	 return OBJ.formula;
      }
 }

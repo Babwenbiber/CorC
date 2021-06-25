@@ -110,10 +110,10 @@ public class DslParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getMethodStatementAccess().getGroup(), "rule__MethodStatement__Group__0");
 			builder.put(grammarAccess.getReturnStatementAccess().getGroup(), "rule__ReturnStatement__Group__0");
 			builder.put(grammarAccess.getStrengthWeakStatementAccess().getGroup(), "rule__StrengthWeakStatement__Group__0");
+			builder.put(grammarAccess.getConditionAccess().getGroup(), "rule__Condition__Group__0");
 			builder.put(grammarAccess.getCompositionStatementAccess().getGroup(), "rule__CompositionStatement__Group__0");
 			builder.put(grammarAccess.getJMLAnnotationAccess().getGroup_0(), "rule__JMLAnnotation__Group_0__0");
 			builder.put(grammarAccess.getJMLAnnotationAccess().getGroup_1(), "rule__JMLAnnotation__Group_1__0");
-			builder.put(grammarAccess.getJMLAnnotationAccess().getGroup_2(), "rule__JMLAnnotation__Group_2__0");
 			builder.put(grammarAccess.getBlockStatementAccess().getGroup(), "rule__BlockStatement__Group__0");
 			builder.put(grammarAccess.getSelectionStatementAccess().getGroup(), "rule__SelectionStatement__Group__0");
 			builder.put(grammarAccess.getSelectionStatementAccess().getGroup_9(), "rule__SelectionStatement__Group_9__0");
@@ -401,7 +401,7 @@ public class DslParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getStrengthWeakStatementAccess().getWeakPreConditionAssignment_3(), "rule__StrengthWeakStatement__WeakPreConditionAssignment_3");
 			builder.put(grammarAccess.getStrengthWeakStatementAccess().getNameAssignment_6(), "rule__StrengthWeakStatement__NameAssignment_6");
 			builder.put(grammarAccess.getStrengthWeakStatementAccess().getStrongPostConditionAssignment_10(), "rule__StrengthWeakStatement__StrongPostConditionAssignment_10");
-			builder.put(grammarAccess.getConditionAccess().getConditionAssignment(), "rule__Condition__ConditionAssignment");
+			builder.put(grammarAccess.getConditionAccess().getConditionAssignment_1(), "rule__Condition__ConditionAssignment_1");
 			builder.put(grammarAccess.getSkipStatementAccess().getNameAssignment(), "rule__SkipStatement__NameAssignment");
 			builder.put(grammarAccess.getCompositionStatementAccess().getFirstStatementAssignment_2(), "rule__CompositionStatement__FirstStatementAssignment_2");
 			builder.put(grammarAccess.getCompositionStatementAccess().getIntermediateConditionAssignment_6(), "rule__CompositionStatement__IntermediateConditionAssignment_6");
@@ -409,7 +409,6 @@ public class DslParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getJavaStatementAccess().getNameAssignment(), "rule__JavaStatement__NameAssignment");
 			builder.put(grammarAccess.getJMLAnnotationAccess().getRequiresAssignment_0_1(), "rule__JMLAnnotation__RequiresAssignment_0_1");
 			builder.put(grammarAccess.getJMLAnnotationAccess().getEnsuresAssignment_1_1(), "rule__JMLAnnotation__EnsuresAssignment_1_1");
-			builder.put(grammarAccess.getJMLAnnotationAccess().getAssignableAssignment_2_1(), "rule__JMLAnnotation__AssignableAssignment_2_1");
 			builder.put(grammarAccess.getBlockStatementAccess().getNameAssignment_1(), "rule__BlockStatement__NameAssignment_1");
 			builder.put(grammarAccess.getBlockStatementAccess().getJmlAnnotationAssignment_3(), "rule__BlockStatement__JmlAnnotationAssignment_3");
 			builder.put(grammarAccess.getBlockStatementAccess().getJavaStatementAssignment_5(), "rule__BlockStatement__JavaStatementAssignment_5");

@@ -56,6 +56,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.Variant;
 //import de.uka.ilkd.key.util.KeYTypeUtil;
 //import de.uka.ilkd.key.util.MiscTools;
 import de.tu_bs.cs.isf.cbc.cbcmodel.singleton.CbCFormulaSingleton;
+import de.tu_bs.cs.isf.cbc.cbcmodel.string_saver.ConditionExtension;
 
 public class ProveWithKey {
 	public static final String REGEX_ORIGINAL = "original";
@@ -143,36 +144,38 @@ public class ProveWithKey {
 
 		String assignmentString = "";
 		
-		String pre = Parser.getConditionFromCondition(Parser.getStringFromObject(statement.getPreCondition().getCondition()));
-		String post = Parser.getConditionFromCondition(Parser.getStringFromObject(statement.getPostCondition().getCondition()));
-		String preFormula = Parser.getConditionFromCondition(Parser.getStringFromObject(formula.getStatement().getPreCondition().getCondition()));
-		String postFormula = Parser.getConditionFromCondition(Parser.getStringFromObject(formula.getStatement().getPostCondition().getCondition()));
-		List<String> modifiables = Parser.getModifiedVarsFromCondition(Parser.getStringFromObject(statement.getPostCondition().getCondition()));
+		
+		ConditionStrings conditonStrings = new ConditionStrings(statement, formula);
+//		String preFormula = Parser.getConditionFromCondition(Parser.getStringFromObject(formula.getStatement().getPreCondition().getCondition()));
+//		String postFormula = Parser.getConditionFromCondition(Parser.getStringFromObject(formula.getStatement().getPostCondition().getCondition()));
+//		String preFormula = Parser.getConditionFromCondition(Parser.getStringFromObject(formula.getPreCondition().getCondition()));
+//		String postFormula = Parser.getConditionFromCondition(Parser.getStringFromObject(formula.getPostCondition().getCondition()));
+		List<String> modifiables = Parser.getModifiedVarsFromCondition(conditonStrings.post);
 		String stat = statement.getName();
 
-		if (refinements != null && pre.equals(preFormula)) {
-			pre = composeContractForCbCDiagram(formula.getCompositionTechnique(), refinements, pre,
+		if (refinements != null && conditonStrings.pre.equals(conditonStrings.preFormula)) {
+			conditonStrings.pre = composeContractForCbCDiagram(formula.getCompositionTechnique(), refinements, conditonStrings.pre,
 					Parser.KEYWORD_JML_PRE, returnVariable, vars);
 		}
-		if (refinements != null && post.equals(postFormula)) {
+		if (refinements != null && conditonStrings.post.equals(conditonStrings.postFormula)) {
 			modifiables = composeModifiables(refinements, modifiables, formula.getCompositionTechnique(), vars, true);
-			post = composeContractForCbCDiagram(formula.getCompositionTechnique(), refinements, post,
+			conditonStrings.post = composeContractForCbCDiagram(formula.getCompositionTechnique(), refinements, conditonStrings.post,
 					Parser.KEYWORD_JML_POST, returnVariable, vars);
 		}
 
 		List<String> unmodifiedVariables = Parser.getUnmodifiedVars(modifiables, vars.getVariables());
 
-		if (pre == null || pre.length() == 0) {
-			pre = "true";
+		if (conditonStrings.pre == null || conditonStrings.pre.length() == 0) {
+			conditonStrings.pre = "true";
 		}
-		if (post == null || post.length() == 0) {
-			post = "true";
+		if (conditonStrings.post == null ||conditonStrings.post.length() == 0) {
+			conditonStrings.post = "true";
 		}
 
 		if (renaming != null) {
 			globalConditionsString = useRenamingCondition(renaming, globalConditionsString);
-			pre = useRenamingCondition(renaming, pre);
-			post = useRenamingCondition(renaming, post);
+			conditonStrings.pre = useRenamingCondition(renaming, conditonStrings.pre);
+			conditonStrings.post = useRenamingCondition(renaming, conditonStrings.post);
 			stat = useRenamingStatement(renaming, stat);
 		}
 
@@ -180,7 +183,7 @@ public class ProveWithKey {
 			String varName = var.substring(var.indexOf(" ") + 1);
 			programVariablesString += var + "_old; ";
 			assignmentString += "||" + varName + "_old:=" + varName;
-			post += "&" + varName + "=" + varName + "_old";
+			conditonStrings.post += "&" + varName + "=" + varName + "_old";
 			// if variable is an Array add <created> condition for key
 			if (var.contains("[]")) {
 				conditionArraysCreated += " & " + varName + "_old.<created>=TRUE";
@@ -198,9 +201,9 @@ public class ProveWithKey {
 		}
 
 		String problem = "\\javaSource \"" + thisProject.getLocation() + "/\";" + "\\include \"helper.key\";"
-				+ "\\programVariables {" + programVariablesString + " Heap heapAtPre;}" + "\\problem {(" + pre + " "
+				+ "\\programVariables {" + programVariablesString + " Heap heapAtPre;}" + "\\problem {(" + conditonStrings.pre + " "
 				+ globalConditionsString + conditionArraysCreated + " & wellFormed(heap) ) -> {heapAtPre := heap"
-				+ assignmentString + "} \\<{" + stat + "}\\> (" + post + ")}";
+				+ assignmentString + "} \\<{" + stat + "}\\> (" + conditonStrings.post + ")}";
 
 		String location = thisProject.getLocation() + "/src/prove" + uri.trimFileExtension().lastSegment();
 		File keyFile = FileUtil.writeFile(problem, location, numberFile, override, name);
@@ -235,9 +238,8 @@ public class ProveWithKey {
 
 		String assignmentString = "";
 		
-		String pre = Parser.getConditionFromCondition(Parser.getStringFromObject(statement.getPreCondition().getCondition()));
-		String post = Parser.getConditionFromCondition(Parser.getStringFromObject(statement.getPostCondition().getCondition()));
-		List<String> modifiables = Parser.getModifiedVarsFromCondition(Parser.getStringFromObject(statement.getPostCondition().getCondition()));
+		ConditionStrings conditionStrings = new ConditionStrings(statement);
+		List<String> modifiables = Parser.getModifiedVarsFromCondition(conditionStrings.post);
 //		String stat = "";
 //		for (XExpression e: statement.getName()) {
 //			if (e instanceof XAssignment) {
@@ -258,17 +260,17 @@ public class ProveWithKey {
 
 		List<String> unmodifiedVariables = Parser.getUnmodifiedVars(modifiables, vars.getVariables());
 
-		if (pre == null || pre.length() == 0) {
-			pre = "true";
+		if (conditionStrings.pre == null || conditionStrings.pre.length() == 0) {
+			conditionStrings.pre = "true";
 		}
-		if (post == null || post.length() == 0) {
-			post = "true";
+		if (conditionStrings.post == null || conditionStrings.post.length() == 0) {
+			conditionStrings.post = "true";
 		}
 
 		if (renaming != null) {
 			globalConditionsString = useRenamingCondition(renaming, globalConditionsString);
-			pre = useRenamingCondition(renaming, pre);
-			post = useRenamingCondition(renaming, post);
+			conditionStrings.pre = useRenamingCondition(renaming, conditionStrings.pre);
+			conditionStrings.post = useRenamingCondition(renaming, conditionStrings.post);
 			stat = useRenamingStatement(renaming, stat);
 		}
 
@@ -276,7 +278,7 @@ public class ProveWithKey {
 			String varName = var.substring(var.indexOf(" ") + 1);
 			programVariablesString += var + "_old; ";
 			assignmentString += "||" + varName + "_old:=" + varName;
-			post += "&" + varName + "=" + varName + "_old";
+			conditionStrings.post += "&" + varName + "=" + varName + "_old";
 			// if variable is an Array add <created> condition for key
 			if (var.contains("[]")) {
 				conditionArraysCreated += " & " + varName + "_old.<created>=TRUE";
@@ -294,9 +296,9 @@ public class ProveWithKey {
 		}
 
 		String problem = "\\javaSource \"" + thisProject.getLocation() + "/\";" + "\\include \"helper.key\";"
-				+ "\\programVariables {" + programVariablesString + " Heap heapAtPre;}" + "\\problem {(" + pre + " "
+				+ "\\programVariables {" + programVariablesString + " Heap heapAtPre;}" + "\\problem {(" + conditionStrings.pre + " "
 				+ globalConditionsString + conditionArraysCreated + " & wellFormed(heap) ) -> {heapAtPre := heap"
-				+ assignmentString + "} \\<{" + stat + "}\\> (" + post + ")}";
+				+ assignmentString + "} \\<{" + stat + "}\\> (" + conditionStrings.post + ")}";
 
 		String location = thisProject.getLocation() + "/src/prove" + uri.trimFileExtension().lastSegment();
 		File keyFile = FileUtil.writeFile(problem, location, numberFile, override, name);
@@ -715,14 +717,14 @@ public class ProveWithKey {
 		return keyFile;
 	}
 
-	public static boolean provePreSelWithKey(EList<Condition> guards, String preCondition, JavaVariables vars,
+	public static boolean provePreSelWithKey(EList<ConditionExtension> guards, String preCondition, JavaVariables vars,
 			GlobalConditions conds, Renaming renaming, URI uri, IProgressMonitor monitor, String name) {
 		File location = createProvePreSelWithKey(guards, preCondition, vars, conds, renaming, uri, 0, true, name);
 		Console.println("Verify Pre -> GvGvG...");
 		return proveWithKey(location, monitor);
 	}
 
-	public static File createProvePreSelWithKey(EList<Condition> guards, String preCondition, JavaVariables vars,
+	public static File createProvePreSelWithKey(EList<ConditionExtension> guards, String preCondition, JavaVariables vars,
 			GlobalConditions conds, Renaming renaming, URI uri, int numberFile, boolean override, String name) {
 		String programVariablesString = "";
 		if (vars != null) {
@@ -738,9 +740,9 @@ public class ProveWithKey {
 		String preString = Parser.getConditionFromCondition(preCondition);
 		String guardString;
 		if (guards != null && guards.get(0) != null) {
-			guardString = "((" + guards.get(0) + ")";
+			guardString = "((" + guards.get(0).stringRepresentation + ")";
 			for (int i = 1; i < guards.size(); i++) {
-				guardString += " | (" + guards.get(i) + ")";
+				guardString += " | (" + guards.get(i).stringRepresentation + ")";
 			}
 			guardString += ")";
 		} else {
@@ -856,7 +858,7 @@ public class ProveWithKey {
 				+ ">=0)}";
 
 		String location = thisProject.getLocation() + "/src/prove" + uri.trimFileExtension().lastSegment();
-		File keyFile = FileUtil.writeFile(problem, location, numberFile, override, name + FilenamePrefix.VARIANT2);
+		File keyFile = FileUtil.writeFile(problem, location, numberFile, override, name);
 		return keyFile;
 	}
 

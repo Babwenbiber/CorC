@@ -1156,20 +1156,29 @@ ruleCondition returns [EObject current=null]
 	(
 		(
 			{
-				newCompositeNode(grammarAccess.getConditionAccess().getConditionExpressionParserRuleCall_0());
+				$current = forceCreateModelElement(
+					grammarAccess.getConditionAccess().getConditionAction_0(),
+					$current);
 			}
-			lv_condition_0_0=ruleExpression
-			{
-				if ($current==null) {
-					$current = createModelElementForParent(grammarAccess.getConditionRule());
+		)
+		(
+			(
+				{
+					newCompositeNode(grammarAccess.getConditionAccess().getConditionExpressionParserRuleCall_1_0());
 				}
-				set(
-					$current,
-					"condition",
-					lv_condition_0_0,
-					"de.tu_bs.cs.isf.cbc.textual.tool.Dsl.Expression");
-				afterParserOrEnumRuleCall();
-			}
+				lv_condition_1_0=ruleExpression
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getConditionRule());
+					}
+					set(
+						$current,
+						"condition",
+						lv_condition_1_0,
+						"de.tu_bs.cs.isf.cbc.textual.tool.Dsl.Expression");
+					afterParserOrEnumRuleCall();
+				}
+			)
 		)
 	)
 ;
@@ -1386,9 +1395,9 @@ ruleJMLAnnotation returns [EObject current=null]
 							(
 								(
 									{
-										newCompositeNode(grammarAccess.getJMLAnnotationAccess().getRequiresEStringParserRuleCall_0_1_0());
+										newCompositeNode(grammarAccess.getJMLAnnotationAccess().getRequiresConditionParserRuleCall_0_1_0());
 									}
-									lv_requires_2_0=ruleEString
+									lv_requires_2_0=ruleCondition
 									{
 										if ($current==null) {
 											$current = createModelElementForParent(grammarAccess.getJMLAnnotationRule());
@@ -1397,7 +1406,7 @@ ruleJMLAnnotation returns [EObject current=null]
 											$current,
 											"requires",
 											lv_requires_2_0,
-											"de.tu_bs.cs.isf.cbc.textual.tool.Dsl.EString");
+											"de.tu_bs.cs.isf.cbc.textual.tool.Dsl.Condition");
 										afterParserOrEnumRuleCall();
 									}
 								)
@@ -1424,9 +1433,9 @@ ruleJMLAnnotation returns [EObject current=null]
 							(
 								(
 									{
-										newCompositeNode(grammarAccess.getJMLAnnotationAccess().getEnsuresEStringParserRuleCall_1_1_0());
+										newCompositeNode(grammarAccess.getJMLAnnotationAccess().getEnsuresConditionParserRuleCall_1_1_0());
 									}
-									lv_ensures_5_0=ruleEString
+									lv_ensures_5_0=ruleCondition
 									{
 										if ($current==null) {
 											$current = createModelElementForParent(grammarAccess.getJMLAnnotationRule());
@@ -1435,7 +1444,7 @@ ruleJMLAnnotation returns [EObject current=null]
 											$current,
 											"ensures",
 											lv_ensures_5_0,
-											"de.tu_bs.cs.isf.cbc.textual.tool.Dsl.EString");
+											"de.tu_bs.cs.isf.cbc.textual.tool.Dsl.Condition");
 										afterParserOrEnumRuleCall();
 									}
 								)
@@ -1443,44 +1452,6 @@ ruleJMLAnnotation returns [EObject current=null]
 							otherlv_6=';'
 							{
 								newLeafNode(otherlv_6, grammarAccess.getJMLAnnotationAccess().getSemicolonKeyword_1_2());
-							}
-							))
-				{ 
-					getUnorderedGroupHelper().returnFromSelection(grammarAccess.getJMLAnnotationAccess().getUnorderedGroup());
-				}
-			)
-		)|
-		(
-			{getUnorderedGroupHelper().canSelect(grammarAccess.getJMLAnnotationAccess().getUnorderedGroup(), 2)}?=>(
-				{
-					getUnorderedGroupHelper().select(grammarAccess.getJMLAnnotationAccess().getUnorderedGroup(), 2);
-				}
-							({true}?=>(otherlv_7='@assignable'
-							{
-								newLeafNode(otherlv_7, grammarAccess.getJMLAnnotationAccess().getAssignableKeyword_2_0());
-							}
-							(
-								(
-									{
-										newCompositeNode(grammarAccess.getJMLAnnotationAccess().getAssignableEStringParserRuleCall_2_1_0());
-									}
-									lv_assignable_8_0=ruleEString
-									{
-										if ($current==null) {
-											$current = createModelElementForParent(grammarAccess.getJMLAnnotationRule());
-										}
-										set(
-											$current,
-											"assignable",
-											lv_assignable_8_0,
-											"de.tu_bs.cs.isf.cbc.textual.tool.Dsl.EString");
-										afterParserOrEnumRuleCall();
-									}
-								)
-							)
-							otherlv_9=';'
-							{
-								newLeafNode(otherlv_9, grammarAccess.getJMLAnnotationAccess().getSemicolonKeyword_2_2());
 							}
 							))
 				{ 
@@ -2351,6 +2322,31 @@ ruleRename returns [EObject current=null]
 	)
 ;
 
+// Entry rule entryRuleExpression
+entryRuleExpression returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getExpressionRule()); }
+	iv_ruleExpression=ruleExpression
+	{ $current=$iv_ruleExpression.current; }
+	EOF;
+
+// Rule Expression
+ruleExpression returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	{
+		newCompositeNode(grammarAccess.getExpressionAccess().getForeachParserRuleCall());
+	}
+	this_Foreach_0=ruleForeach
+	{
+		$current = $this_Foreach_0.current;
+		afterParserOrEnumRuleCall();
+	}
+;
+
 // Entry rule entryRuleVariableOrMethodName
 entryRuleVariableOrMethodName returns [EObject current=null]:
 	{ newCompositeNode(grammarAccess.getVariableOrMethodNameRule()); }
@@ -2384,31 +2380,6 @@ ruleVariableOrMethodName returns [EObject current=null]
 			}
 		)
 	)
-;
-
-// Entry rule entryRuleExpression
-entryRuleExpression returns [EObject current=null]:
-	{ newCompositeNode(grammarAccess.getExpressionRule()); }
-	iv_ruleExpression=ruleExpression
-	{ $current=$iv_ruleExpression.current; }
-	EOF;
-
-// Rule Expression
-ruleExpression returns [EObject current=null]
-@init {
-	enterRule();
-}
-@after {
-	leaveRule();
-}:
-	{
-		newCompositeNode(grammarAccess.getExpressionAccess().getForeachParserRuleCall());
-	}
-	this_Foreach_0=ruleForeach
-	{
-		$current = $this_Foreach_0.current;
-		afterParserOrEnumRuleCall();
-	}
 ;
 
 // Entry rule entryRuleForeach
@@ -2781,9 +2752,9 @@ ruleImplication returns [EObject current=null]
 							$current);
 					}
 				)
-				otherlv_2='=>'
+				otherlv_2='->'
 				{
-					newLeafNode(otherlv_2, grammarAccess.getImplicationAccess().getEqualsSignGreaterThanSignKeyword_1_0_1());
+					newLeafNode(otherlv_2, grammarAccess.getImplicationAccess().getHyphenMinusGreaterThanSignKeyword_1_0_1());
 				}
 			)
 			(
