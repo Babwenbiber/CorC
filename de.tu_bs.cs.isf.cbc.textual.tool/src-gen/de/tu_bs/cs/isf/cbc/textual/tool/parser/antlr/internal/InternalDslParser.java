@@ -8256,7 +8256,7 @@ public class InternalDslParser extends AbstractInternalAntlrParser {
                               								if (current==null) {
                               									current = createModelElement(grammarAccess.getPrimaryExpressionRule());
                               								}
-                              								setWithLastConsumed(current, "isTrue", lv_isTrue_2_0 != null, "true");
+                              								setWithLastConsumed(current, "isTrue", true, "true");
                               							
                             }
 
@@ -8828,7 +8828,7 @@ public class InternalDslParser extends AbstractInternalAntlrParser {
                       							if (current==null) {
                       								current = createModelElement(grammarAccess.getXImportDeclarationRule());
                       							}
-                      							setWithLastConsumed(current, "static", lv_static_1_0 != null, "static");
+                      							setWithLastConsumed(current, "static", true, "static");
                       						
                     }
 
@@ -8909,7 +8909,7 @@ public class InternalDslParser extends AbstractInternalAntlrParser {
                               								if (current==null) {
                               									current = createModelElement(grammarAccess.getXImportDeclarationRule());
                               								}
-                              								setWithLastConsumed(current, "wildcard", lv_wildcard_3_0 != null, "*");
+                              								setWithLastConsumed(current, "wildcard", true, "*");
                               							
                             }
 
@@ -9377,7 +9377,7 @@ public class InternalDslParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getFullJvmFormalParameterRule());
                       					}
-                      					setWithLastConsumed(current, "final", lv_final_1_0 != null, "final");
+                      					setWithLastConsumed(current, "final", true, "final");
                       				
                     }
 
@@ -9449,7 +9449,7 @@ public class InternalDslParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getFullJvmFormalParameterRule());
                       					}
-                      					setWithLastConsumed(current, "varArgs", lv_varArgs_3_0 != null, "...");
+                      					setWithLastConsumed(current, "varArgs", true, "...");
                       				
                     }
 
@@ -10777,7 +10777,7 @@ public class InternalDslParser extends AbstractInternalAntlrParser {
                       							if (current==null) {
                       								current = createModelElement(grammarAccess.getXVariableDeclarationRule());
                       							}
-                      							setWithLastConsumed(current, "final", lv_final_1_0 != null, "final");
+                      							setWithLastConsumed(current, "final", true, "final");
                       						
                     }
 
@@ -12661,7 +12661,7 @@ public class InternalDslParser extends AbstractInternalAntlrParser {
                       						if (current==null) {
                       							current = createModelElement(grammarAccess.getXFeatureCallRule());
                       						}
-                      						setWithLastConsumed(current, "explicitOperationCall", lv_explicitOperationCall_2_0 != null, "(");
+                      						setWithLastConsumed(current, "explicitOperationCall", true, "(");
                       					
                     }
 
@@ -12971,7 +12971,7 @@ public class InternalDslParser extends AbstractInternalAntlrParser {
                       						if (current==null) {
                       							current = createModelElement(grammarAccess.getXConstructorCallRule());
                       						}
-                      						setWithLastConsumed(current, "explicitTypeArguments", lv_explicitTypeArguments_3_0 != null, "<");
+                      						setWithLastConsumed(current, "explicitTypeArguments", true, "<");
                       					
                     }
 
@@ -13133,7 +13133,7 @@ public class InternalDslParser extends AbstractInternalAntlrParser {
                       						if (current==null) {
                       							current = createModelElement(grammarAccess.getXConstructorCallRule());
                       						}
-                      						setWithLastConsumed(current, "explicitConstructorCall", lv_explicitConstructorCall_8_0 != null, "(");
+                      						setWithLastConsumed(current, "explicitConstructorCall", true, "(");
                       					
                     }
 
@@ -14945,7 +14945,7 @@ public class InternalDslParser extends AbstractInternalAntlrParser {
             	              								if (current==null) {
             	              									current = createModelElement(grammarAccess.getXMemberFeatureCallRule());
             	              								}
-            	              								setWithLastConsumed(current, "explicitOperationCall", lv_explicitOperationCall_13_0 != null, "(");
+            	              								setWithLastConsumed(current, "explicitOperationCall", true, "(");
             	              							
             	            }
 
@@ -17120,7 +17120,7 @@ public class InternalDslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleXJTryWithResourcesStatement"
-    // InternalDsl.g:6467:1: ruleXJTryWithResourcesStatement returns [EObject current=null] : ( ( ( ( () 'try' ( ( '(' ) ) ) )=> ( () otherlv_1= 'try' ( (lv_openParenthesis_2_0= '(' ) ) ) ) ( (lv_resources_3_0= ruleXJTryWithResourcesVariableDeclaration ) )* otherlv_4= ')' ( (lv_expression_5_0= ruleXBlockExpression ) ) ( (lv_catchClauses_6_0= ruleXCatchClause ) )* (otherlv_7= 'finally' ( (lv_finallyExpression_8_0= ruleXBlockExpression ) ) )? ) ;
+    // InternalDsl.g:6467:1: ruleXJTryWithResourcesStatement returns [EObject current=null] : ( ( ( ( () 'try' ( ( '(' ) ) ) )=> ( () otherlv_1= 'try' ( (lv_openParenthesis_2_0= '(' ) ) ) ) ( (lv_resourceDeclarations_3_0= ruleXJTryWithResourcesVariableDeclaration ) )* otherlv_4= ')' ( (lv_expression_5_0= ruleXBlockExpression ) ) ( (lv_catchClauses_6_0= ruleXCatchClause ) )* (otherlv_7= 'finally' ( (lv_finallyExpression_8_0= ruleXBlockExpression ) ) )? ) ;
     public final EObject ruleXJTryWithResourcesStatement() throws RecognitionException {
         EObject current = null;
 
@@ -17128,7 +17128,7 @@ public class InternalDslParser extends AbstractInternalAntlrParser {
         Token lv_openParenthesis_2_0=null;
         Token otherlv_4=null;
         Token otherlv_7=null;
-        EObject lv_resources_3_0 = null;
+        EObject lv_resourceDeclarations_3_0 = null;
 
         EObject lv_expression_5_0 = null;
 
@@ -17141,11 +17141,11 @@ public class InternalDslParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalDsl.g:6473:2: ( ( ( ( ( () 'try' ( ( '(' ) ) ) )=> ( () otherlv_1= 'try' ( (lv_openParenthesis_2_0= '(' ) ) ) ) ( (lv_resources_3_0= ruleXJTryWithResourcesVariableDeclaration ) )* otherlv_4= ')' ( (lv_expression_5_0= ruleXBlockExpression ) ) ( (lv_catchClauses_6_0= ruleXCatchClause ) )* (otherlv_7= 'finally' ( (lv_finallyExpression_8_0= ruleXBlockExpression ) ) )? ) )
-            // InternalDsl.g:6474:2: ( ( ( ( () 'try' ( ( '(' ) ) ) )=> ( () otherlv_1= 'try' ( (lv_openParenthesis_2_0= '(' ) ) ) ) ( (lv_resources_3_0= ruleXJTryWithResourcesVariableDeclaration ) )* otherlv_4= ')' ( (lv_expression_5_0= ruleXBlockExpression ) ) ( (lv_catchClauses_6_0= ruleXCatchClause ) )* (otherlv_7= 'finally' ( (lv_finallyExpression_8_0= ruleXBlockExpression ) ) )? )
+            // InternalDsl.g:6473:2: ( ( ( ( ( () 'try' ( ( '(' ) ) ) )=> ( () otherlv_1= 'try' ( (lv_openParenthesis_2_0= '(' ) ) ) ) ( (lv_resourceDeclarations_3_0= ruleXJTryWithResourcesVariableDeclaration ) )* otherlv_4= ')' ( (lv_expression_5_0= ruleXBlockExpression ) ) ( (lv_catchClauses_6_0= ruleXCatchClause ) )* (otherlv_7= 'finally' ( (lv_finallyExpression_8_0= ruleXBlockExpression ) ) )? ) )
+            // InternalDsl.g:6474:2: ( ( ( ( () 'try' ( ( '(' ) ) ) )=> ( () otherlv_1= 'try' ( (lv_openParenthesis_2_0= '(' ) ) ) ) ( (lv_resourceDeclarations_3_0= ruleXJTryWithResourcesVariableDeclaration ) )* otherlv_4= ')' ( (lv_expression_5_0= ruleXBlockExpression ) ) ( (lv_catchClauses_6_0= ruleXCatchClause ) )* (otherlv_7= 'finally' ( (lv_finallyExpression_8_0= ruleXBlockExpression ) ) )? )
             {
-            // InternalDsl.g:6474:2: ( ( ( ( () 'try' ( ( '(' ) ) ) )=> ( () otherlv_1= 'try' ( (lv_openParenthesis_2_0= '(' ) ) ) ) ( (lv_resources_3_0= ruleXJTryWithResourcesVariableDeclaration ) )* otherlv_4= ')' ( (lv_expression_5_0= ruleXBlockExpression ) ) ( (lv_catchClauses_6_0= ruleXCatchClause ) )* (otherlv_7= 'finally' ( (lv_finallyExpression_8_0= ruleXBlockExpression ) ) )? )
-            // InternalDsl.g:6475:3: ( ( ( () 'try' ( ( '(' ) ) ) )=> ( () otherlv_1= 'try' ( (lv_openParenthesis_2_0= '(' ) ) ) ) ( (lv_resources_3_0= ruleXJTryWithResourcesVariableDeclaration ) )* otherlv_4= ')' ( (lv_expression_5_0= ruleXBlockExpression ) ) ( (lv_catchClauses_6_0= ruleXCatchClause ) )* (otherlv_7= 'finally' ( (lv_finallyExpression_8_0= ruleXBlockExpression ) ) )?
+            // InternalDsl.g:6474:2: ( ( ( ( () 'try' ( ( '(' ) ) ) )=> ( () otherlv_1= 'try' ( (lv_openParenthesis_2_0= '(' ) ) ) ) ( (lv_resourceDeclarations_3_0= ruleXJTryWithResourcesVariableDeclaration ) )* otherlv_4= ')' ( (lv_expression_5_0= ruleXBlockExpression ) ) ( (lv_catchClauses_6_0= ruleXCatchClause ) )* (otherlv_7= 'finally' ( (lv_finallyExpression_8_0= ruleXBlockExpression ) ) )? )
+            // InternalDsl.g:6475:3: ( ( ( () 'try' ( ( '(' ) ) ) )=> ( () otherlv_1= 'try' ( (lv_openParenthesis_2_0= '(' ) ) ) ) ( (lv_resourceDeclarations_3_0= ruleXJTryWithResourcesVariableDeclaration ) )* otherlv_4= ')' ( (lv_expression_5_0= ruleXBlockExpression ) ) ( (lv_catchClauses_6_0= ruleXCatchClause ) )* (otherlv_7= 'finally' ( (lv_finallyExpression_8_0= ruleXBlockExpression ) ) )?
             {
             // InternalDsl.g:6475:3: ( ( ( () 'try' ( ( '(' ) ) ) )=> ( () otherlv_1= 'try' ( (lv_openParenthesis_2_0= '(' ) ) ) )
             // InternalDsl.g:6476:4: ( ( () 'try' ( ( '(' ) ) ) )=> ( () otherlv_1= 'try' ( (lv_openParenthesis_2_0= '(' ) ) )
@@ -17189,7 +17189,7 @@ public class InternalDslParser extends AbstractInternalAntlrParser {
               							if (current==null) {
               								current = createModelElement(grammarAccess.getXJTryWithResourcesStatementRule());
               							}
-              							setWithLastConsumed(current, "openParenthesis", lv_openParenthesis_2_0 != null, "(");
+              							setWithLastConsumed(current, "openParenthesis", true, "(");
               						
             }
 
@@ -17204,7 +17204,7 @@ public class InternalDslParser extends AbstractInternalAntlrParser {
 
             }
 
-            // InternalDsl.g:6515:3: ( (lv_resources_3_0= ruleXJTryWithResourcesVariableDeclaration ) )*
+            // InternalDsl.g:6515:3: ( (lv_resourceDeclarations_3_0= ruleXJTryWithResourcesVariableDeclaration ) )*
             loop104:
             do {
                 int alt104=2;
@@ -17217,18 +17217,18 @@ public class InternalDslParser extends AbstractInternalAntlrParser {
 
                 switch (alt104) {
             	case 1 :
-            	    // InternalDsl.g:6516:4: (lv_resources_3_0= ruleXJTryWithResourcesVariableDeclaration )
+            	    // InternalDsl.g:6516:4: (lv_resourceDeclarations_3_0= ruleXJTryWithResourcesVariableDeclaration )
             	    {
-            	    // InternalDsl.g:6516:4: (lv_resources_3_0= ruleXJTryWithResourcesVariableDeclaration )
-            	    // InternalDsl.g:6517:5: lv_resources_3_0= ruleXJTryWithResourcesVariableDeclaration
+            	    // InternalDsl.g:6516:4: (lv_resourceDeclarations_3_0= ruleXJTryWithResourcesVariableDeclaration )
+            	    // InternalDsl.g:6517:5: lv_resourceDeclarations_3_0= ruleXJTryWithResourcesVariableDeclaration
             	    {
             	    if ( state.backtracking==0 ) {
 
-            	      					newCompositeNode(grammarAccess.getXJTryWithResourcesStatementAccess().getResourcesXJTryWithResourcesVariableDeclarationParserRuleCall_1_0());
+            	      					newCompositeNode(grammarAccess.getXJTryWithResourcesStatementAccess().getResourceDeclarationsXJTryWithResourcesVariableDeclarationParserRuleCall_1_0());
             	      				
             	    }
             	    pushFollow(FOLLOW_93);
-            	    lv_resources_3_0=ruleXJTryWithResourcesVariableDeclaration();
+            	    lv_resourceDeclarations_3_0=ruleXJTryWithResourcesVariableDeclaration();
 
             	    state._fsp--;
             	    if (state.failed) return current;
@@ -17239,8 +17239,8 @@ public class InternalDslParser extends AbstractInternalAntlrParser {
             	      					}
             	      					add(
             	      						current,
-            	      						"resources",
-            	      						lv_resources_3_0,
+            	      						"resourceDeclarations",
+            	      						lv_resourceDeclarations_3_0,
             	      						"jbase.Jbase.XJTryWithResourcesVariableDeclaration");
             	      					afterParserOrEnumRuleCall();
             	      				
@@ -17536,7 +17536,7 @@ public class InternalDslParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getXJTryWithResourcesVariableDeclarationRule());
                       					}
-                      					setWithLastConsumed(current, "final", lv_final_1_0 != null, "final");
+                      					setWithLastConsumed(current, "final", true, "final");
                       				
                     }
 
@@ -26417,7 +26417,7 @@ public class InternalDslParser extends AbstractInternalAntlrParser {
                       						if (current==null) {
                       							current = createModelElement(grammarAccess.getXBooleanLiteralRule());
                       						}
-                      						setWithLastConsumed(current, "isTrue", lv_isTrue_2_0 != null, "true");
+                      						setWithLastConsumed(current, "isTrue", true, "true");
                       					
                     }
 

@@ -17,6 +17,8 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.SmallRepetitionStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.StrengthWeakStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.AbstractStatementImpl;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.ReturnStatementImpl;
+import de.tu_bs.cs.isf.cbc.textual.tool.validation.AbstractDslValidator;
+import de.tu_bs.cs.isf.cbc.textual.tool.validation.TraverseFormula;
 import de.tu_bs.cs.isf.cbc.util.FilenamePrefix;
 import de.tu_bs.cs.isf.cbc.util.ProveWithKey;
 import de.tu_bs.cs.isf.toolkit.support.compare.CompareMethodBodies;
@@ -30,9 +32,9 @@ import org.eclipse.xtext.validation.CheckType;
  */
 @SuppressWarnings("all")
 public class DslValidator extends AbstractDslValidator {
-  public static final String INVALID_NAME = "invalidName";
+  public final static String INVALID_NAME = "invalidName";
   
-  public static final String NOT_PROVED = "notProved";
+  public final static String NOT_PROVED = "notProved";
   
   @Check
   public void checkSyntaxOfStatement(final AbstractStatement statement) {

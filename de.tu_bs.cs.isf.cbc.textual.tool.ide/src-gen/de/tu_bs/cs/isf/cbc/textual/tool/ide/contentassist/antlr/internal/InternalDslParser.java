@@ -60054,22 +60054,22 @@ public class InternalDslParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__XJTryWithResourcesStatement__Group__1__Impl"
-    // InternalDsl.g:18348:1: rule__XJTryWithResourcesStatement__Group__1__Impl : ( ( rule__XJTryWithResourcesStatement__ResourcesAssignment_1 )* ) ;
+    // InternalDsl.g:18348:1: rule__XJTryWithResourcesStatement__Group__1__Impl : ( ( rule__XJTryWithResourcesStatement__ResourceDeclarationsAssignment_1 )* ) ;
     public final void rule__XJTryWithResourcesStatement__Group__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalDsl.g:18352:1: ( ( ( rule__XJTryWithResourcesStatement__ResourcesAssignment_1 )* ) )
-            // InternalDsl.g:18353:1: ( ( rule__XJTryWithResourcesStatement__ResourcesAssignment_1 )* )
+            // InternalDsl.g:18352:1: ( ( ( rule__XJTryWithResourcesStatement__ResourceDeclarationsAssignment_1 )* ) )
+            // InternalDsl.g:18353:1: ( ( rule__XJTryWithResourcesStatement__ResourceDeclarationsAssignment_1 )* )
             {
-            // InternalDsl.g:18353:1: ( ( rule__XJTryWithResourcesStatement__ResourcesAssignment_1 )* )
-            // InternalDsl.g:18354:2: ( rule__XJTryWithResourcesStatement__ResourcesAssignment_1 )*
+            // InternalDsl.g:18353:1: ( ( rule__XJTryWithResourcesStatement__ResourceDeclarationsAssignment_1 )* )
+            // InternalDsl.g:18354:2: ( rule__XJTryWithResourcesStatement__ResourceDeclarationsAssignment_1 )*
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getXJTryWithResourcesStatementAccess().getResourcesAssignment_1()); 
+               before(grammarAccess.getXJTryWithResourcesStatementAccess().getResourceDeclarationsAssignment_1()); 
             }
-            // InternalDsl.g:18355:2: ( rule__XJTryWithResourcesStatement__ResourcesAssignment_1 )*
+            // InternalDsl.g:18355:2: ( rule__XJTryWithResourcesStatement__ResourceDeclarationsAssignment_1 )*
             loop134:
             do {
                 int alt134=2;
@@ -60082,10 +60082,10 @@ public class InternalDslParser extends AbstractInternalContentAssistParser {
 
                 switch (alt134) {
             	case 1 :
-            	    // InternalDsl.g:18355:3: rule__XJTryWithResourcesStatement__ResourcesAssignment_1
+            	    // InternalDsl.g:18355:3: rule__XJTryWithResourcesStatement__ResourceDeclarationsAssignment_1
             	    {
             	    pushFollow(FOLLOW_5);
-            	    rule__XJTryWithResourcesStatement__ResourcesAssignment_1();
+            	    rule__XJTryWithResourcesStatement__ResourceDeclarationsAssignment_1();
 
             	    state._fsp--;
             	    if (state.failed) return ;
@@ -60099,7 +60099,7 @@ public class InternalDslParser extends AbstractInternalContentAssistParser {
             } while (true);
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getXJTryWithResourcesStatementAccess().getResourcesAssignment_1()); 
+               after(grammarAccess.getXJTryWithResourcesStatementAccess().getResourceDeclarationsAssignment_1()); 
             }
 
             }
@@ -90498,9 +90498,9 @@ public class InternalDslParser extends AbstractInternalContentAssistParser {
     // $ANTLR end "rule__XJTryWithResourcesStatement__OpenParenthesisAssignment_0_0_2"
 
 
-    // $ANTLR start "rule__XJTryWithResourcesStatement__ResourcesAssignment_1"
-    // InternalDsl.g:28035:1: rule__XJTryWithResourcesStatement__ResourcesAssignment_1 : ( ruleXJTryWithResourcesVariableDeclaration ) ;
-    public final void rule__XJTryWithResourcesStatement__ResourcesAssignment_1() throws RecognitionException {
+    // $ANTLR start "rule__XJTryWithResourcesStatement__ResourceDeclarationsAssignment_1"
+    // InternalDsl.g:28035:1: rule__XJTryWithResourcesStatement__ResourceDeclarationsAssignment_1 : ( ruleXJTryWithResourcesVariableDeclaration ) ;
+    public final void rule__XJTryWithResourcesStatement__ResourceDeclarationsAssignment_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
@@ -90512,7 +90512,7 @@ public class InternalDslParser extends AbstractInternalContentAssistParser {
             // InternalDsl.g:28041:3: ruleXJTryWithResourcesVariableDeclaration
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getXJTryWithResourcesStatementAccess().getResourcesXJTryWithResourcesVariableDeclarationParserRuleCall_1_0()); 
+               before(grammarAccess.getXJTryWithResourcesStatementAccess().getResourceDeclarationsXJTryWithResourcesVariableDeclarationParserRuleCall_1_0()); 
             }
             pushFollow(FOLLOW_2);
             ruleXJTryWithResourcesVariableDeclaration();
@@ -90520,7 +90520,7 @@ public class InternalDslParser extends AbstractInternalContentAssistParser {
             state._fsp--;
             if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getXJTryWithResourcesStatementAccess().getResourcesXJTryWithResourcesVariableDeclarationParserRuleCall_1_0()); 
+               after(grammarAccess.getXJTryWithResourcesStatementAccess().getResourceDeclarationsXJTryWithResourcesVariableDeclarationParserRuleCall_1_0()); 
             }
 
             }
@@ -90540,7 +90540,7 @@ public class InternalDslParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__XJTryWithResourcesStatement__ResourcesAssignment_1"
+    // $ANTLR end "rule__XJTryWithResourcesStatement__ResourceDeclarationsAssignment_1"
 
 
     // $ANTLR start "rule__XJTryWithResourcesStatement__ExpressionAssignment_3"
