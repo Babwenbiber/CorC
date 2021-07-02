@@ -44,6 +44,10 @@ public class Parser {
 		}
 	}
 
+	public static String getStringFromVariable(JavaVariable variable) {
+		return Parser.getStringFromObject(variable.getType()) + " " + variable.getVar().getName();
+	}
+	
 	public static List<String> findAllVariables(AbstractStatement abstractStatement, JavaVariables vars)
 			throws ParserException {
 		String input = abstractStatement.getName().trim();
@@ -87,12 +91,10 @@ public class Parser {
 
 	private static String getTypeOfVariable(String variableName, JavaVariables vars) {
 		for (JavaVariable var : vars.getVariables()) {
-			String[] splittedName = var.getName().split(" ");
-			if (splittedName.length > 1) {
-				if (splittedName[1].equals(variableName)) {
-					return splittedName[0];
-				}
+			if (var.getVar().getName().equals(variableName)) {
+				return Parser.getStringFromObject(var.getType());
 			}
+			
 		}
 		return null;
 	}
@@ -298,9 +300,9 @@ public class Parser {
 		List<String> unmodifiedVariables = Lists.newArrayList();
 		if (!modifiedVars.contains("\\everything")) {
 			for (JavaVariable var : declaredVariables) {
-				String varName = var.getName().split(" ")[1];
+				String varName = var.getVar().getName();
 				if (!modifiedVars.contains(varName)) {
-					unmodifiedVariables.add(var.getName());
+					unmodifiedVariables.add(varName);
 				}
 			}
 		}

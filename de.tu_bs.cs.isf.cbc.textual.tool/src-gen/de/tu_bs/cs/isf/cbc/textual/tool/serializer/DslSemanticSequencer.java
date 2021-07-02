@@ -7,6 +7,7 @@ import com.google.inject.Inject;
 import de.tu_bs.cs.isf.cbc.cbcmodel.AbstractStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.And;
 import de.tu_bs.cs.isf.cbc.cbcmodel.BlockStatement;
+import de.tu_bs.cs.isf.cbc.cbcmodel.Blocks;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbCFormula;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbCProblem;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbcmodelPackage;
@@ -19,6 +20,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.GlobalConditions;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Greater;
 import de.tu_bs.cs.isf.cbc.cbcmodel.GreaterEqual;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Impl;
+import de.tu_bs.cs.isf.cbc.cbcmodel.InlineBlockStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JMLAnnotation;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariable;
@@ -137,6 +139,9 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 			case CbcmodelPackage.BLOCK_STATEMENT:
 				sequence_BlockStatement(context, (BlockStatement) semanticObject); 
 				return; 
+			case CbcmodelPackage.BLOCKS:
+				sequence_Blocks(context, (Blocks) semanticObject); 
+				return; 
 			case CbcmodelPackage.CB_CFORMULA:
 				sequence_CbCFormula(context, (CbCFormula) semanticObject); 
 				return; 
@@ -169,6 +174,9 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 				return; 
 			case CbcmodelPackage.IMPL:
 				sequence_Implication(context, (Impl) semanticObject); 
+				return; 
+			case CbcmodelPackage.INLINE_BLOCK_STATEMENT:
+				sequence_InlineBlockStatement(context, (InlineBlockStatement) semanticObject); 
 				return; 
 			case CbcmodelPackage.JML_ANNOTATION:
 				sequence_JMLAnnotation(context, (JMLAnnotation) semanticObject); 
@@ -592,13 +600,24 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	
 	/**
 	 * Contexts:
-	 *     AbstractStatement returns BlockStatement
 	 *     BlockStatement returns BlockStatement
 	 *
 	 * Constraint:
 	 *     (name=EString jmlAnnotation=JMLAnnotation? javaStatement=JavaStatement)
 	 */
 	protected void sequence_BlockStatement(ISerializationContext context, BlockStatement semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Blocks returns Blocks
+	 *
+	 * Constraint:
+	 *     (blocks+=BlockStatement blocks+=BlockStatement*)?
+	 */
+	protected void sequence_Blocks(ISerializationContext context, Blocks semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -834,6 +853,19 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	
 	/**
 	 * Contexts:
+	 *     AbstractStatement returns InlineBlockStatement
+	 *     InlineBlockStatement returns InlineBlockStatement
+	 *
+	 * Constraint:
+	 *     (block=BlockStatement | name=EString)
+	 */
+	protected void sequence_InlineBlockStatement(ISerializationContext context, InlineBlockStatement semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
 	 *     JMLAnnotation returns JMLAnnotation
 	 *
 	 * Constraint:
@@ -861,15 +893,18 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	 *     JavaVariable returns JavaVariable
 	 *
 	 * Constraint:
-	 *     name=EString
+	 *     (type=JvmTypeReference var=VariableOrMethodName)
 	 */
 	protected void sequence_JavaVariable(ISerializationContext context, JavaVariable semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.JAVA_VARIABLE__NAME) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.JAVA_VARIABLE__NAME));
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.JAVA_VARIABLE__TYPE) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.JAVA_VARIABLE__TYPE));
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.JAVA_VARIABLE__VAR) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.JAVA_VARIABLE__VAR));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getJavaVariableAccess().getNameEStringParserRuleCall_1_0(), semanticObject.getName());
+		feeder.accept(grammarAccess.getJavaVariableAccess().getTypeJvmTypeReferenceParserRuleCall_1_0(), semanticObject.getType());
+		feeder.accept(grammarAccess.getJavaVariableAccess().getVarVariableOrMethodNameParserRuleCall_2_0(), semanticObject.getVar());
 		feeder.finish();
 	}
 	

@@ -43,7 +43,7 @@ public class ConstructCodeBlock {
 		}
 		return code.toString();
 	}
-
+	
 	public static String constructCodeBlockAndVerify2(AbstractStatement statement) {
 		handleInnerLoops = true;
 		withInvariants = false;
@@ -105,9 +105,9 @@ public class ConstructCodeBlock {
 
 		String parameters = "";
 		if (vars != null && !vars.getVariables().isEmpty()) {
-			parameters += vars.getVariables().get(0).getName();
+			parameters += Parser.getStringFromVariable(vars.getVariables().get(0));
 			for (int i = 1; i < vars.getVariables().size(); i++) {
-				parameters += ", " + vars.getVariables().get(i).getName();
+				parameters += ", " + Parser.getStringFromVariable(vars.getVariables().get(i));
 			}
 		}
 		StringBuffer code = new StringBuffer();
@@ -151,17 +151,16 @@ public class ConstructCodeBlock {
 			switch (var.getKind()) {
 			case PARAM:
 				if (parameters.equals("")) {
-					parameters += var.getName();
+					parameters += Parser.getStringFromVariable(var);
 				} else {
-					parameters += ", " + var.getName();
+					parameters += ", " + Parser.getStringFromVariable(var);
 				}
 				break;
 			case RETURN:
-				String[] splitNameAndType = var.getName().split(" ");
 				// get type of variable not whole name
-				returnValueType = splitNameAndType[0];
+				returnValueType = Parser.getStringFromObject(var.getType());
 				// get only the name
-				String returnValueName = splitNameAndType[1];
+				String returnValueName = var.getVar().getName();
 				post = post.replaceAll("(?<=\\W)" + returnValueName + "(?=\\W)", "\\\\result");
 				break;
 			default:

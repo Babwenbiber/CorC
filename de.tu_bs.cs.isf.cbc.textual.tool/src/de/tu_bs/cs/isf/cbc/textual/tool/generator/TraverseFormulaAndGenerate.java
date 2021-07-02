@@ -24,6 +24,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.CompositionStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Condition;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Expression;
 import de.tu_bs.cs.isf.cbc.cbcmodel.GlobalConditions;
+import de.tu_bs.cs.isf.cbc.cbcmodel.InlineBlockStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariable;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariables;
@@ -34,6 +35,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.ReturnStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.SelectionStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.SkipStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.BlockStatement;
+import de.tu_bs.cs.isf.cbc.cbcmodel.Blocks;
 import de.tu_bs.cs.isf.cbc.cbcmodel.SmallRepetitionStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.StrengthWeakStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.AbstractStatementImpl;
@@ -49,17 +51,19 @@ public class TraverseFormulaAndGenerate {
 	private JavaVariables vars;
 	private GlobalConditions conds;
 	private Renaming renaming;
+	private Blocks blocks;
 	private URI uri;
 	private int numberFile;
 	private CbCFormula formula;
 	private Resource resource;
 	private CbcmodelFactory factory;
 
-	TraverseFormulaAndGenerate(JavaVariables vars, GlobalConditions conds, Renaming renaming, URI uri,
+	TraverseFormulaAndGenerate(JavaVariables vars, GlobalConditions conds, Renaming renaming, Blocks blocks, URI uri,
 			CbCFormula formula, Resource resource) {
 		this.vars = vars;
 		this.conds = conds;
 		this.renaming = renaming;
+		this.blocks = blocks;
 		this.uri = uri;
 		this.numberFile = 0;
 		this.formula = formula;
@@ -133,6 +137,24 @@ public class TraverseFormulaAndGenerate {
 			ProveWithKey.createProveEnsuresWithKey(post.stringRepresentation,
 					ensures.stringRepresentation, vars, conds, renaming, uri, numberFile++, false, FilenamePrefix.POST_IMPL);
 			traverseBlockStatement(blockStatement);
+		} else if (statement instanceof InlineBlockStatement) {
+			
+			InlineBlockStatement block = (InlineBlockStatement) statement;
+			if (block.getBlock() != null) {
+				block.getBlock().setPreCondition(block.getPreCondition());
+				block.getBlock().setPostCondition(block.getPostCondition());
+				castStatementAndTraverse(block.getBlock());
+				return;
+			}
+			for (BlockStatement b: this.blocks.getBlocks()) {
+				if (b.getName().equals(block.getName())) {
+					b.setPreCondition(new ConditionExtension(block.getPreCondition()));
+					b.setPostCondition(new ConditionExtension(block.getPostCondition()));
+					castStatementAndTraverse(b);
+					return;
+				}
+			}
+			
 		}
 	}
 
@@ -237,7 +259,7 @@ public class TraverseFormulaAndGenerate {
 		for (JavaVariable var1 : vars1.getVariables()) {
 			boolean isNew = true;
 			for (JavaVariable var2 : vars2.getVariables()) {
-				if (var1.getName().equals(var2.getName()) /*&& var1.getKind().equals(var2.getKind())*/) {
+				if (var1.getVar().equals(var2.getVar()) && var1.getType().equals(var2.getType())) {
 					isNew = false;
 				}
 			}

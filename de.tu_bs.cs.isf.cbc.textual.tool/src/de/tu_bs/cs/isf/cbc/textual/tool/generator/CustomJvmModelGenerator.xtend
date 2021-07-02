@@ -5,6 +5,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.CbCProblem
 import de.tu_bs.cs.isf.cbc.cbcmodel.GlobalConditions
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariables
 import de.tu_bs.cs.isf.cbc.cbcmodel.Renaming
+import de.tu_bs.cs.isf.cbc.cbcmodel.Blocks
 import java.io.IOException
 import java.util.Collections
 import org.eclipse.core.resources.ResourcesPlugin
@@ -23,6 +24,7 @@ class CustomJvmModelGenerator implements IGenerator{
 		var JavaVariables vars = null
 		var GlobalConditions conds = null
 		var Renaming renaming = null
+		var Blocks blocks = null
 		if (resource.allContents.filter(JavaVariables).hasNext) {
 			vars = resource.allContents.filter(JavaVariables).next
 		}
@@ -32,8 +34,11 @@ class CustomJvmModelGenerator implements IGenerator{
 		if (resource.allContents.filter(Renaming).hasNext) {
 			renaming = resource.allContents.filter(Renaming).next
 		}
+		if (resource.allContents.filter(Blocks).hasNext) {
+			blocks = resource.allContents.filter(Blocks).next
+		}
 		var formula = resource.allContents.filter(CbCFormula).next;
-		val TraverseFormulaAndGenerate traverser = new TraverseFormulaAndGenerate(vars, conds, renaming, resource.URI, formula, resource)
+		val TraverseFormulaAndGenerate traverser = new TraverseFormulaAndGenerate(vars, conds, renaming, blocks, resource.URI, formula, resource)
 		formula = traverser.traverseFormulaAndGenerate()
 		
 		val ResourceSet rs = new ResourceSetImpl();

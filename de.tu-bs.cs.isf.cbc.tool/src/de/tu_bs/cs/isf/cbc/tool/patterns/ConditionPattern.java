@@ -30,6 +30,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.impl.MethodStatementImpl;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.ReturnStatementImpl;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.SkipStatementImpl;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.StrengthWeakStatementImpl;
+import de.tu_bs.cs.isf.cbc.cbcmodel.string_saver.ConditionExtension;
 import de.tu_bs.cs.isf.cbc.tool.helper.UpdateConditionsOfChildren;
 
 /**
@@ -73,7 +74,9 @@ public class ConditionPattern extends IdPattern implements IPattern {
 	@Override
 	public Object[] create(ICreateContext context) {
 		Condition condition = CbcmodelFactory.eINSTANCE.createCondition();
-		condition.setName("{}");
+//		condition.setName("{}");
+		condition = new ConditionExtension(condition);
+		((ConditionExtension)condition).stringRepresentation = "{}";
 		GlobalConditions conditions = (GlobalConditions) getBusinessObjectForPictogramElement(
 				context.getTargetContainer());
 		conditions.getConditions().add(condition);
@@ -150,10 +153,10 @@ public class ConditionPattern extends IdPattern implements IPattern {
 	protected IReason updateNeeded(IdUpdateContext context, String id) {
 		if (context.getGraphicsAlgorithm() instanceof MultiText) {
 			MultiText nameText = (MultiText) context.getGraphicsAlgorithm();
-			Condition domainObject = (Condition) context.getDomainObject();
-			if (domainObject.getName() == null || !(domainObject.getName().equals(nameText.getValue())
-					|| nameText.getValue().equals("{" + domainObject.getName() + "}"))) {
-				return Reason.createTrueReason("Name differs. Expected: '" + domainObject.getName() + "'");
+			ConditionExtension domainObject = new ConditionExtension((Condition) context.getDomainObject());
+			if (domainObject.stringRepresentation == null || !(domainObject.stringRepresentation.equals(nameText.getValue())
+					|| nameText.getValue().equals("{" + domainObject.stringRepresentation + "}"))) {
+				return Reason.createTrueReason("Name differs. Expected: '" + domainObject.stringRepresentation + "'");
 			}
 		}
 
@@ -164,7 +167,7 @@ public class ConditionPattern extends IdPattern implements IPattern {
 	protected boolean update(IdUpdateContext context, String id) {
 		if (context.getGraphicsAlgorithm() instanceof MultiText) {
 			MultiText nameText = (MultiText) context.getGraphicsAlgorithm();
-			Condition domainObject = (Condition) context.getDomainObject();
+			ConditionExtension domainObject = new ConditionExtension((Condition) context.getDomainObject());
 			if (domainObject.eContainer().getClass().equals(AbstractStatementImpl.class)
 					|| domainObject.eContainer().getClass().equals(SkipStatementImpl.class)
 					|| domainObject.eContainer().getClass().equals(ReturnStatementImpl.class)
@@ -172,9 +175,9 @@ public class ConditionPattern extends IdPattern implements IPattern {
 					|| domainObject.eContainer().getClass().equals(StrengthWeakStatementImpl.class)
 					|| domainObject.eContainer().getClass().equals(CompositionStatementImpl.class)
 					|| domainObject.eContainer().getClass().equals(Composition3StatementImpl.class)) {
-				nameText.setValue("{" + domainObject.getName() + "}");
+				nameText.setValue("{" + domainObject.stringRepresentation + "}");
 			} else {
-				nameText.setValue(domainObject.getName());
+				nameText.setValue(domainObject.stringRepresentation);
 			}
 			return true;
 		}
@@ -219,8 +222,8 @@ public class ConditionPattern extends IdPattern implements IPattern {
 
 	@Override
 	public String getInitialValue(IDirectEditingContext context) {
-		Condition condition = (Condition) getBusinessObjectForPictogramElement(context.getPictogramElement());
-		return System.getProperty("line.separator") + condition.getName() + System.getProperty("line.separator");
+		ConditionExtension condition = new ConditionExtension((Condition) getBusinessObjectForPictogramElement(context.getPictogramElement()));
+		return System.getProperty("line.separator") + condition.stringRepresentation + System.getProperty("line.separator");
 	}
 
 	@Override
@@ -249,8 +252,8 @@ public class ConditionPattern extends IdPattern implements IPattern {
 
 	@Override
 	public void setValue(String value, IDirectEditingContext context) {
-		Condition condition = (Condition) getBusinessObjectForPictogramElement(context.getPictogramElement());
-		condition.setName(value.trim());
+		ConditionExtension condition = new ConditionExtension((Condition) getBusinessObjectForPictogramElement(context.getPictogramElement()));
+		condition.stringRepresentation = value.trim();
 		if (!(condition.eContainer() instanceof GlobalConditions)) {
 			UpdateConditionsOfChildren.updateConditionsofChildren(condition);
 		} else if (condition.eContainer() instanceof GlobalConditions) {

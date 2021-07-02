@@ -123,12 +123,9 @@ public class ProveWithKey {
 		JavaVariable returnVariable = null;
 		if (vars != null) {
 			for (JavaVariable var : vars.getVariables()) {
-				programVariablesString += var.getName() + "; ";
-				// if variable is an Array add <created> condition for key
-				if (var.getName().contains("[]")) {
-					String varName = var.getName().substring(var.getName().indexOf(" ") + 1);
-					conditionArraysCreated += " & " + varName + ".<created>=TRUE";
-				}
+				programVariablesString += Parser.getStringFromVariable(var) + "; ";
+				conditionArraysCreated += getConditionArrayCreated(var);
+
 				if (var.getKind() == VariableKind.RETURN) {
 					returnVariable = var;
 				}
@@ -214,12 +211,9 @@ public class ProveWithKey {
 		JavaVariable returnVariable = null;
 		if (vars != null) {
 			for (JavaVariable var : vars.getVariables()) {
-				programVariablesString += var.getName() + "; ";
+				programVariablesString +=  Parser.getStringFromVariable(var) + "; ";
 				// if variable is an Array add <created> condition for key
-				if (var.getName().contains("[]")) {
-					String varName = var.getName().substring(var.getName().indexOf(" ") + 1);
-					conditionArraysCreated += " & " + varName + ".<created>=TRUE";
-				}
+				conditionArraysCreated += getConditionArrayCreated(var);
 				if (var.getKind() == VariableKind.RETURN) {
 					returnVariable = var;
 				}
@@ -294,12 +288,8 @@ public class ProveWithKey {
 		String conditionArraysCreated = "";
 		if (vars != null) {
 			for (JavaVariable var : vars.getVariables()) {
-				programVariablesString += var.getName() + "; ";
-				// if variable is an Array add <created> condition for key
-				if (var.getName().contains("[]")) {
-					String varName = var.getName().substring(var.getName().indexOf(" ") + 1);
-					conditionArraysCreated += " & " + varName + ".<created>=TRUE";
-				}
+				programVariablesString += Parser.getStringFromVariable(var) + "; ";
+				conditionArraysCreated += getConditionArrayCreated(var);
 
 			}
 		}
@@ -343,6 +333,14 @@ public class ProveWithKey {
 		String location = thisProject.getLocation() + "/src/prove" + uri.trimFileExtension().lastSegment();
 		File keyFile = writeFile(problem, location, numberFile, override);
 		return keyFile;
+	}
+	
+	private static String getConditionArrayCreated(JavaVariable var) {
+		if (Parser.getStringFromObject(var.getType()).contains("[]")) {
+			String varName =  Parser.getStringFromVariable(var).substring(Parser.getStringFromVariable(var).indexOf(" ") + 1);
+			return " & " + varName + ".<created>=TRUE";
+		}
+		return "";
 	}
 	
 	public static IProject getProject(URI uri) {
@@ -414,7 +412,7 @@ public class ProveWithKey {
 	private static String getRefinementClass(String string, JavaVariables vars) {
 		if (Character.isLowerCase(string.charAt(0))) {
 			for (JavaVariable var : vars.getVariables()) {
-				String[] splitVarNameType = var.getName().split("\\s", 2);
+				String[] splitVarNameType = var.getVar().getName().split("\\s", 2);
 
 				if (splitVarNameType[1].equals(string)) {
 					return splitVarNameType[0];
@@ -568,7 +566,7 @@ public class ProveWithKey {
 
 	private static String resolveResultKeyword(String condition, JavaVariable returnVariable) {
 		if (returnVariable != null) {
-			String variableName = returnVariable.getName().substring(returnVariable.getName().indexOf(" "));
+			String variableName = returnVariable.getVar().getName();
 			return Parser.rewriteJMLConditionToKeY(condition.replaceAll(REGEX_RESULT, variableName));
 		}
 
@@ -657,12 +655,8 @@ public class ProveWithKey {
 	public static File createProvePostWithKey(String invariant, String guard, String postCondition,
 			JavaVariables vars, GlobalConditions conds, Renaming renaming, URI uri, int numberFile, boolean override, String name) {
 
-		String programVariablesString = "";
-		if (vars != null) {
-			for (JavaVariable var : vars.getVariables()) {
-				programVariablesString += var.getName() + "; ";
-			}
-		}
+		String programVariablesString = getProgramVariableString(vars);
+
 
 		String globalConditionsString = getGlobalConditionStringFromObject(conds);
 
@@ -707,12 +701,8 @@ public class ProveWithKey {
 
 	public static File createProvePreSelWithKey(EList<ConditionExtension> guards, String preCondition, JavaVariables vars,
 			GlobalConditions conds, Renaming renaming, URI uri, int numberFile, boolean override, String name) {
-		String programVariablesString = "";
-		if (vars != null) {
-			for (JavaVariable var : vars.getVariables()) {
-				programVariablesString += var.getName() + "; ";
-			}
-		}
+		String programVariablesString = getProgramVariableString(vars);
+
 
 		String globalConditionsString =getGlobalConditionStringFromObject(conds);
 
@@ -758,12 +748,7 @@ public class ProveWithKey {
 
 	public static File createProveVariantWithKey(String code, String invariant, JavaVariables vars,
 			GlobalConditions conds, Renaming renaming, URI uri, int numberFile, boolean override) {
-		String programVariablesString = "";
-		if (vars != null) {
-			for (JavaVariable var : vars.getVariables()) {
-				programVariablesString += var.getName() + "; ";
-			}
-		}
+		String programVariablesString = getProgramVariableString(vars);
 
 		String globalConditionsString = getGlobalConditionStringFromObject(conds);
 
@@ -802,7 +787,7 @@ public class ProveWithKey {
 		String programVariablesString = "";
 		if (vars != null) {
 			for (JavaVariable var : vars.getVariables()) {
-				programVariablesString += var.getName() + "; ";
+				programVariablesString += var.getVar().getName() + "; ";
 			}
 		}
 		programVariablesString += "int variant;";
@@ -876,7 +861,7 @@ public class ProveWithKey {
 		String programVariablesString = "";
 		if (vars != null) {
 			for (JavaVariable var : vars.getVariables()) {
-				programVariablesString += var.getName() + "; ";
+				programVariablesString += var.getVar().getName() + "; ";
 			}
 		}
 
@@ -926,7 +911,7 @@ public class ProveWithKey {
 		String programVariablesString = "";
 		if (vars != null) {
 			for (JavaVariable var : vars.getVariables()) {
-				programVariablesString += var.getName() + "; ";
+				programVariablesString += var.getVar().getName() + "; ";
 			}
 		}
 
@@ -1041,12 +1026,7 @@ public class ProveWithKey {
 	public static File createProveMethodFormulaWithKey(String second, String first, List<JavaVariable> vars,
 			List<Condition> conds, List<Rename> renaming, URI uri, int numberFile, boolean override, String name) {
 
-		String programVariablesString = "";
-		if (vars != null) {
-			for (JavaVariable var : vars) {
-				programVariablesString += var.getName() + "; ";
-			}
-		}
+		String programVariablesString = getProgramVariableString(vars);
 
 		String globalConditionsString = getGlobalConditionStringFromObject(conds);
 
@@ -1086,12 +1066,7 @@ public class ProveWithKey {
 
 	private static File createProveUseWeakestPreWithKey(AbstractStatement statement, JavaVariables vars,
 			GlobalConditions conds, Renaming renaming, URI uri, int numberFile, boolean override, String name) {
-		String programVariablesString = "";
-		if (vars != null) {
-			for (JavaVariable var : vars.getVariables()) {
-				programVariablesString += var.getName() + "; ";
-			}
-		}
+		String programVariablesString = getProgramVariableString(vars);
 
 		String globalConditionsString = getGlobalConditionStringFromObject(conds);
 
@@ -1347,5 +1322,23 @@ public class ProveWithKey {
 			Console.println("Exception at '" + e.getCause() + "'");
 			e.printStackTrace();
 		}
+	}
+	
+	
+	private static String getProgramVariableString(JavaVariables vars) {
+		if (vars != null) {
+			return "";
+		}
+		return getProgramVariableString(vars.getVariables());
+	}
+	
+	private static String getProgramVariableString(List<JavaVariable> vars) {
+		String programVariablesString = "";
+		if (vars != null) {
+			for (JavaVariable var : vars) {
+				programVariablesString += var.getVar().getName() + "; ";
+			}
+		}
+		return programVariablesString;
 	}
 }

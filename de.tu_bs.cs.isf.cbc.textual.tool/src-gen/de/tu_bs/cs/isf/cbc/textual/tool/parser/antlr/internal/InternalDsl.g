@@ -361,11 +361,11 @@ ruleAbstractStatement returns [EObject current=null]
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getAbstractStatementAccess().getBlockStatementParserRuleCall_1());
+			newCompositeNode(grammarAccess.getAbstractStatementAccess().getInlineBlockStatementParserRuleCall_1());
 		}
-		this_BlockStatement_1=ruleBlockStatement
+		this_InlineBlockStatement_1=ruleInlineBlockStatement
 		{
-			$current = $this_BlockStatement_1.current;
+			$current = $this_InlineBlockStatement_1.current;
 			afterParserOrEnumRuleCall();
 		}
 		    |
@@ -1469,6 +1469,70 @@ ruleJMLAnnotation returns [EObject current=null]
 	)
 ;
 
+// Entry rule entryRuleInlineBlockStatement
+entryRuleInlineBlockStatement returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getInlineBlockStatementRule()); }
+	iv_ruleInlineBlockStatement=ruleInlineBlockStatement
+	{ $current=$iv_ruleInlineBlockStatement.current; }
+	EOF;
+
+// Rule InlineBlockStatement
+ruleInlineBlockStatement returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		(
+			(
+				{
+					newCompositeNode(grammarAccess.getInlineBlockStatementAccess().getBlockBlockStatementParserRuleCall_0_0());
+				}
+				lv_block_0_0=ruleBlockStatement
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getInlineBlockStatementRule());
+					}
+					set(
+						$current,
+						"block",
+						lv_block_0_0,
+						"de.tu_bs.cs.isf.cbc.textual.tool.Dsl.BlockStatement");
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)
+		    |
+		(
+			otherlv_1='Block'
+			{
+				newLeafNode(otherlv_1, grammarAccess.getInlineBlockStatementAccess().getBlockKeyword_1_0());
+			}
+			(
+				(
+					{
+						newCompositeNode(grammarAccess.getInlineBlockStatementAccess().getNameEStringParserRuleCall_1_1_0());
+					}
+					lv_name_2_0=ruleEString
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getInlineBlockStatementRule());
+						}
+						set(
+							$current,
+							"name",
+							lv_name_2_0,
+							"de.tu_bs.cs.isf.cbc.textual.tool.Dsl.EString");
+						afterParserOrEnumRuleCall();
+					}
+				)
+			)
+		)
+	)
+;
+
 // Entry rule entryRuleBlockStatement
 entryRuleBlockStatement returns [EObject current=null]:
 	{ newCompositeNode(grammarAccess.getBlockStatementRule()); }
@@ -2030,18 +2094,37 @@ ruleJavaVariable returns [EObject current=null]
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getJavaVariableAccess().getNameEStringParserRuleCall_1_0());
+					newCompositeNode(grammarAccess.getJavaVariableAccess().getTypeJvmTypeReferenceParserRuleCall_1_0());
 				}
-				lv_name_1_0=ruleEString
+				lv_type_1_0=ruleJvmTypeReference
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getJavaVariableRule());
 					}
 					set(
 						$current,
-						"name",
-						lv_name_1_0,
-						"de.tu_bs.cs.isf.cbc.textual.tool.Dsl.EString");
+						"type",
+						lv_type_1_0,
+						"jbase.Jbase.JvmTypeReference");
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)
+		(
+			(
+				{
+					newCompositeNode(grammarAccess.getJavaVariableAccess().getVarVariableOrMethodNameParserRuleCall_2_0());
+				}
+				lv_var_2_0=ruleVariableOrMethodName
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getJavaVariableRule());
+					}
+					set(
+						$current,
+						"var",
+						lv_var_2_0,
+						"de.tu_bs.cs.isf.cbc.textual.tool.Dsl.VariableOrMethodName");
 					afterParserOrEnumRuleCall();
 				}
 			)
