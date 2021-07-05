@@ -45,11 +45,7 @@
     </genClasses>
     <genClasses ecoreClass="cbcmodel.ecore#//SkipStatement"/>
     <genClasses ecoreClass="cbcmodel.ecore#//JavaStatement">
-      <genFeatures createChild="false" ecoreFeature="ecore:EReference cbcmodel.ecore#//JavaStatement/name"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//JavaStatement/postCondition"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//JavaStatement/preCondition"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cbcmodel.ecore#//JavaStatement/proven"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cbcmodel.ecore#//JavaStatement/comment"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference cbcmodel.ecore#//JavaStatement/statement"/>
     </genClasses>
     <genClasses ecoreClass="cbcmodel.ecore#//JMLAnnotation">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//JMLAnnotation/requires"/>
@@ -60,7 +56,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//BlockStatement/jmlAnnotation"/>
     </genClasses>
         <genClasses ecoreClass="cbcmodel.ecore#//InlineBlockStatement">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//InlineBlockStatement/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//InlineBlockStatement/references"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//InlineBlockStatement/block"/>
     </genClasses>
     <genClasses ecoreClass="cbcmodel.ecore#//CompositionStatement">

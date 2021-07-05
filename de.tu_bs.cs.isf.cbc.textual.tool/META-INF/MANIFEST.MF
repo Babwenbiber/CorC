@@ -31,5 +31,6 @@ Export-Package: de.tu_bs.cs.isf.cbc.textual.tool.generator,
  de.tu_bs.cs.isf.cbc.textual.tool.parser.antlr,
  de.tu_bs.cs.isf.cbc.textual.tool.parser.antlr.internal,
  de.tu_bs.cs.isf.cbc.textual.tool.jvmmodel
-Import-Package: de.tu_bs.cs.isf.toolkit.support.compare,
+Import-Package: com.google.common.base;version="21.0.0",
+ de.tu_bs.cs.isf.toolkit.support.compare,
  org.apache.log4j

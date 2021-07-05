@@ -10,6 +10,6 @@ package de.tu_bs.cs.isf.cbc.textual.tool.scoping
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#scoping
  * on how and when to use it.
  */
-class DslScopeProvider extends AbstractDslScopeProvider {
+class DslScopeProvider extends CustomDslScopeProvider {
 
 }

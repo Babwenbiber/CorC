@@ -1,16 +1,16 @@
-grammar de.tu_bs.cs.isf.cbc.textual.tool.Dsl with  org.eclipse.xtext.xbase.Xbase // jbase.Jbase // org.eclipse.xtext.common.Terminals
+grammar de.tu_bs.cs.isf.cbc.textual.tool.Dsl with  jbase.Jbase // org.eclipse.xtext.common.Terminals
 
 import "http://www.eclipse.org/emf/2002/Ecore" as ecore
 import "http://www.example.org/cbcmodel"
 //import "http://www.eclipse.org/xtext/xbase/Xbase"
 //import "http://www.eclipse.org/xtext/common/JavaVMTypes"
-
 CbCProblem returns CbCProblem:
-		cbcformula=CbCFormula 
+		(cbcformula=CbCFormula 
 		& (globalcondition=GlobalConditions)? 
 		& (javaVariable=JavaVariables)? 
-		& (renaming=Renaming)?;
-//		& (blocks=Blocks)?;
+		& (renaming=Renaming)?)
+		| BlockStatement
+		;
 
 CbCFormula returns CbCFormula:
 	'Formula'
@@ -59,15 +59,15 @@ AbstractStatement_Impl returns AbstractStatement:
 	{AbstractStatement}
 		name=CodeString;
 		
-MethodStatement returns MethodStatement:
+MethodStatement returns AbstractStatement:
 	{MethodStatement}
 		name=EString;
 		
-ReturnStatement returns ReturnStatement:
+ReturnStatement returns AbstractStatement:
 	{ReturnStatement}
 		'Return' name=CodeString;
 		
-StrengthWeakStatement returns StrengthWeakStatement:
+StrengthWeakStatement returns AbstractStatement:
 	{StrengthWeakStatement}
 	'Pre:' '(' weakPreCondition=Condition ')'
 		'{' name=CodeString '}'
@@ -78,43 +78,46 @@ StrengthWeakStatement returns StrengthWeakStatement:
 Condition:
 	{Condition} condition=Expression;
 
-SkipStatement returns SkipStatement:
+SkipStatement returns AbstractStatement:
 		 name=';'
 	;
 
-CompositionStatement returns CompositionStatement:
+CompositionStatement returns AbstractStatement:
 	{CompositionStatement}
 		'{' firstStatement=AbstractStatement '}'
 		'Intm:' '(' intermediateCondition=Condition ')'
 		'{' secondStatement=AbstractStatement '}'
 	;
 
-JavaStatement returns JavaStatement:
-	(name+=XExpression)+
+JavaStatement returns AbstractStatement:
+	{JavaStatement}
+	(statement+=XJStatementOrBlock)+
 ;
 
 JMLAnnotation returns JMLAnnotation:
-	"@requires" requires=Condition ";" &
-	"@ensures" ensures=Condition ";"
+	"Pre:" "(" requires=Condition ")" &
+	"Post:" "(" ensures=Condition  ")"
 ;
 
-InlineBlockStatement:
-	block=BlockStatement | "Block" name=EString
+InlineBlockStatement returns AbstractStatement:
+	{InlineBlockStatement}
+	block=BlockStatement | {InlineBlockStatement} "Block" references=[BlockStatement]
 ;
 
-BlockStatement returns BlockStatement:
+BlockStatement returns AbstractStatement:
+{BlockStatement}
 		'Block' name=EString ':'
 			(jmlAnnotation=JMLAnnotation)?
 			'{' javaStatement=JavaStatement '}'
 	;
 
-SelectionStatement returns SelectionStatement:
+SelectionStatement returns AbstractStatement:
 	{SelectionStatement}
 		'If' '(' guards+=Condition ')' 'Then' '{' commands+=AbstractStatement '}'
 		('Elseif' '(' guards+=Condition ')' 'Then' '{' commands+=AbstractStatement '}')* 'Fi'
 	;
 
-SmallRepetitionStatement returns SmallRepetitionStatement:
+SmallRepetitionStatement returns AbstractStatement:
 	{SmallRepetitionStatement}
 		'While' '(' guard=Condition ')' 'Do'
 		'Inv:' '(' invariant=Condition ')'
@@ -157,11 +160,6 @@ Rename returns Rename:
 	'NewName' newName=EString
 	'}'
 	;
-
-Blocks returns Blocks:
-	{Blocks}
-	'BlockStatements'
-	('Blocks' '[' blocks+=BlockStatement ( "," blocks+=BlockStatement )* ']')?;
 
 Expression:
 	Foreach;

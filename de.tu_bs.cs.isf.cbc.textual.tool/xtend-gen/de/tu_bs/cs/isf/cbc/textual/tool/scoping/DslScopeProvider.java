@@ -3,8 +3,6 @@
  */
 package de.tu_bs.cs.isf.cbc.textual.tool.scoping;
 
-import de.tu_bs.cs.isf.cbc.textual.tool.scoping.AbstractDslScopeProvider;
-
 /**
  * This class contains custom scoping description.
  * 
@@ -12,5 +10,5 @@ import de.tu_bs.cs.isf.cbc.textual.tool.scoping.AbstractDslScopeProvider;
  * on how and when to use it.
  */
 @SuppressWarnings("all")
-public class DslScopeProvider extends AbstractDslScopeProvider {
+public class DslScopeProvider extends CustomDslScopeProvider {
 }

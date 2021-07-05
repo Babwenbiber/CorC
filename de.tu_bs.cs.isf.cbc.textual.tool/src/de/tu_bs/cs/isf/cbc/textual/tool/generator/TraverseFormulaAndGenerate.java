@@ -35,7 +35,6 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.ReturnStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.SelectionStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.SkipStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.BlockStatement;
-import de.tu_bs.cs.isf.cbc.cbcmodel.Blocks;
 import de.tu_bs.cs.isf.cbc.cbcmodel.SmallRepetitionStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.StrengthWeakStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.AbstractStatementImpl;
@@ -51,19 +50,17 @@ public class TraverseFormulaAndGenerate {
 	private JavaVariables vars;
 	private GlobalConditions conds;
 	private Renaming renaming;
-	private Blocks blocks;
 	private URI uri;
 	private int numberFile;
 	private CbCFormula formula;
 	private Resource resource;
 	private CbcmodelFactory factory;
 
-	TraverseFormulaAndGenerate(JavaVariables vars, GlobalConditions conds, Renaming renaming, Blocks blocks, URI uri,
+	TraverseFormulaAndGenerate(JavaVariables vars, GlobalConditions conds, Renaming renaming, URI uri,
 			CbCFormula formula, Resource resource) {
 		this.vars = vars;
 		this.conds = conds;
 		this.renaming = renaming;
-		this.blocks = blocks;
 		this.uri = uri;
 		this.numberFile = 0;
 		this.formula = formula;
@@ -146,14 +143,18 @@ public class TraverseFormulaAndGenerate {
 				castStatementAndTraverse(block.getBlock());
 				return;
 			}
-			for (BlockStatement b: this.blocks.getBlocks()) {
-				if (b.getName().equals(block.getName())) {
-					b.setPreCondition(new ConditionExtension(block.getPreCondition()));
-					b.setPostCondition(new ConditionExtension(block.getPostCondition()));
-					castStatementAndTraverse(b);
-					return;
-				}
-			}
+//			for (BlockStatement b: this.blocks.getBlocks()) {
+//				if (b.getName().equals(block.getName())) {
+//					b.setPreCondition(new ConditionExtension(block.getPreCondition()));
+//					b.setPostCondition(new ConditionExtension(block.getPostCondition()));
+//					castStatementAndTraverse(b);
+//					return;
+//				}
+//			}
+			BlockStatement reference = block.getReferences();
+			reference.setPreCondition(new ConditionExtension(block.getPreCondition()));
+			reference.setPostCondition(new ConditionExtension(block.getPostCondition()));
+			castStatementAndTraverse(reference);
 			
 		}
 	}
@@ -209,7 +210,7 @@ public class TraverseFormulaAndGenerate {
 	}
 
 	private void traverseBlockStatement(BlockStatement blockStatement) {
-		JavaStatement statement = blockStatement.getJavaStatement();
+		JavaStatement statement = (JavaStatement) blockStatement.getJavaStatement();
 
 		statement.setPreCondition(new ConditionExtension(blockStatement.getJmlAnnotation().getRequires()));
 		statement.setPostCondition(new ConditionExtension(blockStatement.getJmlAnnotation().getEnsures()));

@@ -858,12 +858,19 @@ public class ProveWithKey {
 	
 	public static File createProvePreWithKey(String preParent, String preChild, JavaVariables vars,
 			GlobalConditions conds, Renaming renaming, URI uri, int numberFile, boolean override, String name) {
+//		String programVariablesString = "";
+//		if (vars != null) {
+//			for (JavaVariable var : vars.getVariables()) {
+//				programVariablesString += var.getVar().getName() + "; ";
+//			}
+//		}
 		String programVariablesString = "";
 		if (vars != null) {
 			for (JavaVariable var : vars.getVariables()) {
-				programVariablesString += var.getVar().getName() + "; ";
+				programVariablesString += Parser.getStringFromVariable(var) + "; ";
 			}
 		}
+		
 
 		String globalConditionsString = getGlobalConditionStringFromObject(conds);
 
@@ -911,7 +918,7 @@ public class ProveWithKey {
 		String programVariablesString = "";
 		if (vars != null) {
 			for (JavaVariable var : vars.getVariables()) {
-				programVariablesString += var.getVar().getName() + "; ";
+				programVariablesString += Parser.getStringFromVariable(var) + "; ";
 			}
 		}
 

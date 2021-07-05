@@ -193,8 +193,9 @@ class DslValidator extends AbstractDslValidator {
 		var boolean closed = ProveWithKey.checkFileIsProven(statement.eResource.URI, numberFile, FilenamePrefix.SELECTION);
 		if (!closed) {
 			info('PreCondition of SelectionStatement is not proved.', 
-					CbcmodelPackage.Literals.SELECTION_STATEMENT__PRE_PROVE,
+					CbcmodelPackage.Literals.SMALL_REPETITION_STATEMENT__PRE_PROVEN,
 					NOT_PROVED)
+					//TODO:  should be CbcmodelPackage.Literals.SELECTION_STATEMENT__PRE_PROVE
 		}
 	}
 }

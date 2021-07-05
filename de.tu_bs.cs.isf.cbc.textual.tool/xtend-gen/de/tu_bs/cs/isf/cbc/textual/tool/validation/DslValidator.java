@@ -17,8 +17,6 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.SmallRepetitionStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.StrengthWeakStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.AbstractStatementImpl;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.ReturnStatementImpl;
-import de.tu_bs.cs.isf.cbc.textual.tool.validation.AbstractDslValidator;
-import de.tu_bs.cs.isf.cbc.textual.tool.validation.TraverseFormula;
 import de.tu_bs.cs.isf.cbc.util.FilenamePrefix;
 import de.tu_bs.cs.isf.cbc.util.ProveWithKey;
 import de.tu_bs.cs.isf.toolkit.support.compare.CompareMethodBodies;
@@ -32,9 +30,9 @@ import org.eclipse.xtext.validation.CheckType;
  */
 @SuppressWarnings("all")
 public class DslValidator extends AbstractDslValidator {
-  public final static String INVALID_NAME = "invalidName";
+  public static final String INVALID_NAME = "invalidName";
   
-  public final static String NOT_PROVED = "notProved";
+  public static final String NOT_PROVED = "notProved";
   
   @Check
   public void checkSyntaxOfStatement(final AbstractStatement statement) {
@@ -199,7 +197,7 @@ public class DslValidator extends AbstractDslValidator {
     boolean closed = ProveWithKey.checkFileIsProven(statement.eResource().getURI(), numberFile, FilenamePrefix.SELECTION);
     if ((!closed)) {
       this.info("PreCondition of SelectionStatement is not proved.", 
-        CbcmodelPackage.Literals.SELECTION_STATEMENT__PRE_PROVE, 
+        CbcmodelPackage.Literals.SMALL_REPETITION_STATEMENT__PRE_PROVEN, 
         DslValidator.NOT_PROVED);
     }
   }
