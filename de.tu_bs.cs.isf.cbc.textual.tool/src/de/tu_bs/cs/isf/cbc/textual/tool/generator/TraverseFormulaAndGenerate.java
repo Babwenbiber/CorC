@@ -125,8 +125,16 @@ public class TraverseFormulaAndGenerate {
 		} else if (statement instanceof BlockStatement) {
 
 			BlockStatement blockStatement = (BlockStatement) statement;
-			ConditionExtension requires = new ConditionExtension(blockStatement.getJmlAnnotation().getRequires());
-			ConditionExtension ensures = new ConditionExtension(blockStatement.getJmlAnnotation().getEnsures());
+			ConditionExtension requires;
+			ConditionExtension ensures;
+			
+			try {
+				requires = new ConditionExtension(blockStatement.getJmlAnnotation().getRequires());
+				ensures = new ConditionExtension(blockStatement.getJmlAnnotation().getEnsures());
+			} catch (java.lang.NullPointerException exc) {
+				requires = new ConditionExtension(blockStatement.getPreCondition());
+				ensures = new ConditionExtension(blockStatement.getPostCondition());
+			}
 			ConditionExtension pre = new ConditionExtension(blockStatement.getPreCondition());
 			ConditionExtension post = new ConditionExtension(blockStatement.getPostCondition());
 			ProveWithKey.createProveRequiresWithKey(pre.stringRepresentation,
@@ -212,8 +220,13 @@ public class TraverseFormulaAndGenerate {
 	private void traverseBlockStatement(BlockStatement blockStatement) {
 		JavaStatement statement = (JavaStatement) blockStatement.getJavaStatement();
 
-		statement.setPreCondition(new ConditionExtension(blockStatement.getJmlAnnotation().getRequires()));
-		statement.setPostCondition(new ConditionExtension(blockStatement.getJmlAnnotation().getEnsures()));
+		try {
+			statement.setPreCondition(new ConditionExtension(blockStatement.getJmlAnnotation().getRequires()));
+			statement.setPostCondition(new ConditionExtension(blockStatement.getJmlAnnotation().getEnsures()));
+		} catch (java.lang.NullPointerException exc) {
+			statement.setPreCondition(new ConditionExtension(blockStatement.getPreCondition()));
+			statement.setPostCondition(new ConditionExtension(blockStatement.getPostCondition()));
+		}
 		
 		ProveWithKey.createProveJavaStatementWithKey(statement, vars, conds, renaming, null, uri, numberFile++, false, FilenamePrefix.JAVA_STATEMENT);
 	}
