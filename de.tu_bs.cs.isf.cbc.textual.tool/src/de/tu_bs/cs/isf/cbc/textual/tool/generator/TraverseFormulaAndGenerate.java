@@ -40,6 +40,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.StrengthWeakStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.AbstractStatementImpl;
 import de.tu_bs.cs.isf.cbc.cbcmodel.singleton.CbCFormulaSingleton;
 import de.tu_bs.cs.isf.cbc.cbcmodel.string_saver.ConditionExtension;
+import de.tu_bs.cs.isf.cbc.cbcmodel.string_saver.JavaVariableExtension;
 import de.tu_bs.cs.isf.cbc.util.ConstructCodeBlock;
 import de.tu_bs.cs.isf.cbc.util.FilenamePrefix;
 import de.tu_bs.cs.isf.cbc.util.Parser;
@@ -82,7 +83,8 @@ public class TraverseFormulaAndGenerate {
 
 	private void castStatementAndTraverse(AbstractStatement statement) {
 		if (statement.getClass().equals(AbstractStatementImpl.class)) {
-			ProveWithKey.createProveStatementWithKey(statement, vars, conds, renaming, null, uri, numberFile++, false, FilenamePrefix.STATEMENT);
+			ProveWithKey.createProveStatementWithKey(statement,  getListStringFromListVariables(vars.getVariables()),
+					getListStringFromListCondition(conds), renaming, null, uri, numberFile++, false, FilenamePrefix.STATEMENT, "");
 		} else if (statement instanceof SmallRepetitionStatement) {
 			SmallRepetitionStatement repetitionStatement = (SmallRepetitionStatement) statement;
 			traverseRepetitionStatement(repetitionStatement);
@@ -105,22 +107,29 @@ public class TraverseFormulaAndGenerate {
 				List<Condition> conds = mergeGlobalConditions(this.conds, condsFormula);
 				List<Rename> renaming = mergeRenaming(this.renaming, renamingFormula);
 				ProveWithKey.createProveMethodFormulaWithKey(Parser.getStringFromObject(formula.getPreCondition()), Parser.getStringFromObject(statement.getPreCondition()),
-						vars, conds, renaming, uri, numberFile++, false, FilenamePrefix.PRE_IMPL);
+						 getListStringFromListVariables(vars),
+							getListStringFromListCondition(conds), renaming, uri, numberFile++, false, FilenamePrefix.PRE_IMPL);
 				ProveWithKey.createProveMethodFormulaWithKey(Parser.getStringFromObject(statement.getPostCondition()), Parser.getStringFromObject(formula.getPostCondition()),
-						vars, conds, renaming, uri, numberFile++, false, FilenamePrefix.POST_IMPL);
+						 getListStringFromListVariables(vars),
+							getListStringFromListCondition(conds), renaming, uri, numberFile++, false, FilenamePrefix.POST_IMPL);
 			}
 		} else if (statement instanceof SkipStatement) {
-			ProveWithKey.createProveStatementWithKey(statement, vars, conds, renaming, null, uri, numberFile++, false, FilenamePrefix.SKIP);
+			ProveWithKey.createProveStatementWithKey(statement,  getListStringFromListVariables(vars.getVariables()),
+					getListStringFromListCondition(conds), renaming, null, uri, numberFile++, false, FilenamePrefix.SKIP, "");
 		} else if (statement instanceof ReturnStatement) {
-			ProveWithKey.createProveStatementWithKey(statement, vars, conds, renaming, null, uri, numberFile++, false, FilenamePrefix.RETURN);
+			ProveWithKey.createProveStatementWithKey(statement,  getListStringFromListVariables(vars.getVariables()),
+					getListStringFromListCondition(conds), renaming, null, uri, numberFile++, false, FilenamePrefix.RETURN, "");
 		} else if (statement instanceof StrengthWeakStatement) {
 			StrengthWeakStatement swStatement = (StrengthWeakStatement)statement;
 			ProveWithKey.createProvePreImplPreWithKey(Parser.getStringFromObject(statement.getPreCondition()),
-					Parser.getStringFromObject(swStatement.getWeakPreCondition()), vars, conds, renaming, uri, numberFile++, false, FilenamePrefix.PRE_IMPL);
+					Parser.getStringFromObject(swStatement.getWeakPreCondition()),  getListStringFromListVariables(vars.getVariables()),
+					getListStringFromListCondition(conds), renaming, uri, numberFile++, false, FilenamePrefix.PRE_IMPL);
 			ProveWithKey.createProvePostImplPostWithKey(Parser.getStringFromObject(statement.getPostCondition()),
-					Parser.getStringFromObject(swStatement.getStrongPostCondition()), vars, conds, renaming, uri,
+					Parser.getStringFromObject(swStatement.getStrongPostCondition()), getListStringFromListVariables(vars.getVariables()),
+					getListStringFromListCondition(conds), renaming, uri,
 					numberFile++, false, FilenamePrefix.POST_IMPL);
-			ProveWithKey.createProveStatementWithKey(statement, vars, conds, renaming, null, uri, numberFile++, false, FilenamePrefix.STATEMENT);
+			ProveWithKey.createProveStatementWithKey(statement,  getListStringFromListVariables(vars.getVariables()),
+					getListStringFromListCondition(conds), renaming, null, uri, numberFile++, false, FilenamePrefix.STATEMENT, "");
 
 		} else if (statement instanceof BlockStatement) {
 
@@ -138,9 +147,11 @@ public class TraverseFormulaAndGenerate {
 			ConditionExtension pre = new ConditionExtension(blockStatement.getPreCondition());
 			ConditionExtension post = new ConditionExtension(blockStatement.getPostCondition());
 			ProveWithKey.createProveRequiresWithKey(pre.stringRepresentation,
-					requires.stringRepresentation, vars, conds, renaming, uri, numberFile++, false, FilenamePrefix.PRE_IMPL);
+					requires.stringRepresentation,  getListStringFromListVariables(vars.getVariables()),
+					getListStringFromListCondition(conds), renaming, uri, numberFile++, false, FilenamePrefix.PRE_IMPL);
 			ProveWithKey.createProveEnsuresWithKey(post.stringRepresentation,
-					ensures.stringRepresentation, vars, conds, renaming, uri, numberFile++, false, FilenamePrefix.POST_IMPL);
+					ensures.stringRepresentation,  getListStringFromListVariables(vars.getVariables()),
+					getListStringFromListCondition(conds), renaming, uri, numberFile++, false, FilenamePrefix.POST_IMPL);
 			traverseBlockStatement(blockStatement);
 		} else if (statement instanceof InlineBlockStatement) {
 			
@@ -177,12 +188,15 @@ public class TraverseFormulaAndGenerate {
 		
 		loopStatement.setPostCondition(invariant);
 		ProveWithKey.createProvePreWithKey(invariant.stringRepresentation, pre.stringRepresentation,
-				vars, conds, renaming, uri, numberFile++, false, FilenamePrefix.PRE_IMPL);
+				 getListStringFromListVariables(vars.getVariables()),
+					getListStringFromListCondition(conds), renaming, uri, numberFile++, false, FilenamePrefix.PRE_IMPL);
 		ProveWithKey.createProvePostWithKey(invariant.stringRepresentation, guard.stringRepresentation,
-				post.stringRepresentation, vars, conds, renaming, uri, numberFile++, false, FilenamePrefix.POST_IMPL);
+				post.stringRepresentation,  getListStringFromListVariables(vars.getVariables()),
+				getListStringFromListCondition(conds), renaming, uri, numberFile++, false, FilenamePrefix.POST_IMPL);
 		String code = ConstructCodeBlock.constructCodeBlockAndVerify3(repetitionStatement);
 		ProveWithKey.createProveVariant2WithKey(code, invariant.stringRepresentation,
-				guard.stringRepresentation, repetitionStatement.getVariant(), vars, conds, renaming, uri,
+				guard.stringRepresentation, repetitionStatement.getVariant(),  getListStringFromListVariables(vars.getVariables()),
+				getListStringFromListCondition(conds), renaming, uri,
 				numberFile++, false, FilenamePrefix.VARIANT2);
 
 		castStatementAndTraverse(loopStatement);
@@ -194,8 +208,9 @@ public class TraverseFormulaAndGenerate {
 		for (Condition cond: selectionStatement.getGuards()) {
 			guards.add(new ConditionExtension(cond));
 		}
-		ProveWithKey.createProvePreSelWithKey(guards, pre.stringRepresentation,
-				vars, conds, renaming, uri, numberFile++, false, FilenamePrefix.SELECTION);
+		ProveWithKey.createProvePreSelWithKey(getListStringFromListCondition(guards), pre.stringRepresentation,
+				 getListStringFromListVariables(vars.getVariables()),
+					getListStringFromListCondition(conds), renaming, uri, numberFile++, false, FilenamePrefix.SELECTION);
 		for (int i = 0; i < selectionStatement.getCommands().size(); i++) {
 			AbstractStatement childStatement = selectionStatement.getCommands().get(i);
 			Condition childGuard = selectionStatement.getGuards().get(i);
@@ -228,7 +243,8 @@ public class TraverseFormulaAndGenerate {
 			statement.setPostCondition(new ConditionExtension(blockStatement.getPostCondition()));
 		}
 		
-		ProveWithKey.createProveJavaStatementWithKey(statement, vars, conds, renaming, null, uri, numberFile++, false, FilenamePrefix.JAVA_STATEMENT);
+		ProveWithKey.createProveJavaStatementWithKey(statement, getListStringFromListVariables(vars.getVariables()),
+				getListStringFromListCondition(conds), renaming, null, uri, numberFile++, false, FilenamePrefix.JAVA_STATEMENT);
 	}
 	
 	private Collection<CbCFormula> getLinkedFormulas(AbstractStatement statement) {
@@ -334,6 +350,51 @@ public class TraverseFormulaAndGenerate {
 			isNew = true;
 		}
 		return newRenaming;
+	}
+	
+	
+	private List<String> getListStringFromListCondition(GlobalConditions conditions) {
+		if (conditions == null) {
+			return new ArrayList<String>();
+		}
+		return getListStringFromListCondition(conditions.getConditions());
+	}
+	private List<String> getListStringFromListCondition(EList<?> conditions) {
+		List<String> strList = new ArrayList<String>();
+		for(Object c: conditions) {
+			strList.add(new ConditionExtension((Condition)c).stringRepresentation);
+		}
+		return strList;
+	}
+	
+	private List<String> getListStringFromListCondition(List<?> conditions) {
+		List<String> strList = new ArrayList<String>();
+		for(Object c: conditions) {
+			strList.add(new ConditionExtension((Condition)c).stringRepresentation);
+		}
+		return strList;
+	}
+	
+	
+	private List<String> getListStringFromListVariables(JavaVariables variables) {
+		if (variables == null) {
+			return new ArrayList<String>();
+		}
+		return getListStringFromListVariables(variables.getVariables());
+	}
+	private List<String> getListStringFromListVariables(EList<JavaVariable> variables) {
+		List<String> strList = new ArrayList<String>();
+		for(JavaVariable v: variables) {
+			strList.add(new JavaVariableExtension(v).stringRepresentation);
+		}
+		return strList;
+	}
+	private List<String> getListStringFromListVariables(List<JavaVariable> variables) {
+		List<String> strList = new ArrayList<String>();
+		for(JavaVariable v: variables) {
+			strList.add(new JavaVariableExtension(v).stringRepresentation);
+		}
+		return strList;
 	}
 
 }

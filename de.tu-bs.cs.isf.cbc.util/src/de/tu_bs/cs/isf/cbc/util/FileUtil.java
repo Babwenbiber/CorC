@@ -137,7 +137,7 @@ public class FileUtil {
 		return thisProject;
 	}
 
-	public static String generateComposedClass(IProject project, List<String> refinements, JavaVariables vars) {
+	public static String generateComposedClass(IProject project, List<String> refinements, List<String> vars) {
 		String[] splittedRefinement = refinements.get(0).split("\\.");
 		String className = "Original" + splittedRefinement[0];
 		String composedClassName = splittedRefinement[0];

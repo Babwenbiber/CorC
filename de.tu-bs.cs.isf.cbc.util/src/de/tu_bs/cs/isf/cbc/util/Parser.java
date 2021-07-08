@@ -45,6 +45,9 @@ public class Parser {
 	}
 
 	public static String getStringFromVariable(JavaVariable variable) {
+		if (variable.getName()!=null && variable.getName()!="") {
+			return variable.getName();
+		}
 		return Parser.getStringFromObject(variable.getType()) + " " + variable.getVar().getName();
 	}
 	
@@ -296,11 +299,11 @@ public class Parser {
 		return condition;
 	}
 
-	public static List<String> getUnmodifiedVars(List<String> modifiedVars, EList<JavaVariable> declaredVariables) {
+	public static List<String> getUnmodifiedVars(List<String> modifiedVars, List<String> declaredVariables) {
 		List<String> unmodifiedVariables = Lists.newArrayList();
 		if (!modifiedVars.contains("\\everything")) {
-			for (JavaVariable var : declaredVariables) {
-				String varName = var.getVar().getName();
+			for (String var : declaredVariables) {
+				String varName = var;
 				if (!modifiedVars.contains(varName)) {
 					unmodifiedVariables.add(varName);
 				}

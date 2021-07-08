@@ -17,6 +17,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.Renaming;
 import de.tu_bs.cs.isf.cbc.cbcmodel.ReturnStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.SkipStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.AbstractStatementImpl;
+import de.tu_bs.cs.isf.cbc.tool.helper.StringParser;
 import de.tu_bs.cs.isf.cbc.util.Console;
 import de.tu_bs.cs.isf.cbc.util.FilenamePrefix;
 import de.tu_bs.cs.isf.cbc.util.ProveWithKey;
@@ -99,8 +100,9 @@ public class VerifyStatement extends MyAbstractAsynchronousCustomFeature {
 				boolean prove = false;
 
 				if (CompareMethodBodies.readAndTestMethodBodyWithJaMoPP2(statement.getName())) {
-					prove = ProveWithKey.proveStatementWithKey(statement, vars, conds, renaming, variants,
-							getDiagram().eResource().getURI(), monitor, FilenamePrefix.STATEMENT);
+					prove = ProveWithKey.proveStatementWithKey(statement, StringParser.getVariableListToStringList(vars),
+							StringParser.getConditionListToStringList(conds), renaming, variants,
+							getDiagram().eResource().getURI(), monitor, FilenamePrefix.STATEMENT, StringParser.getReturnVariableStringFromVariables(vars.getVariables()));
 				} else {
 					Console.println("Statement is not in correct format.");
 				}

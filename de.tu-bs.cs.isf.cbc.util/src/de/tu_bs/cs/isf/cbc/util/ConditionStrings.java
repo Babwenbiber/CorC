@@ -15,49 +15,30 @@ public class ConditionStrings {
 	public ConditionStrings(AbstractStatement statement, CbCFormula formula) {
 		this(statement);
 		//TODO: Parser.getConditionFromCondition() ???
-		Condition cond = statement.getPreCondition();
-		cond = formula.getPreCondition();
-		if (cond instanceof ConditionExtension) {
-			preFormula = ((ConditionExtension)cond).stringRepresentation;
-		} else {
-			preFormula = Parser.getStringFromObject(cond);
-		}
-		cond = formula.getPostCondition();
-		if (cond instanceof ConditionExtension) {
-			postFormula = ((ConditionExtension)cond).stringRepresentation;
-		} else {
-			postFormula = Parser.getStringFromObject(cond);
-		}
+		preFormula = getStringFromCondition(statement.getPreCondition());
+		postFormula = getStringFromCondition(statement.getPostCondition());
 	}
 	
 	
 	public ConditionStrings(AbstractStatement statement) {
-		Condition cond = statement.getPreCondition();
-		if (cond instanceof ConditionExtension) {
-			pre = ((ConditionExtension)cond).stringRepresentation;
-		} else {
-			pre = Parser.getStringFromObject(cond);
-		}
-		cond = statement.getPostCondition();
-		if (cond instanceof ConditionExtension) {
-			post = ((ConditionExtension)cond).stringRepresentation;
-		} else {
-			post = Parser.getStringFromObject(cond);
-		}
+		pre = getStringFromCondition(statement.getPreCondition());
+		post= getStringFromCondition(statement.getPostCondition());
 	}
 	
 	public ConditionStrings(JavaStatement statement) {
-		Condition cond = statement.getPreCondition();
+		pre = getStringFromCondition(statement.getPreCondition());
+		post= getStringFromCondition(statement.getPostCondition());
+	}
+	
+	private String getStringFromCondition(Condition cond) {
 		if (cond instanceof ConditionExtension) {
-			pre = ((ConditionExtension)cond).stringRepresentation;
+			return ((ConditionExtension)cond).stringRepresentation;
 		} else {
-			pre = Parser.getStringFromObject(cond);
-		}
-		cond = statement.getPostCondition();
-		if (cond instanceof ConditionExtension) {
-			post = ((ConditionExtension)cond).stringRepresentation;
-		} else {
-			post = Parser.getStringFromObject(cond);
+			if (cond.getName()!= null) {
+				return cond.getName();
+			} else {
+				return Parser.getStringFromObject(cond);
+			}
 		}
 	}
 }
