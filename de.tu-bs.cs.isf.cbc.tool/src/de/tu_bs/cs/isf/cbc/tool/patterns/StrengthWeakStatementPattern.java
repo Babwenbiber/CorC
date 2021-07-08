@@ -36,6 +36,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.AbstractStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbcmodelFactory;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Condition;
 import de.tu_bs.cs.isf.cbc.cbcmodel.StrengthWeakStatement;
+import de.tu_bs.cs.isf.cbc.cbcmodel.string_saver.ConditionExtension;
 import de.tu_bs.cs.isf.cbc.tool.diagram.CbCImageProvider;
 import de.tu_bs.cs.isf.toolkit.support.compare.CompareMethodBodies;
 
@@ -93,11 +94,9 @@ public class StrengthWeakStatementPattern extends IdPattern implements IPattern 
 	public Object[] create(ICreateContext context) {
 		StrengthWeakStatement statement = CbcmodelFactory.eINSTANCE.createStrengthWeakStatement();
 		statement.setName("Statement");
-		Condition pre = CbcmodelFactory.eINSTANCE.createCondition();
-		pre.setName("");
+		Condition pre = new ConditionExtension();
 		statement.setPreCondition(pre);
-		Condition post = CbcmodelFactory.eINSTANCE.createCondition();
-		post.setName("");
+		Condition post = new ConditionExtension();
 		statement.setPostCondition(post);
 		
 		addGraphicalRepresentation(context, statement);
@@ -118,6 +117,8 @@ public class StrengthWeakStatementPattern extends IdPattern implements IPattern 
 		IPeCreateService peCreateService = Graphiti.getPeCreateService();
 		IGaService gaService = Graphiti.getGaService();
 
+		ConditionExtension pre = new ConditionExtension(addedStatement.getPreCondition());
+		ConditionExtension post = new ConditionExtension(addedStatement.getPostCondition());
 		int width = context.getWidth() <= 0 ? 300 : context.getWidth();
         int height = context.getHeight() <= 0 ? 100 : context.getHeight();
         //Font:
@@ -145,13 +146,13 @@ public class StrengthWeakStatementPattern extends IdPattern implements IPattern 
 		statementNameText.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
 		
 		Shape preShape = peCreateService.createShape(outerContainerShape, true);
-		MultiText preNameText = gaService.createMultiText(preShape, "{" + addedStatement.getPreCondition().getName()+ "}");
+		MultiText preNameText = gaService.createMultiText(preShape, "{" + pre.stringRepresentation + "}");
 		setId(preNameText, ID_PRE_TEXT);
 		preNameText.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
 		preNameText.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
 		
 		Shape postShape = peCreateService.createShape(outerContainerShape, true);
-		MultiText postNameText = gaService.createMultiText(postShape, "{" + addedStatement.getPostCondition().getName() + "}");
+		MultiText postNameText = gaService.createMultiText(postShape, "{" + post.stringRepresentation + "}");
 		setId(postNameText, ID_POST_TEXT);
 		postNameText.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
 		postNameText.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);

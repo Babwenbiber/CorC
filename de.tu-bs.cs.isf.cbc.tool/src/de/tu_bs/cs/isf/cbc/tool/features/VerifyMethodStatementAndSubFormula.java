@@ -28,8 +28,10 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.MethodStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Rename;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Renaming;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.MethodStatementImpl;
+import de.tu_bs.cs.isf.cbc.cbcmodel.string_saver.ConditionExtension;
 import de.tu_bs.cs.isf.cbc.tool.helper.GetDiagramUtil;
 import de.tu_bs.cs.isf.cbc.util.FilenamePrefix;
+import de.tu_bs.cs.isf.cbc.util.Parser;
 import de.tu_bs.cs.isf.cbc.util.ProveWithKey;
 import de.tu_bs.cs.isf.taxonomy.graphiti.features.MyAbstractAsynchronousCustomFeature;
 
@@ -119,10 +121,12 @@ public class VerifyMethodStatementAndSubFormula extends MyAbstractAsynchronousCu
 					List<JavaVariable> vars = mergeJavaVariables(varsMethod, varsFormula);
 					List<Condition> conds = mergeGlobalConditions(condsMethod, condsFormula);
 					List<Rename> renaming = mergeRenaming(renamingMethod, renamingFormula);
-					prove = ProveWithKey.proveMethodFormulaWithKey(formula.getStatement().getPreCondition(), statement.getPreCondition(), vars, 
+					prove = ProveWithKey.proveMethodFormulaWithKey(new ConditionExtension(formula.getStatement().getPreCondition()).stringRepresentation, 
+							new ConditionExtension(statement.getPreCondition()).stringRepresentation, vars, 
 							conds, renaming, getDiagram().eResource().getURI(), monitor, FilenamePrefix.METHOD);
 					if (prove) {
-						prove = ProveWithKey.proveMethodFormulaWithKey(statement.getPostCondition(), formula.getStatement().getPostCondition(), vars, 
+						prove = ProveWithKey.proveMethodFormulaWithKey(new ConditionExtension(statement.getPostCondition()).stringRepresentation, 
+								new ConditionExtension(formula.getStatement().getPostCondition()).stringRepresentation, vars, 
 								conds, renaming, getDiagram().eResource().getURI(), monitor, FilenamePrefix.METHOD);
 					}
 					if (prove) {
@@ -150,7 +154,7 @@ public class VerifyMethodStatementAndSubFormula extends MyAbstractAsynchronousCu
 		for (JavaVariable var1 : vars1.getVariables()) {
 			boolean isNew = true;
 			for (JavaVariable var2 : vars2.getVariables()) {
-				if (var1.getName().equals(var2.getName())) {
+				if (Parser.getStringFromVariable(var1).equals(Parser.getStringFromVariable(var2))) {
 					isNew = false;
 				}
 			}
@@ -171,11 +175,12 @@ public class VerifyMethodStatementAndSubFormula extends MyAbstractAsynchronousCu
 			return conds2.getConditions();
 		}
 		List<Condition> newConds = new ArrayList<Condition>();
-		newConds.addAll(conds2.getConditions());
+		newConds.addAll(conds1.getConditions());
+		
 		for (Condition cond1 : conds1.getConditions()) {
 			boolean isNew = true;
 			for (Condition cond2 : conds2.getConditions()) {
-				if (cond1.getName().equals(cond2.getName())) {
+				if (new ConditionExtension(cond1).stringRepresentation.equals(new ConditionExtension(cond2).stringRepresentation)) {
 					isNew = false;
 				}
 			}

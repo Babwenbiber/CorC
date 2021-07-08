@@ -40,6 +40,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.CbcmodelFactory;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Condition;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariables;
 import de.tu_bs.cs.isf.cbc.cbcmodel.SelectionStatement;
+import de.tu_bs.cs.isf.cbc.cbcmodel.string_saver.ConditionExtension;
 import de.tu_bs.cs.isf.cbc.tool.diagram.CbCImageProvider;
 import de.tu_bs.cs.isf.cbc.tool.helper.UpdateModifiableOfConditions;
 import de.tu_bs.cs.isf.cbc.util.FileUtil;
@@ -98,11 +99,9 @@ public class StatementPattern extends IdPattern implements IPattern {
 	public Object[] create(ICreateContext context) {
 		AbstractStatement statement = CbcmodelFactory.eINSTANCE.createAbstractStatement();
 		statement.setName("Statement");
-		Condition pre = CbcmodelFactory.eINSTANCE.createCondition();
-		pre.setName("");
+		Condition pre = new ConditionExtension();
 		statement.setPreCondition(pre);
-		Condition post = CbcmodelFactory.eINSTANCE.createCondition();
-		post.setName("");
+		Condition post = new ConditionExtension();
 		statement.setPostCondition(post);
 
 		addGraphicalRepresentation(context, statement);
@@ -120,6 +119,8 @@ public class StatementPattern extends IdPattern implements IPattern {
 
 		Diagram targetDiagram = (Diagram) context.getTargetContainer();
 		AbstractStatement addedStatement = (AbstractStatement) context.getNewObject();
+		ConditionExtension pre = new ConditionExtension(addedStatement.getPreCondition());
+		ConditionExtension post = new ConditionExtension(addedStatement.getPostCondition());
 		IPeCreateService peCreateService = Graphiti.getPeCreateService();
 		IGaService gaService = Graphiti.getGaService();
 
@@ -150,14 +151,14 @@ public class StatementPattern extends IdPattern implements IPattern {
 
 		Shape preShape = peCreateService.createShape(outerContainerShape, false);
 		MultiText preNameText = gaService.createMultiText(preShape,
-				"{" + addedStatement.getPreCondition().getName() + "}");
+				"{" + pre.stringRepresentation + "}");
 		setId(preNameText, ID_PRE_TEXT);
 		preNameText.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
 		preNameText.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
 
 		Shape postShape = peCreateService.createShape(outerContainerShape, false);
 		MultiText postNameText = gaService.createMultiText(postShape,
-				"{" + addedStatement.getPostCondition().getName() + "}");
+				"{" + post.stringRepresentation + "}");
 		setId(postNameText, ID_POST_TEXT);
 		postNameText.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
 		postNameText.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
@@ -206,8 +207,8 @@ public class StatementPattern extends IdPattern implements IPattern {
 
 		link(outerContainerShape, addedStatement);
 		link(textShape, addedStatement);
-		link(preShape, addedStatement.getPreCondition());
-		link(postShape, addedStatement.getPostCondition());
+		link(preShape, pre);
+		link(postShape, post);
 		link(proveShape, addedStatement);
 
 		return outerContainerShape;

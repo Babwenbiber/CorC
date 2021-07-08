@@ -36,6 +36,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.AbstractStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbcmodelFactory;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Condition;
 import de.tu_bs.cs.isf.cbc.cbcmodel.SelectionStatement;
+import de.tu_bs.cs.isf.cbc.cbcmodel.string_saver.ConditionExtension;
 import de.tu_bs.cs.isf.cbc.tool.diagram.CbCImageProvider;
 
 /**
@@ -105,14 +106,11 @@ public class SelectionPattern extends IdPattern implements IPattern {
 		AbstractStatement statement = CbcmodelFactory.eINSTANCE.createAbstractStatement();
 		statement.setName("statement");
 		selectionStatement.getCommands().add(statement);
-		Condition condition = CbcmodelFactory.eINSTANCE.createCondition();
-		condition.setName("guard");
+		Condition condition = new ConditionExtension("guard");
 		selectionStatement.getGuards().add(condition);
-		Condition pre = CbcmodelFactory.eINSTANCE.createCondition();
-		pre.setName("");
+		Condition pre = new ConditionExtension();
 		statement.setPreCondition(pre);
-		Condition post = CbcmodelFactory.eINSTANCE.createCondition();
-		post.setName("");
+		Condition post = new ConditionExtension();
 		statement.setPostCondition(post);
 
 		addGraphicalRepresentation(context, selectionStatement);
@@ -466,6 +464,9 @@ public class SelectionPattern extends IdPattern implements IPattern {
 		if (id.equals(ID_MAIN_RECTANGLE)) {
 			ContainerShape containerShape = (ContainerShape) context.getPictogramElement();
 			SelectionStatement statement = (SelectionStatement) context.getDomainObject();
+
+			ConditionExtension pre = new ConditionExtension(statement.getPreCondition());
+			ConditionExtension post = new ConditionExtension(statement.getPostCondition());
 			// 7 = number of graphics elements in update (vertical lines + blocks)
 			// 13 = number of graphics in doAdd (horizontal lines + header + name)
 			while (containerShape.getChildren().size() - 14 != statement.getCommands().size() * 7) {
@@ -491,7 +492,7 @@ public class SelectionPattern extends IdPattern implements IPattern {
 				Shape shapeTextPre = Graphiti.getPeCreateService()
 						.createShape((ContainerShape) context.getPictogramElement(), false);
 				MultiText preNameText = Graphiti.getGaService().createMultiText(shapeTextPre,
-						"{" + childStatement.getPreCondition().getName() + "}");
+						"{" + pre.stringRepresentation + "}");
 				setId(preNameText, ID_PRE_TEXT);
 				setIndex(preNameText, newIndex);
 				preNameText.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
@@ -501,7 +502,7 @@ public class SelectionPattern extends IdPattern implements IPattern {
 				Shape shapeTextPost = Graphiti.getPeCreateService()
 						.createShape((ContainerShape) context.getPictogramElement(), false);
 				MultiText postNameText = Graphiti.getGaService().createMultiText(shapeTextPost,
-						"{" + childStatement.getPostCondition().getName() + "}");
+						"{" + post.stringRepresentation + "}");
 				setId(postNameText, ID_POST_TEXT);
 				setIndex(postNameText, newIndex);
 				postNameText.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
@@ -525,12 +526,12 @@ public class SelectionPattern extends IdPattern implements IPattern {
 				setIndex(ver3line, newIndex);
 
 				EList<Condition> childConditions = ((SelectionStatement) context.getDomainObject()).getGuards();
-				Condition childCondition = childConditions.get(newIndex);
+				ConditionExtension childCondition = new ConditionExtension(childConditions.get(newIndex));
 
 				Shape shapeTextCond = Graphiti.getPeCreateService()
 						.createShape((ContainerShape) context.getPictogramElement(), true);
 				MultiText conditionNameText = Graphiti.getGaService().createMultiText(shapeTextCond,
-						childCondition.getName());
+						childCondition.stringRepresentation);
 				setId(conditionNameText, ID_CONDITION_TEXT);
 				setIndex(conditionNameText, newIndex);
 				conditionNameText.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);

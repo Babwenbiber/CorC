@@ -36,6 +36,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.CbcmodelFactory;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Condition;
 import de.tu_bs.cs.isf.cbc.cbcmodel.SmallRepetitionStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Variant;
+import de.tu_bs.cs.isf.cbc.cbcmodel.string_saver.ConditionExtension;
 import de.tu_bs.cs.isf.cbc.tool.diagram.CbCImageProvider;
 
 /**
@@ -104,28 +105,22 @@ public class SmallRepetitionPattern extends IdPattern implements IPattern {
 		AbstractStatement statement = CbcmodelFactory.eINSTANCE.createAbstractStatement();
 		statement.setName("loop");
 		repetitionStatement.setLoopStatement(statement);
-		Condition condition = CbcmodelFactory.eINSTANCE.createCondition();
-		condition.setName("guard");
+		Condition condition = new ConditionExtension("guard");
 		repetitionStatement.setGuard(condition);
-		Condition invariant = CbcmodelFactory.eINSTANCE.createCondition();
-		invariant.setName("invariant");
+		Condition invariant = new ConditionExtension("invariant");
 		repetitionStatement.setInvariant(invariant);
 		Variant variant = CbcmodelFactory.eINSTANCE.createVariant();
 		variant.setName("variant");
 		repetitionStatement.setVariant(variant);
 		
-		Condition pre = CbcmodelFactory.eINSTANCE.createCondition();
-		pre.setName("");
+		Condition pre = new ConditionExtension();
 		statement.setPreCondition(pre);
-		Condition post = CbcmodelFactory.eINSTANCE.createCondition();
-		post.setName("");
+		Condition post = new ConditionExtension();
 		statement.setPostCondition(post);
 		
-		Condition preRep = CbcmodelFactory.eINSTANCE.createCondition();
-		preRep.setName("");
+		Condition preRep = new ConditionExtension();
 		repetitionStatement.setPreCondition(preRep);
-		Condition postRep = CbcmodelFactory.eINSTANCE.createCondition();
-		postRep.setName("");
+		Condition postRep = new ConditionExtension();
 		repetitionStatement.setPostCondition(postRep);
 		
 		addGraphicalRepresentation(context, repetitionStatement);
@@ -146,6 +141,14 @@ manageColor(IColorConstant.DARK_GREEN);
 		IPeCreateService peCreateService = Graphiti.getPeCreateService();
 		IGaService gaService = Graphiti.getGaService();
 
+		ConditionExtension pre = new ConditionExtension(addedStatement.getPreCondition());
+		ConditionExtension post = new ConditionExtension(addedStatement.getPostCondition());
+
+		ConditionExtension loopPre = new ConditionExtension(addedStatement.getLoopStatement().getPreCondition());
+		ConditionExtension loopPost = new ConditionExtension(addedStatement.getLoopStatement().getPostCondition());
+
+		ConditionExtension guard = new ConditionExtension(addedStatement.getGuard());
+		ConditionExtension inv = new ConditionExtension(addedStatement.getInvariant());
 		int width = context.getWidth() <= 0 ? 300 : context.getWidth();
         int height = context.getHeight() <= 0 ? 300 : context.getHeight();
         //Font:
@@ -176,14 +179,14 @@ manageColor(IColorConstant.DARK_GREEN);
 		Shape textShapeCondition = peCreateService.createShape(outerContainerShape, true);
 		MultiText conditionText = gaService.createMultiText(textShapeCondition, "");
 		setId(conditionText, ID_CONDITION_TEXT);
-		conditionText.setValue(addedStatement.getGuard().getName());
+		conditionText.setValue(guard.stringRepresentation);
 		conditionText.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
 		conditionText.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
 		
 		Shape textShapeInvariant = peCreateService.createShape(outerContainerShape, true);
 		MultiText invariantText = gaService.createMultiText(textShapeInvariant, "");
 		setId(invariantText, ID_INVARIANT_TEXT);
-		invariantText.setValue(addedStatement.getInvariant().getName());
+		invariantText.setValue(inv.stringRepresentation);
 		invariantText.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
 		invariantText.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
 		
@@ -202,13 +205,13 @@ manageColor(IColorConstant.DARK_GREEN);
 		nameText.setFont(headerFont);
 		
 		Shape pre1Shape = peCreateService.createShape(outerContainerShape, false);
-		MultiText pre1NameText = gaService.createMultiText(pre1Shape, "{" + addedStatement.getLoopStatement().getPreCondition().getName() + "}");
+		MultiText pre1NameText = gaService.createMultiText(pre1Shape, "{" + loopPre.stringRepresentation + "}");
 		setId(pre1NameText, ID_PRE_TEXT);
 		pre1NameText.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
 		pre1NameText.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
 		
 		Shape post1Shape = peCreateService.createShape(outerContainerShape, false);
-		MultiText post1NameText = gaService.createMultiText(post1Shape, "{" + addedStatement.getLoopStatement().getPostCondition().getName() + "}");
+		MultiText post1NameText = gaService.createMultiText(post1Shape, "{" + loopPost.stringRepresentation + "}");
 		setId(post1NameText, ID_POST_TEXT);
 		post1NameText.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
 		post1NameText.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
@@ -287,12 +290,12 @@ manageColor(IColorConstant.DARK_GREEN);
 		peCreateService.createChopboxAnchor(outerContainerShape);
 
 		link(outerContainerShape, addedStatement);
-		link(textShapeCondition, addedStatement.getGuard());
+		link(textShapeCondition, guard);
 		link(textShapeStatement1, addedStatement.getLoopStatement());
 		link(textShapeVariant, addedStatement.getVariant());
-		link(textShapeInvariant, addedStatement.getInvariant());
-		link(pre1Shape, addedStatement.getLoopStatement().getPreCondition());
-		link(post1Shape, addedStatement.getLoopStatement().getPostCondition());
+		link(textShapeInvariant, inv);
+		link(pre1Shape, loopPre);
+		link(post1Shape, loopPost);
 		link(proveShape, addedStatement);
 
 		return outerContainerShape;

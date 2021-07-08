@@ -15,6 +15,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariables;
 import de.tu_bs.cs.isf.cbc.cbcmodel.SelectionStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.SmallRepetitionStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.StrengthWeakStatement;
+import de.tu_bs.cs.isf.cbc.cbcmodel.string_saver.ConditionExtension;
 import de.tu_bs.cs.isf.cbc.util.Parser;
 import de.tu_bs.cs.isf.cbc.util.ParserException;
 import de.tu_bs.cs.isf.toolkit.support.compare.CompareMethodBodies;
@@ -137,25 +138,31 @@ public class UpdateModifiableOfConditions {
 	}
 
 	private static void copyModifiableVariables(Condition copyFromCondition, Condition copyToCondition) {
-		if (copyFromCondition != null && copyToCondition != null
-				&& copyFromCondition.getName().contains("modifiable(")) {
-			String variables = null;
-			String[] splittedCondition = copyFromCondition.getName().split(";", 2);
-			if (splittedCondition.length > 1) {
-				variables = splittedCondition[0];
-			}
-			String conditionString = null;
-			String[] splittedCondition2 = copyToCondition.getName().split(";", 2);
-			if (splittedCondition2.length > 1) {
-				conditionString = splittedCondition2[1];
-			} else {
-				conditionString = splittedCondition2[0];
-			}
-			if (variables != null) {
-				copyToCondition
-						.setName(variables + ";" + System.getProperty("line.separator") + conditionString.trim());
-			} else {
-				copyToCondition.setName(conditionString.trim());
+
+		if (copyFromCondition != null && copyToCondition != null) {
+			ConditionExtension copyFrom = new ConditionExtension(copyFromCondition);
+			ConditionExtension copyTo= new ConditionExtension(copyFrom);
+		
+			if (copyFrom.stringRepresentation.contains("modifiable(")) {
+				String variables = null;
+				String[] splittedCondition = copyFrom.stringRepresentation.split(";", 2);
+				if (splittedCondition.length > 1) {
+					variables = splittedCondition[0];
+				}
+				String conditionString = null;
+				String[] splittedCondition2 = copyTo.stringRepresentation.split(";", 2);
+				if (splittedCondition2.length > 1) {
+					conditionString = splittedCondition2[1];
+				} else {
+					conditionString = splittedCondition2[0];
+				}
+				if (variables != null) {
+					copyTo.stringRepresentation = variables + ";" + System.getProperty("line.separator") + conditionString.trim();
+				} else {
+					copyTo.stringRepresentation = conditionString.trim();
+				}
+				copyFromCondition = copyFrom;
+				copyToCondition = copyTo;
 			}
 		}
 
@@ -171,9 +178,10 @@ public class UpdateModifiableOfConditions {
 
 	private static void addModifiableVariablesToStatement(Condition condition, List<String> modifiableVariables) {
 		String variables = "";
-		String conditionString = condition.getName();
-		if (condition.getName().contains("modifiable(")) {
-			String[] splittedCondition = condition.getName().split(";", 2);
+		ConditionExtension condExt = new ConditionExtension(condition);
+		String conditionString = condExt.stringRepresentation;
+		if (condExt.stringRepresentation.contains("modifiable(")) {
+			String[] splittedCondition = condExt.stringRepresentation.split(";", 2);
 			if (splittedCondition.length > 1) {
 				variables = splittedCondition[0];
 				conditionString = splittedCondition[1];
@@ -186,15 +194,17 @@ public class UpdateModifiableOfConditions {
 		} else if (modifiableVariables.size() > 1) {
 			variables = "modifiable(" + String.join(",", modifiableVariables) + "); ";
 		}
-		condition.setName(variables + conditionString);
+		condExt.stringRepresentation = variables + conditionString;
+		condition = condExt;
 
 	}
 
 	public static List<String> getModifiableVariables(Condition condition) {
 		String variables = null;
+		ConditionExtension condExt = new ConditionExtension(condition);
 		List<String> variablesAsList = Lists.newArrayList();
-		if (condition.getName().contains("modifiable") & condition.getName().split(";").length > 1) {
-			variables = condition.getName().split(";")[0];
+		if (condExt.stringRepresentation.contains("modifiable") & condExt.stringRepresentation.split(";").length > 1) {
+			variables = condExt.stringRepresentation.split(";")[0];
 		}
 		if (variables != null) {
 			variables = variables.substring(1);

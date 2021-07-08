@@ -33,6 +33,7 @@ import org.eclipse.graphiti.util.PredefinedColoredAreas;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbcmodelFactory;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Condition;
 import de.tu_bs.cs.isf.cbc.cbcmodel.GlobalConditions;
+import de.tu_bs.cs.isf.cbc.cbcmodel.string_saver.ConditionExtension;
 import de.tu_bs.cs.isf.cbc.tool.model.CbcModelUtil;
 
 /**
@@ -87,8 +88,7 @@ public class GlobalConditionsPattern extends IdPattern implements IPattern {
 	@Override
 	public Object[] create(ICreateContext context) {
 		GlobalConditions conditions = CbcmodelFactory.eINSTANCE.createGlobalConditions();
-		Condition condition = CbcmodelFactory.eINSTANCE.createCondition();
-		condition.setName("{}");
+		Condition condition = new ConditionExtension("{}");
 		conditions.getConditions().add(condition);
 		
 		try {
@@ -201,9 +201,9 @@ public class GlobalConditionsPattern extends IdPattern implements IPattern {
 			EList<Condition> conditions = ((GlobalConditions) context.getDomainObject()).getConditions();
 			while (((ContainerShape) context.getPictogramElement()).getChildren().size() - 2 < conditions.size()) {
 				int newIndex = ((ContainerShape) context.getPictogramElement()).getChildren().size() - 2;
-				Condition condition = conditions.get(newIndex);
+				ConditionExtension condition = new ConditionExtension(conditions.get(newIndex));
 				Shape shapeText = Graphiti.getPeCreateService().createShape((ContainerShape) context.getPictogramElement(), true);
-				MultiText conditionNameText = Graphiti.getGaService().createMultiText(shapeText, condition.getName());
+				MultiText conditionNameText = Graphiti.getGaService().createMultiText(shapeText, condition.stringRepresentation);
 				setId(conditionNameText, ID_CONDITION_TEXT);
 				setIndex(conditionNameText, newIndex);
 				conditionNameText.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);

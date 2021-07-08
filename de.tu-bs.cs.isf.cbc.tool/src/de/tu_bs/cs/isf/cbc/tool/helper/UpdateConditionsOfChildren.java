@@ -14,6 +14,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.SelectionStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.SkipStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.SmallRepetitionStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.StrengthWeakStatement;
+import de.tu_bs.cs.isf.cbc.cbcmodel.string_saver.ConditionExtension;
 import de.tu_bs.cs.isf.cbc.util.Parser;
 
 public class UpdateConditionsOfChildren {
@@ -33,38 +34,49 @@ public class UpdateConditionsOfChildren {
 	}
 
 	public static void updateRefinedStatement(AbstractStatement parentStatement, AbstractStatement refinedStatement) {
-		Condition preParent = parentStatement.getPreCondition();
-		Condition postParent = parentStatement.getPostCondition();
+		ConditionExtension preParent = new ConditionExtension(parentStatement.getPreCondition());
+		ConditionExtension postParent =new ConditionExtension(parentStatement.getPostCondition());
+
 //		refinedStatement.setProven(false);
 		if (refinedStatement instanceof SkipStatement) {
 			SkipStatement childSkip = (SkipStatement) refinedStatement;
-
-			if (!childSkip.getPreCondition().getName().equals(preParent.getName())
-					|| !childSkip.getPostCondition().getName().equals(postParent.getName())) {
+			ConditionExtension preSkip= new ConditionExtension(childSkip.getPreCondition());
+			ConditionExtension postSkip=new ConditionExtension(childSkip.getPostCondition());
+			if (!preSkip.stringRepresentation.equals(preParent.stringRepresentation)
+					|| !postSkip.stringRepresentation.equals(postParent.stringRepresentation)) {
 				refinedStatement.setProven(false);
 			}
-
-			childSkip.getPreCondition().setName(preParent.getName());
-			childSkip.getPostCondition().setName(postParent.getName());
+			ConditionExtension preChild = new ConditionExtension(childSkip.getPreCondition());
+			preChild.stringRepresentation = preParent.stringRepresentation;
+			ConditionExtension postChild = new ConditionExtension(childSkip.getPostCondition());
+			postChild.stringRepresentation = postParent.stringRepresentation;
 
 		} else if (refinedStatement instanceof CompositionStatement) {
 			CompositionStatement childCompo = (CompositionStatement) refinedStatement;
 			AbstractStatement firstStatement = childCompo.getFirstStatement();
 			AbstractStatement secondStatement = childCompo.getSecondStatement();
+			ConditionExtension firstPre = new ConditionExtension(firstStatement.getPreCondition());
+			ConditionExtension firstPost= new ConditionExtension(firstStatement.getPostCondition());
+			ConditionExtension secondPre = new ConditionExtension(secondStatement.getPreCondition());
+			ConditionExtension secondPost= new ConditionExtension(secondStatement.getPostCondition());
+			ConditionExtension intm = new ConditionExtension(childCompo.getIntermediateCondition());
 
-			if (!firstStatement.getPreCondition().getName().equals(preParent.getName())
-					|| !firstStatement.getPostCondition().getName()
-							.equals(childCompo.getIntermediateCondition().getName())
-					|| !secondStatement.getPreCondition().getName()
-							.equals(childCompo.getIntermediateCondition().getName())
-					|| !secondStatement.getPostCondition().getName().equals(postParent.getName())) {
+			if (!firstPre.stringRepresentation.equals(preParent.stringRepresentation)
+					|| !firstPost.stringRepresentation
+							.equals(intm.stringRepresentation)
+					|| !secondPre.stringRepresentation
+							.equals(intm.stringRepresentation)
+					|| !secondPost.stringRepresentation.equals(postParent.stringRepresentation)) {
 				refinedStatement.setProven(false);
 			}
-
-			firstStatement.getPreCondition().setName(preParent.getName());
-			firstStatement.getPostCondition().setName(childCompo.getIntermediateCondition().getName());
-			secondStatement.getPreCondition().setName(childCompo.getIntermediateCondition().getName());
-			secondStatement.getPostCondition().setName(postParent.getName());
+			firstPre.stringRepresentation = preParent.stringRepresentation;
+			firstPost.stringRepresentation = intm.stringRepresentation;
+			secondPre.stringRepresentation = intm.stringRepresentation;
+			secondPost.stringRepresentation = preParent.stringRepresentation;
+			firstStatement.setPreCondition(firstPre);
+			firstStatement.setPostCondition(firstPost);
+			secondStatement.setPreCondition(secondPre);
+			secondStatement.setPostCondition(secondPost);
 
 			if (firstStatement.getRefinement() != null) {
 				updateRefinedStatement(firstStatement, firstStatement.getRefinement());
@@ -78,26 +90,41 @@ public class UpdateConditionsOfChildren {
 			AbstractStatement firstStatement = childCompo.getFirstStatement();
 			AbstractStatement secondStatement = childCompo.getSecondStatement();
 			AbstractStatement thirdStatement = childCompo.getThirdStatement();
+			
+			ConditionExtension firstPre = new ConditionExtension(firstStatement.getPreCondition());
+			ConditionExtension firstPost= new ConditionExtension(firstStatement.getPostCondition());
+			ConditionExtension secondPre = new ConditionExtension(secondStatement.getPreCondition());
+			ConditionExtension secondPost= new ConditionExtension(secondStatement.getPostCondition());
+			ConditionExtension thirdPre = new ConditionExtension(thirdStatement.getPreCondition());
+			ConditionExtension thirdPost= new ConditionExtension(thirdStatement.getPostCondition());
+			ConditionExtension firstIntm = new ConditionExtension(childCompo.getFirstIntermediateCondition());
+			ConditionExtension secondIntm = new ConditionExtension(childCompo.getSecondIntermediateCondition());
 
-			if (!firstStatement.getPreCondition().getName().equals(preParent.getName())
-					|| !firstStatement.getPostCondition().getName()
-							.equals(childCompo.getFirstIntermediateCondition().getName())
-					|| !secondStatement.getPreCondition().getName()
-							.equals(childCompo.getFirstIntermediateCondition().getName())
-					|| !secondStatement.getPostCondition().getName()
-							.equals(childCompo.getSecondIntermediateCondition().getName())
-					|| !thirdStatement.getPreCondition().getName()
-							.equals(childCompo.getSecondIntermediateCondition().getName())
-					|| !thirdStatement.getPostCondition().getName().equals(postParent.getName())) {
+			if (!firstPre.stringRepresentation.equals(preParent.stringRepresentation)
+					|| !firstPost.stringRepresentation
+							.equals(firstIntm.stringRepresentation)
+					|| !secondPre.stringRepresentation
+							.equals(firstIntm.stringRepresentation)
+					|| !secondPost.stringRepresentation
+							.equals(secondIntm.stringRepresentation)
+					|| !thirdPre.stringRepresentation
+							.equals(secondIntm.stringRepresentation)
+					|| !thirdPost.stringRepresentation.equals(postParent.stringRepresentation)) {
 				refinedStatement.setProven(false);
 			}
 
-			firstStatement.getPreCondition().setName(preParent.getName());
-			firstStatement.getPostCondition().setName(childCompo.getFirstIntermediateCondition().getName());
-			secondStatement.getPreCondition().setName(childCompo.getFirstIntermediateCondition().getName());
-			secondStatement.getPostCondition().setName(childCompo.getSecondIntermediateCondition().getName());
-			thirdStatement.getPreCondition().setName(childCompo.getSecondIntermediateCondition().getName());
-			thirdStatement.getPostCondition().setName(postParent.getName());
+			firstPre.stringRepresentation = preParent.stringRepresentation;
+			firstPost.stringRepresentation = firstIntm.stringRepresentation;
+			secondPre.stringRepresentation =  firstIntm.stringRepresentation;
+			secondPost.stringRepresentation =  secondIntm.stringRepresentation;
+			thirdPre.stringRepresentation =  secondIntm.stringRepresentation;
+			thirdPost.stringRepresentation = preParent.stringRepresentation;
+			firstStatement.setPreCondition(firstPre);
+			firstStatement.setPostCondition(firstPost);
+			secondStatement.setPreCondition(secondPre);
+			secondStatement.setPostCondition(secondPost);
+			thirdStatement.setPreCondition(thirdPre);
+			thirdStatement.setPostCondition(thirdPost);
 
 			if (firstStatement.getRefinement() != null) {
 				updateRefinedStatement(firstStatement, firstStatement.getRefinement());
@@ -115,26 +142,44 @@ public class UpdateConditionsOfChildren {
 			AbstractStatement loopStatement = childRep.getLoopStatement();
 			AbstractStatement endStatement = childRep.getEndStatement();
 
-			if (!startStatement.getPreCondition().getName().equals(preParent.getName())
-					|| !startStatement.getPostCondition().getName().equals(childRep.getInvariant().getName())
-					|| !loopStatement.getPreCondition().getName().equals(
-							"(" + childRep.getInvariant().getName() + ") & (" + childRep.getGuard().getName() + ")")
-					|| !loopStatement.getPostCondition().getName().equals(childRep.getInvariant().getName())
-					|| !endStatement.getPreCondition().getName().equals(
-							"(" + childRep.getInvariant().getName() + ") & !(" + childRep.getGuard().getName() + ")")
-					|| !endStatement.getPostCondition().getName().equals(postParent.getName())) {
+			ConditionExtension startPre = new ConditionExtension(startStatement.getPreCondition());
+			ConditionExtension startPost= new ConditionExtension(startStatement.getPostCondition());
+			ConditionExtension loopPre = new ConditionExtension(loopStatement.getPreCondition());
+			ConditionExtension loopPost= new ConditionExtension(loopStatement.getPostCondition());
+			ConditionExtension endPre = new ConditionExtension(endStatement.getPreCondition());
+			ConditionExtension endPost= new ConditionExtension(endStatement.getPostCondition());
+			ConditionExtension inv = new ConditionExtension(childRep.getInvariant());
+			ConditionExtension guard = new ConditionExtension(childRep.getGuard());
+			
+			ConditionExtension invAndGuard = new ConditionExtension(childRep.getInvariant(), childRep.getGuard());
+			ConditionExtension invAndNotGuard = new ConditionExtension(childRep.getInvariant());
+			invAndNotGuard.stringRepresentation = "(" + invAndNotGuard.stringRepresentation + ") & !(" + guard.stringRepresentation + ")";
+			
+			if (!startPre.stringRepresentation.equals(preParent.stringRepresentation)
+					|| !startPost.stringRepresentation.equals(inv.stringRepresentation)
+					|| !loopPre.stringRepresentation.equals(
+							invAndGuard.stringRepresentation)
+					|| !loopPost.stringRepresentation.equals(inv.stringRepresentation)
+					|| !endPre.stringRepresentation.equals(invAndNotGuard.stringRepresentation)
+					|| !endPost.stringRepresentation.equals(postParent.stringRepresentation)) {
 				refinedStatement.setProven(false);
 				childRep.setVariantProven(false);
 			}
 
-			startStatement.getPreCondition().setName(preParent.getName());
-			startStatement.getPostCondition().setName(childRep.getInvariant().getName());
-			loopStatement.getPreCondition()
-					.setName("(" + childRep.getInvariant().getName() + ") & (" + childRep.getGuard().getName() + ")");
-			loopStatement.getPostCondition().setName(childRep.getInvariant().getName());
-			endStatement.getPreCondition()
-					.setName("(" + childRep.getInvariant().getName() + ") & !(" + childRep.getGuard().getName() + ")");
-			endStatement.getPostCondition().setName(postParent.getName());
+			startPre.stringRepresentation = preParent.stringRepresentation;
+			startPost.stringRepresentation = inv.stringRepresentation;
+			loopPre.stringRepresentation = invAndGuard.stringRepresentation;
+			loopPost.stringRepresentation = inv.stringRepresentation;
+			endPre.stringRepresentation = invAndNotGuard.stringRepresentation;
+			endPost.stringRepresentation = preParent.stringRepresentation;
+			startStatement.setPreCondition(startPre);
+			startStatement.setPostCondition(startPost);
+			loopStatement.setPreCondition(loopPre);
+			loopStatement.setPostCondition(loopPost);
+			endStatement.setPreCondition(endPre);
+			endStatement.setPostCondition(endPost);
+			
+		
 
 			if (startStatement.getRefinement() != null) {
 				updateRefinedStatement(startStatement, startStatement.getRefinement());
@@ -149,30 +194,42 @@ public class UpdateConditionsOfChildren {
 		} else if (refinedStatement instanceof SmallRepetitionStatement) {
 			SmallRepetitionStatement childRep = (SmallRepetitionStatement) refinedStatement;
 			AbstractStatement loopStatement = childRep.getLoopStatement();
-
-			if (!loopStatement.getPreCondition().getName()
-					.equals("(" + childRep.getInvariant().getName() + ") & (" + childRep.getGuard().getName() + ")")
-					|| !loopStatement.getPostCondition().getName().equals(childRep.getInvariant().getName())) {
+			
+			ConditionExtension childPre = new ConditionExtension(childRep.getPreCondition());
+			ConditionExtension childPost= new ConditionExtension(childRep.getPostCondition());
+			ConditionExtension loopPre = new ConditionExtension(loopStatement.getPreCondition());
+			ConditionExtension loopPost= new ConditionExtension(loopStatement.getPostCondition());
+			
+			ConditionExtension inv = new ConditionExtension(childRep.getInvariant());
+			
+			ConditionExtension invAndGuard = new ConditionExtension(childRep.getInvariant(), childRep.getGuard());
+		
+			if (!loopPre.stringRepresentation
+					.equals(invAndGuard)
+					|| !loopPost.stringRepresentation.equals(inv.stringRepresentation)) {
 				refinedStatement.setProven(false);
 				childRep.setVariantProven(false);
 			}
-			if (!loopStatement.getPostCondition().getName().equals(childRep.getInvariant().getName())
-					|| !childRep.getPreCondition().getName().equals(preParent)) {
+			if (!loopPost.stringRepresentation.equals(inv.stringRepresentation)
+					|| !childPre.stringRepresentation.equals(preParent)) {
 				childRep.setPreProven(false);
 			}
-			if (!loopStatement.getPreCondition().getName()
-					.equals("(" + childRep.getInvariant().getName() + ") & (" + childRep.getGuard().getName() + ")")
-					|| !childRep.getPostCondition().getName().equals(postParent)) {
+			if (!loopPre.stringRepresentation
+					.equals(invAndGuard.stringRepresentation)
+					|| !childPost.stringRepresentation.equals(postParent)) {
 				childRep.setPostProven(false);
 			}
 
-			childRep.getPreCondition().setName(preParent.getName());
-			childRep.getPostCondition().setName(postParent.getName());
-
-			loopStatement.getPreCondition()
-					.setName("(" + childRep.getInvariant().getName() + ") & (" + childRep.getGuard().getName() + ")");
-			loopStatement.getPostCondition().setName(childRep.getInvariant().getName());
-
+			childPre.stringRepresentation = preParent.stringRepresentation;
+			childPost.stringRepresentation = postParent.stringRepresentation;
+			loopPre.stringRepresentation = invAndGuard.stringRepresentation;
+			loopPost.stringRepresentation = inv.stringRepresentation;
+			
+			childRep.setPreCondition(childPre);
+			childRep.setPostCondition(childPost);
+			loopStatement.setPreCondition(loopPre);
+			loopStatement.setPostCondition(loopPost);
+		
 			if (loopStatement.getRefinement() != null) {
 				updateRefinedStatement(loopStatement, loopStatement.getRefinement());
 			}
@@ -182,27 +239,33 @@ public class UpdateConditionsOfChildren {
 
 			for (int i = 0; i < childSel.getCommands().size(); i++) {
 				AbstractStatement childStatement = childSel.getCommands().get(i);
-				Condition childGuard = childSel.getGuards().get(i);
+				ConditionExtension childGuard = new ConditionExtension(childSel.getGuards().get(i));
+				
+				ConditionExtension childPre = new ConditionExtension(childStatement.getPreCondition());
+				ConditionExtension childPost= new ConditionExtension(childStatement.getPostCondition());
+				ConditionExtension invAndGuard = new ConditionExtension(childPre, childGuard);
 
-				String preCondParent = Parser.getConditionFromCondition(preParent.getName());
-				String modifiablePreParent = Parser.getModifieableVarsFromCondition(preParent.getName())
+				String preCondParent = Parser.getConditionFromCondition(preParent.stringRepresentation);
+				String modifiablePreParent = Parser.getModifieableVarsFromCondition(preParent.stringRepresentation)
 						.equals("\\\\everything;") ? ""
-								: "modifiable(" + Parser.getModifieableVarsFromCondition(preParent.getName()) + ");";
+								: "modifiable(" + Parser.getModifieableVarsFromCondition(preParent.stringRepresentation) + ");";
 
-				if (!childStatement.getPreCondition().getName()
-						.equals(modifiablePreParent + "(" + preCondParent + ") & (" + childGuard.getName() + ")")
-						|| !childStatement.getPostCondition().getName().equals(postParent.getName())) {
+				if (!childPre.stringRepresentation
+						.equals(invAndGuard.stringRepresentation)
+						|| !childPost.stringRepresentation.equals(postParent.stringRepresentation)) {
 					refinedStatement.setProven(false);
 				}
-				if (!childStatement.getPreCondition().getName()
-						.equals("(" + preParent.getName() + ") & (" + childGuard.getName() + ")")) {
+				if (!childPre.stringRepresentation
+						.equals(invAndGuard.stringRepresentation)) {
 					childSel.setPreProve(false);
 				}
 
-				childStatement.getPreCondition()
-						.setName(modifiablePreParent + "(" + preCondParent + ") & (" + childGuard.getName() + ")");
-				childStatement.getPostCondition().setName(postParent.getName());
-
+				childPre.stringRepresentation = invAndGuard.stringRepresentation;
+				childPost.stringRepresentation = postParent.stringRepresentation;
+				
+				childStatement.setPreCondition(childPre);
+				childStatement.setPostCondition(childPost);
+			
 				if (childStatement.getRefinement() != null) {
 					updateRefinedStatement(childStatement, childStatement.getRefinement());
 				}
@@ -211,45 +274,62 @@ public class UpdateConditionsOfChildren {
 		} else if (refinedStatement instanceof MethodStatement) {
 			MethodStatement childAbstract = (MethodStatement) refinedStatement;
 
-			if (!childAbstract.getPreCondition().getName().equals(preParent.getName())
-					|| !childAbstract.getPostCondition().getName().equals(postParent.getName())) {
+			ConditionExtension childPre = new ConditionExtension(childAbstract.getPreCondition());
+			ConditionExtension childPost= new ConditionExtension(childAbstract.getPostCondition());
+			
+			if (!childPre.stringRepresentation.equals(preParent.stringRepresentation)
+					|| !childPost.stringRepresentation.equals(postParent.stringRepresentation)) {
 				refinedStatement.setProven(false);
 			}
 
-			childAbstract.getPreCondition().setName(preParent.getName());
-			childAbstract.getPostCondition().setName(postParent.getName());
-
+			childPre.stringRepresentation = preParent.stringRepresentation;
+			childPost.stringRepresentation = postParent.stringRepresentation;
+			
+			childAbstract.setPreCondition(childPre);
+			childAbstract.setPostCondition(childPost);
+		
 		} else if (refinedStatement instanceof ReturnStatement) {
 			ReturnStatement childReturn = (ReturnStatement) refinedStatement;
+			ConditionExtension childPre = new ConditionExtension(childReturn.getPreCondition());
+			ConditionExtension childPost= new ConditionExtension(childReturn.getPostCondition());
 			CbCFormula formula = getFormula(parentStatement);
+			ConditionExtension formulaPost= new ConditionExtension(formula.getPostCondition());
 			if (formula != null) {
-				if (!childReturn.getPreCondition().getName().equals(preParent.getName()) || !childReturn
-						.getPostCondition().getName().equals(formula.getStatement().getPostCondition().getName())) {
+				if (!childPre.stringRepresentation.equals(preParent.stringRepresentation) || 
+						!childPost.stringRepresentation.equals(formulaPost.stringRepresentation)) {
 					refinedStatement.setProven(false);
 				}
 
-				childReturn.getPreCondition().setName(preParent.getName());
-				childReturn.getPostCondition().setName(formula.getStatement().getPostCondition().getName());
+				childPre.stringRepresentation = preParent.stringRepresentation;
+				childPost.stringRepresentation = formulaPost.stringRepresentation;
+				
+				childReturn.setPreCondition(childPre);
+				childReturn.setPostCondition(childPost);
+				
 			}
 
 		} else if (refinedStatement instanceof StrengthWeakStatement) {
 			StrengthWeakStatement childStrengthWeak = (StrengthWeakStatement) refinedStatement;
 			refinedStatement.setProven(false);
-
+			
 			if (childStrengthWeak.getRefinement() != null) {
 				updateRefinedStatement(childStrengthWeak, childStrengthWeak.getRefinement());
 			}
 
 		} else if (refinedStatement instanceof AbstractStatement) {
 			AbstractStatement childAbstract = (AbstractStatement) refinedStatement;
-
-			if (!childAbstract.getPreCondition().getName().equals(preParent.getName())
-					|| !childAbstract.getPostCondition().getName().equals(postParent.getName())) {
+			ConditionExtension childPre = new ConditionExtension(childAbstract.getPreCondition());
+			ConditionExtension childPost= new ConditionExtension(childAbstract.getPostCondition());
+			if (!childPre.stringRepresentation.equals(preParent.stringRepresentation)
+					|| !childPost.stringRepresentation.equals(postParent.stringRepresentation)) {
 				refinedStatement.setProven(false);
 			}
 
-			childAbstract.getPreCondition().setName(preParent.getName());
-			childAbstract.getPostCondition().setName(postParent.getName());
+			childPre.stringRepresentation = preParent.stringRepresentation;
+			childPost.stringRepresentation = postParent.stringRepresentation;
+			
+			childAbstract.setPreCondition(childPre);
+			childAbstract.setPostCondition(childPost);
 
 		}
 	}

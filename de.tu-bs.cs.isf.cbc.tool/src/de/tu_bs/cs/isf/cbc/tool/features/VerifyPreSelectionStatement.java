@@ -1,17 +1,21 @@
 package de.tu_bs.cs.isf.cbc.tool.features;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.common.util.BasicEList;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ICustomContext;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.mm.pictograms.Shape;
 
 import de.tu_bs.cs.isf.cbc.cbcmodel.AbstractStatement;
+import de.tu_bs.cs.isf.cbc.cbcmodel.Condition;
 import de.tu_bs.cs.isf.cbc.cbcmodel.GlobalConditions;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariables;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Renaming;
 import de.tu_bs.cs.isf.cbc.cbcmodel.SelectionStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.SelectionStatementImpl;
+import de.tu_bs.cs.isf.cbc.cbcmodel.string_saver.ConditionExtension;
 import de.tu_bs.cs.isf.cbc.util.FilenamePrefix;
 import de.tu_bs.cs.isf.cbc.util.ProveWithKey;
 import de.tu_bs.cs.isf.taxonomy.graphiti.features.MyAbstractAsynchronousCustomFeature;
@@ -80,7 +84,12 @@ public class VerifyPreSelectionStatement extends MyAbstractAsynchronousCustomFea
 					}
 				}
 				boolean prove = false;
-				prove = ProveWithKey.provePreSelWithKey(statement.getGuards(), parent.getPreCondition(), vars,
+				EList<ConditionExtension> guards = new BasicEList<ConditionExtension>();
+				for (Condition cond: statement.getGuards()) {
+					guards.add(new ConditionExtension(cond));
+				}
+				prove = ProveWithKey.provePreSelWithKey(guards, new ConditionExtension(parent.getPreCondition()).stringRepresentation,
+						vars,
 						conds, renaming, getDiagram().eResource().getURI(), monitor, FilenamePrefix.SELECTION);
 				if (prove) {
 					statement.setPreProve(true);

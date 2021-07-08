@@ -16,6 +16,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.SmallRepetitionStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Variant;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.RepetitionStatementImpl;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.SmallRepetitionStatementImpl;
+import de.tu_bs.cs.isf.cbc.cbcmodel.string_saver.ConditionExtension;
 import de.tu_bs.cs.isf.cbc.util.Console;
 import de.tu_bs.cs.isf.cbc.util.ConstructCodeBlock;
 import de.tu_bs.cs.isf.cbc.util.FilenamePrefix;
@@ -87,23 +88,23 @@ public class VerifyVariant2 extends MyAbstractAsynchronousCustomFeature {
 				}
 				boolean prove = false;
 				String code = ConstructCodeBlock.constructCodeBlockAndVerify2(statement);
-				Condition invariant = null;
-				Condition guard = null;
+				ConditionExtension invariant = null;
+				ConditionExtension guard = null;
 				Variant variant = null;
 				if (statement instanceof RepetitionStatement) {
 					RepetitionStatement repStatement = (RepetitionStatement) statement;
-					invariant = repStatement.getInvariant();
-					guard = repStatement.getGuard();
+					invariant = new ConditionExtension(repStatement.getInvariant());
+					guard = new ConditionExtension(repStatement.getGuard());
 					variant = repStatement.getVariant();
 				} else if (statement instanceof SmallRepetitionStatement) {
 					SmallRepetitionStatement repStatement = (SmallRepetitionStatement) statement;
-					invariant = repStatement.getInvariant();
-					guard = repStatement.getGuard();
+					invariant = new ConditionExtension(repStatement.getInvariant());
+					guard = new ConditionExtension(repStatement.getGuard());
 					variant = repStatement.getVariant();
 
 				}
 				if (CompareMethodBodies.readAndTestMethodBodyWithJaMoPP2(code)) {
-					prove = ProveWithKey.proveVariant2WithKey(code, invariant, guard, variant, vars, 
+					prove = ProveWithKey.proveVariant2WithKey(code, invariant.stringRepresentation, guard.stringRepresentation, variant, vars, 
 							conds, renaming, getDiagram().eResource().getURI(), monitor, FilenamePrefix.REPETITION);
 				} else {
 					Console.println("Statement is not in correct format.");

@@ -151,14 +151,6 @@ public class TraverseFormulaAndGenerate {
 				castStatementAndTraverse(block.getBlock());
 				return;
 			}
-//			for (BlockStatement b: this.blocks.getBlocks()) {
-//				if (b.getName().equals(block.getName())) {
-//					b.setPreCondition(new ConditionExtension(block.getPreCondition()));
-//					b.setPostCondition(new ConditionExtension(block.getPostCondition()));
-//					castStatementAndTraverse(b);
-//					return;
-//				}
-//			}
 			BlockStatement reference = block.getReferences();
 			reference.setPreCondition(new ConditionExtension(block.getPreCondition()));
 			reference.setPostCondition(new ConditionExtension(block.getPostCondition()));

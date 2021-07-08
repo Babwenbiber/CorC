@@ -1,6 +1,7 @@
 package de.tu_bs.cs.isf.cbc.tool.features;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.graphiti.features.IFeatureProvider;
@@ -22,6 +23,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.RepetitionStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.SelectionStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.SmallRepetitionStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Variant;
+import de.tu_bs.cs.isf.cbc.cbcmodel.string_saver.ConditionExtension;
 import de.tu_bs.cs.isf.cbc.util.Console;
 import de.tu_bs.cs.isf.cbc.util.ConstructCodeBlock;
 import de.tu_bs.cs.isf.cbc.util.FilenamePrefix;
@@ -233,9 +235,12 @@ public class VerifyAllStatements extends MyAbstractAsynchronousCustomFeature {
 		boolean provePre = selectionStatement.isPreProve();
 		if (!(selectionStatement.isProven() && provePre && true)) {
 			if (!selectionStatement.isPreProve()) {
-				EList<Condition> guards = selectionStatement.getGuards();
-				Condition preCondition = selectionStatement.getParent().getPreCondition();
-				provePre = ProveWithKey.provePreSelWithKey(guards, preCondition, vars, conds, renaming, uri, null, FilenamePrefix.SELECTION);
+				EList<ConditionExtension> guards = new BasicEList<ConditionExtension>();
+				for (Condition cond: selectionStatement.getGuards()) {
+					guards.add(new ConditionExtension(cond));
+				}
+				ConditionExtension preCondition = new ConditionExtension(selectionStatement.getParent().getPreCondition());
+				provePre = ProveWithKey.provePreSelWithKey(guards, preCondition.stringRepresentation, vars, conds, renaming, uri, null, FilenamePrefix.SELECTION);
 				selectionStatement.setPreProve(provePre);
 			}
 			if (provePre && prove && true) {
@@ -254,7 +259,7 @@ public class VerifyAllStatements extends MyAbstractAsynchronousCustomFeature {
     	boolean prove = false;
     	BlockStatement blockStatement = (BlockStatement) statement;
     	
-		prove = proveJavaStatement(blockStatement.getJavaStatement(), vars, conds, renaming, uri, monitor);
+		prove = proveJavaStatement((JavaStatement) blockStatement.getJavaStatement(), vars, conds, renaming, uri, monitor);
     	
     	
     	if (prove && true)  {
@@ -279,15 +284,15 @@ public class VerifyAllStatements extends MyAbstractAsynchronousCustomFeature {
 			prove = (proveChildStatement(repStatement.getEndStatement().getRefinement(), vars, conds, renaming, uri, monitor) && prove && true);
 		}
 		if (!(repStatement.isVariantProven() && repStatement.isProven()) && true) {
-			Condition invariant = repStatement.getInvariant();
-			Condition preCondition = repStatement.getPreCondition();
-			Condition guard = repStatement.getGuard();
-			Condition postCondition = repStatement.getPostCondition();
+			ConditionExtension invariant = new ConditionExtension(repStatement.getInvariant());
+			ConditionExtension preCondition =  new ConditionExtension(repStatement.getPreCondition());
+			ConditionExtension guard =  new ConditionExtension(repStatement.getGuard());
+			ConditionExtension postCondition =  new ConditionExtension(repStatement.getPostCondition());
 			String code = ConstructCodeBlock.constructCodeBlockAndVerify(statement);
 			Variant variant = repStatement.getVariant();
-			provePre = ProveWithKey.provePreWithKey(invariant, preCondition, vars, conds, renaming, uri, monitor, FilenamePrefix.REPETITION);
-			provePost = ProveWithKey.provePostWithKey(invariant, guard, postCondition, vars, conds, renaming, uri, monitor, FilenamePrefix.REPETITION);
-			proveVar = ProveWithKey.proveVariant2WithKey(code, invariant, guard, variant, vars, conds, renaming, uri, monitor, FilenamePrefix.REPETITION);
+			provePre = ProveWithKey.provePreWithKey(invariant.stringRepresentation, preCondition.stringRepresentation, vars, conds, renaming, uri, monitor, FilenamePrefix.REPETITION);
+			provePost = ProveWithKey.provePostWithKey(invariant.stringRepresentation, guard.stringRepresentation, postCondition.stringRepresentation, vars, conds, renaming, uri, monitor, FilenamePrefix.REPETITION);
+			proveVar = ProveWithKey.proveVariant2WithKey(code, invariant.stringRepresentation, guard.stringRepresentation, variant, vars, conds, renaming, uri, monitor, FilenamePrefix.REPETITION);
 			repStatement.setVariantProven(proveVar);
 			if (prove && provePre && provePost && proveVar && true) {
 				statement.setProven(true);
@@ -312,22 +317,22 @@ public class VerifyAllStatements extends MyAbstractAsynchronousCustomFeature {
 		boolean provePost = repStatement.isPostProven();
 		boolean proveVar = repStatement.isVariantProven();
 		if (!(repStatement.isProven() && provePre && provePost && proveVar && true)) {
-			Condition invariant = repStatement.getInvariant();
-			Condition preCondition = repStatement.getParent().getPreCondition();
-			Condition guard = repStatement.getGuard();
-			Condition postCondition = repStatement.getParent().getPostCondition();
+			ConditionExtension invariant = new ConditionExtension(repStatement.getInvariant());
+			ConditionExtension preCondition = new ConditionExtension(repStatement.getParent().getPreCondition());
+			ConditionExtension guard = new ConditionExtension(repStatement.getGuard());
+			ConditionExtension postCondition = new ConditionExtension(repStatement.getParent().getPostCondition());
 			String code = ConstructCodeBlock.constructCodeBlockAndVerify(statement);
 			Variant variant = repStatement.getVariant();
 			if (!provePre) {
-				provePre = ProveWithKey.provePreWithKey(invariant, preCondition, vars, conds, renaming, uri, monitor,FilenamePrefix.REPETITION);
+				provePre = ProveWithKey.provePreWithKey(invariant.stringRepresentation, preCondition.stringRepresentation, vars, conds, renaming, uri, monitor,FilenamePrefix.REPETITION);
 				repStatement.setPreProven(provePre);
 			}
 			if (!provePost) {
-				provePost = ProveWithKey.provePostWithKey(invariant, guard, postCondition, vars, conds, renaming, uri, monitor, FilenamePrefix.REPETITION);
+				provePost = ProveWithKey.provePostWithKey(invariant.stringRepresentation, guard.stringRepresentation, postCondition.stringRepresentation, vars, conds, renaming, uri, monitor, FilenamePrefix.REPETITION);
 				repStatement.setPostProven(provePost);
 			}
 			if (!proveVar) {
-				proveVar = ProveWithKey.proveVariant2WithKey(code, invariant, guard, variant, vars, conds, renaming, uri, monitor, FilenamePrefix.REPETITION);
+				proveVar = ProveWithKey.proveVariant2WithKey(code, invariant.stringRepresentation, guard.stringRepresentation, variant, vars, conds, renaming, uri, monitor, FilenamePrefix.REPETITION);
 				repStatement.setVariantProven(proveVar);	
 			}
 			if (prove && provePre && provePost && proveVar) {

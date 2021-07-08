@@ -32,9 +32,11 @@ import org.eclipse.graphiti.util.IColorConstant;
 import org.eclipse.graphiti.util.PredefinedColoredAreas;
 
 import de.tu_bs.cs.isf.cbc.cbcmodel.AbstractStatement;
+import de.tu_bs.cs.isf.cbc.cbcmodel.BlockStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbCFormula;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbcmodelFactory;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Condition;
+import de.tu_bs.cs.isf.cbc.cbcmodel.string_saver.ConditionExtension;
 import de.tu_bs.cs.isf.cbc.tool.diagram.CbCImageProvider;
 import de.tu_bs.cs.isf.cbc.tool.model.CbcModelUtil;
 
@@ -105,11 +107,9 @@ public class BlockPattern extends IdPattern implements IPattern {
 		AbstractStatement statement = CbcmodelFactory.eINSTANCE.createAbstractStatement();
 		statement.setName("statement");
 		formula.setStatement(statement);
-		Condition preCondition = CbcmodelFactory.eINSTANCE.createCondition();
-		preCondition.setName("pre");
+		Condition preCondition = new ConditionExtension("pre");
 		statement.setPreCondition(preCondition);
-		Condition postCondition = CbcmodelFactory.eINSTANCE.createCondition();
-		postCondition.setName("post");
+		Condition postCondition =new ConditionExtension("post");
 		statement.setPostCondition(postCondition);
 
 		// Use the following instead of the above line to store the model
@@ -132,110 +132,114 @@ public class BlockPattern extends IdPattern implements IPattern {
 	@Override
 	public PictogramElement doAdd(IAddContext context) {
 		manageColor(IColorConstant.DARK_GREEN);
-		Diagram targetDiagram = (Diagram) context.getTargetContainer();
-		CbCFormula addedFormula = (CbCFormula) context.getNewObject();
-		IPeCreateService peCreateService = Graphiti.getPeCreateService();
-		IGaService gaService = Graphiti.getGaService();
+//		Diagram targetDiagram = (Diagram) context.getTargetContainer();
+//		BlockStatement addedStatement= (BlockStatement) context.getNewObject();
+//		IPeCreateService peCreateService = Graphiti.getPeCreateService();
+//		IGaService gaService = Graphiti.getGaService();
+//
+//		ConditionExtension pre = new ConditionExtension(addedStatement.getPreCondition());
+//		ConditionExtension post = new ConditionExtension(addedStatement.getPostCondition());
+//		
+//		int width = context.getWidth() <= 0 ? 300 : context.getWidth();
+//		int height = context.getHeight() <= 0 ? 150 : context.getHeight();
+//		// header font:
+//		Font headerFont = gaService.manageFont(getDiagram(), "Arial", 9, false, true);
+//
+//		// Main contents area
+//		ContainerShape outerContainerShape = peCreateService.createContainerShape(targetDiagram, true);
+//		RoundedRectangle mainRectangle = gaService.createRoundedRectangle(outerContainerShape, 20, 20);
+//		mainRectangle.setFilled(true);
+//		gaService.setRenderingStyle(mainRectangle, PredefinedColoredAreas.getBlueWhiteAdaptions());
+//		mainRectangle.setForeground(manageColor(IColorConstant.RED));
+//		mainRectangle.setLineWidth(2);
+//		setId(mainRectangle, ID_MAIN_RECTANGLE);
+//		gaService.setLocationAndSize(mainRectangle, context.getX(), context.getY(), width, height);
+//
+//		// create link and wire it
+//		link(outerContainerShape, addedFormula);
+//
+//		// Statement name
+//		Shape textShapePreCondition = peCreateService.createShape(outerContainerShape, true);
+//		MultiText preConditionText = gaService.createMultiText(textShapePreCondition, "");
+//		setId(preConditionText, ID_PRE_TEXT);
+//		preConditionText.setValue("{" + Parser.getStringFromObject(addedFormula.getStatement().getPreCondition()) + "}");
+//		preConditionText.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
+//		preConditionText.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
+//
+//		Shape textShapeStatement = peCreateService.createShape(outerContainerShape, true);
+//		MultiText statementText = gaService.createMultiText(textShapeStatement, "");
+//		setId(statementText, ID_STATEMENT_TEXT);
+//		statementText.setValue(addedFormula.getStatement().getName());
+//		statementText.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
+//		statementText.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
+//
+//		Shape textShapePostCondition = peCreateService.createShape(outerContainerShape, true);
+//		MultiText postConditionText = gaService.createMultiText(textShapePostCondition, "");
+//		postConditionText.setValue("{" + Parser.getStringFromObject(addedFormula.getStatement().getPostCondition()) + "}");
+//		setId(postConditionText, ID_POST_TEXT);
+//		postConditionText.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
+//		postConditionText.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
+//
+//		Shape textShapeName = peCreateService.createShape(outerContainerShape, false);
+//		MultiText nameText = gaService.createMultiText(textShapeName, "Formula");
+//		setId(nameText, ID_NAME_TEXT);
+//		nameText.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
+//		nameText.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
+//		nameText.setFont(headerFont);
+//
+//		Shape proveShape = peCreateService.createShape(outerContainerShape, false);
+//		Image image = gaService.createImage(proveShape, CbCImageProvider.IMG_UNPROVEN);
+//		setId(image, ID_IMAGE_PROVEN);
+//
+//		// Header:
+//		Shape preHeaderShape = peCreateService.createShape(outerContainerShape, false);
+//		Text preHeader = gaService.createText(preHeaderShape, "precondition");
+//		setId(preHeader, ID_PRE_HEADER);
+//		preHeader.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
+//		preHeader.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
+//		preHeader.setFont(headerFont);
+//
+//		Shape postHeaderShape = peCreateService.createShape(outerContainerShape, false);
+//		Text postHeader = gaService.createText(postHeaderShape, "postcondition");
+//		setId(postHeader, ID_POST_HEADER);
+//		postHeader.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
+//		postHeader.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
+//		postHeader.setFont(headerFont);
+//
+//		Shape stHeaderShape = peCreateService.createShape(outerContainerShape, false);
+//		Text stHeader = gaService.createText(stHeaderShape, "statement");
+//		setId(stHeader, ID_ST_HEADER);
+//		stHeader.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
+//		stHeader.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
+//		stHeader.setFont(headerFont);
+//		// lines:
+//		Shape hor1LineShape = peCreateService.createShape(outerContainerShape, false);
+//		Polyline hor1Polyline = gaService.createPolyline(hor1LineShape);
+//		setId(hor1Polyline, ID_HOR1_LINE);
+//
+//		Shape hor2LineShape = peCreateService.createShape(outerContainerShape, false);
+//		Polyline hor2Polyline = gaService.createPolyline(hor2LineShape);
+//		setId(hor2Polyline, ID_HOR2_LINE);
+//
+//		Shape ver1LineShape = peCreateService.createShape(outerContainerShape, false);
+//		Polyline ver1Polyline = gaService.createPolyline(ver1LineShape);
+//		setId(ver1Polyline, ID_VER1_LINE);
+//
+//		Shape ver2LineShape = peCreateService.createShape(outerContainerShape, false);
+//		Polyline ver2Polyline = gaService.createPolyline(ver2LineShape);
+//		setId(ver2Polyline, ID_VER2_LINE);
+//
+//		peCreateService.createChopboxAnchor(textShapeStatement);
+//
+//		link(outerContainerShape, addedFormula);
+//		link(getDiagram(), addedFormula);
+//		link(textShapePreCondition, addedFormula.getStatement().getPreCondition());
+//		link(textShapeStatement, addedFormula.getStatement());
+//		link(textShapePostCondition, addedFormula.getStatement().getPostCondition());
+//		link(proveShape, addedFormula);
 
-		int width = context.getWidth() <= 0 ? 300 : context.getWidth();
-		int height = context.getHeight() <= 0 ? 150 : context.getHeight();
-		// header font:
-		Font headerFont = gaService.manageFont(getDiagram(), "Arial", 9, false, true);
-
-		// Main contents area
-		ContainerShape outerContainerShape = peCreateService.createContainerShape(targetDiagram, true);
-		RoundedRectangle mainRectangle = gaService.createRoundedRectangle(outerContainerShape, 20, 20);
-		mainRectangle.setFilled(true);
-		gaService.setRenderingStyle(mainRectangle, PredefinedColoredAreas.getBlueWhiteAdaptions());
-		mainRectangle.setForeground(manageColor(IColorConstant.RED));
-		mainRectangle.setLineWidth(2);
-		setId(mainRectangle, ID_MAIN_RECTANGLE);
-		gaService.setLocationAndSize(mainRectangle, context.getX(), context.getY(), width, height);
-
-		// create link and wire it
-		link(outerContainerShape, addedFormula);
-
-		// Statement name
-		Shape textShapePreCondition = peCreateService.createShape(outerContainerShape, true);
-		MultiText preConditionText = gaService.createMultiText(textShapePreCondition, "");
-		setId(preConditionText, ID_PRE_TEXT);
-		preConditionText.setValue("{" + addedFormula.getStatement().getPreCondition().getName() + "}");
-		preConditionText.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
-		preConditionText.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
-
-		Shape textShapeStatement = peCreateService.createShape(outerContainerShape, true);
-		MultiText statementText = gaService.createMultiText(textShapeStatement, "");
-		setId(statementText, ID_STATEMENT_TEXT);
-		statementText.setValue(addedFormula.getStatement().getName());
-		statementText.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
-		statementText.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
-
-		Shape textShapePostCondition = peCreateService.createShape(outerContainerShape, true);
-		MultiText postConditionText = gaService.createMultiText(textShapePostCondition, "");
-		postConditionText.setValue("{" + addedFormula.getStatement().getPostCondition().getName() + "}");
-		setId(postConditionText, ID_POST_TEXT);
-		postConditionText.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
-		postConditionText.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
-
-		Shape textShapeName = peCreateService.createShape(outerContainerShape, false);
-		MultiText nameText = gaService.createMultiText(textShapeName, "Formula");
-		setId(nameText, ID_NAME_TEXT);
-		nameText.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
-		nameText.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
-		nameText.setFont(headerFont);
-
-		Shape proveShape = peCreateService.createShape(outerContainerShape, false);
-		Image image = gaService.createImage(proveShape, CbCImageProvider.IMG_UNPROVEN);
-		setId(image, ID_IMAGE_PROVEN);
-
-		// Header:
-		Shape preHeaderShape = peCreateService.createShape(outerContainerShape, false);
-		Text preHeader = gaService.createText(preHeaderShape, "precondition");
-		setId(preHeader, ID_PRE_HEADER);
-		preHeader.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
-		preHeader.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
-		preHeader.setFont(headerFont);
-
-		Shape postHeaderShape = peCreateService.createShape(outerContainerShape, false);
-		Text postHeader = gaService.createText(postHeaderShape, "postcondition");
-		setId(postHeader, ID_POST_HEADER);
-		postHeader.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
-		postHeader.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
-		postHeader.setFont(headerFont);
-
-		Shape stHeaderShape = peCreateService.createShape(outerContainerShape, false);
-		Text stHeader = gaService.createText(stHeaderShape, "statement");
-		setId(stHeader, ID_ST_HEADER);
-		stHeader.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
-		stHeader.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
-		stHeader.setFont(headerFont);
-		// lines:
-		Shape hor1LineShape = peCreateService.createShape(outerContainerShape, false);
-		Polyline hor1Polyline = gaService.createPolyline(hor1LineShape);
-		setId(hor1Polyline, ID_HOR1_LINE);
-
-		Shape hor2LineShape = peCreateService.createShape(outerContainerShape, false);
-		Polyline hor2Polyline = gaService.createPolyline(hor2LineShape);
-		setId(hor2Polyline, ID_HOR2_LINE);
-
-		Shape ver1LineShape = peCreateService.createShape(outerContainerShape, false);
-		Polyline ver1Polyline = gaService.createPolyline(ver1LineShape);
-		setId(ver1Polyline, ID_VER1_LINE);
-
-		Shape ver2LineShape = peCreateService.createShape(outerContainerShape, false);
-		Polyline ver2Polyline = gaService.createPolyline(ver2LineShape);
-		setId(ver2Polyline, ID_VER2_LINE);
-
-		peCreateService.createChopboxAnchor(textShapeStatement);
-
-		link(outerContainerShape, addedFormula);
-		link(getDiagram(), addedFormula);
-		link(textShapePreCondition, addedFormula.getStatement().getPreCondition());
-		link(textShapeStatement, addedFormula.getStatement());
-		link(textShapePostCondition, addedFormula.getStatement().getPostCondition());
-		link(proveShape, addedFormula);
-
-		return outerContainerShape;
+//		return outerContainerShape;
+		return null;
 	}
 
 	@Override

@@ -22,6 +22,9 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.SelectionStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.SkipStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.SmallRepetitionStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Variant;
+import de.tu_bs.cs.isf.cbc.cbcmodel.string_saver.ConditionExtension;
+import de.tu_bs.cs.isf.cbc.cbcmodel.string_saver.JavaVariableExtension;
+import de.tu_bs.cs.isf.cbc.util.Parser;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
@@ -98,7 +101,6 @@ public class GenerateModelWithoutContract {
 							}
 						}
 					}
-					JavaVariable javaVariable = CbcmodelFactory.eINSTANCE.createJavaVariable();
 					String type;
 					if (globalVariable.getTypeReference().getLayoutInformations().size() > 0) {
 						type = globalVariable.getTypeReference().getLayoutInformations().get(0).getVisibleTokenText();
@@ -106,7 +108,7 @@ public class GenerateModelWithoutContract {
 						type = globalVariable.getTypeReference().getPureClassifierReference().getLayoutInformations()
 								.get(0).getVisibleTokenText();
 					}
-					javaVariable.setName(type + arrayTokens + " " + globalVariable.getName());
+					JavaVariable javaVariable = new JavaVariableExtension(type + arrayTokens + " " + globalVariable.getName());
 					globalVariables.getVariables().add(javaVariable);
 				}
 				if (member instanceof ClassMethod) {
@@ -120,8 +122,7 @@ public class GenerateModelWithoutContract {
 					}
 					// add global variables to variables
 					for (int j = 0; j < globalVariables.getVariables().size(); j++) {
-						JavaVariable newVariable = CbcmodelFactory.eINSTANCE.createJavaVariable();
-						newVariable.setName(globalVariables.getVariables().get(j).getName());
+						JavaVariable newVariable = new JavaVariableExtension(globalVariables.getVariables().get(j));
 						variables.getVariables().add(newVariable);
 					}
 
@@ -135,8 +136,7 @@ public class GenerateModelWithoutContract {
 								}
 							}
 						}
-						JavaVariable variable = CbcmodelFactory.eINSTANCE.createJavaVariable();
-						variable.setName(JavaResourceUtil.getText(type) + arrayDimensions + " result");
+						JavaVariable variable = new JavaVariableExtension(JavaResourceUtil.getText(type) + arrayDimensions + " result");
 						variables.getVariables().add(variable);
 					}
 
@@ -160,8 +160,7 @@ public class GenerateModelWithoutContract {
 					GlobalConditions conditions = CbcmodelFactory.eINSTANCE.createGlobalConditions();
 					JavaVariables variables2 = CbcmodelFactory.eINSTANCE.createJavaVariables();
 					for (JavaVariable jv : variables.getVariables()) {
-						JavaVariable var = CbcmodelFactory.eINSTANCE.createJavaVariable();
-						var.setName(jv.getName());
+						JavaVariable var = new JavaVariableExtension(jv);
 						variables2.getVariables().add(var);
 					}
 
@@ -177,14 +176,16 @@ public class GenerateModelWithoutContract {
 					handleListOfStatements(r, listOfStatements, formula.getStatement());
 
 					// add types to old variables in variable table
-					for (JavaVariable variable : variables2.getVariables()) {
-						if (variable.getName().startsWith("old_")) {
-							String oldVariableName = variable.getName().substring(4);
-							for (JavaVariable variable2 : variables2.getVariables()) {
-								int indexName = variable2.getName().indexOf(" " + oldVariableName);
+					for (JavaVariable javaVariable: variables2.getVariables()) {
+						JavaVariableExtension variable = new JavaVariableExtension(javaVariable);
+						if (Parser.getStringFromVariable(variable).startsWith("old_")) {
+							String oldVariableName = variable.stringRepresentation.substring(4);
+							for (JavaVariable javaVariable2 : variables2.getVariables()) {
+								JavaVariableExtension variable2 = new JavaVariableExtension(javaVariable2);
+								int indexName = variable2.stringRepresentation.indexOf(" " + oldVariableName);
 								if (indexName != -1) {
-									String typeOfVariable = variable2.getName().substring(0, indexName);
-									variable.setName(typeOfVariable + " " + variable.getName());
+									String typeOfVariable = variable2.stringRepresentation.substring(0, indexName);
+									variable.stringRepresentation = typeOfVariable + " " + variable.stringRepresentation;
 									break;
 								}
 
@@ -356,14 +357,11 @@ public class GenerateModelWithoutContract {
 					AbstractStatement nextStatement = CbcmodelFactory.eINSTANCE.createAbstractStatement();
 					nextStatement.setName("statement");
 					selStatement.getCommands().add(nextStatement);
-					Condition conditionNext = CbcmodelFactory.eINSTANCE.createCondition();
-					conditionNext.setName(JavaResourceUtil.getText(condition));
+					Condition conditionNext = new ConditionExtension(JavaResourceUtil.getText(condition));
 					selStatement.getGuards().add(conditionNext);
-					Condition nextPre = CbcmodelFactory.eINSTANCE.createCondition();
-					nextPre.setName("");
+					Condition nextPre =new ConditionExtension();
 					nextStatement.setPreCondition(nextPre);
-					Condition nextPost = CbcmodelFactory.eINSTANCE.createCondition();
-					nextPost.setName("");
+					Condition nextPost = new ConditionExtension();
 					nextStatement.setPostCondition(nextPost);
 					UpdateConditionsOfChildren.updateRefinedStatement(parent, selStatement);
 					UpdateConditionsOfChildren.updateConditionsofChildren(nextPre);
@@ -379,19 +377,16 @@ public class GenerateModelWithoutContract {
 					AbstractStatement nextStatement = CbcmodelFactory.eINSTANCE.createAbstractStatement();
 					nextStatement.setName("statement");
 					selStatement.getCommands().add(nextStatement);
-					Condition conditionNext = CbcmodelFactory.eINSTANCE.createCondition();
 					String condition = "";
 					for (Condition guard : selStatement.getGuards()) {
-						condition = condition + "!(" + guard.getName() + ") & ";
+						condition = condition + "!(" + Parser.getStringFromObject(guard) + ") & ";
 					}
 					condition = condition.substring(0, condition.length() - 3);
-					conditionNext.setName(condition);
+					Condition conditionNext = new ConditionExtension(condition);
 					selStatement.getGuards().add(conditionNext);
-					Condition nextPre = CbcmodelFactory.eINSTANCE.createCondition();
-					nextPre.setName("");
+					Condition nextPre = new ConditionExtension();
 					nextStatement.setPreCondition(nextPre);
-					Condition nextPost = CbcmodelFactory.eINSTANCE.createCondition();
-					nextPost.setName("");
+					Condition nextPost = new ConditionExtension();
 					nextStatement.setPostCondition(nextPost);
 					UpdateConditionsOfChildren.updateRefinedStatement(parent, selStatement);
 					UpdateConditionsOfChildren.updateConditionsofChildren(nextPre);
@@ -436,7 +431,7 @@ public class GenerateModelWithoutContract {
 			composition2.getFirstStatement().setRefinement(repStatement);
 			UpdateConditionsOfChildren.updateRefinedStatement(composition2.getFirstStatement(), repStatement);
 
-			// loop variable update, prüfen, ob ich mehrere updates haben kann
+			// loop variable update, prï¿½fen, ob ich mehrere updates haben kann
 			String update = JavaResourceUtil.getText(loop.getUpdates().get(0));
 			AbstractStatement updateStatement = createStatement(update + ";");
 			composition2.getSecondStatement().setRefinement(updateStatement);
@@ -471,14 +466,11 @@ public class GenerateModelWithoutContract {
 					AbstractStatement nextStatement = CbcmodelFactory.eINSTANCE.createAbstractStatement();
 					nextStatement.setName("statement");
 					selStatement.getCommands().add(nextStatement);
-					Condition conditionNext = CbcmodelFactory.eINSTANCE.createCondition();
-					conditionNext.setName(switchVariable + " = " + JavaResourceUtil.getText(condition));
+					Condition conditionNext = new ConditionExtension(switchVariable + " = " + JavaResourceUtil.getText(condition));
 					selStatement.getGuards().add(conditionNext);
-					Condition nextPre = CbcmodelFactory.eINSTANCE.createCondition();
-					nextPre.setName("");
+					Condition nextPre = new ConditionExtension();
 					nextStatement.setPreCondition(nextPre);
-					Condition nextPost = CbcmodelFactory.eINSTANCE.createCondition();
-					nextPost.setName("");
+					Condition nextPost = new ConditionExtension();
 					nextStatement.setPostCondition(nextPost);
 					UpdateConditionsOfChildren.updateRefinedStatement(parent, selStatement);
 					UpdateConditionsOfChildren.updateConditionsofChildren(nextPre);
@@ -488,21 +480,18 @@ public class GenerateModelWithoutContract {
 					DefaultSwitchCaseImpl defaultCase = (DefaultSwitchCaseImpl) switchCase.getCases().get(i);
 					String defaultCondition = "";
 					for (Condition guard : selStatement.getGuards()) {
-						defaultCondition = defaultCondition + "!(" + guard.getName() + ") & ";
+						defaultCondition = defaultCondition + "!(" + Parser.getStringFromObject(guard) + ") & ";
 					}
 					defaultCondition = defaultCondition.substring(0, defaultCondition.length() - 3);
 
 					AbstractStatement nextStatement = CbcmodelFactory.eINSTANCE.createAbstractStatement();
 					nextStatement.setName("statement");
 					selStatement.getCommands().add(nextStatement);
-					Condition conditionNext = CbcmodelFactory.eINSTANCE.createCondition();
-					conditionNext.setName(defaultCondition);
+					Condition conditionNext = new ConditionExtension(defaultCondition);
 					selStatement.getGuards().add(conditionNext);
-					Condition nextPre = CbcmodelFactory.eINSTANCE.createCondition();
-					nextPre.setName("");
+					Condition nextPre = new ConditionExtension();
 					nextStatement.setPreCondition(nextPre);
-					Condition nextPost = CbcmodelFactory.eINSTANCE.createCondition();
-					nextPost.setName("");
+					Condition nextPost = new ConditionExtension();
 					nextStatement.setPostCondition(nextPost);
 					UpdateConditionsOfChildren.updateRefinedStatement(parent, selStatement);
 					UpdateConditionsOfChildren.updateConditionsofChildren(nextPre);
@@ -528,7 +517,6 @@ public class GenerateModelWithoutContract {
 				}
 			}
 		}
-		JavaVariable javaVariable = CbcmodelFactory.eINSTANCE.createJavaVariable();
 		String type;
 		if (variable.getTypeReference().getLayoutInformations().size() > 0) {
 			type = variable.getTypeReference().getLayoutInformations().get(0).getVisibleTokenText();
@@ -536,7 +524,7 @@ public class GenerateModelWithoutContract {
 			type = variable.getTypeReference().getPureClassifierReference().getLayoutInformations().get(0)
 					.getVisibleTokenText();
 		}
-		javaVariable.setName(type + arrayTokens + " " + variable.getName());
+		JavaVariable javaVariable = new JavaVariableExtension(type + arrayTokens + " " + variable.getName());
 		variableList.getVariables().add(javaVariable);
 	}
 
@@ -546,17 +534,13 @@ public class GenerateModelWithoutContract {
 		AbstractStatement statement = CbcmodelFactory.eINSTANCE.createAbstractStatement();
 		statement.setName("statement");
 		formula.setStatement(statement);
-		Condition preCondition = CbcmodelFactory.eINSTANCE.createCondition();
-		preCondition.setName("pre");
+		Condition preCondition = new ConditionExtension("pre");
 		statement.setPreCondition(preCondition);
-		Condition preCondition2 = CbcmodelFactory.eINSTANCE.createCondition();
-		preCondition2.setName("pre");
+		Condition preCondition2 = new ConditionExtension("pre");
 		formula.setPreCondition(preCondition2);
-		Condition postCondition = CbcmodelFactory.eINSTANCE.createCondition();
-		postCondition.setName("post");
+		Condition postCondition = new ConditionExtension("post");
 		statement.setPostCondition(postCondition);
-		Condition postCondition2 = CbcmodelFactory.eINSTANCE.createCondition();
-		postCondition2.setName("post");
+		Condition postCondition2 = new ConditionExtension("post");
 		formula.setPostCondition(postCondition2);
 		return formula;
 	}
@@ -567,24 +551,19 @@ public class GenerateModelWithoutContract {
 		AbstractStatement statement1 = CbcmodelFactory.eINSTANCE.createAbstractStatement();
 		statement1.setName("statement1");
 		compoStatement.setFirstStatement(statement1);
-		Condition pre1 = CbcmodelFactory.eINSTANCE.createCondition();
-		pre1.setName("");
+		Condition pre1 = new ConditionExtension();
 		statement1.setPreCondition(pre1);
-		Condition post1 = CbcmodelFactory.eINSTANCE.createCondition();
-		post1.setName("");
+		Condition post1 = new ConditionExtension();
 		statement1.setPostCondition(post1);
 
-		Condition condition = CbcmodelFactory.eINSTANCE.createCondition();
-		condition.setName("intermediateCond");
+		Condition condition = new ConditionExtension("intermediateCond");
 		compoStatement.setIntermediateCondition(condition);
 		AbstractStatement statement2 = CbcmodelFactory.eINSTANCE.createAbstractStatement();
 		statement2.setName("statement2");
 		compoStatement.setSecondStatement(statement2);
-		Condition pre2 = CbcmodelFactory.eINSTANCE.createCondition();
-		pre2.setName("");
+		Condition pre2 = new ConditionExtension();
 		statement2.setPreCondition(pre2);
-		Condition post2 = CbcmodelFactory.eINSTANCE.createCondition();
-		post2.setName("");
+		Condition post2 = new ConditionExtension();
 		statement2.setPostCondition(post2);
 		return compoStatement;
 	}
@@ -595,28 +574,22 @@ public class GenerateModelWithoutContract {
 		AbstractStatement statement = CbcmodelFactory.eINSTANCE.createAbstractStatement();
 		statement.setName("loop");
 		repetitionStatement.setLoopStatement(statement);
-		Condition condition = CbcmodelFactory.eINSTANCE.createCondition();
-		condition.setName(guard);
+		Condition condition = new ConditionExtension(guard);
 		repetitionStatement.setGuard(condition);
-		Condition invariant = CbcmodelFactory.eINSTANCE.createCondition();
-		invariant.setName("invariant");
+		Condition invariant = new ConditionExtension("invariant");
 		repetitionStatement.setInvariant(invariant);
 		Variant variant = CbcmodelFactory.eINSTANCE.createVariant();
 		variant.setName("variant");
 		repetitionStatement.setVariant(variant);
 
-		Condition pre = CbcmodelFactory.eINSTANCE.createCondition();
-		pre.setName("");
+		Condition pre = new ConditionExtension();
 		statement.setPreCondition(pre);
-		Condition post = CbcmodelFactory.eINSTANCE.createCondition();
-		post.setName("");
+		Condition post = new ConditionExtension();
 		statement.setPostCondition(post);
 
-		Condition preRep = CbcmodelFactory.eINSTANCE.createCondition();
-		preRep.setName("");
+		Condition preRep = new ConditionExtension();
 		repetitionStatement.setPreCondition(preRep);
-		Condition postRep = CbcmodelFactory.eINSTANCE.createCondition();
-		postRep.setName("");
+		Condition postRep = new ConditionExtension();
 		repetitionStatement.setPostCondition(postRep);
 		return repetitionStatement;
 	}
@@ -627,27 +600,21 @@ public class GenerateModelWithoutContract {
 		AbstractStatement statement = CbcmodelFactory.eINSTANCE.createAbstractStatement();
 		statement.setName("statement1");
 		selectionStatement.getCommands().add(statement);
-		Condition condition = CbcmodelFactory.eINSTANCE.createCondition();
-		condition.setName(guard1);
+		Condition condition = new ConditionExtension(guard1);
 		selectionStatement.getGuards().add(condition);
-		Condition pre = CbcmodelFactory.eINSTANCE.createCondition();
-		pre.setName("");
+		Condition pre = new ConditionExtension();
 		statement.setPreCondition(pre);
-		Condition post = CbcmodelFactory.eINSTANCE.createCondition();
-		post.setName("");
+		Condition post = new ConditionExtension();
 		statement.setPostCondition(post);
 
 		AbstractStatement statement2 = CbcmodelFactory.eINSTANCE.createAbstractStatement();
 		statement2.setName("statement2");
 		selectionStatement.getCommands().add(statement2);
-		Condition condition2 = CbcmodelFactory.eINSTANCE.createCondition();
-		condition2.setName(guard2);
+		Condition condition2 = new ConditionExtension(guard2);
 		selectionStatement.getGuards().add(condition2);
-		Condition pre2 = CbcmodelFactory.eINSTANCE.createCondition();
-		pre2.setName("");
+		Condition pre2 = new ConditionExtension();
 		statement2.setPreCondition(pre2);
-		Condition post2 = CbcmodelFactory.eINSTANCE.createCondition();
-		post2.setName("");
+		Condition post2 = new ConditionExtension();
 		statement2.setPostCondition(post2);
 		return selectionStatement;
 	}
@@ -659,14 +626,11 @@ public class GenerateModelWithoutContract {
 		AbstractStatement statement = CbcmodelFactory.eINSTANCE.createAbstractStatement();
 		statement.setName("statement1");
 		selectionStatement.getCommands().add(statement);
-		Condition condition = CbcmodelFactory.eINSTANCE.createCondition();
-		condition.setName(guard1);
+		Condition condition = new ConditionExtension(guard1);
 		selectionStatement.getGuards().add(condition);
-		Condition pre = CbcmodelFactory.eINSTANCE.createCondition();
-		pre.setName("");
+		Condition pre = new ConditionExtension();
 		statement.setPreCondition(pre);
-		Condition post = CbcmodelFactory.eINSTANCE.createCondition();
-		post.setName("");
+		Condition post = new ConditionExtension();
 		statement.setPostCondition(post);
 
 		return selectionStatement;
@@ -675,11 +639,9 @@ public class GenerateModelWithoutContract {
 	public AbstractStatement createStatement(String name) {
 		AbstractStatement statement = CbcmodelFactory.eINSTANCE.createAbstractStatement();
 		statement.setName(name);
-		Condition pre = CbcmodelFactory.eINSTANCE.createCondition();
-		pre.setName("");
+		Condition pre = new ConditionExtension();
 		statement.setPreCondition(pre);
-		Condition post = CbcmodelFactory.eINSTANCE.createCondition();
-		post.setName("");
+		Condition post = new ConditionExtension();
 		statement.setPostCondition(post);
 		return statement;
 	}
@@ -687,11 +649,9 @@ public class GenerateModelWithoutContract {
 	public ReturnStatement createReturnStatement(String name) {
 		ReturnStatement returnStatement = CbcmodelFactory.eINSTANCE.createReturnStatement();
 		returnStatement.setName(name);
-		Condition pre = CbcmodelFactory.eINSTANCE.createCondition();
-		pre.setName("");
+		Condition pre = new ConditionExtension();
 		returnStatement.setPreCondition(pre);
-		Condition post = CbcmodelFactory.eINSTANCE.createCondition();
-		post.setName("");
+		Condition post = new ConditionExtension();
 		returnStatement.setPostCondition(post);
 		return returnStatement;
 	}
@@ -699,11 +659,9 @@ public class GenerateModelWithoutContract {
 	public SkipStatement createSkipStatement() {
 		SkipStatement statement = CbcmodelFactory.eINSTANCE.createSkipStatement();
 		statement.setName(";");
-		Condition pre = CbcmodelFactory.eINSTANCE.createCondition();
-		pre.setName("{}");
+		Condition pre = new ConditionExtension("{}");
 		statement.setPreCondition(pre);
-		Condition post = CbcmodelFactory.eINSTANCE.createCondition();
-		post.setName("{}");
+		Condition post = new ConditionExtension("{}");
 		statement.setPostCondition(post);
 		return statement;
 	}

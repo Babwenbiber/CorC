@@ -21,6 +21,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.CompositionTechnique;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Condition;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariable;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariables;
+import de.tu_bs.cs.isf.cbc.cbcmodel.string_saver.JavaVariableExtension;
 
 public class Parser {
 	public static final String KEYWORD_JML_PRE = "requires";
@@ -45,6 +46,9 @@ public class Parser {
 	}
 
 	public static String getStringFromVariable(JavaVariable variable) {
+		if (variable instanceof JavaVariableExtension) {
+			return ((JavaVariableExtension) variable).stringRepresentation;
+		}
 		return Parser.getStringFromObject(variable.getType()) + " " + variable.getVar().getName();
 	}
 	

@@ -12,6 +12,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariables;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Renaming;
 import de.tu_bs.cs.isf.cbc.cbcmodel.SmallRepetitionStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.SmallRepetitionStatementImpl;
+import de.tu_bs.cs.isf.cbc.cbcmodel.string_saver.ConditionExtension;
 import de.tu_bs.cs.isf.cbc.util.FilenamePrefix;
 import de.tu_bs.cs.isf.cbc.util.ProveWithKey;
 import de.tu_bs.cs.isf.taxonomy.graphiti.features.MyAbstractAsynchronousCustomFeature;
@@ -80,7 +81,9 @@ public class VerifyPreRepetitionStatement extends MyAbstractAsynchronousCustomFe
 					}
 				}
 				boolean prove = false;
-				prove = ProveWithKey.provePreWithKey(statement.getInvariant(), parent.getPreCondition(), vars, 
+				prove = ProveWithKey.provePreWithKey(new ConditionExtension(statement.getInvariant()).stringRepresentation,
+						new ConditionExtension(parent.getPreCondition()).stringRepresentation,
+						vars, 
 						conds, renaming, getDiagram().eResource().getURI(), monitor, FilenamePrefix.REPETITION);
 				if (prove) {
 					statement.setPreProven(true);

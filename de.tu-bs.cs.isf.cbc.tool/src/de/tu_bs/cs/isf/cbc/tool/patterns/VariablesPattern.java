@@ -33,6 +33,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.CbcmodelFactory;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariable;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariables;
 import de.tu_bs.cs.isf.cbc.cbcmodel.VariableKind;
+import de.tu_bs.cs.isf.cbc.cbcmodel.string_saver.JavaVariableExtension;
 import de.tu_bs.cs.isf.cbc.tool.model.CbcModelUtil;
 
 /**
@@ -88,8 +89,8 @@ public class VariablesPattern extends IdPattern implements IPattern {
 	@Override
 	public Object[] create(ICreateContext context) {
 		JavaVariables variables = CbcmodelFactory.eINSTANCE.createJavaVariables();
-		JavaVariable variable = CbcmodelFactory.eINSTANCE.createJavaVariable();
-		variable.setName("int a");
+		JavaVariableExtension variable = new JavaVariableExtension(CbcmodelFactory.eINSTANCE.createJavaVariable());
+		variable.stringRepresentation =  "int a";
 		variable.setKind(VariableKind.LOCAL);
 		variable.setDisplayedName("int a");
 		variables.getVariables().add(variable);

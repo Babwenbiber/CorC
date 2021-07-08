@@ -35,6 +35,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.AbstractStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbcmodelFactory;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CompositionStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Condition;
+import de.tu_bs.cs.isf.cbc.cbcmodel.string_saver.ConditionExtension;
 import de.tu_bs.cs.isf.cbc.tool.diagram.CbCImageProvider;
 
 /**
@@ -102,24 +103,19 @@ public class CompositionPattern extends IdPattern implements IPattern {
 		AbstractStatement statement1 = CbcmodelFactory.eINSTANCE.createAbstractStatement();
 		statement1.setName("statement1");
 		compoStatement.setFirstStatement(statement1);
-		Condition pre1 = CbcmodelFactory.eINSTANCE.createCondition();
-		pre1.setName("");
+		Condition pre1 = new ConditionExtension();
 		statement1.setPreCondition(pre1);
-		Condition post1 = CbcmodelFactory.eINSTANCE.createCondition();
-		post1.setName("");
+		Condition post1 = new ConditionExtension();
 		statement1.setPostCondition(post1);
 		
-		Condition condition = CbcmodelFactory.eINSTANCE.createCondition();
-		condition.setName("intermediateCond");
+		Condition condition = new ConditionExtension("intermediateCond");
 		compoStatement.setIntermediateCondition(condition);
 		AbstractStatement statement2 = CbcmodelFactory.eINSTANCE.createAbstractStatement();
 		statement2.setName("statement2");
 		compoStatement.setSecondStatement(statement2);
-		Condition pre2 = CbcmodelFactory.eINSTANCE.createCondition();
-		pre2.setName("");
+		Condition pre2 = new ConditionExtension();
 		statement2.setPreCondition(pre2);
-		Condition post2 = CbcmodelFactory.eINSTANCE.createCondition();
-		post2.setName("");
+		Condition post2 = new ConditionExtension();
 		statement2.setPostCondition(post2);
 		
 		addGraphicalRepresentation(context, compoStatement);
@@ -138,6 +134,9 @@ public class CompositionPattern extends IdPattern implements IPattern {
 		CompositionStatement addedStatement = (CompositionStatement) context.getNewObject();
 		IPeCreateService peCreateService = Graphiti.getPeCreateService();
 		IGaService gaService = Graphiti.getGaService();
+		ConditionExtension pre = new ConditionExtension(addedStatement.getPreCondition());
+		ConditionExtension post = new ConditionExtension(addedStatement.getPostCondition());
+		ConditionExtension intm = new ConditionExtension(addedStatement.getIntermediateCondition());
 		int width = context.getWidth() <= 0 ? 500 : context.getWidth();
         int height = context.getHeight() <= 0 ? 300 : context.getHeight();
         //font:
@@ -166,7 +165,7 @@ public class CompositionPattern extends IdPattern implements IPattern {
 		statement1Text.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
 		
 		Shape textShapeCondition = peCreateService.createShape(outerContainerShape, true);
-		MultiText conditionText = gaService.createMultiText(textShapeCondition, "{" + addedStatement.getIntermediateCondition().getName() + "}");
+		MultiText conditionText = gaService.createMultiText(textShapeCondition, "{" +intm.stringRepresentation + "}");
 		setId(conditionText, ID_CONDITION_TEXT);
 		conditionText.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
 		conditionText.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
@@ -186,13 +185,13 @@ public class CompositionPattern extends IdPattern implements IPattern {
 		nameText.setFont(headerFont);
 		
 		Shape pre1Shape = peCreateService.createShape(outerContainerShape, false);
-		MultiText pre1NameText = gaService.createMultiText(pre1Shape, "{" + addedStatement.getFirstStatement().getPreCondition().getName()+ "}");
+		MultiText pre1NameText = gaService.createMultiText(pre1Shape, "{" +pre.stringRepresentation+ "}");
 		setId(pre1NameText, ID_PRE1_TEXT);
 		pre1NameText.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
 		pre1NameText.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
 		
 		Shape post2Shape = peCreateService.createShape(outerContainerShape, false);
-		MultiText post2NameText = gaService.createMultiText(post2Shape, "{" + addedStatement.getSecondStatement().getPostCondition().getName()+ "}");
+		MultiText post2NameText = gaService.createMultiText(post2Shape, "{" +post.stringRepresentation+ "}");
 		setId(post2NameText, ID_POST2_TEXT);
 		post2NameText.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
 		post2NameText.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
@@ -270,11 +269,11 @@ public class CompositionPattern extends IdPattern implements IPattern {
 		peCreateService.createChopboxAnchor(outerContainerShape);
 
 		link(outerContainerShape, addedStatement);
-		link(textShapeCondition, addedStatement.getIntermediateCondition());
+		link(textShapeCondition, intm);
 		link(textShapeStatement1, addedStatement.getFirstStatement());
 		link(textShapeStatement2, addedStatement.getSecondStatement());
-		link(pre1Shape, addedStatement.getFirstStatement().getPreCondition());
-		link(post2Shape, addedStatement.getSecondStatement().getPostCondition());
+		link(pre1Shape, pre);
+		link(post2Shape, post);
 		link(proveShape, addedStatement);
 		
 

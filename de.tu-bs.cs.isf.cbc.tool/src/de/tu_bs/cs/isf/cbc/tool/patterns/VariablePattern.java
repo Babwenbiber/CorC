@@ -20,6 +20,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.CbcmodelFactory;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariable;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariables;
 import de.tu_bs.cs.isf.cbc.cbcmodel.VariableKind;
+import de.tu_bs.cs.isf.cbc.cbcmodel.string_saver.JavaVariableExtension;
 
 /**
  * Class that creates the graphical representation of Methods
@@ -61,9 +62,9 @@ public class VariablePattern extends IdPattern implements IPattern {
 	@Override
 	public Object[] create(ICreateContext context) {
 		JavaVariables variables = (JavaVariables) getBusinessObjectForPictogramElement(context.getTargetContainer());
-		JavaVariable variable = CbcmodelFactory.eINSTANCE.createJavaVariable();
+		JavaVariableExtension variable = new JavaVariableExtension(CbcmodelFactory.eINSTANCE.createJavaVariable());
 		variable.setKind(VariableKind.LOCAL);
-		variable.setName("int a");
+		variable.stringRepresentation = "int a";
 		variables.getVariables().add(variable);
 		updatePictogramElement(context.getTargetContainer());
 		return new Object[] { variable };
@@ -91,9 +92,9 @@ public class VariablePattern extends IdPattern implements IPattern {
  
     public IReason updateNeeded(IdUpdateContext context, String id) {
 		Text nameText = (Text) context.getPictogramElement().getGraphicsAlgorithm();
-		JavaVariable domainObject = (JavaVariable) getBusinessObjectForPictogramElement(context.getPictogramElement());
-		if (domainObject.getName() == null || !nameText.getValue().equals(domainObject.getDisplayedName())) {
-			return Reason.createTrueReason("Name differs. Expected: '" + domainObject.getName() + "'");
+		JavaVariableExtension domainObject = new JavaVariableExtension((JavaVariable) getBusinessObjectForPictogramElement(context.getPictogramElement()));
+		if (domainObject.stringRepresentation == null || !nameText.getValue().equals(domainObject.getDisplayedName())) {
+			return Reason.createTrueReason("Name differs. Expected: '" + domainObject.stringRepresentation + "'");
 		}
 		return Reason.createFalseReason();
     }
@@ -139,16 +140,16 @@ public class VariablePattern extends IdPattern implements IPattern {
 
 	@Override
 	public void setValue(String value, IDirectEditingContext context) {
-		JavaVariable variable = (JavaVariable) getBusinessObjectForPictogramElement(context.getPictogramElement());
+		JavaVariableExtension variable = new JavaVariableExtension((JavaVariable) getBusinessObjectForPictogramElement(context.getPictogramElement()));
 		if(value.length() - value.replaceAll(" ","").length() == 1) {
 			variable.setKind(VariableKind.LOCAL);
-			variable.setName(value);
+			variable.stringRepresentation = value;
 			variable.setDisplayedName(value);
 		}else {
 			
 			variable.setKind(translateIntoVariableKind(value.substring(0, value.indexOf(" "))));
-			variable.setName(value.substring(value.indexOf(" ")+1));
-			variable.setDisplayedName(variable.getKind() + " " + variable.getName());
+			variable.stringRepresentation = value.substring(value.indexOf(" ")+1);
+			variable.setDisplayedName(variable.getKind() + " " + variable.stringRepresentation);
 		}
 		updatePictogramElement(((Shape) context.getPictogramElement()));
 	}

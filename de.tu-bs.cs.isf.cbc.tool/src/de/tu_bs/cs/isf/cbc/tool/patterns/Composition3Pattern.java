@@ -35,6 +35,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.AbstractStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbcmodelFactory;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Composition3Statement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Condition;
+import de.tu_bs.cs.isf.cbc.cbcmodel.string_saver.ConditionExtension;
 import de.tu_bs.cs.isf.cbc.tool.diagram.CbCImageProvider;
 
 /**
@@ -109,37 +110,29 @@ public class Composition3Pattern extends IdPattern implements IPattern {
 		AbstractStatement statement1 = CbcmodelFactory.eINSTANCE.createAbstractStatement();
 		statement1.setName("statement1");
 		compoStatement.setFirstStatement(statement1);
-		Condition pre1 = CbcmodelFactory.eINSTANCE.createCondition();
-		pre1.setName("{}");
+		Condition pre1 = new ConditionExtension("{}");
 		statement1.setPreCondition(pre1);
-		Condition post1 = CbcmodelFactory.eINSTANCE.createCondition();
-		post1.setName("{}");
+		Condition post1 =  new ConditionExtension("{}");
 		statement1.setPostCondition(post1);
 		
-		Condition condition1 = CbcmodelFactory.eINSTANCE.createCondition();
-		condition1.setName("intermediateCond");
+		Condition condition1 =  new ConditionExtension("intermediateCond");
 		compoStatement.setFirstIntermediateCondition(condition1);
 		AbstractStatement statement2 = CbcmodelFactory.eINSTANCE.createAbstractStatement();
 		statement2.setName("statement2");
 		compoStatement.setSecondStatement(statement2);
-		Condition pre2 = CbcmodelFactory.eINSTANCE.createCondition();
-		pre2.setName("{}");
+		Condition pre2 =  new ConditionExtension("{}");
 		statement2.setPreCondition(pre2);
-		Condition post2 = CbcmodelFactory.eINSTANCE.createCondition();
-		post2.setName("{}");
+		Condition post2 =  new ConditionExtension("{}");
 		statement2.setPostCondition(post2);
 		
-		Condition condition2 = CbcmodelFactory.eINSTANCE.createCondition();
-		condition2.setName("intermediateCond");
+		Condition condition2 =  new ConditionExtension("intermediateCond");
 		compoStatement.setSecondIntermediateCondition(condition2);
 		AbstractStatement statement3 = CbcmodelFactory.eINSTANCE.createAbstractStatement();
 		statement3.setName("statement3");
 		compoStatement.setThirdStatement(statement3);
-		Condition pre3 = CbcmodelFactory.eINSTANCE.createCondition();
-		pre3.setName("{}");
+		Condition pre3 =  new ConditionExtension("{}");
 		statement3.setPreCondition(pre3);
-		Condition post3 = CbcmodelFactory.eINSTANCE.createCondition();
-		post3.setName("{}");
+		Condition post3 =  new ConditionExtension("{}");
 		statement3.setPostCondition(post3);
 		
 		
@@ -160,7 +153,10 @@ public class Composition3Pattern extends IdPattern implements IPattern {
 		Composition3Statement addedStatement = (Composition3Statement) context.getNewObject();
 		IPeCreateService peCreateService = Graphiti.getPeCreateService();
 		IGaService gaService = Graphiti.getGaService();
-
+		ConditionExtension pre = new ConditionExtension(addedStatement.getPreCondition());
+		ConditionExtension post = new ConditionExtension(addedStatement.getPostCondition());
+		ConditionExtension firstIntm = new ConditionExtension(addedStatement.getPreCondition());
+		ConditionExtension secondIntm = new ConditionExtension(addedStatement.getPostCondition());
 		int width = context.getWidth() <= 0 ? 400 : context.getWidth();
         int height = context.getHeight() <= 0 ? 300 : context.getHeight();
         
@@ -190,7 +186,7 @@ public class Composition3Pattern extends IdPattern implements IPattern {
 		statement1Text.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
         
 		Shape textShapeCondition = peCreateService.createShape(outerContainerShape, true);
-		MultiText conditionText = gaService.createMultiText(textShapeCondition, "{" + addedStatement.getFirstIntermediateCondition().getName() + "}");
+		MultiText conditionText = gaService.createMultiText(textShapeCondition, "{" + firstIntm.stringRepresentation + "}");
 		setId(conditionText, ID_INTER1_TEXT);
 		conditionText.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
 		conditionText.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
@@ -203,7 +199,7 @@ public class Composition3Pattern extends IdPattern implements IPattern {
 		statement2Text.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
 		
 		Shape textShapeCondition2 = peCreateService.createShape(outerContainerShape, true);
-		MultiText condition2Text = gaService.createMultiText(textShapeCondition2, "{" + addedStatement.getFirstIntermediateCondition().getName() + "}");
+		MultiText condition2Text = gaService.createMultiText(textShapeCondition2, "{" + firstIntm.stringRepresentation + "}");
 		setId(condition2Text, ID_INTER2_TEXT);
 		condition2Text.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
 		condition2Text.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
@@ -223,13 +219,13 @@ public class Composition3Pattern extends IdPattern implements IPattern {
 		nameText.setFont(headerFont);
 		
 		Shape pre1Shape = peCreateService.createShape(outerContainerShape, false);
-		MultiText pre1NameText = gaService.createMultiText(pre1Shape, addedStatement.getFirstStatement().getPreCondition().getName());
+		MultiText pre1NameText = gaService.createMultiText(pre1Shape, pre.stringRepresentation);
 		setId(pre1NameText, ID_PRE1_TEXT);
 		pre1NameText.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
 		pre1NameText.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
 		
 		Shape post3Shape = peCreateService.createShape(outerContainerShape, false);
-		MultiText post3NameText = gaService.createMultiText(post3Shape, addedStatement.getSecondStatement().getPostCondition().getName());
+		MultiText post3NameText = gaService.createMultiText(post3Shape, post.stringRepresentation);
 		setId(post3NameText, ID_POST3_TEXT);
 		post3NameText.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
 		post3NameText.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
@@ -334,13 +330,13 @@ public class Composition3Pattern extends IdPattern implements IPattern {
 		peCreateService.createChopboxAnchor(outerContainerShape);
 
 		link(outerContainerShape, addedStatement);
-		link(textShapeCondition, addedStatement.getFirstIntermediateCondition());
-		link(textShapeCondition2, addedStatement.getSecondIntermediateCondition());
+		link(textShapeCondition, firstIntm);
+		link(textShapeCondition2, secondIntm.stringRepresentation);
 		link(textShapeStatement1, addedStatement.getFirstStatement());
 		link(textShapeStatement2, addedStatement.getSecondStatement());
 		link(textShapeStatement3, addedStatement.getThirdStatement());
-		link(pre1Shape, addedStatement.getFirstStatement().getPreCondition());
-		link(post3Shape, addedStatement.getThirdStatement().getPostCondition());
+		link(pre1Shape, pre);
+		link(post3Shape, post);
 		link(proveShape, addedStatement);
 
 		return outerContainerShape;

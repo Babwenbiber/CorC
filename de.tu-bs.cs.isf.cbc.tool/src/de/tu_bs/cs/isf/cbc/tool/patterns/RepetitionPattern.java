@@ -36,6 +36,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.CbcmodelFactory;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Condition;
 import de.tu_bs.cs.isf.cbc.cbcmodel.RepetitionStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Variant;
+import de.tu_bs.cs.isf.cbc.cbcmodel.string_saver.ConditionExtension;
 import de.tu_bs.cs.isf.cbc.tool.diagram.CbCImageProvider;
 
 /**
@@ -125,33 +126,25 @@ public class RepetitionPattern extends IdPattern implements IPattern {
 		AbstractStatement statement3 = CbcmodelFactory.eINSTANCE.createAbstractStatement();
 		statement3.setName("end");
 		repetitionStatement.setEndStatement(statement3);
-		Condition condition = CbcmodelFactory.eINSTANCE.createCondition();
-		condition.setName("guard");
+		Condition condition = new ConditionExtension("guard");
 		repetitionStatement.setGuard(condition);
-		Condition invariant = CbcmodelFactory.eINSTANCE.createCondition();
-		invariant.setName("invariant");
+		Condition invariant = new ConditionExtension("invariant");
 		repetitionStatement.setInvariant(invariant);
 		Variant variant = CbcmodelFactory.eINSTANCE.createVariant();
 		variant.setName("variant");
 		repetitionStatement.setVariant(variant);
 		
-		Condition pre1 = CbcmodelFactory.eINSTANCE.createCondition();
-		pre1.setName("{}");
+		Condition pre1 = new ConditionExtension("{}");
 		statement1.setPreCondition(pre1);
-		Condition post1 = CbcmodelFactory.eINSTANCE.createCondition();
-		post1.setName("{}");
+		Condition post1 = new ConditionExtension("{}");
 		statement1.setPostCondition(post1);
-		Condition pre2 = CbcmodelFactory.eINSTANCE.createCondition();
-		pre2.setName("{}");
+		Condition pre2 = new ConditionExtension("{}");
 		statement2.setPreCondition(pre2);
-		Condition post2 = CbcmodelFactory.eINSTANCE.createCondition();
-		post2.setName("{}");
+		Condition post2 =new ConditionExtension("{}");
 		statement2.setPostCondition(post2);
-		Condition pre3 = CbcmodelFactory.eINSTANCE.createCondition();
-		pre3.setName("{}");
+		Condition pre3 = new ConditionExtension("{}");
 		statement3.setPreCondition(pre3);
-		Condition post3 = CbcmodelFactory.eINSTANCE.createCondition();
-		post3.setName("{}");
+		Condition post3 = new ConditionExtension("{}");
 		statement3.setPostCondition(post3);
 		
 		addGraphicalRepresentation(context, repetitionStatement);
@@ -170,7 +163,15 @@ public class RepetitionPattern extends IdPattern implements IPattern {
 		RepetitionStatement addedStatement = (RepetitionStatement) context.getNewObject();
 		IPeCreateService peCreateService = Graphiti.getPeCreateService();
 		IGaService gaService = Graphiti.getGaService();
-
+		ConditionExtension startPre = new ConditionExtension(addedStatement.getStartStatement().getPreCondition());
+		ConditionExtension startPost = new ConditionExtension(addedStatement.getStartStatement().getPostCondition());
+		ConditionExtension loopPre = new ConditionExtension(addedStatement.getLoopStatement().getPreCondition());
+		ConditionExtension loopPost = new ConditionExtension(addedStatement.getLoopStatement().getPostCondition());
+		ConditionExtension endPre = new ConditionExtension(addedStatement.getEndStatement().getPreCondition());
+		ConditionExtension endPost = new ConditionExtension(addedStatement.getEndStatement().getPostCondition());
+		ConditionExtension inv = new ConditionExtension(addedStatement.getInvariant());
+		ConditionExtension guard = new ConditionExtension(addedStatement.getGuard());
+		
 		int width = context.getWidth() <= 0 ? 300 : context.getWidth();
         int height = context.getHeight() <= 0 ? 300 : context.getHeight();
         //font
@@ -215,14 +216,14 @@ public class RepetitionPattern extends IdPattern implements IPattern {
 		Shape textShapeCondition = peCreateService.createShape(outerContainerShape, true);
 		MultiText conditionText = gaService.createMultiText(textShapeCondition, "");
 		setId(conditionText, ID_CONDITION_TEXT);
-		conditionText.setValue(addedStatement.getGuard().getName());
+		conditionText.setValue(guard.stringRepresentation);
 		conditionText.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
 		conditionText.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
 		
 		Shape textShapeInvariant = peCreateService.createShape(outerContainerShape, true);
 		MultiText invariantText = gaService.createMultiText(textShapeInvariant, "");
 		setId(invariantText, ID_INVARIANT_TEXT);
-		invariantText.setValue(addedStatement.getInvariant().getName());
+		invariantText.setValue(inv.stringRepresentation);
 		invariantText.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
 		invariantText.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
 		
@@ -241,37 +242,37 @@ public class RepetitionPattern extends IdPattern implements IPattern {
 		nameText.setFont(headerFont);
 		
 		Shape pre1Shape = peCreateService.createShape(outerContainerShape, false);
-		MultiText pre1NameText = gaService.createMultiText(pre1Shape, addedStatement.getStartStatement().getPreCondition().getName());
+		MultiText pre1NameText = gaService.createMultiText(pre1Shape, startPre.stringRepresentation);
 		setId(pre1NameText, ID_PRE1_TEXT);
 		pre1NameText.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
 		pre1NameText.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
 		
 		Shape post1Shape = peCreateService.createShape(outerContainerShape, false);
-		MultiText post1NameText = gaService.createMultiText(post1Shape, addedStatement.getStartStatement().getPostCondition().getName());
+		MultiText post1NameText = gaService.createMultiText(post1Shape, startPost.stringRepresentation);
 		setId(post1NameText, ID_POST1_TEXT);
 		post1NameText.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
 		post1NameText.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
 		
 		Shape pre2Shape = peCreateService.createShape(outerContainerShape, false);
-		MultiText pre2NameText = gaService.createMultiText(pre2Shape, addedStatement.getLoopStatement().getPreCondition().getName());
+		MultiText pre2NameText = gaService.createMultiText(pre2Shape,loopPre.stringRepresentation);
 		setId(pre2NameText, ID_PRE2_TEXT);
 		pre2NameText.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
 		pre2NameText.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
 		
 		Shape post2Shape = peCreateService.createShape(outerContainerShape, false);
-		MultiText post2NameText = gaService.createMultiText(post2Shape, addedStatement.getLoopStatement().getPostCondition().getName());
+		MultiText post2NameText = gaService.createMultiText(post2Shape, loopPost.stringRepresentation);
 		setId(post2NameText, ID_POST2_TEXT);
 		post2NameText.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
 		post2NameText.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
 		
 		Shape pre3Shape = peCreateService.createShape(outerContainerShape, false);
-		MultiText pre3NameText = gaService.createMultiText(pre3Shape, addedStatement.getEndStatement().getPreCondition().getName());
+		MultiText pre3NameText = gaService.createMultiText(pre3Shape, endPre.stringRepresentation);
 		setId(pre3NameText, ID_PRE3_TEXT);
 		pre3NameText.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
 		pre3NameText.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
 		
 		Shape post3Shape = peCreateService.createShape(outerContainerShape, false);
-		MultiText post3NameText = gaService.createMultiText(post3Shape, addedStatement.getEndStatement().getPostCondition().getName());
+		MultiText post3NameText = gaService.createMultiText(post3Shape, endPost.stringRepresentation);
 		setId(post3NameText, ID_POST3_TEXT);
 		post3NameText.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
 		post3NameText.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
@@ -417,12 +418,12 @@ public class RepetitionPattern extends IdPattern implements IPattern {
 		link(textShapeStatement3, addedStatement.getEndStatement());
 		link(textShapeVariant, addedStatement.getVariant());
 		link(textShapeInvariant, addedStatement.getInvariant());
-		link(pre1Shape, addedStatement.getStartStatement().getPreCondition());
-		link(post1Shape, addedStatement.getStartStatement().getPostCondition());
-		link(pre2Shape, addedStatement.getLoopStatement().getPreCondition());
-		link(post2Shape, addedStatement.getLoopStatement().getPostCondition());
-		link(pre3Shape, addedStatement.getEndStatement().getPreCondition());
-		link(post3Shape, addedStatement.getEndStatement().getPostCondition());
+		link(pre1Shape, startPre);
+		link(post1Shape, startPost);
+		link(pre2Shape, loopPre);
+		link(post2Shape, loopPost);
+		link(pre3Shape, endPre);
+		link(post3Shape, endPost);
 		link(proveShape, addedStatement);
 
 		return outerContainerShape;

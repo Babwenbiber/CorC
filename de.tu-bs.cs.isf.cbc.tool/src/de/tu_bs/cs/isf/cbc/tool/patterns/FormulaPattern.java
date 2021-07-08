@@ -35,6 +35,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.AbstractStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbCFormula;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbcmodelFactory;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Condition;
+import de.tu_bs.cs.isf.cbc.cbcmodel.string_saver.ConditionExtension;
 import de.tu_bs.cs.isf.cbc.tool.diagram.CbCImageProvider;
 import de.tu_bs.cs.isf.cbc.tool.model.CbcModelUtil;
 
@@ -105,11 +106,9 @@ public class FormulaPattern extends IdPattern implements IPattern {
 		AbstractStatement statement = CbcmodelFactory.eINSTANCE.createAbstractStatement();
 		statement.setName("statement");
 		formula.setStatement(statement);
-		Condition preCondition = CbcmodelFactory.eINSTANCE.createCondition();
-		preCondition.setName("pre");
+		Condition preCondition = new ConditionExtension("pre");
 		statement.setPreCondition(preCondition);
-		Condition postCondition = CbcmodelFactory.eINSTANCE.createCondition();
-		postCondition.setName("post");
+		Condition postCondition = new ConditionExtension("post");
 		statement.setPostCondition(postCondition);
 
 		// Use the following instead of the above line to store the model
@@ -134,6 +133,8 @@ public class FormulaPattern extends IdPattern implements IPattern {
 		manageColor(IColorConstant.DARK_GREEN);
 		Diagram targetDiagram = (Diagram) context.getTargetContainer();
 		CbCFormula addedFormula = (CbCFormula) context.getNewObject();
+		ConditionExtension pre = new ConditionExtension(addedFormula.getStatement().getPreCondition());
+		ConditionExtension post = new ConditionExtension(addedFormula.getStatement().getPostCondition());
 		IPeCreateService peCreateService = Graphiti.getPeCreateService();
 		IGaService gaService = Graphiti.getGaService();
 
@@ -159,7 +160,7 @@ public class FormulaPattern extends IdPattern implements IPattern {
 		Shape textShapePreCondition = peCreateService.createShape(outerContainerShape, true);
 		MultiText preConditionText = gaService.createMultiText(textShapePreCondition, "");
 		setId(preConditionText, ID_PRE_TEXT);
-		preConditionText.setValue("{" + addedFormula.getStatement().getPreCondition().getName() + "}");
+		preConditionText.setValue("{" +pre.stringRepresentation + "}");
 		preConditionText.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
 		preConditionText.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
 
@@ -172,7 +173,7 @@ public class FormulaPattern extends IdPattern implements IPattern {
 
 		Shape textShapePostCondition = peCreateService.createShape(outerContainerShape, true);
 		MultiText postConditionText = gaService.createMultiText(textShapePostCondition, "");
-		postConditionText.setValue("{" + addedFormula.getStatement().getPostCondition().getName() + "}");
+		postConditionText.setValue("{" + post.stringRepresentation + "}");
 		setId(postConditionText, ID_POST_TEXT);
 		postConditionText.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
 		postConditionText.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
@@ -230,9 +231,9 @@ public class FormulaPattern extends IdPattern implements IPattern {
 
 		link(outerContainerShape, addedFormula);
 		link(getDiagram(), addedFormula);
-		link(textShapePreCondition, addedFormula.getStatement().getPreCondition());
+		link(textShapePreCondition, pre);
 		link(textShapeStatement, addedFormula.getStatement());
-		link(textShapePostCondition, addedFormula.getStatement().getPostCondition());
+		link(textShapePostCondition, post);
 		link(proveShape, addedFormula);
 
 		return outerContainerShape;
@@ -347,32 +348,6 @@ public class FormulaPattern extends IdPattern implements IPattern {
 				return Reason.createTrueReason("Statement is not proven. Expected red color.");
 			}
 		}
-		// if (id.equals(ID_PRE_TEXT)) {
-		//// MultiText nameText = (MultiText) context.getGraphicsAlgorithm();
-		//// Condition domainObject = (Condition) context.getDomainObject();
-		//// if (domainObject.getName() == null ||
-		// !domainObject.getName().equals(nameText.getValue())) {
-		//// return Reason.createTrueReason("Name differs. Expected: '" +
-		// domainObject.getName() + "'");
-		//// }
-		// } else if (id.equals(ID_STATEMENT_TEXT)) {
-		//// MultiText nameText = (MultiText) context.getGraphicsAlgorithm();
-		//// AbstractStatement domainObject = (AbstractStatement)
-		// context.getDomainObject();
-		//// if (domainObject.getName() == null ||
-		// !domainObject.getName().equals(nameText.getValue())) {
-		//// return Reason.createTrueReason("Name differs. Expected: '" +
-		// domainObject.getName() + "'");
-		//// }
-		// } else if (id.equals(ID_POST_TEXT)) {
-		//// MultiText nameText = (MultiText) context.getGraphicsAlgorithm();
-		//// Condition domainObject = (Condition) context.getDomainObject();
-		//// if (domainObject.getName() == null ||
-		// !domainObject.getName().equals(nameText.getValue())) {
-		//// return Reason.createTrueReason("Name differs. Expected: '" +
-		// domainObject.getName() + "'");
-		//// }
-		// }
 
 		return Reason.createFalseReason();
 	}
@@ -392,10 +367,8 @@ public class FormulaPattern extends IdPattern implements IPattern {
 			if (statementToCheck.isProven()) {
 				domainObject.setProven(true);
 				rectangle.setForeground(manageColor(IColorConstant.DARK_GREEN));
-				// updateParent(domainObject, true); MethodStatement of other diagram
 			} else {
 				domainObject.setProven(false);
-				// updateParent(domainObject, false);
 				rectangle.setForeground(manageColor(IColorConstant.RED));
 			}
 			return true;
@@ -415,97 +388,9 @@ public class FormulaPattern extends IdPattern implements IPattern {
 				image.setId(CbCImageProvider.IMG_UNPROVEN);
 			}
 		}
-		// if (id.equals(ID_PRE_TEXT)) {
-		// updatePictogramElement(context.getPictogramElement());
-		//// MultiText nameText = (MultiText) context.getGraphicsAlgorithm();
-		//// Condition domainObject = (Condition) context.getDomainObject();
-		//// nameText.setValue(domainObject.getName());
-		// return true;
-		// } else if (id.equals(ID_STATEMENT_TEXT)) {
-		// updatePictogramElement(context.getPictogramElement());
-		//// MultiText nameText = (MultiText) context.getGraphicsAlgorithm();
-		//// AbstractStatement domainObject = (AbstractStatement)
-		// context.getDomainObject();
-		//// nameText.setValue(domainObject.getName());
-		// return true;
-		// } else if (id.equals(ID_POST_TEXT)) {
-		// updatePictogramElement(context.getPictogramElement());
-		//// MultiText nameText = (MultiText) context.getGraphicsAlgorithm();
-		//// Condition domainObject = (Condition) context.getDomainObject();
-		//// nameText.setValue(domainObject.getName());
-		// return true;
-		// }
+
 		return false;
 	}
 
-	// private void updateParent(CbCFormula formula, boolean proven) {
-	// final Collection<Diagram> allDiagrams = getDiagrams();
-	// for (final Diagram d : allDiagrams) {
-	// final Diagram currentDiagram = getDiagram();
-	// if (!EcoreUtil.equals(currentDiagram, d)) { // always filter out the
-	// // current
-	// // diagram
-	// final Collection<MethodStatement> statements = new
-	// HashSet<MethodStatement>();
-	// final Object businessObjectForDiagram =
-	// getBusinessObjectForPictogramElement(d);
-	// if (businessObjectForDiagram instanceof CbCFormula) {
-	// final CbCFormula formula2 = (CbCFormula) businessObjectForDiagram;
-	// if (formula2 != null) {
-	// TreeIterator<EObject> iterator = formula2.eAllContents();
-	// while (iterator.hasNext()) {
-	// EObject object = iterator.next();
-	// if (object instanceof MethodStatement) {
-	// MethodStatement statement = (MethodStatement) object;
-	// if (formula.getName().equals(statement.getName())) {
-	// statements.add(statement);
-	// }
-	// }
-	// }
-	// }
-	// }
-	// IPeService pe = Graphiti.getPeService();
-	// for (MethodStatement statement : statements) {
-	// statement.setProven(proven);
-	// EObject[] objArray = {statement};
-	// Object[] obj = pe.getLinkedPictogramElements(objArray, d);
-	// if (obj.length > 0) {
-	// Shape pElement = (Shape) obj[0];
-	// if (pElement != null) updatePictogramElement(pElement);
-	// }
-	// try {
-	// URI uri = d.eResource().getURI();
-	// uri = uri.trimFragment();
-	// uri = uri.trimFileExtension();
-	// uri = uri.appendFileExtension("cbcmodel");
-	// ResourceSet rSet = d.eResource().getResourceSet();
-	// Resource modelResource = rSet.getResource(uri, false);
-	// modelResource.save(Collections.EMPTY_MAP);
-	// modelResource.setTrackingModification(true);
-	// d.eResource().save(Collections.EMPTY_MAP);
-	// d.eResource().setTrackingModification(true);
-	// } catch (IOException e) {
-	// e.printStackTrace();
-	// }
-	// }
-	// }
-	// }
-	// }
-	//
-	// private Collection<Diagram> getDiagrams() {
-	// Collection<Diagram> result = Collections.emptyList();
-	// Resource resource = getDiagram().eResource();
-	// URI uri = resource.getURI();
-	// URI uriTrimmed = uri.trimFragment();
-	// if (uriTrimmed.isPlatformResource()){
-	// String platformString = uriTrimmed.toPlatformString(true);
-	// IResource fileResource = ResourcesPlugin.getWorkspace()
-	// .getRoot().findMember(platformString);
-	// if (fileResource != null){
-	// IProject project = fileResource.getProject();
-	// result = GetDiagramUtil.getDiagrams(project);
-	// }
-	// }
-	// return result;
-	// }
+	
 }

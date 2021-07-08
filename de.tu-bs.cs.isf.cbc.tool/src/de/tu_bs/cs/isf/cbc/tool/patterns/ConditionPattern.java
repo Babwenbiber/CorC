@@ -1,5 +1,6 @@
 package de.tu_bs.cs.isf.cbc.tool.patterns;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.graphiti.features.IReason;
 import org.eclipse.graphiti.features.context.IAddContext;
 import org.eclipse.graphiti.features.context.ICreateContext;
@@ -8,13 +9,20 @@ import org.eclipse.graphiti.features.context.IDirectEditingContext;
 import org.eclipse.graphiti.features.impl.Reason;
 import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
 import org.eclipse.graphiti.mm.algorithms.MultiText;
+import org.eclipse.graphiti.mm.algorithms.RoundedRectangle;
+import org.eclipse.graphiti.mm.algorithms.styles.Orientation;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
+import org.eclipse.graphiti.mm.pictograms.Diagram;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.pattern.IPattern;
 import org.eclipse.graphiti.pattern.id.IdLayoutContext;
 import org.eclipse.graphiti.pattern.id.IdPattern;
 import org.eclipse.graphiti.pattern.id.IdUpdateContext;
+import org.eclipse.graphiti.services.Graphiti;
+import org.eclipse.graphiti.services.IGaService;
+import org.eclipse.graphiti.services.IPeCreateService;
+import org.eclipse.graphiti.util.PredefinedColoredAreas;
 
 import de.tu_bs.cs.isf.cbc.cbcmodel.AbstractStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbCFormula;
@@ -41,8 +49,8 @@ import de.tu_bs.cs.isf.cbc.tool.helper.UpdateConditionsOfChildren;
  */
 public class ConditionPattern extends IdPattern implements IPattern {
 
-	// private static final String ID_NAME_TEXT = "conditionNameText";
-	// private static final String ID_MAIN_RECTANGLE = "mainRectangle";
+	 private static final String ID_NAME_TEXT = "conditionNameText";
+	 private static final String ID_MAIN_RECTANGLE = "mainRectangle";
 
 	/**
 	 * Constructor of the class
@@ -92,61 +100,59 @@ public class ConditionPattern extends IdPattern implements IPattern {
 	@Override
 	public PictogramElement doAdd(IAddContext context) {
 
-		// Diagram targetDiagram = (Diagram) context.getTargetContainer();
-		// Condition addedCondition = (Condition) context.getNewObject();
-		// IPeCreateService peCreateService = Graphiti.getPeCreateService();
-		// IGaService gaService = Graphiti.getGaService();
-		//
-		// int width = context.getWidth() <= 0 ? 200 : context.getWidth();
-		// int height = context.getHeight() <= 0 ? 100 : context.getHeight();
-		//
-		// // Main contents area
-		// ContainerShape outerContainerShape =
-		// peCreateService.createContainerShape(targetDiagram, true);
-		// RoundedRectangle mainRectangle =
-		// gaService.createRoundedRectangle(outerContainerShape, 20, 20);
-		// setId(mainRectangle, ID_MAIN_RECTANGLE);
-		// mainRectangle.setFilled(true);
-		// gaService.setRenderingStyle(mainRectangle,
-		// PredefinedColoredAreas.getBlueWhiteAdaptions());
-		// gaService.setLocationAndSize(mainRectangle,
-		// context.getX(), context.getY(), width, height);
-		//
-		// // create link and wire it
-		// link(outerContainerShape, addedCondition);
-		//
-		// // Condition name
-		// Shape textShape = peCreateService.createShape(outerContainerShape, false);
-		// MultiText conditionNameText = gaService.createMultiText(textShape, "");
-		// setId(conditionNameText, ID_NAME_TEXT);
-		// conditionNameText.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
-		// conditionNameText.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
-		//
-		// peCreateService.createChopboxAnchor(outerContainerShape);
-		//
-		// link(outerContainerShape, addedCondition);
-		// link(textShape, addedCondition);
-		//
-		// return outerContainerShape;
-		return null;
+		 Diagram targetDiagram = (Diagram) context.getTargetContainer();
+		 Condition addedCondition = (Condition) context.getNewObject();
+		 IPeCreateService peCreateService = Graphiti.getPeCreateService();
+		 IGaService gaService = Graphiti.getGaService();
+		
+		 int width = context.getWidth() <= 0 ? 200 : context.getWidth();
+		 int height = context.getHeight() <= 0 ? 100 : context.getHeight();
+		
+		 // Main contents area
+		 ContainerShape outerContainerShape =
+		 peCreateService.createContainerShape(targetDiagram, true);
+		 RoundedRectangle mainRectangle =
+		 gaService.createRoundedRectangle(outerContainerShape, 20, 20);
+		 setId(mainRectangle, ID_MAIN_RECTANGLE);
+		 mainRectangle.setFilled(true);
+		 gaService.setRenderingStyle(mainRectangle,
+		 PredefinedColoredAreas.getBlueWhiteAdaptions());
+		 gaService.setLocationAndSize(mainRectangle,
+		 context.getX(), context.getY(), width, height);
+		
+		 // create link and wire it
+		 link(outerContainerShape, addedCondition);
+		
+		 // Condition name
+		 Shape textShape = peCreateService.createShape(outerContainerShape, false);
+		 MultiText conditionNameText = gaService.createMultiText(textShape, "");
+		 setId(conditionNameText, ID_NAME_TEXT);
+		 conditionNameText.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
+		 conditionNameText.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
+		
+		 peCreateService.createChopboxAnchor(outerContainerShape);
+		
+		 link(outerContainerShape, addedCondition);
+		 link(textShape, addedCondition);
+		
+		 return outerContainerShape;
 	}
 
 	@Override
 	protected boolean layout(IdLayoutContext context, String id) {
-		// boolean changesDone = false;
-		//
-		// GraphicsAlgorithm mainRectangle =
-		// context.getRootPictogramElement().getGraphicsAlgorithm();
-		// GraphicsAlgorithm ga = context.getGraphicsAlgorithm();
-		//
-		// if (id.equals(ID_NAME_TEXT)) {
-		// Graphiti.getGaService().setLocationAndSize(ga, 0, 10,
-		// mainRectangle.getWidth(), mainRectangle.getHeight() - 10);
-		// changesDone = true;
-		// }
-		//
-		// return changesDone;
-		return false;
+		 boolean changesDone = false;
+		
+		 GraphicsAlgorithm mainRectangle =
+		 context.getRootPictogramElement().getGraphicsAlgorithm();
+		 GraphicsAlgorithm ga = context.getGraphicsAlgorithm();
+		
+		 if (id.equals(ID_NAME_TEXT)) {
+		 Graphiti.getGaService().setLocationAndSize(ga, 0, 10,
+		 mainRectangle.getWidth(), mainRectangle.getHeight() - 10);
+		 changesDone = true;
+		 }
+		
+		 return changesDone;
 	}
 
 	@Override
@@ -195,14 +201,15 @@ public class ConditionPattern extends IdPattern implements IPattern {
 		GraphicsAlgorithm ga = context.getGraphicsAlgorithm();
 		if (domainObject instanceof Condition && ga instanceof MultiText) {
 			Condition condition = ((Condition) domainObject);
-			if (condition.eContainer() instanceof MethodStatement) {
+			EObject eContainer = condition.eContainer();
+			if (eContainer instanceof MethodStatement) {
 				MethodStatement statement = (MethodStatement) condition.eContainer();
 				if (statement.getParent() == null) {
 					return true;
 				} else {
 					return false;
 				}
-			} else if (condition.eContainer() instanceof AbstractStatement) {
+			} else if (eContainer instanceof AbstractStatement) {
 				AbstractStatement statement = (AbstractStatement) condition.eContainer();
 				if (statement.eContainer() instanceof CbCFormula || statement instanceof StrengthWeakStatement) {
 					return true;
