@@ -17,22 +17,22 @@ public class DslProposalProvider extends AbstractDslProposalProvider {
   @Override
   public void complete_CompositionStatement(final EObject model, final RuleCall ruleCall, final ContentAssistContext context, final ICompletionProposalAcceptor acceptor) {
     super.complete_CompositionStatement(model, ruleCall, context, acceptor);
-    final String proposal = (((("{\n" + "\t<statement>\n") + "} Intm: (\"<condition>\") {\n") + "\t<statement>\n") + "}");
-    acceptor.accept(this.createCompletionProposal(proposal, context));
+    final String proposal = (((("{\n" + "\t<statement>\n") + "} Intm: (<condition>) {\n") + "\t<statement>\n") + "}");
+    acceptor.accept(this.createCompletionProposal(proposal, "Composition", null, context));
   }
   
   @Override
   public void complete_SmallRepetitionStatement(final EObject model, final RuleCall ruleCall, final ContentAssistContext context, final ICompletionProposalAcceptor acceptor) {
     super.complete_SmallRepetitionStatement(model, ruleCall, context, acceptor);
-    final String proposal = (((("While (\"<guard>\") Do\n" + "\t\tInv: [\"<invariant>\"] Var: [\"<variant>\"]\n") + "\t\t{\n") + "\t\t\t<statement>\n") + "\t\t} Od");
-    acceptor.accept(this.createCompletionProposal(proposal, context));
+    final String proposal = (((("While (<guard>) Do\n" + "\t\tInv: (<invariant>) Var: (<variant>)\n") + "\t\t{\n") + "\t\t\t<statement>\n") + "\t\t} Od");
+    acceptor.accept(this.createCompletionProposal(proposal, "Repitition", null, context));
   }
   
   @Override
   public void complete_SelectionStatement(final EObject model, final RuleCall ruleCall, final ContentAssistContext context, final ICompletionProposalAcceptor acceptor) {
     super.complete_SelectionStatement(model, ruleCall, context, acceptor);
-    final String proposal = ((("If (\"<guard>\") Then\n" + "\t\t{<statement>}\n") + "\t\tElseif (\"<guard>\") then\n") + "\t\t{<statement>} Fi");
-    acceptor.accept(this.createCompletionProposal(proposal, context));
+    final String proposal = ((("If (<guard>) Then\n" + "\t\t{<statement>}\n") + "\t\tElseif (<guard>) then\n") + "\t\t{<statement>} Fi");
+    acceptor.accept(this.createCompletionProposal(proposal, "Selection", null, context));
   }
   
   @Override
@@ -44,49 +44,49 @@ public class DslProposalProvider extends AbstractDslProposalProvider {
     String _plus_1 = ("prefix is " + _prefix);
     System.out.println(_plus_1);
     super.complete_SelectionStatement(model, ruleCall, context, acceptor);
-    final String proposal = (((((("Block \"<name>\":\n" + "@requires \"<precondition>\";\n") + "@ensure \"<postcondition>\";\n") + "@assignable \"<modifiable>\";\n") + "{\n") + "\t\t<statement>\n") + "}");
-    acceptor.accept(this.createCompletionProposal(proposal, context));
+    final String proposal = ((((("Block \"<name>\":\n" + "Pre: (<precondition>);\n") + "Post (<postcondition>);\n") + "{\n") + "\t\t<statement>\n") + "}");
+    acceptor.accept(this.createCompletionProposal(proposal, "Block", null, context));
   }
   
   @Override
   public void complete_CbCFormula(final EObject model, final RuleCall ruleCall, final ContentAssistContext context, final ICompletionProposalAcceptor acceptor) {
     super.complete_CbCFormula(model, ruleCall, context, acceptor);
-    final String proposal = ((("Formula \"<formula>\"\n" + "\tPre: {\"<condition>\"}\n") + "\t{<statement>}\n") + "\tPost: {\"<condition>\"}");
-    acceptor.accept(this.createCompletionProposal(proposal, context));
+    final String proposal = ((("Formula \"<formula>\"\n" + "\tPre: (<condition>)\n") + "\t{<statement>}\n") + "\tPost: (<condition>)");
+    acceptor.accept(this.createCompletionProposal(proposal, "Formula", null, context));
   }
   
   @Override
   public void complete_StrengthWeakStatement(final EObject model, final RuleCall ruleCall, final ContentAssistContext context, final ICompletionProposalAcceptor acceptor) {
     super.complete_StrengthWeakStatement(model, ruleCall, context, acceptor);
-    final String proposal = (("Pre: {\"<condition>\"}\n" + "\t\t{<statement>}\n") + "\t\tPost: {\"<condition>\"}");
-    acceptor.accept(this.createCompletionProposal(proposal, context));
+    final String proposal = (("Pre: (<condition>)\n" + "\t\t{<statement>}\n") + "\t\tPost: (<condition>)");
+    acceptor.accept(this.createCompletionProposal(proposal, "StrengthWeak", null, context));
   }
   
   @Override
   public void complete_JavaVariables(final EObject model, final RuleCall ruleCall, final ContentAssistContext context, final ICompletionProposalAcceptor acceptor) {
     super.complete_JavaVariables(model, ruleCall, context, acceptor);
-    final String proposal = ("JavaVariables\n" + "\tVariables {\"<variable>\", \"<variable>\"}\n");
-    acceptor.accept(this.createCompletionProposal(proposal, context));
+    final String proposal = ("JavaVariables\n" + "\tVariables [<variable>, <variable>]\n");
+    acceptor.accept(this.createCompletionProposal(proposal, "JavaVariables", null, context));
   }
   
   @Override
   public void complete_GlobalConditions(final EObject model, final RuleCall ruleCall, final ContentAssistContext context, final ICompletionProposalAcceptor acceptor) {
     super.complete_GlobalConditions(model, ruleCall, context, acceptor);
-    final String proposal = ("GlobalConditions\n" + "\tConditions {\"<condition>\", \"<condition>\"}\n");
-    acceptor.accept(this.createCompletionProposal(proposal, context));
+    final String proposal = ("GlobalConditions\n" + "\tConditions [<condition>, <condition>]\n");
+    acceptor.accept(this.createCompletionProposal(proposal, "GlobalConditions", null, context));
   }
   
   @Override
   public void complete_Renaming(final EObject model, final RuleCall ruleCall, final ContentAssistContext context, final ICompletionProposalAcceptor acceptor) {
     super.complete_Renaming(model, ruleCall, context, acceptor);
     final String proposal = ((((("Renaming\n" + "\tRenames {\n") + "\t\t{Type \"<type>\"") + " Function \"<functionName>\"") + " NewName \"<newName>\"}\n") + "\t}");
-    acceptor.accept(this.createCompletionProposal(proposal, context));
+    acceptor.accept(this.createCompletionProposal(proposal, "Renames", null, context));
   }
   
   @Override
   public void complete_Rename(final EObject model, final RuleCall ruleCall, final ContentAssistContext context, final ICompletionProposalAcceptor acceptor) {
     super.complete_Rename(model, ruleCall, context, acceptor);
     final String proposal = (("{Type \"<type>\"" + " Function \"<functionName>\"") + " NewName \"<newName>\"}");
-    acceptor.accept(this.createCompletionProposal(proposal, context));
+    acceptor.accept(this.createCompletionProposal(proposal, "Rename", null, context));
   }
 }
