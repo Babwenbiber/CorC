@@ -47,6 +47,8 @@ public class DslParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getExistsAccess().getAlternatives(), "rule__Exists__Alternatives");
 			builder.put(grammarAccess.getRelationAccess().getAlternatives_1_0(), "rule__Relation__Alternatives_1_0");
 			builder.put(grammarAccess.getConcatAccess().getAlternatives_1_0(), "rule__Concat__Alternatives_1_0");
+			builder.put(grammarAccess.getMultiMathOperationAccess().getAlternatives_1_0(), "rule__MultiMathOperation__Alternatives_1_0");
+			builder.put(grammarAccess.getAddMathOperationAccess().getAlternatives_1_0(), "rule__AddMathOperation__Alternatives_1_0");
 			builder.put(grammarAccess.getPrimaryExpressionAccess().getAlternatives(), "rule__PrimaryExpression__Alternatives");
 			builder.put(grammarAccess.getPrimaryExpressionAccess().getAlternatives_0_1_0(), "rule__PrimaryExpression__Alternatives_0_1_0");
 			builder.put(grammarAccess.getXJStatementOrBlockAccess().getAlternatives(), "rule__XJStatementOrBlock__Alternatives");
@@ -151,6 +153,15 @@ public class DslParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getConcatAccess().getGroup_1(), "rule__Concat__Group_1__0");
 			builder.put(grammarAccess.getConcatAccess().getGroup_1_0_0(), "rule__Concat__Group_1_0_0__0");
 			builder.put(grammarAccess.getConcatAccess().getGroup_1_0_1(), "rule__Concat__Group_1_0_1__0");
+			builder.put(grammarAccess.getMultiMathOperationAccess().getGroup(), "rule__MultiMathOperation__Group__0");
+			builder.put(grammarAccess.getMultiMathOperationAccess().getGroup_1(), "rule__MultiMathOperation__Group_1__0");
+			builder.put(grammarAccess.getMultiMathOperationAccess().getGroup_1_0_0(), "rule__MultiMathOperation__Group_1_0_0__0");
+			builder.put(grammarAccess.getMultiMathOperationAccess().getGroup_1_0_1(), "rule__MultiMathOperation__Group_1_0_1__0");
+			builder.put(grammarAccess.getMultiMathOperationAccess().getGroup_1_0_2(), "rule__MultiMathOperation__Group_1_0_2__0");
+			builder.put(grammarAccess.getAddMathOperationAccess().getGroup(), "rule__AddMathOperation__Group__0");
+			builder.put(grammarAccess.getAddMathOperationAccess().getGroup_1(), "rule__AddMathOperation__Group_1__0");
+			builder.put(grammarAccess.getAddMathOperationAccess().getGroup_1_0_0(), "rule__AddMathOperation__Group_1_0_0__0");
+			builder.put(grammarAccess.getAddMathOperationAccess().getGroup_1_0_1(), "rule__AddMathOperation__Group_1_0_1__0");
 			builder.put(grammarAccess.getPrimaryExpressionAccess().getGroup_0(), "rule__PrimaryExpression__Group_0__0");
 			builder.put(grammarAccess.getPrimaryExpressionAccess().getGroup_0_1(), "rule__PrimaryExpression__Group_0_1__0");
 			builder.put(grammarAccess.getPrimaryExpressionAccess().getGroup_1(), "rule__PrimaryExpression__Group_1__0");
@@ -451,6 +462,8 @@ public class DslParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getRelationAccess().getRightAssignment_1_1(), "rule__Relation__RightAssignment_1_1");
 			builder.put(grammarAccess.getImplicationAccess().getRightAssignment_1_1(), "rule__Implication__RightAssignment_1_1");
 			builder.put(grammarAccess.getConcatAccess().getRightAssignment_1_1(), "rule__Concat__RightAssignment_1_1");
+			builder.put(grammarAccess.getMultiMathOperationAccess().getRightAssignment_1_1(), "rule__MultiMathOperation__RightAssignment_1_1");
+			builder.put(grammarAccess.getAddMathOperationAccess().getRightAssignment_1_1(), "rule__AddMathOperation__RightAssignment_1_1");
 			builder.put(grammarAccess.getPrimaryExpressionAccess().getIsTrueAssignment_0_1_0_1(), "rule__PrimaryExpression__IsTrueAssignment_0_1_0_1");
 			builder.put(grammarAccess.getPrimaryExpressionAccess().getFuncAssignment_2_1(), "rule__PrimaryExpression__FuncAssignment_2_1");
 			builder.put(grammarAccess.getPrimaryExpressionAccess().getArgsAssignment_2_2_1_0(), "rule__PrimaryExpression__ArgsAssignment_2_2_1_0");

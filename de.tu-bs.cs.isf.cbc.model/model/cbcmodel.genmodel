@@ -182,6 +182,21 @@
     <genClasses ecoreClass="cbcmodel.ecore#//Or">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//Or/left"/>
     </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//Multiplication">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//Multiplication/left"/>
+    </genClasses>
+        <genClasses ecoreClass="cbcmodel.ecore#//Division">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//Division/left"/>
+    </genClasses>
+        <genClasses ecoreClass="cbcmodel.ecore#//Modulo">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//Modulo/left"/>
+    </genClasses>
+        <genClasses ecoreClass="cbcmodel.ecore#//Addition">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//Addition/left"/>
+    </genClasses>
+        <genClasses ecoreClass="cbcmodel.ecore#//Subtraction">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//Subtraction/left"/>
+    </genClasses>
     <genClasses ecoreClass="cbcmodel.ecore#//FunctionCall">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//FunctionCall/func"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//FunctionCall/args"/>

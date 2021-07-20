@@ -132,7 +132,6 @@ Variant returns Variant:
 	{Variant}
 	name=EString;
 
-	
 JavaVariables returns JavaVariables:
 	{JavaVariables}
 	'JavaVariables'
@@ -182,7 +181,13 @@ Implication returns Expression:
 	Concat (( {Impl.left=current} '->') right=Concat)*;
 
 Concat returns Expression:
-	PrimaryExpression (({And.left=current} '&' | {Or.left=current} '|') right=PrimaryExpression)*;
+	MultiMathOperation (({And.left=current} '&' | {Or.left=current} '|') right=MultiMathOperation)*;
+	
+MultiMathOperation returns Expression:
+	AddMathOperation (( {Multiplication.left=current} '*' | {Division.left=current} "/" | {Modulo.left=current} "%") right=AddMathOperation)*;
+
+AddMathOperation returns Expression:
+	PrimaryExpression (({Addition.left=current} '+' | {Subtraction.left=current} '-') right=PrimaryExpression)*;	
 
 PrimaryExpression returns Expression:
     {Expression} => ('false' | isTrue?='true') |

@@ -22,6 +22,8 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 
+import com.google.common.hash.Hashing;
+
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariables;
 
 public class FileUtil {
@@ -88,10 +90,19 @@ public class FileUtil {
 	}
 
 	public static File writeFile(String problem, String location, int numberFile, boolean override, String proveName) {
-		File keyFile = new File(location + "/prove" + numberFile + proveName + ".key");
+		String newFileName = "prove" + numberFile + proveName + ".key";
+		File keyFile = new File(location + "/" + newFileName);
 		File keyHelperFile = new File(location + "/helper.key");
 
-		if (true || !keyFile.exists() || override) {
+		String hash = Hashing.sha256()
+				  .hashString(problem, StandardCharsets.UTF_8)
+				  .toString();
+		
+		String fileName = HashTable.getFileNameFromHashTable(location, hash);
+		
+		
+		if (fileName == null || override) {
+			System.out.println("new file " + keyFile);
 			try {
 				keyFile.getParentFile().mkdirs();
 				keyFile.createNewFile();
@@ -108,13 +119,21 @@ public class FileUtil {
 				IPath iLocation = Path.fromOSString(keyFile.getAbsolutePath());
 				IFile ifile = workspace.getRoot().getFileForLocation(iLocation);
 				ifile.refreshLocal(0, null);
+				HashTable.saveHashInTmpTable(location, hash, newFileName);
 				return keyFile;
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			} catch (CoreException e) {
 				e.printStackTrace();
 			}
+		} else if (!fileName.equals(newFileName)) {
+			System.out.println("renaming file " + keyFile);
+			new File(fileName).renameTo(keyFile);
+			HashTable.saveHashInTmpTable(location, hash, newFileName);
+			return keyFile;
 		}
+		System.out.println("old file " + keyFile);
+		HashTable.saveHashInTmpTable(location, hash, newFileName);
 		return null;
 	}
 	

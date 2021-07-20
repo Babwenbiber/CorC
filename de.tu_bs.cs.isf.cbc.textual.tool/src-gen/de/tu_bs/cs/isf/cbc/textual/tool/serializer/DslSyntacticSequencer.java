@@ -138,14 +138,19 @@ public class DslSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     (rule start) (ambiguity) foreach='(\foreach'
 	 *     (rule start) (ambiguity) func=VariableOrMethodName
 	 *     (rule start) (ambiguity) isTrue?='true'
+	 *     (rule start) (ambiguity) {Addition.left=}
 	 *     (rule start) (ambiguity) {And.left=}
+	 *     (rule start) (ambiguity) {Division.left=}
 	 *     (rule start) (ambiguity) {Equal.left=}
 	 *     (rule start) (ambiguity) {Greater.left=}
 	 *     (rule start) (ambiguity) {GreaterEqual.left=}
 	 *     (rule start) (ambiguity) {Impl.left=}
 	 *     (rule start) (ambiguity) {Lower.left=}
 	 *     (rule start) (ambiguity) {LowerEqual.left=}
+	 *     (rule start) (ambiguity) {Modulo.left=}
+	 *     (rule start) (ambiguity) {Multiplication.left=}
 	 *     (rule start) (ambiguity) {Or.left=}
+	 *     (rule start) (ambiguity) {Subtraction.left=}
 	 */
 	protected void emit_PrimaryExpression_LeftParenthesisKeyword_1_0_a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
@@ -158,14 +163,19 @@ public class DslSyntacticSequencer extends AbstractSyntacticSequencer {
 	 * This ambiguous syntax occurs at:
 	 *     (rule start) (ambiguity) exists='(\exists'
 	 *     (rule start) (ambiguity) foreach='(\foreach'
+	 *     (rule start) (ambiguity) {Addition.left=}
 	 *     (rule start) (ambiguity) {And.left=}
+	 *     (rule start) (ambiguity) {Division.left=}
 	 *     (rule start) (ambiguity) {Equal.left=}
 	 *     (rule start) (ambiguity) {Greater.left=}
 	 *     (rule start) (ambiguity) {GreaterEqual.left=}
 	 *     (rule start) (ambiguity) {Impl.left=}
 	 *     (rule start) (ambiguity) {Lower.left=}
 	 *     (rule start) (ambiguity) {LowerEqual.left=}
+	 *     (rule start) (ambiguity) {Modulo.left=}
+	 *     (rule start) (ambiguity) {Multiplication.left=}
 	 *     (rule start) (ambiguity) {Or.left=}
+	 *     (rule start) (ambiguity) {Subtraction.left=}
 	 */
 	protected void emit_PrimaryExpression_LeftParenthesisKeyword_1_0_p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);

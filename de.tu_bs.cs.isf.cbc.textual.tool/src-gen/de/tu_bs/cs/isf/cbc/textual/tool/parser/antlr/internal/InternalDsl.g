@@ -2925,11 +2925,11 @@ ruleConcat returns [EObject current=null]
 }:
 	(
 		{
-			newCompositeNode(grammarAccess.getConcatAccess().getPrimaryExpressionParserRuleCall_0());
+			newCompositeNode(grammarAccess.getConcatAccess().getMultiMathOperationParserRuleCall_0());
 		}
-		this_PrimaryExpression_0=rulePrimaryExpression
+		this_MultiMathOperation_0=ruleMultiMathOperation
 		{
-			$current = $this_PrimaryExpression_0.current;
+			$current = $this_MultiMathOperation_0.current;
 			afterParserOrEnumRuleCall();
 		}
 		(
@@ -2965,12 +2965,180 @@ ruleConcat returns [EObject current=null]
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getConcatAccess().getRightPrimaryExpressionParserRuleCall_1_1_0());
+						newCompositeNode(grammarAccess.getConcatAccess().getRightMultiMathOperationParserRuleCall_1_1_0());
+					}
+					lv_right_5_0=ruleMultiMathOperation
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getConcatRule());
+						}
+						set(
+							$current,
+							"right",
+							lv_right_5_0,
+							"de.tu_bs.cs.isf.cbc.textual.tool.Dsl.MultiMathOperation");
+						afterParserOrEnumRuleCall();
+					}
+				)
+			)
+		)*
+	)
+;
+
+// Entry rule entryRuleMultiMathOperation
+entryRuleMultiMathOperation returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getMultiMathOperationRule()); }
+	iv_ruleMultiMathOperation=ruleMultiMathOperation
+	{ $current=$iv_ruleMultiMathOperation.current; }
+	EOF;
+
+// Rule MultiMathOperation
+ruleMultiMathOperation returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		{
+			newCompositeNode(grammarAccess.getMultiMathOperationAccess().getAddMathOperationParserRuleCall_0());
+		}
+		this_AddMathOperation_0=ruleAddMathOperation
+		{
+			$current = $this_AddMathOperation_0.current;
+			afterParserOrEnumRuleCall();
+		}
+		(
+			(
+				(
+					(
+						{
+							$current = forceCreateModelElementAndSet(
+								grammarAccess.getMultiMathOperationAccess().getMultiplicationLeftAction_1_0_0_0(),
+								$current);
+						}
+					)
+					otherlv_2='*'
+					{
+						newLeafNode(otherlv_2, grammarAccess.getMultiMathOperationAccess().getAsteriskKeyword_1_0_0_1());
+					}
+				)
+				    |
+				(
+					(
+						{
+							$current = forceCreateModelElementAndSet(
+								grammarAccess.getMultiMathOperationAccess().getDivisionLeftAction_1_0_1_0(),
+								$current);
+						}
+					)
+					otherlv_4='/'
+					{
+						newLeafNode(otherlv_4, grammarAccess.getMultiMathOperationAccess().getSolidusKeyword_1_0_1_1());
+					}
+				)
+				    |
+				(
+					(
+						{
+							$current = forceCreateModelElementAndSet(
+								grammarAccess.getMultiMathOperationAccess().getModuloLeftAction_1_0_2_0(),
+								$current);
+						}
+					)
+					otherlv_6='%'
+					{
+						newLeafNode(otherlv_6, grammarAccess.getMultiMathOperationAccess().getPercentSignKeyword_1_0_2_1());
+					}
+				)
+			)
+			(
+				(
+					{
+						newCompositeNode(grammarAccess.getMultiMathOperationAccess().getRightAddMathOperationParserRuleCall_1_1_0());
+					}
+					lv_right_7_0=ruleAddMathOperation
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getMultiMathOperationRule());
+						}
+						set(
+							$current,
+							"right",
+							lv_right_7_0,
+							"de.tu_bs.cs.isf.cbc.textual.tool.Dsl.AddMathOperation");
+						afterParserOrEnumRuleCall();
+					}
+				)
+			)
+		)*
+	)
+;
+
+// Entry rule entryRuleAddMathOperation
+entryRuleAddMathOperation returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getAddMathOperationRule()); }
+	iv_ruleAddMathOperation=ruleAddMathOperation
+	{ $current=$iv_ruleAddMathOperation.current; }
+	EOF;
+
+// Rule AddMathOperation
+ruleAddMathOperation returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		{
+			newCompositeNode(grammarAccess.getAddMathOperationAccess().getPrimaryExpressionParserRuleCall_0());
+		}
+		this_PrimaryExpression_0=rulePrimaryExpression
+		{
+			$current = $this_PrimaryExpression_0.current;
+			afterParserOrEnumRuleCall();
+		}
+		(
+			(
+				(
+					(
+						{
+							$current = forceCreateModelElementAndSet(
+								grammarAccess.getAddMathOperationAccess().getAdditionLeftAction_1_0_0_0(),
+								$current);
+						}
+					)
+					otherlv_2='+'
+					{
+						newLeafNode(otherlv_2, grammarAccess.getAddMathOperationAccess().getPlusSignKeyword_1_0_0_1());
+					}
+				)
+				    |
+				(
+					(
+						{
+							$current = forceCreateModelElementAndSet(
+								grammarAccess.getAddMathOperationAccess().getSubtractionLeftAction_1_0_1_0(),
+								$current);
+						}
+					)
+					otherlv_4='-'
+					{
+						newLeafNode(otherlv_4, grammarAccess.getAddMathOperationAccess().getHyphenMinusKeyword_1_0_1_1());
+					}
+				)
+			)
+			(
+				(
+					{
+						newCompositeNode(grammarAccess.getAddMathOperationAccess().getRightPrimaryExpressionParserRuleCall_1_1_0());
 					}
 					lv_right_5_0=rulePrimaryExpression
 					{
 						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getConcatRule());
+							$current = createModelElementForParent(grammarAccess.getAddMathOperationRule());
 						}
 						set(
 							$current,

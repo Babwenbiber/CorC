@@ -42,7 +42,9 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.singleton.CbCFormulaSingleton;
 import de.tu_bs.cs.isf.cbc.cbcmodel.string_saver.ConditionExtension;
 import de.tu_bs.cs.isf.cbc.cbcmodel.string_saver.JavaVariableExtension;
 import de.tu_bs.cs.isf.cbc.util.ConstructCodeBlock;
+import de.tu_bs.cs.isf.cbc.util.FileUtil;
 import de.tu_bs.cs.isf.cbc.util.FilenamePrefix;
+import de.tu_bs.cs.isf.cbc.util.HashTable;
 import de.tu_bs.cs.isf.cbc.util.Parser;
 import de.tu_bs.cs.isf.cbc.util.ProveWithKey;
 
@@ -77,6 +79,8 @@ public class TraverseFormulaAndGenerate {
 		statement.setPostCondition(new ConditionExtension(formula.getPostCondition()));
 		System.out.println("lessgo Traverse");
 		castStatementAndTraverse(statement);
+		String location =  FileUtil.getProject(uri).getLocation() + "/src/prove" + uri.trimFileExtension().lastSegment();
+		HashTable.overrideOldOverview(location);
 		
 		return CbCFormulaSingleton.getCbCFormula();
 	}
