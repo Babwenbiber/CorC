@@ -104,7 +104,7 @@ public class VerifyVariant2 extends MyAbstractAsynchronousCustomFeature {
 
 				}
 				if (CompareMethodBodies.readAndTestMethodBodyWithJaMoPP2(code)) {
-					prove = ProveWithKey.proveVariant2WithKey(code, invariant.getName(), guard.getName(), variant,
+					prove = ProveWithKey.proveVariant2WithKey(code, invariant.getName(), guard.getName(), variant.getName(),
 							StringParser.getVariableListToStringList(vars), 
 							StringParser.getConditionListToStringList(conds), renaming, getDiagram().eResource().getURI(), monitor, FilenamePrefix.REPETITION);
 				} else {

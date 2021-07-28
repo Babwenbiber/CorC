@@ -766,7 +766,7 @@ public class ProveWithKey {
 	}
 
 
-	public static boolean proveVariant2WithKey(String code, String invariant, String guard, Variant variant,
+	public static boolean proveVariant2WithKey(String code, String invariant, String guard, String variant,
 			List<String> vars, List<String> conds, Renaming renaming, URI uri, IProgressMonitor monitor, String name) {
 		File location = createProveVariant2WithKey(code, invariant, guard, variant, vars, conds, renaming, uri, 0,
 				true, name);
@@ -774,7 +774,7 @@ public class ProveWithKey {
 		return proveWithKey(location, monitor);
 	}
 	
-	public static File createProveVariant2WithKey(String code, String invariant, String guard, Variant variant,
+	public static File createProveVariant2WithKey(String code, String invariant, String guard, String variant,
 			List<String> vars, List<String> conds, Renaming renaming, URI uri, int numberFile, boolean override, String name) {
 		String programVariablesString = "";
 		if (vars != null) {
@@ -807,7 +807,7 @@ public class ProveWithKey {
 			guardString = useRenamingCondition(renaming, guardString);
 		}
 
-		String variantString = variant.getName();
+		String variantString = variant;
 
 		String problem = "\\javaSource \"" + thisProject.getLocation() + "/\";" + "\\include \"helper.key\";"
 				+ "\\programVariables {" + programVariablesString + " Heap heapAtPre;}" + "\\problem {("
@@ -881,7 +881,8 @@ public class ProveWithKey {
 			preChild = useRenamingCondition(renaming, preChild);
 		}
 
-		String problem = "\\javaSource \"" + thisProject.getLocation() + "/\";" + "\\programVariables {"
+		String problem = "\\javaSource \"" + thisProject.getLocation() + "/\";" + "\\include \"helper.key\";"
+				+ "\\programVariables {"
 				+ programVariablesString + " Heap heapAtPre;}" + "\\problem {(" + preParent + " "
 				+ globalConditionsString + ") -> {heapAtPre := heap} (" + preChild + ")}";
 
@@ -932,7 +933,8 @@ public class ProveWithKey {
 			postChild = useRenamingCondition(renaming, postChild);
 		}
 
-		String problem = "\\javaSource \"" + thisProject.getLocation() + "/\";" + "\\programVariables {"
+		String problem = "\\javaSource \"" + thisProject.getLocation() + "/\";" + "\\include \"helper.key\";"
+				+ "\\programVariables {"
 				+ programVariablesString + " Heap heapAtPre;}" + "\\problem {(" + postChild + " "
 				+ globalConditionsString + ") -> {heapAtPre := heap} (" + postParent + ")}";
 
@@ -988,7 +990,8 @@ public class ProveWithKey {
 			preChild = useRenamingCondition(renaming, preChild);
 		}
 
-		String problem = "\\javaSource \"" + thisProject.getLocation() + "/\";" + "\\programVariables {"
+		String problem = "\\javaSource \"" + thisProject.getLocation() + "/\";" + "\\include \"helper.key\";"
+				+ "\\programVariables {"
 				+ programVariablesString + "}" + "\\problem {(" + preParent + " " + globalConditionsString + ") -> ("
 				+ preChild + ")}";
 

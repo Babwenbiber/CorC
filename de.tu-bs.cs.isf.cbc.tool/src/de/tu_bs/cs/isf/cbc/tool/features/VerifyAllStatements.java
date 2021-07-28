@@ -300,7 +300,7 @@ public class VerifyAllStatements extends MyAbstractAsynchronousCustomFeature {
 					StringParser.getConditionListToStringList(conds), renaming, uri, monitor, FilenamePrefix.REPETITION);
 			provePost = ProveWithKey.provePostWithKey(invariant, guard, postCondition,  StringParser.getVariableListToStringList(vars),
 					StringParser.getConditionListToStringList(conds), renaming, uri, monitor, FilenamePrefix.REPETITION);
-			proveVar = ProveWithKey.proveVariant2WithKey(code, invariant, guard, variant,  StringParser.getVariableListToStringList(vars),
+			proveVar = ProveWithKey.proveVariant2WithKey(code, invariant, guard, variant.getName(),  StringParser.getVariableListToStringList(vars),
 					StringParser.getConditionListToStringList(conds), renaming, uri, monitor, FilenamePrefix.REPETITION);
 			repStatement.setVariantProven(proveVar);
 			if (prove && provePre && provePost && proveVar && true) {
@@ -343,7 +343,7 @@ public class VerifyAllStatements extends MyAbstractAsynchronousCustomFeature {
 				repStatement.setPostProven(provePost);
 			}
 			if (!proveVar) {
-				proveVar = ProveWithKey.proveVariant2WithKey(code, invariant.getName(), guard.getName(), variant,  StringParser.getVariableListToStringList(vars),
+				proveVar = ProveWithKey.proveVariant2WithKey(code, invariant.getName(), guard.getName(), variant.getName(),  StringParser.getVariableListToStringList(vars),
 						StringParser.getConditionListToStringList(conds), renaming, uri, monitor, FilenamePrefix.REPETITION);
 				repStatement.setVariantProven(proveVar);	
 			}

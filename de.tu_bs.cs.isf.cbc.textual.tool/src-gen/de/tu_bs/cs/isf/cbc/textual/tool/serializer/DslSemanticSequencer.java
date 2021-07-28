@@ -7,6 +7,7 @@ import com.google.inject.Inject;
 import de.tu_bs.cs.isf.cbc.cbcmodel.AbstractStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Addition;
 import de.tu_bs.cs.isf.cbc.cbcmodel.And;
+import de.tu_bs.cs.isf.cbc.cbcmodel.ArrayElement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.BlockStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbCFormula;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbCProblem;
@@ -31,7 +32,9 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.LowerEqual;
 import de.tu_bs.cs.isf.cbc.cbcmodel.MethodStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Modulo;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Multiplication;
+import de.tu_bs.cs.isf.cbc.cbcmodel.NotEqual;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Or;
+import de.tu_bs.cs.isf.cbc.cbcmodel.Qualifier;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Rename;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Renaming;
 import de.tu_bs.cs.isf.cbc.cbcmodel.ReturnStatement;
@@ -153,6 +156,9 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 			case CbcmodelPackage.AND:
 				sequence_Concat(context, (And) semanticObject); 
 				return; 
+			case CbcmodelPackage.ARRAY_ELEMENT:
+				sequence_PrimaryExpression(context, (ArrayElement) semanticObject); 
+				return; 
 			case CbcmodelPackage.BLOCK_STATEMENT:
 				sequence_BlockStatement(context, (BlockStatement) semanticObject); 
 				return; 
@@ -222,8 +228,14 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 			case CbcmodelPackage.MULTIPLICATION:
 				sequence_MultiMathOperation(context, (Multiplication) semanticObject); 
 				return; 
+			case CbcmodelPackage.NOT_EQUAL:
+				sequence_Relation(context, (NotEqual) semanticObject); 
+				return; 
 			case CbcmodelPackage.OR:
 				sequence_Concat(context, (Or) semanticObject); 
+				return; 
+			case CbcmodelPackage.QUALIFIER:
+				sequence_QualifiedExpression(context, (Qualifier) semanticObject); 
 				return; 
 			case CbcmodelPackage.RENAME:
 				sequence_Rename(context, (Rename) semanticObject); 
@@ -635,19 +647,20 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	/**
 	 * Contexts:
 	 *     Expression returns Addition
+	 *     Implication returns Addition
+	 *     Implication.Impl_1_0_0 returns Addition
+	 *     Concat returns Addition
+	 *     Concat.And_1_0_0_0 returns Addition
+	 *     Concat.Or_1_0_1_0 returns Addition
 	 *     Foreach returns Addition
 	 *     Exists returns Addition
 	 *     Relation returns Addition
 	 *     Relation.Lower_1_0_0_0 returns Addition
 	 *     Relation.Greater_1_0_1_0 returns Addition
 	 *     Relation.Equal_1_0_2_0 returns Addition
-	 *     Relation.LowerEqual_1_0_3_0 returns Addition
-	 *     Relation.GreaterEqual_1_0_4_0 returns Addition
-	 *     Implication returns Addition
-	 *     Implication.Impl_1_0_0 returns Addition
-	 *     Concat returns Addition
-	 *     Concat.And_1_0_0_0 returns Addition
-	 *     Concat.Or_1_0_1_0 returns Addition
+	 *     Relation.NotEqual_1_0_3_0 returns Addition
+	 *     Relation.LowerEqual_1_0_4_0 returns Addition
+	 *     Relation.GreaterEqual_1_0_5_0 returns Addition
 	 *     MultiMathOperation returns Addition
 	 *     MultiMathOperation.Multiplication_1_0_0_0 returns Addition
 	 *     MultiMathOperation.Division_1_0_1_0 returns Addition
@@ -655,10 +668,12 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	 *     AddMathOperation returns Addition
 	 *     AddMathOperation.Addition_1_0_0_0 returns Addition
 	 *     AddMathOperation.Subtraction_1_0_1_0 returns Addition
+	 *     QualifiedExpression returns Addition
+	 *     QualifiedExpression.Qualifier_1_0_0_0 returns Addition
 	 *     PrimaryExpression returns Addition
 	 *
 	 * Constraint:
-	 *     (left=AddMathOperation_Addition_1_0_0_0 right=PrimaryExpression)
+	 *     (left=AddMathOperation_Addition_1_0_0_0 right=QualifiedExpression)
 	 */
 	protected void sequence_AddMathOperation(ISerializationContext context, Addition semanticObject) {
 		if (errorAcceptor != null) {
@@ -669,7 +684,7 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getAddMathOperationAccess().getAdditionLeftAction_1_0_0_0(), semanticObject.getLeft());
-		feeder.accept(grammarAccess.getAddMathOperationAccess().getRightPrimaryExpressionParserRuleCall_1_1_0(), semanticObject.getRight());
+		feeder.accept(grammarAccess.getAddMathOperationAccess().getRightQualifiedExpressionParserRuleCall_1_1_0(), semanticObject.getRight());
 		feeder.finish();
 	}
 	
@@ -677,19 +692,20 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	/**
 	 * Contexts:
 	 *     Expression returns Subtraction
+	 *     Implication returns Subtraction
+	 *     Implication.Impl_1_0_0 returns Subtraction
+	 *     Concat returns Subtraction
+	 *     Concat.And_1_0_0_0 returns Subtraction
+	 *     Concat.Or_1_0_1_0 returns Subtraction
 	 *     Foreach returns Subtraction
 	 *     Exists returns Subtraction
 	 *     Relation returns Subtraction
 	 *     Relation.Lower_1_0_0_0 returns Subtraction
 	 *     Relation.Greater_1_0_1_0 returns Subtraction
 	 *     Relation.Equal_1_0_2_0 returns Subtraction
-	 *     Relation.LowerEqual_1_0_3_0 returns Subtraction
-	 *     Relation.GreaterEqual_1_0_4_0 returns Subtraction
-	 *     Implication returns Subtraction
-	 *     Implication.Impl_1_0_0 returns Subtraction
-	 *     Concat returns Subtraction
-	 *     Concat.And_1_0_0_0 returns Subtraction
-	 *     Concat.Or_1_0_1_0 returns Subtraction
+	 *     Relation.NotEqual_1_0_3_0 returns Subtraction
+	 *     Relation.LowerEqual_1_0_4_0 returns Subtraction
+	 *     Relation.GreaterEqual_1_0_5_0 returns Subtraction
 	 *     MultiMathOperation returns Subtraction
 	 *     MultiMathOperation.Multiplication_1_0_0_0 returns Subtraction
 	 *     MultiMathOperation.Division_1_0_1_0 returns Subtraction
@@ -697,10 +713,12 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	 *     AddMathOperation returns Subtraction
 	 *     AddMathOperation.Addition_1_0_0_0 returns Subtraction
 	 *     AddMathOperation.Subtraction_1_0_1_0 returns Subtraction
+	 *     QualifiedExpression returns Subtraction
+	 *     QualifiedExpression.Qualifier_1_0_0_0 returns Subtraction
 	 *     PrimaryExpression returns Subtraction
 	 *
 	 * Constraint:
-	 *     (left=AddMathOperation_Subtraction_1_0_1_0 right=PrimaryExpression)
+	 *     (left=AddMathOperation_Subtraction_1_0_1_0 right=QualifiedExpression)
 	 */
 	protected void sequence_AddMathOperation(ISerializationContext context, Subtraction semanticObject) {
 		if (errorAcceptor != null) {
@@ -711,7 +729,7 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getAddMathOperationAccess().getSubtractionLeftAction_1_0_1_0(), semanticObject.getLeft());
-		feeder.accept(grammarAccess.getAddMathOperationAccess().getRightPrimaryExpressionParserRuleCall_1_1_0(), semanticObject.getRight());
+		feeder.accept(grammarAccess.getAddMathOperationAccess().getRightQualifiedExpressionParserRuleCall_1_1_0(), semanticObject.getRight());
 		feeder.finish();
 	}
 	
@@ -796,19 +814,20 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	/**
 	 * Contexts:
 	 *     Expression returns And
+	 *     Implication returns And
+	 *     Implication.Impl_1_0_0 returns And
+	 *     Concat returns And
+	 *     Concat.And_1_0_0_0 returns And
+	 *     Concat.Or_1_0_1_0 returns And
 	 *     Foreach returns And
 	 *     Exists returns And
 	 *     Relation returns And
 	 *     Relation.Lower_1_0_0_0 returns And
 	 *     Relation.Greater_1_0_1_0 returns And
 	 *     Relation.Equal_1_0_2_0 returns And
-	 *     Relation.LowerEqual_1_0_3_0 returns And
-	 *     Relation.GreaterEqual_1_0_4_0 returns And
-	 *     Implication returns And
-	 *     Implication.Impl_1_0_0 returns And
-	 *     Concat returns And
-	 *     Concat.And_1_0_0_0 returns And
-	 *     Concat.Or_1_0_1_0 returns And
+	 *     Relation.NotEqual_1_0_3_0 returns And
+	 *     Relation.LowerEqual_1_0_4_0 returns And
+	 *     Relation.GreaterEqual_1_0_5_0 returns And
 	 *     MultiMathOperation returns And
 	 *     MultiMathOperation.Multiplication_1_0_0_0 returns And
 	 *     MultiMathOperation.Division_1_0_1_0 returns And
@@ -816,10 +835,12 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	 *     AddMathOperation returns And
 	 *     AddMathOperation.Addition_1_0_0_0 returns And
 	 *     AddMathOperation.Subtraction_1_0_1_0 returns And
+	 *     QualifiedExpression returns And
+	 *     QualifiedExpression.Qualifier_1_0_0_0 returns And
 	 *     PrimaryExpression returns And
 	 *
 	 * Constraint:
-	 *     (left=Concat_And_1_0_0_0 right=MultiMathOperation)
+	 *     (left=Concat_And_1_0_0_0 right=Foreach)
 	 */
 	protected void sequence_Concat(ISerializationContext context, And semanticObject) {
 		if (errorAcceptor != null) {
@@ -830,7 +851,7 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getConcatAccess().getAndLeftAction_1_0_0_0(), semanticObject.getLeft());
-		feeder.accept(grammarAccess.getConcatAccess().getRightMultiMathOperationParserRuleCall_1_1_0(), semanticObject.getRight());
+		feeder.accept(grammarAccess.getConcatAccess().getRightForeachParserRuleCall_1_1_0(), semanticObject.getRight());
 		feeder.finish();
 	}
 	
@@ -838,19 +859,20 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	/**
 	 * Contexts:
 	 *     Expression returns Or
+	 *     Implication returns Or
+	 *     Implication.Impl_1_0_0 returns Or
+	 *     Concat returns Or
+	 *     Concat.And_1_0_0_0 returns Or
+	 *     Concat.Or_1_0_1_0 returns Or
 	 *     Foreach returns Or
 	 *     Exists returns Or
 	 *     Relation returns Or
 	 *     Relation.Lower_1_0_0_0 returns Or
 	 *     Relation.Greater_1_0_1_0 returns Or
 	 *     Relation.Equal_1_0_2_0 returns Or
-	 *     Relation.LowerEqual_1_0_3_0 returns Or
-	 *     Relation.GreaterEqual_1_0_4_0 returns Or
-	 *     Implication returns Or
-	 *     Implication.Impl_1_0_0 returns Or
-	 *     Concat returns Or
-	 *     Concat.And_1_0_0_0 returns Or
-	 *     Concat.Or_1_0_1_0 returns Or
+	 *     Relation.NotEqual_1_0_3_0 returns Or
+	 *     Relation.LowerEqual_1_0_4_0 returns Or
+	 *     Relation.GreaterEqual_1_0_5_0 returns Or
 	 *     MultiMathOperation returns Or
 	 *     MultiMathOperation.Multiplication_1_0_0_0 returns Or
 	 *     MultiMathOperation.Division_1_0_1_0 returns Or
@@ -858,10 +880,12 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	 *     AddMathOperation returns Or
 	 *     AddMathOperation.Addition_1_0_0_0 returns Or
 	 *     AddMathOperation.Subtraction_1_0_1_0 returns Or
+	 *     QualifiedExpression returns Or
+	 *     QualifiedExpression.Qualifier_1_0_0_0 returns Or
 	 *     PrimaryExpression returns Or
 	 *
 	 * Constraint:
-	 *     (left=Concat_Or_1_0_1_0 right=MultiMathOperation)
+	 *     (left=Concat_Or_1_0_1_0 right=Foreach)
 	 */
 	protected void sequence_Concat(ISerializationContext context, Or semanticObject) {
 		if (errorAcceptor != null) {
@@ -872,7 +896,7 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getConcatAccess().getOrLeftAction_1_0_1_0(), semanticObject.getLeft());
-		feeder.accept(grammarAccess.getConcatAccess().getRightMultiMathOperationParserRuleCall_1_1_0(), semanticObject.getRight());
+		feeder.accept(grammarAccess.getConcatAccess().getRightForeachParserRuleCall_1_1_0(), semanticObject.getRight());
 		feeder.finish();
 	}
 	
@@ -898,19 +922,20 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	/**
 	 * Contexts:
 	 *     Expression returns Expression
+	 *     Implication returns Expression
+	 *     Implication.Impl_1_0_0 returns Expression
+	 *     Concat returns Expression
+	 *     Concat.And_1_0_0_0 returns Expression
+	 *     Concat.Or_1_0_1_0 returns Expression
 	 *     Foreach returns Expression
 	 *     Exists returns Expression
 	 *     Relation returns Expression
 	 *     Relation.Lower_1_0_0_0 returns Expression
 	 *     Relation.Greater_1_0_1_0 returns Expression
 	 *     Relation.Equal_1_0_2_0 returns Expression
-	 *     Relation.LowerEqual_1_0_3_0 returns Expression
-	 *     Relation.GreaterEqual_1_0_4_0 returns Expression
-	 *     Implication returns Expression
-	 *     Implication.Impl_1_0_0 returns Expression
-	 *     Concat returns Expression
-	 *     Concat.And_1_0_0_0 returns Expression
-	 *     Concat.Or_1_0_1_0 returns Expression
+	 *     Relation.NotEqual_1_0_3_0 returns Expression
+	 *     Relation.LowerEqual_1_0_4_0 returns Expression
+	 *     Relation.GreaterEqual_1_0_5_0 returns Expression
 	 *     MultiMathOperation returns Expression
 	 *     MultiMathOperation.Multiplication_1_0_0_0 returns Expression
 	 *     MultiMathOperation.Division_1_0_1_0 returns Expression
@@ -918,11 +943,13 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	 *     AddMathOperation returns Expression
 	 *     AddMathOperation.Addition_1_0_0_0 returns Expression
 	 *     AddMathOperation.Subtraction_1_0_1_0 returns Expression
+	 *     QualifiedExpression returns Expression
+	 *     QualifiedExpression.Qualifier_1_0_0_0 returns Expression
 	 *     PrimaryExpression returns Expression
 	 *
 	 * Constraint:
 	 *     (
-	 *         (foreach='(\foreach' type=JvmTypeReference var=VariableOrMethodName right=Exists) | 
+	 *         (foreach='(\forall' type=JvmTypeReference var=VariableOrMethodName right=Exists) | 
 	 *         (exists='(\exists' type=JvmTypeReference var=VariableOrMethodName right=Relation) | 
 	 *         isTrue?='true'
 	 *     )?
@@ -947,19 +974,20 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	/**
 	 * Contexts:
 	 *     Expression returns Impl
+	 *     Implication returns Impl
+	 *     Implication.Impl_1_0_0 returns Impl
+	 *     Concat returns Impl
+	 *     Concat.And_1_0_0_0 returns Impl
+	 *     Concat.Or_1_0_1_0 returns Impl
 	 *     Foreach returns Impl
 	 *     Exists returns Impl
 	 *     Relation returns Impl
 	 *     Relation.Lower_1_0_0_0 returns Impl
 	 *     Relation.Greater_1_0_1_0 returns Impl
 	 *     Relation.Equal_1_0_2_0 returns Impl
-	 *     Relation.LowerEqual_1_0_3_0 returns Impl
-	 *     Relation.GreaterEqual_1_0_4_0 returns Impl
-	 *     Implication returns Impl
-	 *     Implication.Impl_1_0_0 returns Impl
-	 *     Concat returns Impl
-	 *     Concat.And_1_0_0_0 returns Impl
-	 *     Concat.Or_1_0_1_0 returns Impl
+	 *     Relation.NotEqual_1_0_3_0 returns Impl
+	 *     Relation.LowerEqual_1_0_4_0 returns Impl
+	 *     Relation.GreaterEqual_1_0_5_0 returns Impl
 	 *     MultiMathOperation returns Impl
 	 *     MultiMathOperation.Multiplication_1_0_0_0 returns Impl
 	 *     MultiMathOperation.Division_1_0_1_0 returns Impl
@@ -967,6 +995,8 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	 *     AddMathOperation returns Impl
 	 *     AddMathOperation.Addition_1_0_0_0 returns Impl
 	 *     AddMathOperation.Subtraction_1_0_1_0 returns Impl
+	 *     QualifiedExpression returns Impl
+	 *     QualifiedExpression.Qualifier_1_0_0_0 returns Impl
 	 *     PrimaryExpression returns Impl
 	 *
 	 * Constraint:
@@ -1078,19 +1108,20 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	/**
 	 * Contexts:
 	 *     Expression returns Division
+	 *     Implication returns Division
+	 *     Implication.Impl_1_0_0 returns Division
+	 *     Concat returns Division
+	 *     Concat.And_1_0_0_0 returns Division
+	 *     Concat.Or_1_0_1_0 returns Division
 	 *     Foreach returns Division
 	 *     Exists returns Division
 	 *     Relation returns Division
 	 *     Relation.Lower_1_0_0_0 returns Division
 	 *     Relation.Greater_1_0_1_0 returns Division
 	 *     Relation.Equal_1_0_2_0 returns Division
-	 *     Relation.LowerEqual_1_0_3_0 returns Division
-	 *     Relation.GreaterEqual_1_0_4_0 returns Division
-	 *     Implication returns Division
-	 *     Implication.Impl_1_0_0 returns Division
-	 *     Concat returns Division
-	 *     Concat.And_1_0_0_0 returns Division
-	 *     Concat.Or_1_0_1_0 returns Division
+	 *     Relation.NotEqual_1_0_3_0 returns Division
+	 *     Relation.LowerEqual_1_0_4_0 returns Division
+	 *     Relation.GreaterEqual_1_0_5_0 returns Division
 	 *     MultiMathOperation returns Division
 	 *     MultiMathOperation.Multiplication_1_0_0_0 returns Division
 	 *     MultiMathOperation.Division_1_0_1_0 returns Division
@@ -1098,6 +1129,8 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	 *     AddMathOperation returns Division
 	 *     AddMathOperation.Addition_1_0_0_0 returns Division
 	 *     AddMathOperation.Subtraction_1_0_1_0 returns Division
+	 *     QualifiedExpression returns Division
+	 *     QualifiedExpression.Qualifier_1_0_0_0 returns Division
 	 *     PrimaryExpression returns Division
 	 *
 	 * Constraint:
@@ -1120,19 +1153,20 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	/**
 	 * Contexts:
 	 *     Expression returns Modulo
+	 *     Implication returns Modulo
+	 *     Implication.Impl_1_0_0 returns Modulo
+	 *     Concat returns Modulo
+	 *     Concat.And_1_0_0_0 returns Modulo
+	 *     Concat.Or_1_0_1_0 returns Modulo
 	 *     Foreach returns Modulo
 	 *     Exists returns Modulo
 	 *     Relation returns Modulo
 	 *     Relation.Lower_1_0_0_0 returns Modulo
 	 *     Relation.Greater_1_0_1_0 returns Modulo
 	 *     Relation.Equal_1_0_2_0 returns Modulo
-	 *     Relation.LowerEqual_1_0_3_0 returns Modulo
-	 *     Relation.GreaterEqual_1_0_4_0 returns Modulo
-	 *     Implication returns Modulo
-	 *     Implication.Impl_1_0_0 returns Modulo
-	 *     Concat returns Modulo
-	 *     Concat.And_1_0_0_0 returns Modulo
-	 *     Concat.Or_1_0_1_0 returns Modulo
+	 *     Relation.NotEqual_1_0_3_0 returns Modulo
+	 *     Relation.LowerEqual_1_0_4_0 returns Modulo
+	 *     Relation.GreaterEqual_1_0_5_0 returns Modulo
 	 *     MultiMathOperation returns Modulo
 	 *     MultiMathOperation.Multiplication_1_0_0_0 returns Modulo
 	 *     MultiMathOperation.Division_1_0_1_0 returns Modulo
@@ -1140,6 +1174,8 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	 *     AddMathOperation returns Modulo
 	 *     AddMathOperation.Addition_1_0_0_0 returns Modulo
 	 *     AddMathOperation.Subtraction_1_0_1_0 returns Modulo
+	 *     QualifiedExpression returns Modulo
+	 *     QualifiedExpression.Qualifier_1_0_0_0 returns Modulo
 	 *     PrimaryExpression returns Modulo
 	 *
 	 * Constraint:
@@ -1162,19 +1198,20 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	/**
 	 * Contexts:
 	 *     Expression returns Multiplication
+	 *     Implication returns Multiplication
+	 *     Implication.Impl_1_0_0 returns Multiplication
+	 *     Concat returns Multiplication
+	 *     Concat.And_1_0_0_0 returns Multiplication
+	 *     Concat.Or_1_0_1_0 returns Multiplication
 	 *     Foreach returns Multiplication
 	 *     Exists returns Multiplication
 	 *     Relation returns Multiplication
 	 *     Relation.Lower_1_0_0_0 returns Multiplication
 	 *     Relation.Greater_1_0_1_0 returns Multiplication
 	 *     Relation.Equal_1_0_2_0 returns Multiplication
-	 *     Relation.LowerEqual_1_0_3_0 returns Multiplication
-	 *     Relation.GreaterEqual_1_0_4_0 returns Multiplication
-	 *     Implication returns Multiplication
-	 *     Implication.Impl_1_0_0 returns Multiplication
-	 *     Concat returns Multiplication
-	 *     Concat.And_1_0_0_0 returns Multiplication
-	 *     Concat.Or_1_0_1_0 returns Multiplication
+	 *     Relation.NotEqual_1_0_3_0 returns Multiplication
+	 *     Relation.LowerEqual_1_0_4_0 returns Multiplication
+	 *     Relation.GreaterEqual_1_0_5_0 returns Multiplication
 	 *     MultiMathOperation returns Multiplication
 	 *     MultiMathOperation.Multiplication_1_0_0_0 returns Multiplication
 	 *     MultiMathOperation.Division_1_0_1_0 returns Multiplication
@@ -1182,6 +1219,8 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	 *     AddMathOperation returns Multiplication
 	 *     AddMathOperation.Addition_1_0_0_0 returns Multiplication
 	 *     AddMathOperation.Subtraction_1_0_1_0 returns Multiplication
+	 *     QualifiedExpression returns Multiplication
+	 *     QualifiedExpression.Qualifier_1_0_0_0 returns Multiplication
 	 *     PrimaryExpression returns Multiplication
 	 *
 	 * Constraint:
@@ -1203,20 +1242,57 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	
 	/**
 	 * Contexts:
+	 *     Expression returns ArrayElement
+	 *     Implication returns ArrayElement
+	 *     Implication.Impl_1_0_0 returns ArrayElement
+	 *     Concat returns ArrayElement
+	 *     Concat.And_1_0_0_0 returns ArrayElement
+	 *     Concat.Or_1_0_1_0 returns ArrayElement
+	 *     Foreach returns ArrayElement
+	 *     Exists returns ArrayElement
+	 *     Relation returns ArrayElement
+	 *     Relation.Lower_1_0_0_0 returns ArrayElement
+	 *     Relation.Greater_1_0_1_0 returns ArrayElement
+	 *     Relation.Equal_1_0_2_0 returns ArrayElement
+	 *     Relation.NotEqual_1_0_3_0 returns ArrayElement
+	 *     Relation.LowerEqual_1_0_4_0 returns ArrayElement
+	 *     Relation.GreaterEqual_1_0_5_0 returns ArrayElement
+	 *     MultiMathOperation returns ArrayElement
+	 *     MultiMathOperation.Multiplication_1_0_0_0 returns ArrayElement
+	 *     MultiMathOperation.Division_1_0_1_0 returns ArrayElement
+	 *     MultiMathOperation.Modulo_1_0_2_0 returns ArrayElement
+	 *     AddMathOperation returns ArrayElement
+	 *     AddMathOperation.Addition_1_0_0_0 returns ArrayElement
+	 *     AddMathOperation.Subtraction_1_0_1_0 returns ArrayElement
+	 *     QualifiedExpression returns ArrayElement
+	 *     QualifiedExpression.Qualifier_1_0_0_0 returns ArrayElement
+	 *     PrimaryExpression returns ArrayElement
+	 *
+	 * Constraint:
+	 *     (array=VariableOrMethodName (element+=Expression element+=Expression*)?)
+	 */
+	protected void sequence_PrimaryExpression(ISerializationContext context, ArrayElement semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
 	 *     Expression returns FunctionCall
+	 *     Implication returns FunctionCall
+	 *     Implication.Impl_1_0_0 returns FunctionCall
+	 *     Concat returns FunctionCall
+	 *     Concat.And_1_0_0_0 returns FunctionCall
+	 *     Concat.Or_1_0_1_0 returns FunctionCall
 	 *     Foreach returns FunctionCall
 	 *     Exists returns FunctionCall
 	 *     Relation returns FunctionCall
 	 *     Relation.Lower_1_0_0_0 returns FunctionCall
 	 *     Relation.Greater_1_0_1_0 returns FunctionCall
 	 *     Relation.Equal_1_0_2_0 returns FunctionCall
-	 *     Relation.LowerEqual_1_0_3_0 returns FunctionCall
-	 *     Relation.GreaterEqual_1_0_4_0 returns FunctionCall
-	 *     Implication returns FunctionCall
-	 *     Implication.Impl_1_0_0 returns FunctionCall
-	 *     Concat returns FunctionCall
-	 *     Concat.And_1_0_0_0 returns FunctionCall
-	 *     Concat.Or_1_0_1_0 returns FunctionCall
+	 *     Relation.NotEqual_1_0_3_0 returns FunctionCall
+	 *     Relation.LowerEqual_1_0_4_0 returns FunctionCall
+	 *     Relation.GreaterEqual_1_0_5_0 returns FunctionCall
 	 *     MultiMathOperation returns FunctionCall
 	 *     MultiMathOperation.Multiplication_1_0_0_0 returns FunctionCall
 	 *     MultiMathOperation.Division_1_0_1_0 returns FunctionCall
@@ -1224,6 +1300,8 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	 *     AddMathOperation returns FunctionCall
 	 *     AddMathOperation.Addition_1_0_0_0 returns FunctionCall
 	 *     AddMathOperation.Subtraction_1_0_1_0 returns FunctionCall
+	 *     QualifiedExpression returns FunctionCall
+	 *     QualifiedExpression.Qualifier_1_0_0_0 returns FunctionCall
 	 *     PrimaryExpression returns FunctionCall
 	 *
 	 * Constraint:
@@ -1236,20 +1314,66 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	
 	/**
 	 * Contexts:
+	 *     Expression returns Qualifier
+	 *     Implication returns Qualifier
+	 *     Implication.Impl_1_0_0 returns Qualifier
+	 *     Concat returns Qualifier
+	 *     Concat.And_1_0_0_0 returns Qualifier
+	 *     Concat.Or_1_0_1_0 returns Qualifier
+	 *     Foreach returns Qualifier
+	 *     Exists returns Qualifier
+	 *     Relation returns Qualifier
+	 *     Relation.Lower_1_0_0_0 returns Qualifier
+	 *     Relation.Greater_1_0_1_0 returns Qualifier
+	 *     Relation.Equal_1_0_2_0 returns Qualifier
+	 *     Relation.NotEqual_1_0_3_0 returns Qualifier
+	 *     Relation.LowerEqual_1_0_4_0 returns Qualifier
+	 *     Relation.GreaterEqual_1_0_5_0 returns Qualifier
+	 *     MultiMathOperation returns Qualifier
+	 *     MultiMathOperation.Multiplication_1_0_0_0 returns Qualifier
+	 *     MultiMathOperation.Division_1_0_1_0 returns Qualifier
+	 *     MultiMathOperation.Modulo_1_0_2_0 returns Qualifier
+	 *     AddMathOperation returns Qualifier
+	 *     AddMathOperation.Addition_1_0_0_0 returns Qualifier
+	 *     AddMathOperation.Subtraction_1_0_1_0 returns Qualifier
+	 *     QualifiedExpression returns Qualifier
+	 *     QualifiedExpression.Qualifier_1_0_0_0 returns Qualifier
+	 *     PrimaryExpression returns Qualifier
+	 *
+	 * Constraint:
+	 *     (left=QualifiedExpression_Qualifier_1_0_0_0 right=PrimaryExpression)
+	 */
+	protected void sequence_QualifiedExpression(ISerializationContext context, Qualifier semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.QUALIFIER__LEFT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.QUALIFIER__LEFT));
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.EXPRESSION__RIGHT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.EXPRESSION__RIGHT));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getQualifiedExpressionAccess().getQualifierLeftAction_1_0_0_0(), semanticObject.getLeft());
+		feeder.accept(grammarAccess.getQualifiedExpressionAccess().getRightPrimaryExpressionParserRuleCall_1_1_0(), semanticObject.getRight());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
 	 *     Expression returns Equal
+	 *     Implication returns Equal
+	 *     Implication.Impl_1_0_0 returns Equal
+	 *     Concat returns Equal
+	 *     Concat.And_1_0_0_0 returns Equal
+	 *     Concat.Or_1_0_1_0 returns Equal
 	 *     Foreach returns Equal
 	 *     Exists returns Equal
 	 *     Relation returns Equal
 	 *     Relation.Lower_1_0_0_0 returns Equal
 	 *     Relation.Greater_1_0_1_0 returns Equal
 	 *     Relation.Equal_1_0_2_0 returns Equal
-	 *     Relation.LowerEqual_1_0_3_0 returns Equal
-	 *     Relation.GreaterEqual_1_0_4_0 returns Equal
-	 *     Implication returns Equal
-	 *     Implication.Impl_1_0_0 returns Equal
-	 *     Concat returns Equal
-	 *     Concat.And_1_0_0_0 returns Equal
-	 *     Concat.Or_1_0_1_0 returns Equal
+	 *     Relation.NotEqual_1_0_3_0 returns Equal
+	 *     Relation.LowerEqual_1_0_4_0 returns Equal
+	 *     Relation.GreaterEqual_1_0_5_0 returns Equal
 	 *     MultiMathOperation returns Equal
 	 *     MultiMathOperation.Multiplication_1_0_0_0 returns Equal
 	 *     MultiMathOperation.Division_1_0_1_0 returns Equal
@@ -1257,10 +1381,12 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	 *     AddMathOperation returns Equal
 	 *     AddMathOperation.Addition_1_0_0_0 returns Equal
 	 *     AddMathOperation.Subtraction_1_0_1_0 returns Equal
+	 *     QualifiedExpression returns Equal
+	 *     QualifiedExpression.Qualifier_1_0_0_0 returns Equal
 	 *     PrimaryExpression returns Equal
 	 *
 	 * Constraint:
-	 *     (left=Relation_Equal_1_0_2_0 right=Implication)
+	 *     (left=Relation_Equal_1_0_2_0 right=MultiMathOperation)
 	 */
 	protected void sequence_Relation(ISerializationContext context, Equal semanticObject) {
 		if (errorAcceptor != null) {
@@ -1271,7 +1397,7 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getRelationAccess().getEqualLeftAction_1_0_2_0(), semanticObject.getLeft());
-		feeder.accept(grammarAccess.getRelationAccess().getRightImplicationParserRuleCall_1_1_0(), semanticObject.getRight());
+		feeder.accept(grammarAccess.getRelationAccess().getRightMultiMathOperationParserRuleCall_1_1_0(), semanticObject.getRight());
 		feeder.finish();
 	}
 	
@@ -1279,19 +1405,20 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	/**
 	 * Contexts:
 	 *     Expression returns Greater
+	 *     Implication returns Greater
+	 *     Implication.Impl_1_0_0 returns Greater
+	 *     Concat returns Greater
+	 *     Concat.And_1_0_0_0 returns Greater
+	 *     Concat.Or_1_0_1_0 returns Greater
 	 *     Foreach returns Greater
 	 *     Exists returns Greater
 	 *     Relation returns Greater
 	 *     Relation.Lower_1_0_0_0 returns Greater
 	 *     Relation.Greater_1_0_1_0 returns Greater
 	 *     Relation.Equal_1_0_2_0 returns Greater
-	 *     Relation.LowerEqual_1_0_3_0 returns Greater
-	 *     Relation.GreaterEqual_1_0_4_0 returns Greater
-	 *     Implication returns Greater
-	 *     Implication.Impl_1_0_0 returns Greater
-	 *     Concat returns Greater
-	 *     Concat.And_1_0_0_0 returns Greater
-	 *     Concat.Or_1_0_1_0 returns Greater
+	 *     Relation.NotEqual_1_0_3_0 returns Greater
+	 *     Relation.LowerEqual_1_0_4_0 returns Greater
+	 *     Relation.GreaterEqual_1_0_5_0 returns Greater
 	 *     MultiMathOperation returns Greater
 	 *     MultiMathOperation.Multiplication_1_0_0_0 returns Greater
 	 *     MultiMathOperation.Division_1_0_1_0 returns Greater
@@ -1299,10 +1426,12 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	 *     AddMathOperation returns Greater
 	 *     AddMathOperation.Addition_1_0_0_0 returns Greater
 	 *     AddMathOperation.Subtraction_1_0_1_0 returns Greater
+	 *     QualifiedExpression returns Greater
+	 *     QualifiedExpression.Qualifier_1_0_0_0 returns Greater
 	 *     PrimaryExpression returns Greater
 	 *
 	 * Constraint:
-	 *     (left=Relation_Greater_1_0_1_0 right=Implication)
+	 *     (left=Relation_Greater_1_0_1_0 right=MultiMathOperation)
 	 */
 	protected void sequence_Relation(ISerializationContext context, Greater semanticObject) {
 		if (errorAcceptor != null) {
@@ -1313,7 +1442,7 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getRelationAccess().getGreaterLeftAction_1_0_1_0(), semanticObject.getLeft());
-		feeder.accept(grammarAccess.getRelationAccess().getRightImplicationParserRuleCall_1_1_0(), semanticObject.getRight());
+		feeder.accept(grammarAccess.getRelationAccess().getRightMultiMathOperationParserRuleCall_1_1_0(), semanticObject.getRight());
 		feeder.finish();
 	}
 	
@@ -1321,19 +1450,20 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	/**
 	 * Contexts:
 	 *     Expression returns GreaterEqual
+	 *     Implication returns GreaterEqual
+	 *     Implication.Impl_1_0_0 returns GreaterEqual
+	 *     Concat returns GreaterEqual
+	 *     Concat.And_1_0_0_0 returns GreaterEqual
+	 *     Concat.Or_1_0_1_0 returns GreaterEqual
 	 *     Foreach returns GreaterEqual
 	 *     Exists returns GreaterEqual
 	 *     Relation returns GreaterEqual
 	 *     Relation.Lower_1_0_0_0 returns GreaterEqual
 	 *     Relation.Greater_1_0_1_0 returns GreaterEqual
 	 *     Relation.Equal_1_0_2_0 returns GreaterEqual
-	 *     Relation.LowerEqual_1_0_3_0 returns GreaterEqual
-	 *     Relation.GreaterEqual_1_0_4_0 returns GreaterEqual
-	 *     Implication returns GreaterEqual
-	 *     Implication.Impl_1_0_0 returns GreaterEqual
-	 *     Concat returns GreaterEqual
-	 *     Concat.And_1_0_0_0 returns GreaterEqual
-	 *     Concat.Or_1_0_1_0 returns GreaterEqual
+	 *     Relation.NotEqual_1_0_3_0 returns GreaterEqual
+	 *     Relation.LowerEqual_1_0_4_0 returns GreaterEqual
+	 *     Relation.GreaterEqual_1_0_5_0 returns GreaterEqual
 	 *     MultiMathOperation returns GreaterEqual
 	 *     MultiMathOperation.Multiplication_1_0_0_0 returns GreaterEqual
 	 *     MultiMathOperation.Division_1_0_1_0 returns GreaterEqual
@@ -1341,10 +1471,12 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	 *     AddMathOperation returns GreaterEqual
 	 *     AddMathOperation.Addition_1_0_0_0 returns GreaterEqual
 	 *     AddMathOperation.Subtraction_1_0_1_0 returns GreaterEqual
+	 *     QualifiedExpression returns GreaterEqual
+	 *     QualifiedExpression.Qualifier_1_0_0_0 returns GreaterEqual
 	 *     PrimaryExpression returns GreaterEqual
 	 *
 	 * Constraint:
-	 *     (left=Relation_GreaterEqual_1_0_4_0 right=Implication)
+	 *     (left=Relation_GreaterEqual_1_0_5_0 right=MultiMathOperation)
 	 */
 	protected void sequence_Relation(ISerializationContext context, GreaterEqual semanticObject) {
 		if (errorAcceptor != null) {
@@ -1354,8 +1486,8 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.EXPRESSION__RIGHT));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getRelationAccess().getGreaterEqualLeftAction_1_0_4_0(), semanticObject.getLeft());
-		feeder.accept(grammarAccess.getRelationAccess().getRightImplicationParserRuleCall_1_1_0(), semanticObject.getRight());
+		feeder.accept(grammarAccess.getRelationAccess().getGreaterEqualLeftAction_1_0_5_0(), semanticObject.getLeft());
+		feeder.accept(grammarAccess.getRelationAccess().getRightMultiMathOperationParserRuleCall_1_1_0(), semanticObject.getRight());
 		feeder.finish();
 	}
 	
@@ -1363,19 +1495,20 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	/**
 	 * Contexts:
 	 *     Expression returns Lower
+	 *     Implication returns Lower
+	 *     Implication.Impl_1_0_0 returns Lower
+	 *     Concat returns Lower
+	 *     Concat.And_1_0_0_0 returns Lower
+	 *     Concat.Or_1_0_1_0 returns Lower
 	 *     Foreach returns Lower
 	 *     Exists returns Lower
 	 *     Relation returns Lower
 	 *     Relation.Lower_1_0_0_0 returns Lower
 	 *     Relation.Greater_1_0_1_0 returns Lower
 	 *     Relation.Equal_1_0_2_0 returns Lower
-	 *     Relation.LowerEqual_1_0_3_0 returns Lower
-	 *     Relation.GreaterEqual_1_0_4_0 returns Lower
-	 *     Implication returns Lower
-	 *     Implication.Impl_1_0_0 returns Lower
-	 *     Concat returns Lower
-	 *     Concat.And_1_0_0_0 returns Lower
-	 *     Concat.Or_1_0_1_0 returns Lower
+	 *     Relation.NotEqual_1_0_3_0 returns Lower
+	 *     Relation.LowerEqual_1_0_4_0 returns Lower
+	 *     Relation.GreaterEqual_1_0_5_0 returns Lower
 	 *     MultiMathOperation returns Lower
 	 *     MultiMathOperation.Multiplication_1_0_0_0 returns Lower
 	 *     MultiMathOperation.Division_1_0_1_0 returns Lower
@@ -1383,10 +1516,12 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	 *     AddMathOperation returns Lower
 	 *     AddMathOperation.Addition_1_0_0_0 returns Lower
 	 *     AddMathOperation.Subtraction_1_0_1_0 returns Lower
+	 *     QualifiedExpression returns Lower
+	 *     QualifiedExpression.Qualifier_1_0_0_0 returns Lower
 	 *     PrimaryExpression returns Lower
 	 *
 	 * Constraint:
-	 *     (left=Relation_Lower_1_0_0_0 right=Implication)
+	 *     (left=Relation_Lower_1_0_0_0 right=MultiMathOperation)
 	 */
 	protected void sequence_Relation(ISerializationContext context, Lower semanticObject) {
 		if (errorAcceptor != null) {
@@ -1397,7 +1532,7 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getRelationAccess().getLowerLeftAction_1_0_0_0(), semanticObject.getLeft());
-		feeder.accept(grammarAccess.getRelationAccess().getRightImplicationParserRuleCall_1_1_0(), semanticObject.getRight());
+		feeder.accept(grammarAccess.getRelationAccess().getRightMultiMathOperationParserRuleCall_1_1_0(), semanticObject.getRight());
 		feeder.finish();
 	}
 	
@@ -1405,19 +1540,20 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	/**
 	 * Contexts:
 	 *     Expression returns LowerEqual
+	 *     Implication returns LowerEqual
+	 *     Implication.Impl_1_0_0 returns LowerEqual
+	 *     Concat returns LowerEqual
+	 *     Concat.And_1_0_0_0 returns LowerEqual
+	 *     Concat.Or_1_0_1_0 returns LowerEqual
 	 *     Foreach returns LowerEqual
 	 *     Exists returns LowerEqual
 	 *     Relation returns LowerEqual
 	 *     Relation.Lower_1_0_0_0 returns LowerEqual
 	 *     Relation.Greater_1_0_1_0 returns LowerEqual
 	 *     Relation.Equal_1_0_2_0 returns LowerEqual
-	 *     Relation.LowerEqual_1_0_3_0 returns LowerEqual
-	 *     Relation.GreaterEqual_1_0_4_0 returns LowerEqual
-	 *     Implication returns LowerEqual
-	 *     Implication.Impl_1_0_0 returns LowerEqual
-	 *     Concat returns LowerEqual
-	 *     Concat.And_1_0_0_0 returns LowerEqual
-	 *     Concat.Or_1_0_1_0 returns LowerEqual
+	 *     Relation.NotEqual_1_0_3_0 returns LowerEqual
+	 *     Relation.LowerEqual_1_0_4_0 returns LowerEqual
+	 *     Relation.GreaterEqual_1_0_5_0 returns LowerEqual
 	 *     MultiMathOperation returns LowerEqual
 	 *     MultiMathOperation.Multiplication_1_0_0_0 returns LowerEqual
 	 *     MultiMathOperation.Division_1_0_1_0 returns LowerEqual
@@ -1425,10 +1561,12 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	 *     AddMathOperation returns LowerEqual
 	 *     AddMathOperation.Addition_1_0_0_0 returns LowerEqual
 	 *     AddMathOperation.Subtraction_1_0_1_0 returns LowerEqual
+	 *     QualifiedExpression returns LowerEqual
+	 *     QualifiedExpression.Qualifier_1_0_0_0 returns LowerEqual
 	 *     PrimaryExpression returns LowerEqual
 	 *
 	 * Constraint:
-	 *     (left=Relation_LowerEqual_1_0_3_0 right=Implication)
+	 *     (left=Relation_LowerEqual_1_0_4_0 right=MultiMathOperation)
 	 */
 	protected void sequence_Relation(ISerializationContext context, LowerEqual semanticObject) {
 		if (errorAcceptor != null) {
@@ -1438,8 +1576,53 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.EXPRESSION__RIGHT));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getRelationAccess().getLowerEqualLeftAction_1_0_3_0(), semanticObject.getLeft());
-		feeder.accept(grammarAccess.getRelationAccess().getRightImplicationParserRuleCall_1_1_0(), semanticObject.getRight());
+		feeder.accept(grammarAccess.getRelationAccess().getLowerEqualLeftAction_1_0_4_0(), semanticObject.getLeft());
+		feeder.accept(grammarAccess.getRelationAccess().getRightMultiMathOperationParserRuleCall_1_1_0(), semanticObject.getRight());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Expression returns NotEqual
+	 *     Implication returns NotEqual
+	 *     Implication.Impl_1_0_0 returns NotEqual
+	 *     Concat returns NotEqual
+	 *     Concat.And_1_0_0_0 returns NotEqual
+	 *     Concat.Or_1_0_1_0 returns NotEqual
+	 *     Foreach returns NotEqual
+	 *     Exists returns NotEqual
+	 *     Relation returns NotEqual
+	 *     Relation.Lower_1_0_0_0 returns NotEqual
+	 *     Relation.Greater_1_0_1_0 returns NotEqual
+	 *     Relation.Equal_1_0_2_0 returns NotEqual
+	 *     Relation.NotEqual_1_0_3_0 returns NotEqual
+	 *     Relation.LowerEqual_1_0_4_0 returns NotEqual
+	 *     Relation.GreaterEqual_1_0_5_0 returns NotEqual
+	 *     MultiMathOperation returns NotEqual
+	 *     MultiMathOperation.Multiplication_1_0_0_0 returns NotEqual
+	 *     MultiMathOperation.Division_1_0_1_0 returns NotEqual
+	 *     MultiMathOperation.Modulo_1_0_2_0 returns NotEqual
+	 *     AddMathOperation returns NotEqual
+	 *     AddMathOperation.Addition_1_0_0_0 returns NotEqual
+	 *     AddMathOperation.Subtraction_1_0_1_0 returns NotEqual
+	 *     QualifiedExpression returns NotEqual
+	 *     QualifiedExpression.Qualifier_1_0_0_0 returns NotEqual
+	 *     PrimaryExpression returns NotEqual
+	 *
+	 * Constraint:
+	 *     (left=Relation_NotEqual_1_0_3_0 right=MultiMathOperation)
+	 */
+	protected void sequence_Relation(ISerializationContext context, NotEqual semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.NOT_EQUAL__LEFT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.NOT_EQUAL__LEFT));
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.EXPRESSION__RIGHT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.EXPRESSION__RIGHT));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getRelationAccess().getNotEqualLeftAction_1_0_3_0(), semanticObject.getLeft());
+		feeder.accept(grammarAccess.getRelationAccess().getRightMultiMathOperationParserRuleCall_1_1_0(), semanticObject.getRight());
 		feeder.finish();
 	}
 	
@@ -1606,15 +1789,15 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	 *     Variant returns Variant
 	 *
 	 * Constraint:
-	 *     name=EString
+	 *     var=MultiMathOperation
 	 */
 	protected void sequence_Variant(ISerializationContext context, Variant semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.VARIANT__NAME) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.VARIANT__NAME));
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.VARIANT__VAR) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.VARIANT__VAR));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getVariantAccess().getNameEStringParserRuleCall_1_0(), semanticObject.getName());
+		feeder.accept(grammarAccess.getVariantAccess().getVarMultiMathOperationParserRuleCall_1_0(), semanticObject.getVar());
 		feeder.finish();
 	}
 	

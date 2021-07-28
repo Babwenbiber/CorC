@@ -29,7 +29,7 @@ EString returns ecore::EString:
 	
 	
 CodeString returns ecore::EString: 
-			(ID ('[' (ID | INT) ']')? '=' '('? (VariableString | '-'? INT) (Operation '('* ( VariableString | '-'? INT ) ')'*)* ';')+
+			(VariableString '=' "("? VariableString (Operation VariableString)* ")"? ';')+
 		;
 
 //CodeString returns ecore::EString: 
@@ -45,11 +45,10 @@ CodeString returns ecore::EString:
 //;
 		
 VariableString returns ecore::EString:
-	'-'? ID ( 
-			('(' ( (VariableString | '-'? INT) (',' (VariableString | '-'? INT))*)? ')') ('.' VariableString)? |
-			('[' (VariableString | '-'? INT)? ']') ('.' VariableString)? |
-			('.' VariableString)
-		)?
+	'-'? (INT | QualifiedName ( 
+			('(' ( '-'?(QualifiedName |  INT) (',' '-'?(QualifiedName |  INT))*)? ')') |
+			('[' '-'?(QualifiedName |  INT) (Operation '-'?(QualifiedName | INT))* ']')
+		)?)
 ;
 		//ID( ('[' | '(') ( (VariableString | INT) (',' (VariableString | INT))*)? (']' | ')'))?
 Operation:
@@ -130,7 +129,7 @@ EInt returns ecore::EInt:
 
 Variant returns Variant:
 	{Variant}
-	name=EString;
+	var=MultiMathOperation;
 
 JavaVariables returns JavaVariables:
 	{JavaVariables}
@@ -161,13 +160,19 @@ Rename returns Rename:
 	;
 
 Expression:
-	Foreach;
+	Implication;
 	
 VariableOrMethodName:
 	name=ID;
 	
+Implication returns Expression:
+	Concat (( {Impl.left=current} '->') right=Concat)*;
+
+Concat returns Expression:
+	Foreach (({And.left=current} '&' | {Or.left=current} '|') right=Foreach)*;
+	
 Foreach returns Expression:
-	Exists | (foreach="(\\foreach" type=JvmTypeReference var=VariableOrMethodName ";" right=Exists ")")
+	Exists | (foreach="(\\forall" type=JvmTypeReference var=VariableOrMethodName ";" right=Exists ")")
 ;
 
 Exists returns Expression:
@@ -175,23 +180,24 @@ Exists returns Expression:
 ;
 
 Relation returns Expression:
-	Implication ( ({Lower.left=current} "<" | {Greater.left=current} ">" | {Equal.left=current} "=" | {LowerEqual.left=current} "<=" | {GreaterEqual.left=current} ">=") right=Implication)*;
-
-Implication returns Expression:
-	Concat (( {Impl.left=current} '->') right=Concat)*;
-
-Concat returns Expression:
-	MultiMathOperation (({And.left=current} '&' | {Or.left=current} '|') right=MultiMathOperation)*;
+	MultiMathOperation( ({Lower.left=current} "<" | {Greater.left=current} ">" | {Equal.left=current} "=" | {NotEqual.left=current} "!=" |{LowerEqual.left=current} "<=" | {GreaterEqual.left=current} ">=") right=MultiMathOperation)*;
 	
 MultiMathOperation returns Expression:
 	AddMathOperation (( {Multiplication.left=current} '*' | {Division.left=current} "/" | {Modulo.left=current} "%") right=AddMathOperation)*;
 
 AddMathOperation returns Expression:
-	PrimaryExpression (({Addition.left=current} '+' | {Subtraction.left=current} '-') right=PrimaryExpression)*;	
+	QualifiedExpression (({Addition.left=current} '+' | {Subtraction.left=current} '-') right=QualifiedExpression)*;	
+
+QualifiedExpression returns Expression:
+	PrimaryExpression (=>({Qualifier.left=current} ".") right=PrimaryExpression)*;
 
 PrimaryExpression returns Expression:
     {Expression} => ('false' | isTrue?='true') |
-	'(' Expression ')' |
-	{FunctionCall} func=VariableOrMethodName ('(' (args+=Expression (',' args+=Expression)* )?')')? |
-	{Expression} Number
+	'!' ? '(' Expression ')' |
+	{FunctionCall} '!' ? func=VariableOrMethodName ('(' (args+=Expression (',' args+=Expression)* )?')')? |
+	{ArrayElement} '!' ? array=VariableOrMethodName ('[' (element+=Expression ']'('[' element+=Expression ']')* )?) |	
+	{Expression} INT |
+	{Expression} STRING |
+	{Expression} CHARACTER |
+	{Expression} "null"
 	 ;

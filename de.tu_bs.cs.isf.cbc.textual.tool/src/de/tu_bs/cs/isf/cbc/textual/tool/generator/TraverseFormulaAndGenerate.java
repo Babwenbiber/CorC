@@ -40,6 +40,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.StrengthWeakStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.AbstractStatementImpl;
 import de.tu_bs.cs.isf.cbc.cbcmodel.singleton.CbCFormulaSingleton;
 import de.tu_bs.cs.isf.cbc.cbcmodel.string_saver.ConditionExtension;
+import de.tu_bs.cs.isf.cbc.cbcmodel.string_saver.ExpressionExtension;
 import de.tu_bs.cs.isf.cbc.cbcmodel.string_saver.JavaVariableExtension;
 import de.tu_bs.cs.isf.cbc.util.ConstructCodeBlock;
 import de.tu_bs.cs.isf.cbc.util.FileUtil;
@@ -199,7 +200,8 @@ public class TraverseFormulaAndGenerate {
 				getListStringFromListCondition(conds), renaming, uri, numberFile++, false, FilenamePrefix.POST_IMPL);
 		String code = ConstructCodeBlock.constructCodeBlockAndVerify3(repetitionStatement);
 		ProveWithKey.createProveVariant2WithKey(code, invariant.stringRepresentation,
-				guard.stringRepresentation, repetitionStatement.getVariant(),  getListStringFromListVariables(vars.getVariables()),
+				guard.stringRepresentation, new ExpressionExtension(repetitionStatement.getVariant().getVar()).stringRepresentation,
+				getListStringFromListVariables(vars.getVariables()),
 				getListStringFromListCondition(conds), renaming, uri,
 				numberFile++, false, FilenamePrefix.VARIANT2);
 
