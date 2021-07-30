@@ -1,12 +1,15 @@
 package de.tu_bs.cs.isf.cbc.tool.patterns;
 
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.runtime.CoreException;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.graphiti.features.IReason;
 import org.eclipse.graphiti.features.context.IAddContext;
 import org.eclipse.graphiti.features.context.ICreateContext;
+import org.eclipse.graphiti.features.context.IDeleteContext;
+import org.eclipse.graphiti.features.context.IDirectEditingContext;
 import org.eclipse.graphiti.features.impl.Reason;
 import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
 import org.eclipse.graphiti.mm.algorithms.Image;
@@ -28,15 +31,22 @@ import org.eclipse.graphiti.pattern.id.IdUpdateContext;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeCreateService;
+import org.eclipse.graphiti.services.IPeService;
 import org.eclipse.graphiti.util.IColorConstant;
 import org.eclipse.graphiti.util.PredefinedColoredAreas;
 
-import de.tu_bs.cs.isf.cbc.cbcmodel.AbstractStatement;
+import de.tu_bs.cs.isf.cbc.cbcmodel.BlockStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbCFormula;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbcmodelFactory;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Condition;
+import de.tu_bs.cs.isf.cbc.cbcmodel.JMLAnnotation;
+import de.tu_bs.cs.isf.cbc.cbcmodel.JavaStatement;
+import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariables;
+import de.tu_bs.cs.isf.cbc.cbcmodel.SelectionStatement;
 import de.tu_bs.cs.isf.cbc.tool.diagram.CbCImageProvider;
-import de.tu_bs.cs.isf.cbc.tool.model.CbcModelUtil;
+import de.tu_bs.cs.isf.cbc.tool.helper.UpdateModifiableOfConditions;
+import de.tu_bs.cs.isf.cbc.util.FileUtil;
+import de.tu_bs.cs.isf.toolkit.support.compare.CompareMethodBodies;
 
 /**
  * Class that creates the graphical representation of Conditions
@@ -46,21 +56,26 @@ import de.tu_bs.cs.isf.cbc.tool.model.CbcModelUtil;
  */
 public class BlockPattern extends IdPattern implements IPattern {
 
-	private static final String ID_STATEMENT_TEXT = "statementNameText";
-	private static final String ID_NAME_TEXT = "nameText";
-	private static final String ID_PRE_TEXT = "preConditionText";
-	private static final String ID_POST_TEXT = "postConditionText";
+	private static final String ID_NAME_TEXT = "statementText";
+	private static final String ID_PRE_TEXT = "preText";
+	private static final String ID_POST_TEXT = "postText";
+	private static final String ID_PRE_BLOCK_TEXT = "preBlockText";
+	private static final String ID_POST_BLOCK_TEXT = "postBlockText";
 	private static final String ID_MAIN_RECTANGLE = "mainRectangle";
 	private static final String ID_IMAGE_PROVEN = "imageproven";
-	// Header:
+	// Headers:
 	private static final String ID_PRE_HEADER = "preHeader";
-	private static final String ID_ST_HEADER = "stHeader";
 	private static final String ID_POST_HEADER = "postHeader";
-	// lines:
-	private static final String ID_HOR1_LINE = "hor1Line";
-	private static final String ID_HOR2_LINE = "hor2Line";
-	private static final String ID_VER1_LINE = "ver1Line";
-	private static final String ID_VER2_LINE = "ver2Line";
+	private static final String ID_NAME_HEADER = "statementHeader";
+	private static final String ID_PRE_BLOCK_HEADER = "preBlockHeader";
+	private static final String ID_POST_BLOCK_HEADER = "postBlockHeader";
+	// Separating lines:
+	private static final String ID_HEADER_SEPARATER = "headerSeparater";
+	private static final String ID_BLOCK_HEADER_SEPARATER = "blockHeaderSeparater";
+	private static final String ID_STATEMENT_HEADER_SEPARATER = "statementHeaderSeparater";
+	private static final String ID_CONDITION_SEP = "conditionSep";
+	private static final String ID_BLOCK_CONDITION_SEPARATER = "blockConditionSeparater";
+	private static final String ID_STATEMENT_BLOCK_SEPARATER = "statementBlockSeparater";
 
 	/**
 	 * Constructor of the class
@@ -71,57 +86,45 @@ public class BlockPattern extends IdPattern implements IPattern {
 
 	@Override
 	public String getCreateName() {
-		return "Formula";
+		return "Block";
 	}
 
 	@Override
 	public String getCreateDescription() {
-		return "Create a Formula.";
+		return "Create a Block-Statement.";
 	}
 
 	@Override
 	public boolean isMainBusinessObjectApplicable(Object mainBusinessObject) {
-		return mainBusinessObject instanceof CbCFormula;
+		return mainBusinessObject instanceof BlockStatement;
 	}
 
 	@Override
 	public boolean canCreate(ICreateContext context) {
-		CbCFormula formula = null;
-		for (Shape shape : getDiagram().getChildren()) {
-			Object obj = getBusinessObjectForPictogramElement(shape);
-			if (obj instanceof CbCFormula) {
-				formula = (CbCFormula) obj;
-			}
-		}
-		if (formula != null)
-			return false;
 		return context.getTargetContainer() instanceof Diagram;
 	}
 
 	@Override
 	public Object[] create(ICreateContext context) {
-		CbCFormula formula = CbcmodelFactory.eINSTANCE.createCbCFormula();
-		formula.setName(getDiagram().getName());
-		AbstractStatement statement = CbcmodelFactory.eINSTANCE.createAbstractStatement();
-		statement.setName("statement");
-		formula.setStatement(statement);
-		Condition preCondition = CbcmodelFactory.eINSTANCE.createCondition();
-		preCondition.setName("pre");
-		statement.setPreCondition(preCondition);
-		Condition postCondition = CbcmodelFactory.eINSTANCE.createCondition();
-		postCondition.setName("post");
-		statement.setPostCondition(postCondition);
+		BlockStatement statement = CbcmodelFactory.eINSTANCE.createBlockStatement();
+		statement.setName("Block-Statement");
+		Condition pre = CbcmodelFactory.eINSTANCE.createCondition();
+		pre.setName("1");
+		statement.setPreCondition(pre);
+		Condition post = CbcmodelFactory.eINSTANCE.createCondition();
+		post.setName("2");
+		statement.setPostCondition(post);
+		Condition preBlock = CbcmodelFactory.eINSTANCE.createCondition();
+		preBlock.setName("3");
+		Condition postBlock = CbcmodelFactory.eINSTANCE.createCondition();
+		postBlock.setName("4");
+		JMLAnnotation annotation = CbcmodelFactory.eINSTANCE.createJMLAnnotation();
+		annotation.setRequires(preBlock);
+		annotation.setEnsures(postBlock);
+		statement.setJmlAnnotation(annotation);
 
-		// Use the following instead of the above line to store the model
-		// data in a seperate file parallel to the diagram file
-		try {
-			CbcModelUtil.saveFormulaToModelFile(formula, getDiagram());
-		} catch (CoreException | IOException e) {
-			e.printStackTrace();
-		}
-
-		addGraphicalRepresentation(context, formula);
-		return new Object[] { formula };
+		addGraphicalRepresentation(context, statement);
+		return new Object[] { statement };
 	}
 
 	@Override
@@ -132,15 +135,15 @@ public class BlockPattern extends IdPattern implements IPattern {
 	@Override
 	public PictogramElement doAdd(IAddContext context) {
 		manageColor(IColorConstant.DARK_GREEN);
+
 		Diagram targetDiagram = (Diagram) context.getTargetContainer();
-		CbCFormula addedFormula = (CbCFormula) context.getNewObject();
+		BlockStatement addedStatement = (BlockStatement) context.getNewObject();
 		IPeCreateService peCreateService = Graphiti.getPeCreateService();
 		IGaService gaService = Graphiti.getGaService();
 
 		int width = context.getWidth() <= 0 ? 300 : context.getWidth();
-		int height = context.getHeight() <= 0 ? 150 : context.getHeight();
-		// header font:
-		Font headerFont = gaService.manageFont(getDiagram(), "Arial", 9, false, true);
+		int height = context.getHeight() <= 0 ? 300 : context.getHeight();
+		// Font:
 
 		// Main contents area
 		ContainerShape outerContainerShape = peCreateService.createContainerShape(targetDiagram, true);
@@ -153,359 +156,336 @@ public class BlockPattern extends IdPattern implements IPattern {
 		gaService.setLocationAndSize(mainRectangle, context.getX(), context.getY(), width, height);
 
 		// create link and wire it
-		link(outerContainerShape, addedFormula);
+		link(outerContainerShape, addedStatement);
 
 		// Statement name
-		Shape textShapePreCondition = peCreateService.createShape(outerContainerShape, true);
-		MultiText preConditionText = gaService.createMultiText(textShapePreCondition, "");
-		setId(preConditionText, ID_PRE_TEXT);
-		preConditionText.setValue("{" + addedFormula.getStatement().getPreCondition().getName() + "}");
-		preConditionText.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
-		preConditionText.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
-
-		Shape textShapeStatement = peCreateService.createShape(outerContainerShape, true);
-		MultiText statementText = gaService.createMultiText(textShapeStatement, "");
-		setId(statementText, ID_STATEMENT_TEXT);
-		statementText.setValue(addedFormula.getStatement().getName());
-		statementText.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
-		statementText.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
-
-		Shape textShapePostCondition = peCreateService.createShape(outerContainerShape, true);
-		MultiText postConditionText = gaService.createMultiText(textShapePostCondition, "");
-		postConditionText.setValue("{" + addedFormula.getStatement().getPostCondition().getName() + "}");
-		setId(postConditionText, ID_POST_TEXT);
-		postConditionText.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
-		postConditionText.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
-
-		Shape textShapeName = peCreateService.createShape(outerContainerShape, false);
-		MultiText nameText = gaService.createMultiText(textShapeName, "Formula");
-		setId(nameText, ID_NAME_TEXT);
-		nameText.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
-		nameText.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
-		nameText.setFont(headerFont);
+		Shape textShape = setContent(ID_NAME_TEXT, addedStatement.getJavaStatement().getName(), 
+				true, outerContainerShape, peCreateService, gaService);
+		Shape preShape = setContent(ID_PRE_TEXT, "{" + addedStatement.getPreCondition().getName() + "}", 
+				false, outerContainerShape, peCreateService, gaService);
+		Shape postShape = setContent(ID_POST_TEXT, "{" + addedStatement.getPostCondition().getName() + "}",
+				false, outerContainerShape, peCreateService, gaService);
+		Shape preBlockShape = setContent(ID_PRE_BLOCK_TEXT, "{" + addedStatement.getJmlAnnotation().getRequires().getName() + "}", 
+				true, outerContainerShape, peCreateService, gaService);
+		Shape postBlockShape = setContent(ID_POST_BLOCK_TEXT, "{" + addedStatement.getJmlAnnotation().getEnsures().getName() + "}", 
+				true, outerContainerShape, peCreateService, gaService);
 
 		Shape proveShape = peCreateService.createShape(outerContainerShape, false);
 		Image image = gaService.createImage(proveShape, CbCImageProvider.IMG_UNPROVEN);
 		setId(image, ID_IMAGE_PROVEN);
 
-		// Header:
-		Shape preHeaderShape = peCreateService.createShape(outerContainerShape, false);
-		Text preHeader = gaService.createText(preHeaderShape, "precondition");
-		setId(preHeader, ID_PRE_HEADER);
-		preHeader.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
-		preHeader.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
-		preHeader.setFont(headerFont);
+		setHeader(ID_NAME_HEADER, "statement", outerContainerShape, peCreateService, gaService);
+		setHeader(ID_PRE_HEADER, "precondition", outerContainerShape, peCreateService, gaService);
+		setHeader(ID_POST_HEADER, "postcondition", outerContainerShape, peCreateService, gaService);
+		setHeader(ID_PRE_BLOCK_HEADER, "requires", outerContainerShape, peCreateService, gaService);
+		setHeader(ID_POST_BLOCK_HEADER, "ensures", outerContainerShape, peCreateService, gaService);
+		
+		createSeperator(ID_HEADER_SEPARATER, outerContainerShape, peCreateService, gaService);
+		createSeperator(ID_BLOCK_HEADER_SEPARATER, outerContainerShape, peCreateService, gaService);
+		createSeperator(ID_STATEMENT_HEADER_SEPARATER, outerContainerShape, peCreateService, gaService);
+		createSeperator(ID_CONDITION_SEP, outerContainerShape, peCreateService, gaService);
+		createSeperator(ID_BLOCK_CONDITION_SEPARATER, outerContainerShape, peCreateService, gaService);
+		createSeperator(ID_STATEMENT_BLOCK_SEPARATER, outerContainerShape, peCreateService, gaService);
 
-		Shape postHeaderShape = peCreateService.createShape(outerContainerShape, false);
-		Text postHeader = gaService.createText(postHeaderShape, "postcondition");
-		setId(postHeader, ID_POST_HEADER);
-		postHeader.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
-		postHeader.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
-		postHeader.setFont(headerFont);
+		peCreateService.createChopboxAnchor(outerContainerShape);
+		peCreateService.createChopboxAnchor(textShape);
+		peCreateService.createChopboxAnchor(preBlockShape);
+		peCreateService.createChopboxAnchor(postBlockShape);
 
-		Shape stHeaderShape = peCreateService.createShape(outerContainerShape, false);
-		Text stHeader = gaService.createText(stHeaderShape, "statement");
-		setId(stHeader, ID_ST_HEADER);
-		stHeader.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
-		stHeader.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
-		stHeader.setFont(headerFont);
-		// lines:
-		Shape hor1LineShape = peCreateService.createShape(outerContainerShape, false);
-		Polyline hor1Polyline = gaService.createPolyline(hor1LineShape);
-		setId(hor1Polyline, ID_HOR1_LINE);
-
-		Shape hor2LineShape = peCreateService.createShape(outerContainerShape, false);
-		Polyline hor2Polyline = gaService.createPolyline(hor2LineShape);
-		setId(hor2Polyline, ID_HOR2_LINE);
-
-		Shape ver1LineShape = peCreateService.createShape(outerContainerShape, false);
-		Polyline ver1Polyline = gaService.createPolyline(ver1LineShape);
-		setId(ver1Polyline, ID_VER1_LINE);
-
-		Shape ver2LineShape = peCreateService.createShape(outerContainerShape, false);
-		Polyline ver2Polyline = gaService.createPolyline(ver2LineShape);
-		setId(ver2Polyline, ID_VER2_LINE);
-
-		peCreateService.createChopboxAnchor(textShapeStatement);
-
-		link(outerContainerShape, addedFormula);
-		link(getDiagram(), addedFormula);
-		link(textShapePreCondition, addedFormula.getStatement().getPreCondition());
-		link(textShapeStatement, addedFormula.getStatement());
-		link(textShapePostCondition, addedFormula.getStatement().getPostCondition());
-		link(proveShape, addedFormula);
+		link(outerContainerShape, addedStatement);
+		link(textShape, addedStatement.getJavaStatement());
+		link(preShape, addedStatement.getPreCondition());
+		link(postShape, addedStatement.getPostCondition());
+		link(preBlockShape, addedStatement.getJmlAnnotation().getRequires());
+		link(postBlockShape, addedStatement.getJmlAnnotation().getEnsures());
+		link(proveShape, addedStatement);
 
 		return outerContainerShape;
 	}
 
+	private Shape setContent(String name, String text, boolean active, ContainerShape outerContainerShape, IPeCreateService peCreateService, IGaService gaService) {
+		Shape shape = peCreateService.createShape(outerContainerShape, active);
+		MultiText multiText = gaService.createMultiText(shape, text);
+		setId(multiText, name);
+		multiText.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
+		multiText.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
+		return shape;
+	}
+	
+	private void setHeader(String name, String text, ContainerShape outerContainerShape, IPeCreateService peCreateService, IGaService gaService) {
+		Font headerFont = gaService.manageFont(getDiagram(), "Arial", 9, false, true);
+		Shape textHeader = peCreateService.createShape(outerContainerShape, false);
+		Text statementNameHeader = gaService.createText(textHeader, text);
+		setId(statementNameHeader, name);
+		statementNameHeader.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
+		statementNameHeader.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
+		statementNameHeader.setFont(headerFont);
+	}
+	
+	private void createSeperator(String name, ContainerShape outerContainerShape, IPeCreateService peCreateService, IGaService gaService) {
+		Shape statementHeaderSepShape = peCreateService.createShape(outerContainerShape, false);
+		Polyline polyLine = gaService.createPolyline(statementHeaderSepShape);
+		setId(polyLine, name);
+	}
+	
 	@Override
 	protected boolean layout(IdLayoutContext context, String id) {
-		boolean changesDone = false;
 
-		GraphicsAlgorithm mainRectangle = context.getRootPictogramElement().getGraphicsAlgorithm();
-		GraphicsAlgorithm ga = context.getGraphicsAlgorithm();
-		int third = mainRectangle.getWidth() / 3;
-		// stable sizes from Name and Header save space when the diagram gets big!
-		int sizeName = 30; // size from Formular block
-		int sizeHeader = 20; // size from the Header
-		int positionHeader = 40; // position where the Header is
-		int sizeText = mainRectangle.getHeight() - positionHeader - sizeHeader; // size from the blocks (pre, statement,
-																				// post)
-		int positionText = positionHeader + sizeHeader; // position from the blocks (pre, statement, post)
 
 		if (id.equals(ID_NAME_TEXT)) {
-			Graphiti.getGaService().setLocationAndSize(ga, 0, 5, mainRectangle.getWidth(), sizeName);
-			changesDone = true;
+			return setLocationAndSize(context, 0.0, 2.0/3+0.1, 1.0, 1.0);
 		} else if (id.equals(ID_PRE_TEXT)) {
-			Graphiti.getGaService().setLocationAndSize(ga, 0, positionText, third, sizeText);
-			changesDone = true;
-		} else if (id.equals(ID_STATEMENT_TEXT)) {
-			Graphiti.getGaService().setLocationAndSize(ga, third, positionText, third, sizeText);
-			changesDone = true;
+			return setLocationAndSize(context, 0.0, 0.1, 1.0/2, 1.0/3);
 		} else if (id.equals(ID_POST_TEXT)) {
-			Graphiti.getGaService().setLocationAndSize(ga, third * 2, positionText, third, sizeText);
-			changesDone = true;
+			return setLocationAndSize(context, 1.0/2, 0.1, 1.0, 1.0/3);
+		} else if (id.equals(ID_PRE_BLOCK_TEXT)) {
+			return setLocationAndSize(context, 0.0, 1.0/3+0.1, 1.0/2, 2.0/3);
+		} else if (id.equals(ID_POST_BLOCK_TEXT)) {
+			return setLocationAndSize(context, 1.0/2, 1.0/3+0.1, 1.0, 2.0/3);
 		} else if (id.equals(ID_IMAGE_PROVEN)) {
-			Graphiti.getGaService().setLocationAndSize(ga, mainRectangle.getWidth() - 20, 10, 10, 10);
-			changesDone = true;
+			return setLocationAndSize(context, 0.9, 0.02, 0.95, 0.08);
+			// Header:
+		} else if (id.equals(ID_NAME_HEADER)) {
+			return setLocationAndSize(context, 0, 2.0/3+0.05, 1, 2.0/3+0.1);
 		} else if (id.equals(ID_PRE_HEADER)) {
-			Graphiti.getGaService().setLocationAndSize(ga, 0, positionHeader, third, sizeHeader);
-			changesDone = true;
-		} else if (id.equals(ID_ST_HEADER)) {
-			Graphiti.getGaService().setLocationAndSize(ga, third, positionHeader, third, sizeHeader);
-			changesDone = true;
+			return setLocationAndSize(context, 0, 0.05, 0.5, 0.1);
 		} else if (id.equals(ID_POST_HEADER)) {
-			Graphiti.getGaService().setLocationAndSize(ga, third * 2, positionHeader, third, sizeHeader);
-			changesDone = true;
-		} else if (id.equals(ID_HOR1_LINE)) {
-			Polyline polyline = (Polyline) ga;
-			polyline.getPoints().clear();
-			List<Point> pointList = Graphiti.getGaService()
-					.createPointList(new int[] { 0, positionHeader, mainRectangle.getWidth(), positionHeader });
-			polyline.getPoints().addAll(pointList);
-			changesDone = true;
-		} else if (id.equals(ID_HOR2_LINE)) {
-			Polyline polyline = (Polyline) ga;
-			polyline.getPoints().clear();
-			List<Point> pointList = Graphiti.getGaService().createPointList(new int[] { 0, positionHeader + sizeHeader,
-					mainRectangle.getWidth(), positionHeader + sizeHeader });
-			polyline.getPoints().addAll(pointList);
-			changesDone = true;
-		} else if (id.equals(ID_VER1_LINE)) {
-			Polyline polyline = (Polyline) ga;
-			polyline.getPoints().clear();
-			List<Point> pointList = Graphiti.getGaService()
-					.createPointList(new int[] { third, positionHeader, third, mainRectangle.getHeight() });
-			polyline.getPoints().addAll(pointList);
-			changesDone = true;
-		} else if (id.equals(ID_VER2_LINE)) {
-			Polyline polyline = (Polyline) ga;
-			polyline.getPoints().clear();
-			List<Point> pointList = Graphiti.getGaService()
-					.createPointList(new int[] { third * 2, positionHeader, third * 2, mainRectangle.getHeight() });
-			polyline.getPoints().addAll(pointList);
-			changesDone = true;
+			return setLocationAndSize(context, 0.5, 0.05, 1, 0.1);
+		} else if (id.equals(ID_PRE_BLOCK_HEADER)) {
+			return setLocationAndSize(context, 0, 1.0/3+0.05, 0.5, 1.0/3+0.1);
+		} else if (id.equals(ID_POST_BLOCK_HEADER)) {
+			return setLocationAndSize(context, 0.5, 1.0/3+0.05, 1, 1.0/3+0.1);
+			// LINES:
+		} else if (id.equals(ID_HEADER_SEPARATER)) {
+			return drawLine(context, 0, 0.1, 1, 0.1);
+		} else if (id.equals(ID_BLOCK_HEADER_SEPARATER)) {
+			return drawLine(context, 0, 1.0/3+0.1, 1, 1.0/3+0.1);
+		} else if (id.equals(ID_STATEMENT_HEADER_SEPARATER)) {
+			return drawLine(context, 0, 2.0/3+0.1, 1, 2.0/3+0.1);
+		} else if (id.equals(ID_CONDITION_SEP)) {
+			return drawLine(context, 0.5, 0, 0.5, 2.0/3);
+		} else if (id.equals(ID_BLOCK_CONDITION_SEPARATER)) {
+			return drawLine(context, 0, 1.0/3, 1, 1.0/3);
+		} else if (id.equals(ID_STATEMENT_BLOCK_SEPARATER)) {
+			return drawLine(context, 0, 2.0/3, 1, 2.0/3);
 		}
-
-		return changesDone;
+		
+		return false;
 	}
 
+	private boolean drawLine(IdLayoutContext context, double startX, double startY, double endX, double endY) {
+		GraphicsAlgorithm mainRectangle = context.getRootPictogramElement().getGraphicsAlgorithm();
+		GraphicsAlgorithm ga = context.getGraphicsAlgorithm();
+		Polyline polyline = (Polyline) ga;
+		double width = mainRectangle.getWidth();
+		double height= (mainRectangle.getHeight());
+		polyline.getPoints().clear();
+		List<Point> pointList = Graphiti.getGaService()
+				.createPointList(new int[] { (int)(startX*width), (int)(startY*height),
+						(int)(endX*width), (int)(endY*height) });
+		polyline.getPoints().addAll(pointList);
+		return true;
+	}
+	
+	private boolean setLocationAndSize(IdLayoutContext context, double startX, double startY, double endX, double endY) {
+		GraphicsAlgorithm mainRectangle = context.getRootPictogramElement().getGraphicsAlgorithm();
+		GraphicsAlgorithm ga = context.getGraphicsAlgorithm();
+		double width = mainRectangle.getWidth();
+		double height= (mainRectangle.getHeight());
+		int itemWidth = (int)((endX-startX)*width);
+		int itemHeight= (int)((endY-startY)*height);
+		Graphiti.getGaService().setLocationAndSize(ga, (int)(startX*width), (int)(startY*height), itemWidth, itemHeight);
+		return true;
+	}
+	
 	@Override
 	protected IReason updateNeeded(IdUpdateContext context, String id) {
-		if (id.equals(ID_MAIN_RECTANGLE)) {
+		if (context.getGraphicsAlgorithm() instanceof MultiText &&
+				(context.getDomainObject() instanceof BlockStatement || context.getDomainObject() instanceof Condition)) {
+//			MultiText nameText = (MultiText) context.getGraphicsAlgorithm();
+//			String newText = "";
+//			if (context.getDomainObject() instanceof Condition) {
+//				newText = ((Condition)context.getDomainObject()).getName();
+//			}
+//			BlockStatement domainObject = (BlockStatement) context.getDomainObject();
+//			if (id.equals(ID_NAME_TEXT)) {
+//				newText = domainObject.getJavaStatement().getName();
+//			} else if (id.equals(ID_PRE_BLOCK_TEXT)) {
+//				newText = domainObject.getJmlAnnotation().getRequires().getName();
+//			} else if (id.equals(ID_POST_BLOCK_TEXT)) {
+//				newText = domainObject.getJmlAnnotation().getEnsures().getName();
+//			} else {
+//				return Reason.createFalseReason();
+//			}
+//			if (newText == null || !newText.equals(nameText.getValue())) {
+//				return Reason.createTrueReason("Name differs. Expected: '" + newText + "'");
+//			} 
+		} else if (id.equals(ID_MAIN_RECTANGLE)) {
 			RoundedRectangle rectangle = (RoundedRectangle) context.getGraphicsAlgorithm();
-			CbCFormula domainObject = (CbCFormula) context.getDomainObject();
-			AbstractStatement statement = domainObject.getStatement();
-			AbstractStatement statementToCheck = null;
-			if (statement.getRefinement() != null) {
-				statementToCheck = statement.getRefinement();
-			} else {
-				statementToCheck = statement;
-			}
-			if (statementToCheck.isProven() && ((rectangle.getForeground() != null
+			BlockStatement domainObject = (BlockStatement) context.getDomainObject();
+			if (domainObject.isProven() && ((rectangle.getForeground() != null
 					&& !rectangle.getForeground().equals(manageColor(IColorConstant.DARK_GREEN)))
 					|| rectangle.getForeground() == null)) {
 				return Reason.createTrueReason("Statement is proven. Expected green color.");
-			} else if (!statementToCheck.isProven() && ((rectangle.getForeground() != null
+			} else if (!domainObject.isProven() && ((rectangle.getForeground() != null
 					&& rectangle.getForeground().equals(manageColor(IColorConstant.DARK_GREEN)))
 					|| rectangle.getForeground() == null)) {
 				return Reason.createTrueReason("Statement is not proven. Expected red color.");
 			}
 		} else if (id.equals(ID_IMAGE_PROVEN)) {
-			CbCFormula domainObject = (CbCFormula) context.getDomainObject();
-			AbstractStatement statement = domainObject.getStatement();
-			AbstractStatement statementToCheck = null;
-			if (statement.getRefinement() != null) {
-				statementToCheck = statement.getRefinement();
-			} else {
-				statementToCheck = statement;
-			}
+			BlockStatement domainObject = (BlockStatement) context.getDomainObject();
 			Image image = (Image) context.getGraphicsAlgorithm();
-			if (statementToCheck.isProven() && image.getId().equals(CbCImageProvider.IMG_UNPROVEN)) {
+			if (domainObject.isProven() && image.getId().equals(CbCImageProvider.IMG_UNPROVEN)) {
 				return Reason.createTrueReason("Statement is proven. Expected green color.");
-			} else if (!statementToCheck.isProven() && image.getId().equals(CbCImageProvider.IMG_PROVEN)) {
+			} else if (!domainObject.isProven() && image.getId().equals(CbCImageProvider.IMG_PROVEN)) {
 				return Reason.createTrueReason("Statement is not proven. Expected red color.");
 			}
 		}
-		// if (id.equals(ID_PRE_TEXT)) {
-		//// MultiText nameText = (MultiText) context.getGraphicsAlgorithm();
-		//// Condition domainObject = (Condition) context.getDomainObject();
-		//// if (domainObject.getName() == null ||
-		// !domainObject.getName().equals(nameText.getValue())) {
-		//// return Reason.createTrueReason("Name differs. Expected: '" +
-		// domainObject.getName() + "'");
-		//// }
-		// } else if (id.equals(ID_STATEMENT_TEXT)) {
-		//// MultiText nameText = (MultiText) context.getGraphicsAlgorithm();
-		//// AbstractStatement domainObject = (AbstractStatement)
-		// context.getDomainObject();
-		//// if (domainObject.getName() == null ||
-		// !domainObject.getName().equals(nameText.getValue())) {
-		//// return Reason.createTrueReason("Name differs. Expected: '" +
-		// domainObject.getName() + "'");
-		//// }
-		// } else if (id.equals(ID_POST_TEXT)) {
-		//// MultiText nameText = (MultiText) context.getGraphicsAlgorithm();
-		//// Condition domainObject = (Condition) context.getDomainObject();
-		//// if (domainObject.getName() == null ||
-		// !domainObject.getName().equals(nameText.getValue())) {
-		//// return Reason.createTrueReason("Name differs. Expected: '" +
-		// domainObject.getName() + "'");
-		//// }
-		// }
 
 		return Reason.createFalseReason();
 	}
 
 	@Override
 	protected boolean update(IdUpdateContext context, String id) {
-		if (id.equals(ID_MAIN_RECTANGLE)) {
-			RoundedRectangle rectangle = (RoundedRectangle) context.getGraphicsAlgorithm();
-			CbCFormula domainObject = (CbCFormula) context.getDomainObject();
-			AbstractStatement statement = domainObject.getStatement();
-			AbstractStatement statementToCheck = null;
-			if (statement.getRefinement() != null) {
-				statementToCheck = statement.getRefinement();
+		if (context.getGraphicsAlgorithm() instanceof MultiText &&
+				context.getDomainObject() != null) {
+			MultiText nameText = (MultiText) context.getGraphicsAlgorithm();
+			
+			String newText = "";
+			if (id.equals(ID_NAME_TEXT)) {
+				JavaStatement domainObject = (JavaStatement) context.getDomainObject();
+				newText = domainObject.getName();
+			} else if (id.equals(ID_PRE_BLOCK_TEXT) || id.equals(ID_POST_BLOCK_TEXT) || id.equals(ID_PRE_TEXT) || id.equals(ID_POST_TEXT)) {
+				Condition domainObject = (Condition) context.getDomainObject();
+				newText = "{" + domainObject.getName() + "}";
 			} else {
-				statementToCheck = statement;
+				return false;
 			}
-			if (statementToCheck.isProven()) {
-				domainObject.setProven(true);
+			nameText.setValue(newText);
+			return true;	
+		} else if (id.equals(ID_MAIN_RECTANGLE)) {
+			RoundedRectangle rectangle = (RoundedRectangle) context.getGraphicsAlgorithm();
+			BlockStatement domainObject = (BlockStatement) context.getDomainObject();
+			if (domainObject.isProven()) {
 				rectangle.setForeground(manageColor(IColorConstant.DARK_GREEN));
-				// updateParent(domainObject, true); MethodStatement of other diagram
+				if (domainObject.getParent() != null) {
+					IPeService pe = Graphiti.getPeService();
+					EObject[] objArray = { domainObject.getParent() };
+					Object[] obj = pe.getLinkedPictogramElements(objArray, getDiagram());
+					Shape pElement = (Shape) obj[0];
+					if (pElement.getContainer() != null)
+						updatePictogramElement(pElement.getContainer());
+				}
 			} else {
-				domainObject.setProven(false);
-				// updateParent(domainObject, false);
 				rectangle.setForeground(manageColor(IColorConstant.RED));
+				if (domainObject.getParent() != null) {
+					IPeService pe = Graphiti.getPeService();
+					EObject[] objArray = { domainObject.getParent() };
+					Object[] obj = pe.getLinkedPictogramElements(objArray, getDiagram());
+					if (obj.length > 0) {
+						Shape pElement = (Shape) obj[0];
+						if (pElement.getContainer() != null)
+							updatePictogramElement(pElement.getContainer());
+					}
+				}
 			}
 			return true;
 		} else if (id.equals(ID_IMAGE_PROVEN)) {
-			CbCFormula domainObject = (CbCFormula) context.getDomainObject();
+			BlockStatement domainObject = (BlockStatement) context.getDomainObject();
 			Image image = (Image) context.getGraphicsAlgorithm();
-			AbstractStatement statement = domainObject.getStatement();
-			AbstractStatement statementToCheck = null;
-			if (statement.getRefinement() != null) {
-				statementToCheck = statement.getRefinement();
-			} else {
-				statementToCheck = statement;
-			}
-			if (statementToCheck.isProven()) {
+			if (domainObject.isProven()) {
 				image.setId(CbCImageProvider.IMG_PROVEN);
 			} else {
 				image.setId(CbCImageProvider.IMG_UNPROVEN);
 			}
 		}
-		// if (id.equals(ID_PRE_TEXT)) {
-		// updatePictogramElement(context.getPictogramElement());
-		//// MultiText nameText = (MultiText) context.getGraphicsAlgorithm();
-		//// Condition domainObject = (Condition) context.getDomainObject();
-		//// nameText.setValue(domainObject.getName());
-		// return true;
-		// } else if (id.equals(ID_STATEMENT_TEXT)) {
-		// updatePictogramElement(context.getPictogramElement());
-		//// MultiText nameText = (MultiText) context.getGraphicsAlgorithm();
-		//// AbstractStatement domainObject = (AbstractStatement)
-		// context.getDomainObject();
-		//// nameText.setValue(domainObject.getName());
-		// return true;
-		// } else if (id.equals(ID_POST_TEXT)) {
-		// updatePictogramElement(context.getPictogramElement());
-		//// MultiText nameText = (MultiText) context.getGraphicsAlgorithm();
-		//// Condition domainObject = (Condition) context.getDomainObject();
-		//// nameText.setValue(domainObject.getName());
-		// return true;
-		// }
 		return false;
 	}
 
-	// private void updateParent(CbCFormula formula, boolean proven) {
-	// final Collection<Diagram> allDiagrams = getDiagrams();
-	// for (final Diagram d : allDiagrams) {
-	// final Diagram currentDiagram = getDiagram();
-	// if (!EcoreUtil.equals(currentDiagram, d)) { // always filter out the
-	// // current
-	// // diagram
-	// final Collection<MethodStatement> statements = new
-	// HashSet<MethodStatement>();
-	// final Object businessObjectForDiagram =
-	// getBusinessObjectForPictogramElement(d);
-	// if (businessObjectForDiagram instanceof CbCFormula) {
-	// final CbCFormula formula2 = (CbCFormula) businessObjectForDiagram;
-	// if (formula2 != null) {
-	// TreeIterator<EObject> iterator = formula2.eAllContents();
-	// while (iterator.hasNext()) {
-	// EObject object = iterator.next();
-	// if (object instanceof MethodStatement) {
-	// MethodStatement statement = (MethodStatement) object;
-	// if (formula.getName().equals(statement.getName())) {
-	// statements.add(statement);
-	// }
-	// }
-	// }
-	// }
-	// }
-	// IPeService pe = Graphiti.getPeService();
-	// for (MethodStatement statement : statements) {
-	// statement.setProven(proven);
-	// EObject[] objArray = {statement};
-	// Object[] obj = pe.getLinkedPictogramElements(objArray, d);
-	// if (obj.length > 0) {
-	// Shape pElement = (Shape) obj[0];
-	// if (pElement != null) updatePictogramElement(pElement);
-	// }
-	// try {
-	// URI uri = d.eResource().getURI();
-	// uri = uri.trimFragment();
-	// uri = uri.trimFileExtension();
-	// uri = uri.appendFileExtension("cbcmodel");
-	// ResourceSet rSet = d.eResource().getResourceSet();
-	// Resource modelResource = rSet.getResource(uri, false);
-	// modelResource.save(Collections.EMPTY_MAP);
-	// modelResource.setTrackingModification(true);
-	// d.eResource().save(Collections.EMPTY_MAP);
-	// d.eResource().setTrackingModification(true);
-	// } catch (IOException e) {
-	// e.printStackTrace();
-	// }
-	// }
-	// }
-	// }
-	// }
-	//
-	// private Collection<Diagram> getDiagrams() {
-	// Collection<Diagram> result = Collections.emptyList();
-	// Resource resource = getDiagram().eResource();
-	// URI uri = resource.getURI();
-	// URI uriTrimmed = uri.trimFragment();
-	// if (uriTrimmed.isPlatformResource()){
-	// String platformString = uriTrimmed.toPlatformString(true);
-	// IResource fileResource = ResourcesPlugin.getWorkspace()
-	// .getRoot().findMember(platformString);
-	// if (fileResource != null){
-	// IProject project = fileResource.getProject();
-	// result = GetDiagramUtil.getDiagrams(project);
-	// }
-	// }
-	// return result;
-	// }
+
+	@Override
+	public int getEditingType() {
+		return TYPE_MULTILINETEXT;
+	}
+	
+	@Override
+	public boolean canDirectEdit(IDirectEditingContext context) {
+		Object domainObject = getBusinessObjectForPictogramElement(context.getPictogramElement());
+		GraphicsAlgorithm ga = context.getGraphicsAlgorithm();
+		if (domainObject instanceof BlockStatement && ga instanceof MultiText) {
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public String getInitialValue(IDirectEditingContext context) {
+		BlockStatement statement = (BlockStatement) getBusinessObjectForPictogramElement(
+				context.getPictogramElement());
+		return System.getProperty("line.separator") + statement.getName() + System.getProperty("line.separator");
+	}
+
+	@Override
+	public String checkValueValid(String value, IDirectEditingContext context) {
+		if (value == null || value.length() == 0) {
+			return "Statement must not be empty";
+		}
+		if (value.contains(";") && !CompareMethodBodies.readAndTestMethodBodyWithJaMoPP2(value)) {
+			return "Statement has not the correct syntax.";
+		}
+		return null;
+	}
+
+	@Override
+	public void setValue(String value, IDirectEditingContext context) {
+		BlockStatement statement = (BlockStatement) getBusinessObjectForPictogramElement(
+				context.getPictogramElement());
+		statement.setName(value.trim());
+		statement.setProven(false);
+		JavaVariables vars = null;
+		for (Shape shape : getDiagram().getChildren()) {
+			Object obj = getBusinessObjectForPictogramElement(shape);
+			if (obj instanceof JavaVariables) {
+				vars = (JavaVariables) obj;
+			}
+		}
+		UpdateModifiableOfConditions.setVars(vars);
+		FileUtil.setApplicationUri(getDiagram().eResource().getURI());
+		UpdateModifiableOfConditions.updateAssignmentStatement(statement);
+		updatePictogramElement(context.getPictogramElement());
+	}
+
+	@Override
+	public void delete(IDeleteContext context) {
+//		Shape shape = (Shape) context.getPictogramElement();
+//		ContainerShape container = shape.getContainer();
+//		BlockStatement statement = (BlockStatement) getBusinessObjectForPictogramElement(
+//				context.getPictogramElement());
+//		if (statement != null && statement.eContainer() != null
+//				&& statement.eContainer() instanceof BlockStatement) {
+//			int indexToDelete = getIndex(shape.getGraphicsAlgorithm());
+//			BlockStatement blockStatement = (BlockStatement) statement.eContainer();
+//			int indexInSelSt = blockStatement.getCommands().indexOf(statement);
+//			blockStatement.getGuards().remove(indexInSelSt);
+//			super.delete(context);
+//			List<Shape> shapesToDelete = new ArrayList<Shape>();
+//			for (Shape childShape : container.getChildren()) {
+//				if (getIndex(childShape.getGraphicsAlgorithm()) == indexToDelete) {
+//					shapesToDelete.add(childShape);
+//				}
+//			}
+//			for (Shape deleteShape : shapesToDelete) {
+//				EcoreUtil.delete(deleteShape, true);
+//			}
+//
+//			for (Shape childShape : container.getChildren()) {
+//				if (getIndex(childShape.getGraphicsAlgorithm()) > indexToDelete) {
+//					setIndex(childShape.getGraphicsAlgorithm(), getIndex(childShape.getGraphicsAlgorithm()) - 1);
+//				}
+//			}
+//			layoutPictogramElement(container);
+//		} else {
+			super.delete(context);
+//		}
+	}
 }

@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.tu_bs.cs.isf.cbc.cbcmodel.AbstractStatement;
+import de.tu_bs.cs.isf.cbc.cbcmodel.BlockStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbCFormula;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbcmodelFactory;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbcmodelPackage;
@@ -376,7 +377,7 @@ public class GenerateModelWithoutContract {
 				}
 
 				if (conditionImpl.getElseStatement() instanceof BlockImpl) {
-					AbstractStatement nextStatement = CbcmodelFactory.eINSTANCE.createAbstractStatement();
+					BlockStatement nextStatement = CbcmodelFactory.eINSTANCE.createBlockStatement();
 					nextStatement.setName("statement");
 					selStatement.getCommands().add(nextStatement);
 					Condition conditionNext = CbcmodelFactory.eINSTANCE.createCondition();
@@ -436,7 +437,7 @@ public class GenerateModelWithoutContract {
 			composition2.getFirstStatement().setRefinement(repStatement);
 			UpdateConditionsOfChildren.updateRefinedStatement(composition2.getFirstStatement(), repStatement);
 
-			// loop variable update, prüfen, ob ich mehrere updates haben kann
+			// loop variable update, prï¿½fen, ob ich mehrere updates haben kann
 			String update = JavaResourceUtil.getText(loop.getUpdates().get(0));
 			AbstractStatement updateStatement = createStatement(update + ";");
 			composition2.getSecondStatement().setRefinement(updateStatement);
