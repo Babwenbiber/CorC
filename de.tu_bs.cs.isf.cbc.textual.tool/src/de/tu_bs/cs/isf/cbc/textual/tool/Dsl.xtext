@@ -100,14 +100,17 @@ JMLAnnotation returns JMLAnnotation:
 
 InlineBlockStatement returns AbstractStatement:
 	{InlineBlockStatement}
-	block=BlockStatement | {InlineBlockStatement} "Block" references=[BlockStatement]
+	block=BlockStatement | {InlineBlockStatement} "Block" references=[BlockStatement] ";"
 ;
 
 BlockStatement returns AbstractStatement:
 {BlockStatement}
 		'Block' name=EString ':'
 			(jmlAnnotation=JMLAnnotation)?
-			'{' javaStatement=JavaStatement '}'
+			(=> ('{' javaStatement=JavaStatement '}') |
+				('{' internalBlockStatement=InlineBlockStatement '}')
+			)
+			 
 	;
 
 SelectionStatement returns AbstractStatement:

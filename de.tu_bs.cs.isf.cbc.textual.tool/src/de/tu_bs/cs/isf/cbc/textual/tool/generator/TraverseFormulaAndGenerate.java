@@ -239,18 +239,24 @@ public class TraverseFormulaAndGenerate {
 	}
 
 	private void traverseBlockStatement(BlockStatement blockStatement) {
-		JavaStatement statement = (JavaStatement) blockStatement.getJavaStatement();
-
-		try {
-			statement.setPreCondition(new ConditionExtension(blockStatement.getJmlAnnotation().getRequires()));
-			statement.setPostCondition(new ConditionExtension(blockStatement.getJmlAnnotation().getEnsures()));
-		} catch (java.lang.NullPointerException exc) {
-			statement.setPreCondition(new ConditionExtension(blockStatement.getPreCondition()));
-			statement.setPostCondition(new ConditionExtension(blockStatement.getPostCondition()));
+		JavaStatement javaStatement = (JavaStatement) blockStatement.getJavaStatement();
+		if (javaStatement == null) {
+			InlineBlockStatement internalBlockStatement = (InlineBlockStatement) blockStatement.getInternalBlockStatement();
+			internalBlockStatement.setPreCondition(blockStatement.getPreCondition());
+			internalBlockStatement.setPostCondition(blockStatement.getPostCondition());
+			castStatementAndTraverse(internalBlockStatement);
+		} else {
+			try {
+				javaStatement.setPreCondition(new ConditionExtension(blockStatement.getJmlAnnotation().getRequires()));
+				javaStatement.setPostCondition(new ConditionExtension(blockStatement.getJmlAnnotation().getEnsures()));
+			} catch (java.lang.NullPointerException exc) {
+				javaStatement.setPreCondition(new ConditionExtension(blockStatement.getPreCondition()));
+				javaStatement.setPostCondition(new ConditionExtension(blockStatement.getPostCondition()));
+			}
+			
+			ProveWithKey.createProveJavaStatementWithKey(javaStatement, getListStringFromListVariables(vars.getVariables()),
+					getListStringFromListCondition(conds), renaming, null, uri, numberFile++, false, FilenamePrefix.JAVA_STATEMENT);
 		}
-		
-		ProveWithKey.createProveJavaStatementWithKey(statement, getListStringFromListVariables(vars.getVariables()),
-				getListStringFromListCondition(conds), renaming, null, uri, numberFile++, false, FilenamePrefix.JAVA_STATEMENT);
 	}
 	
 	private Collection<CbCFormula> getLinkedFormulas(AbstractStatement statement) {

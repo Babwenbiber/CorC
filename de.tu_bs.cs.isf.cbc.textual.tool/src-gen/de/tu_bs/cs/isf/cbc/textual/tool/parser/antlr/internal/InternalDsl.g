@@ -1488,6 +1488,10 @@ ruleInlineBlockStatement returns [EObject current=null]
 					}
 				)
 			)
+			otherlv_5=';'
+			{
+				newLeafNode(otherlv_5, grammarAccess.getInlineBlockStatementAccess().getSemicolonKeyword_1_3());
+			}
 		)
 	)
 ;
@@ -1561,33 +1565,79 @@ ruleBlockStatement returns [EObject current=null]
 				}
 			)
 		)?
-		otherlv_5='{'
-		{
-			newLeafNode(otherlv_5, grammarAccess.getBlockStatementAccess().getLeftCurlyBracketKeyword_5());
-		}
 		(
 			(
-				{
-					newCompositeNode(grammarAccess.getBlockStatementAccess().getJavaStatementJavaStatementParserRuleCall_6_0());
-				}
-				lv_javaStatement_6_0=ruleJavaStatement
-				{
-					if ($current==null) {
-						$current = createModelElementForParent(grammarAccess.getBlockStatementRule());
+				((
+					'{'
+					(
+						(
+							ruleJavaStatement
+						)
+					)
+					'}'
+				)
+				)=>
+				(
+					otherlv_5='{'
+					{
+						newLeafNode(otherlv_5, grammarAccess.getBlockStatementAccess().getLeftCurlyBracketKeyword_5_0_0_0());
 					}
-					set(
-						$current,
-						"javaStatement",
-						lv_javaStatement_6_0,
-						"de.tu_bs.cs.isf.cbc.textual.tool.Dsl.JavaStatement");
-					afterParserOrEnumRuleCall();
+					(
+						(
+							{
+								newCompositeNode(grammarAccess.getBlockStatementAccess().getJavaStatementJavaStatementParserRuleCall_5_0_0_1_0());
+							}
+							lv_javaStatement_6_0=ruleJavaStatement
+							{
+								if ($current==null) {
+									$current = createModelElementForParent(grammarAccess.getBlockStatementRule());
+								}
+								set(
+									$current,
+									"javaStatement",
+									lv_javaStatement_6_0,
+									"de.tu_bs.cs.isf.cbc.textual.tool.Dsl.JavaStatement");
+								afterParserOrEnumRuleCall();
+							}
+						)
+					)
+					otherlv_7='}'
+					{
+						newLeafNode(otherlv_7, grammarAccess.getBlockStatementAccess().getRightCurlyBracketKeyword_5_0_0_2());
+					}
+				)
+			)
+			    |
+			(
+				otherlv_8='{'
+				{
+					newLeafNode(otherlv_8, grammarAccess.getBlockStatementAccess().getLeftCurlyBracketKeyword_5_1_0());
+				}
+				(
+					(
+						{
+							newCompositeNode(grammarAccess.getBlockStatementAccess().getInternalBlockStatementInlineBlockStatementParserRuleCall_5_1_1_0());
+						}
+						lv_internalBlockStatement_9_0=ruleInlineBlockStatement
+						{
+							if ($current==null) {
+								$current = createModelElementForParent(grammarAccess.getBlockStatementRule());
+							}
+							set(
+								$current,
+								"internalBlockStatement",
+								lv_internalBlockStatement_9_0,
+								"de.tu_bs.cs.isf.cbc.textual.tool.Dsl.InlineBlockStatement");
+							afterParserOrEnumRuleCall();
+						}
+					)
+				)
+				otherlv_10='}'
+				{
+					newLeafNode(otherlv_10, grammarAccess.getBlockStatementAccess().getRightCurlyBracketKeyword_5_1_2());
 				}
 			)
 		)
-		otherlv_7='}'
-		{
-			newLeafNode(otherlv_7, grammarAccess.getBlockStatementAccess().getRightCurlyBracketKeyword_7());
-		}
 	)
 ;
 

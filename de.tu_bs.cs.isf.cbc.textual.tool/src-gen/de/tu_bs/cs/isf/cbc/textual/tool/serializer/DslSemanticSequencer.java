@@ -740,7 +740,7 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	 *     BlockStatement returns BlockStatement
 	 *
 	 * Constraint:
-	 *     (name=EString jmlAnnotation=JMLAnnotation? javaStatement=JavaStatement)
+	 *     (name=EString jmlAnnotation=JMLAnnotation? (javaStatement=JavaStatement | internalBlockStatement=InlineBlockStatement))
 	 */
 	protected void sequence_BlockStatement(ISerializationContext context, BlockStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

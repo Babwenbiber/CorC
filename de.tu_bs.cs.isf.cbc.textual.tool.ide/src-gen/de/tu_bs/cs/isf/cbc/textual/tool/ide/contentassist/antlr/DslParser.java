@@ -42,6 +42,7 @@ public class DslParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getVariableStringAccess().getAlternatives_1_1_1_1_3_2(), "rule__VariableString__Alternatives_1_1_1_1_3_2");
 			builder.put(grammarAccess.getOperationAccess().getAlternatives(), "rule__Operation__Alternatives");
 			builder.put(grammarAccess.getInlineBlockStatementAccess().getAlternatives(), "rule__InlineBlockStatement__Alternatives");
+			builder.put(grammarAccess.getBlockStatementAccess().getAlternatives_5(), "rule__BlockStatement__Alternatives_5");
 			builder.put(grammarAccess.getConcatAccess().getAlternatives_1_0(), "rule__Concat__Alternatives_1_0");
 			builder.put(grammarAccess.getForeachAccess().getAlternatives(), "rule__Foreach__Alternatives");
 			builder.put(grammarAccess.getExistsAccess().getAlternatives(), "rule__Exists__Alternatives");
@@ -112,6 +113,9 @@ public class DslParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getInlineBlockStatementAccess().getGroup_0(), "rule__InlineBlockStatement__Group_0__0");
 			builder.put(grammarAccess.getInlineBlockStatementAccess().getGroup_1(), "rule__InlineBlockStatement__Group_1__0");
 			builder.put(grammarAccess.getBlockStatementAccess().getGroup(), "rule__BlockStatement__Group__0");
+			builder.put(grammarAccess.getBlockStatementAccess().getGroup_5_0(), "rule__BlockStatement__Group_5_0__0");
+			builder.put(grammarAccess.getBlockStatementAccess().getGroup_5_0_0(), "rule__BlockStatement__Group_5_0_0__0");
+			builder.put(grammarAccess.getBlockStatementAccess().getGroup_5_1(), "rule__BlockStatement__Group_5_1__0");
 			builder.put(grammarAccess.getSelectionStatementAccess().getGroup(), "rule__SelectionStatement__Group__0");
 			builder.put(grammarAccess.getSelectionStatementAccess().getGroup_9(), "rule__SelectionStatement__Group_9__0");
 			builder.put(grammarAccess.getSmallRepetitionStatementAccess().getGroup(), "rule__SmallRepetitionStatement__Group__0");
@@ -431,7 +435,8 @@ public class DslParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getInlineBlockStatementAccess().getReferencesAssignment_1_2(), "rule__InlineBlockStatement__ReferencesAssignment_1_2");
 			builder.put(grammarAccess.getBlockStatementAccess().getNameAssignment_2(), "rule__BlockStatement__NameAssignment_2");
 			builder.put(grammarAccess.getBlockStatementAccess().getJmlAnnotationAssignment_4(), "rule__BlockStatement__JmlAnnotationAssignment_4");
-			builder.put(grammarAccess.getBlockStatementAccess().getJavaStatementAssignment_6(), "rule__BlockStatement__JavaStatementAssignment_6");
+			builder.put(grammarAccess.getBlockStatementAccess().getJavaStatementAssignment_5_0_0_1(), "rule__BlockStatement__JavaStatementAssignment_5_0_0_1");
+			builder.put(grammarAccess.getBlockStatementAccess().getInternalBlockStatementAssignment_5_1_1(), "rule__BlockStatement__InternalBlockStatementAssignment_5_1_1");
 			builder.put(grammarAccess.getSelectionStatementAccess().getGuardsAssignment_3(), "rule__SelectionStatement__GuardsAssignment_3");
 			builder.put(grammarAccess.getSelectionStatementAccess().getCommandsAssignment_7(), "rule__SelectionStatement__CommandsAssignment_7");
 			builder.put(grammarAccess.getSelectionStatementAccess().getGuardsAssignment_9_2(), "rule__SelectionStatement__GuardsAssignment_9_2");
