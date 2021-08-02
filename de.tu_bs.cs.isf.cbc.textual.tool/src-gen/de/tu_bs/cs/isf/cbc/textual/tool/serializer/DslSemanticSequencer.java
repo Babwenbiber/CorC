@@ -8,6 +8,9 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.AbstractStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Addition;
 import de.tu_bs.cs.isf.cbc.cbcmodel.And;
 import de.tu_bs.cs.isf.cbc.cbcmodel.ArrayElement;
+import de.tu_bs.cs.isf.cbc.cbcmodel.BlockJavaMix;
+import de.tu_bs.cs.isf.cbc.cbcmodel.BlockJavaStatement;
+import de.tu_bs.cs.isf.cbc.cbcmodel.BlockJavaTuple;
 import de.tu_bs.cs.isf.cbc.cbcmodel.BlockStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbCFormula;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbCProblem;
@@ -24,6 +27,8 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.GreaterEqual;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Impl;
 import de.tu_bs.cs.isf.cbc.cbcmodel.InlineBlockStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JMLAnnotation;
+import de.tu_bs.cs.isf.cbc.cbcmodel.JavaBlockStatement;
+import de.tu_bs.cs.isf.cbc.cbcmodel.JavaBlockTuple;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariable;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariables;
@@ -159,6 +164,15 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 			case CbcmodelPackage.ARRAY_ELEMENT:
 				sequence_PrimaryExpression(context, (ArrayElement) semanticObject); 
 				return; 
+			case CbcmodelPackage.BLOCK_JAVA_MIX:
+				sequence_BlockJavaMix(context, (BlockJavaMix) semanticObject); 
+				return; 
+			case CbcmodelPackage.BLOCK_JAVA_STATEMENT:
+				sequence_BlockJavaStatement(context, (BlockJavaStatement) semanticObject); 
+				return; 
+			case CbcmodelPackage.BLOCK_JAVA_TUPLE:
+				sequence_BlockJavaTuple(context, (BlockJavaTuple) semanticObject); 
+				return; 
 			case CbcmodelPackage.BLOCK_STATEMENT:
 				sequence_BlockStatement(context, (BlockStatement) semanticObject); 
 				return; 
@@ -203,6 +217,12 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 				return; 
 			case CbcmodelPackage.JML_ANNOTATION:
 				sequence_JMLAnnotation(context, (JMLAnnotation) semanticObject); 
+				return; 
+			case CbcmodelPackage.JAVA_BLOCK_STATEMENT:
+				sequence_JavaBlockStatement(context, (JavaBlockStatement) semanticObject); 
+				return; 
+			case CbcmodelPackage.JAVA_BLOCK_TUPLE:
+				sequence_JavaBlockTuple(context, (JavaBlockTuple) semanticObject); 
 				return; 
 			case CbcmodelPackage.JAVA_STATEMENT:
 				sequence_JavaStatement(context, (JavaStatement) semanticObject); 
@@ -736,11 +756,56 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	
 	/**
 	 * Contexts:
+	 *     BlockJavaMix returns BlockJavaMix
+	 *
+	 * Constraint:
+	 *     (javaBlockStatement=JavaBlockStatement | blockJavaStatement=BlockJavaStatement)
+	 */
+	protected void sequence_BlockJavaMix(ISerializationContext context, BlockJavaMix semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     BlockJavaStatement returns BlockJavaStatement
+	 *
+	 * Constraint:
+	 *     ((leading=BlockStatement body+=JavaBlockTuple*) | body+=BlockJavaTuple+)?
+	 */
+	protected void sequence_BlockJavaStatement(ISerializationContext context, BlockJavaStatement semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     BlockJavaTuple returns BlockJavaTuple
+	 *
+	 * Constraint:
+	 *     (blockStatement=InlineBlockStatement javaStatement=JavaStatement)
+	 */
+	protected void sequence_BlockJavaTuple(ISerializationContext context, BlockJavaTuple semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.BLOCK_JAVA_TUPLE__BLOCK_STATEMENT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.BLOCK_JAVA_TUPLE__BLOCK_STATEMENT));
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.BLOCK_JAVA_TUPLE__JAVA_STATEMENT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.BLOCK_JAVA_TUPLE__JAVA_STATEMENT));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getBlockJavaTupleAccess().getBlockStatementInlineBlockStatementParserRuleCall_1_0_0(), semanticObject.getBlockStatement());
+		feeder.accept(grammarAccess.getBlockJavaTupleAccess().getJavaStatementJavaStatementParserRuleCall_1_1_0(), semanticObject.getJavaStatement());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
 	 *     CbCProblem returns BlockStatement
 	 *     BlockStatement returns BlockStatement
 	 *
 	 * Constraint:
-	 *     (name=EString jmlAnnotation=JMLAnnotation? (javaStatement=JavaStatement | internalBlockStatement=InlineBlockStatement))
+	 *     (name=EString jmlAnnotation=JMLAnnotation? blockJavaMix=BlockJavaMix)
 	 */
 	protected void sequence_BlockStatement(ISerializationContext context, BlockStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -1038,6 +1103,39 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	 */
 	protected void sequence_JMLAnnotation(ISerializationContext context, JMLAnnotation semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     JavaBlockStatement returns JavaBlockStatement
+	 *
+	 * Constraint:
+	 *     ((leading=JavaStatement body+=BlockJavaTuple*) | body+=JavaBlockTuple+)?
+	 */
+	protected void sequence_JavaBlockStatement(ISerializationContext context, JavaBlockStatement semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     JavaBlockTuple returns JavaBlockTuple
+	 *
+	 * Constraint:
+	 *     (javaStatement=JavaStatement blockStatement=InlineBlockStatement)
+	 */
+	protected void sequence_JavaBlockTuple(ISerializationContext context, JavaBlockTuple semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.JAVA_BLOCK_TUPLE__JAVA_STATEMENT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.JAVA_BLOCK_TUPLE__JAVA_STATEMENT));
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.JAVA_BLOCK_TUPLE__BLOCK_STATEMENT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.JAVA_BLOCK_TUPLE__BLOCK_STATEMENT));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getJavaBlockTupleAccess().getJavaStatementJavaStatementParserRuleCall_1_0_0(), semanticObject.getJavaStatement());
+		feeder.accept(grammarAccess.getJavaBlockTupleAccess().getBlockStatementInlineBlockStatementParserRuleCall_1_1_0(), semanticObject.getBlockStatement());
+		feeder.finish();
 	}
 	
 	

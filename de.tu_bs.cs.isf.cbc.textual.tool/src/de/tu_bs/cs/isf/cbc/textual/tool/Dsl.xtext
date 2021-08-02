@@ -107,11 +107,37 @@ BlockStatement returns AbstractStatement:
 {BlockStatement}
 		'Block' name=EString ':'
 			(jmlAnnotation=JMLAnnotation)?
-			(=> ('{' javaStatement=JavaStatement '}') |
-				('{' internalBlockStatement=InlineBlockStatement '}')
-			)
-			 
+			blockJavaMix=BlockJavaMix			 
 	;
+
+BlockJavaMix returns AbstractStatement:
+{BlockJavaMix}
+	'{'
+		(=>javaBlockStatement=JavaBlockStatement |
+		blockJavaStatement=BlockJavaStatement)
+	'}'
+;
+
+JavaBlockStatement returns AbstractStatement:
+{JavaBlockStatement}
+	(=>((leading=JavaStatement) (body+=BlockJavaTuple)*) | (body+=JavaBlockTuple)*)
+;
+
+BlockJavaStatement returns AbstractStatement:
+{BlockJavaStatement}
+	(=>((leading=BlockStatement) (body+=JavaBlockTuple)*) | (body+=BlockJavaTuple)*)
+;
+
+
+BlockJavaTuple returns AbstractStatement:
+{BlockJavaTuple}
+	(blockStatement=InlineBlockStatement javaStatement=JavaStatement)
+;
+
+JavaBlockTuple returns AbstractStatement:
+{JavaBlockTuple}
+	(javaStatement=JavaStatement  blockStatement=InlineBlockStatement)
+;
 
 SelectionStatement returns AbstractStatement:
 	{SelectionStatement}

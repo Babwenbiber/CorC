@@ -200,9 +200,39 @@
   <eClassifiers xsi:type="ecore:EClass" name="BlockStatement" eSuperTypes="#//AbstractStatement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="jmlAnnotation" eType="#//JMLAnnotation"
         containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="blockJavaMix" eType="#//AbstractStatement"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BlockJavaMix" eSuperTypes="#//AbstractStatement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="blockJavaStatement" eType="#//AbstractStatement"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="javaBlockStatement" eType="#//AbstractStatement"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="trailing" eType="#//AbstractStatement"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BlockJavaStatement" eSuperTypes="#//AbstractStatement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="body" eType="#//AbstractStatement" upperBound="-1"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="leading" eType="#//AbstractStatement"
+        containment="true"/>
+  </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="JavaBlockStatement" eSuperTypes="#//AbstractStatement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="body" eType="#//AbstractStatement" upperBound="-1"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="leading" eType="#//AbstractStatement"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BlockJavaTuple" eSuperTypes="#//AbstractStatement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="javaStatement" eType="#//AbstractStatement" 
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="blockStatement" eType="#//AbstractStatement" 
+        containment="true"/>
+  </eClassifiers>
+   <eClassifiers xsi:type="ecore:EClass" name="JavaBlockTuple" eSuperTypes="#//AbstractStatement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="javaStatement" eType="#//AbstractStatement"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="internalBlockStatement" eType="#//AbstractStatement"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="blockStatement" eType="#//AbstractStatement"
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SelectionStatement" eSuperTypes="#//AbstractStatement">

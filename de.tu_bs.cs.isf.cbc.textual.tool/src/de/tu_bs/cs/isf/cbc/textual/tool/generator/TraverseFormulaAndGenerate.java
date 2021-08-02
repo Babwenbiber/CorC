@@ -17,6 +17,8 @@ import org.eclipse.emf.ecore.util.EcoreEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 import de.tu_bs.cs.isf.cbc.cbcmodel.AbstractStatement;
+import de.tu_bs.cs.isf.cbc.cbcmodel.BlockJavaMix;
+import de.tu_bs.cs.isf.cbc.cbcmodel.BlockJavaStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbCFormula;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbCProblem;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbcmodelFactory;
@@ -25,6 +27,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.Condition;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Expression;
 import de.tu_bs.cs.isf.cbc.cbcmodel.GlobalConditions;
 import de.tu_bs.cs.isf.cbc.cbcmodel.InlineBlockStatement;
+import de.tu_bs.cs.isf.cbc.cbcmodel.JavaBlockStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariable;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariables;
@@ -239,24 +242,44 @@ public class TraverseFormulaAndGenerate {
 	}
 
 	private void traverseBlockStatement(BlockStatement blockStatement) {
-		JavaStatement javaStatement = (JavaStatement) blockStatement.getJavaStatement();
-		if (javaStatement == null) {
-			InlineBlockStatement internalBlockStatement = (InlineBlockStatement) blockStatement.getInternalBlockStatement();
-			internalBlockStatement.setPreCondition(blockStatement.getPreCondition());
-			internalBlockStatement.setPostCondition(blockStatement.getPostCondition());
-			castStatementAndTraverse(internalBlockStatement);
-		} else {
-			try {
-				javaStatement.setPreCondition(new ConditionExtension(blockStatement.getJmlAnnotation().getRequires()));
-				javaStatement.setPostCondition(new ConditionExtension(blockStatement.getJmlAnnotation().getEnsures()));
-			} catch (java.lang.NullPointerException exc) {
-				javaStatement.setPreCondition(new ConditionExtension(blockStatement.getPreCondition()));
-				javaStatement.setPostCondition(new ConditionExtension(blockStatement.getPostCondition()));
+		BlockJavaMix blockJavaMix = (BlockJavaMix)blockStatement.getBlockJavaMix();
+		BlockJavaStatement blockJavaStatement = (BlockJavaStatement)blockJavaMix.getBlockJavaStatement();
+		JavaBlockStatement javaBlockStatement = (JavaBlockStatement)blockJavaMix.getJavaBlockStatement();
+		//Set Pre
+		if (blockJavaStatement!=null) {
+			EList<AbstractStatement> body = blockJavaStatement.getBody();
+			AbstractStatement leadingStatement = blockJavaStatement.getLeading();
+			Condition currentPre = blockStatement.getPreCondition();
+			leadingStatement.setPreCondition(currentPre);
+			for (int i = 0; i < body.size(); i++) {
+				BlockStatement currentBlock = (BlockStatement) blocks.get(0);
+				currentBlock.setPreCondition(blockStatement.getPreCondition());
+
 			}
-			
-			ProveWithKey.createProveJavaStatementWithKey(javaStatement, getListStringFromListVariables(vars.getVariables()),
-					getListStringFromListCondition(conds), renaming, null, uri, numberFile++, false, FilenamePrefix.JAVA_STATEMENT);
+		} else {
+			EList<AbstractStatement> blocks = javaBlockStatement.getBlockStatements();
+			EList<AbstractStatement> javaStatements = javaBlockStatement.getJavaStatements();
+			Condition currentPost= blockStatement.getPostCondition();
+			for (int i = blocks.size()-1; i <= 0; i--) {
+				BlockStatement currentBlock = (BlockStatement) blocks.get(0);
+				currentBlock.setPostCondition(blockStatement.getPostCondition());
+			}
 		}
+//			internalBlockStatement.setPreCondition(blockStatement.getPreCondition());
+//			internalBlockStatement.setPostCondition(blockStatement.getPostCondition());
+//			castStatementAndTraverse(internalBlockStatement);
+//		} else {
+//			try {
+//				javaStatement.setPreCondition(new ConditionExtension(blockStatement.getJmlAnnotation().getRequires()));
+//				javaStatement.setPostCondition(new ConditionExtension(blockStatement.getJmlAnnotation().getEnsures()));
+//			} catch (java.lang.NullPointerException exc) {
+//				javaStatement.setPreCondition(new ConditionExtension(blockStatement.getPreCondition()));
+//				javaStatement.setPostCondition(new ConditionExtension(blockStatement.getPostCondition()));
+//			}
+//			
+//			ProveWithKey.createProveJavaStatementWithKey(javaStatement, getListStringFromListVariables(vars.getVariables()),
+//					getListStringFromListCondition(conds), renaming, null, uri, numberFile++, false, FilenamePrefix.JAVA_STATEMENT);
+//		}
 	}
 	
 	private Collection<CbCFormula> getLinkedFormulas(AbstractStatement statement) {

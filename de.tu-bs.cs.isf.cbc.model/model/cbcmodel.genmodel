@@ -150,8 +150,27 @@
     </genClasses>
     <genClasses ecoreClass="cbcmodel.ecore#//BlockStatement">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//BlockStatement/jmlAnnotation"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//BlockStatement/javaStatement"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//BlockStatement/internalBlockStatement"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//BlockStatement/blockJavaMix"/>
+    </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//BlockJavaMix">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//BlockJavaMix/blockJavaStatement"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//BlockJavaMix/javaBlockStatement"/>
+    </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//BlockJavaStatement">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//BlockJavaStatement/body"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//BlockJavaStatement/leading"/>
+    </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//JavaBlockStatement">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//JavaBlockStatement/body"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//JavaBlockStatement/leading"/>
+    </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//BlockJavaTuple">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//BlockJavaTuple/javaStatement"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//BlockJavaTuple/blockStatement"/>
+    </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//JavaBlockTuple">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//JavaBlockTuple/javaStatement"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//JavaBlockTuple/blockStatement"/>
     </genClasses>
     <genClasses ecoreClass="cbcmodel.ecore#//SelectionStatement">
       <genFeatures children="true" createChild="true" propertySortChoices="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//SelectionStatement/guards"/>
