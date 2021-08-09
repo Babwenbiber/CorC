@@ -37,6 +37,7 @@ public class HashTable {
 	}
 	
 	public static boolean fileExistsInOverview(String location, String filename) {
+		System.out.println("check if exists " + filename);
 		File overviewFile = new File(location + "/" + OVERVIEW_TMP_FILENAME);
 		if (overviewFile.exists() && overviewFile.canRead()) {
 			Scanner fileReader;
@@ -59,11 +60,12 @@ public class HashTable {
 			}
 			fileReader.close();
 		}
+		System.out.println("false ");
 		return false;
 	}
 	
 	public static void saveHashInTmpTable(String location, String hash, String filename) {
-//	    System.out.println("saving " + location + "/"+ filename);
+	    System.out.println("saving " + location + "/"+ filename);
 		FileWriter fw;
 		try {
 			File file = new File(location + "/" + OVERVIEW_TMP_FILENAME);

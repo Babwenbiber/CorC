@@ -1283,9 +1283,9 @@ ruleJavaStatement returns [EObject current=null]
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getJavaStatementAccess().getStatementXJStatementOrBlockParserRuleCall_1_0());
+					newCompositeNode(grammarAccess.getJavaStatementAccess().getStatementExtendedJavaStatementParserRuleCall_1_0());
 				}
-				lv_statement_1_0=ruleXJStatementOrBlock
+				lv_statement_1_0=ruleExtendedJavaStatement
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getJavaStatementRule());
@@ -1294,11 +1294,93 @@ ruleJavaStatement returns [EObject current=null]
 						$current,
 						"statement",
 						lv_statement_1_0,
-						"jbase.Jbase.XJStatementOrBlock");
+						"de.tu_bs.cs.isf.cbc.textual.tool.Dsl.ExtendedJavaStatement");
 					afterParserOrEnumRuleCall();
 				}
 			)
 		)+
+	)
+;
+
+// Entry rule entryRuleExtendedJavaStatement
+entryRuleExtendedJavaStatement returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getExtendedJavaStatementRule()); }
+	iv_ruleExtendedJavaStatement=ruleExtendedJavaStatement
+	{ $current=$iv_ruleExtendedJavaStatement.current; }
+	EOF;
+
+// Rule ExtendedJavaStatement
+ruleExtendedJavaStatement returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		(
+			((
+				ruleXBlockExpression
+			)
+			)=>
+			(
+				{
+					newCompositeNode(grammarAccess.getExtendedJavaStatementAccess().getXblockXBlockExpressionParserRuleCall_0_0());
+				}
+				lv_xblock_0_0=ruleXBlockExpression
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getExtendedJavaStatementRule());
+					}
+					set(
+						$current,
+						"xblock",
+						lv_xblock_0_0,
+						"jbase.Jbase.XBlockExpression");
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)
+		    |
+		(
+			(
+				{
+					newCompositeNode(grammarAccess.getExtendedJavaStatementAccess().getXsingleXJSingleStatementParserRuleCall_1_0());
+				}
+				lv_xsingle_1_0=ruleXJSingleStatement
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getExtendedJavaStatementRule());
+					}
+					set(
+						$current,
+						"xsingle",
+						lv_xsingle_1_0,
+						"jbase.Jbase.XJSingleStatement");
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)
+		    |
+		(
+			(
+				{
+					newCompositeNode(grammarAccess.getExtendedJavaStatementAccess().getBlockBlockStatementParserRuleCall_2_0());
+				}
+				lv_block_2_0=ruleBlockStatement
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getExtendedJavaStatementRule());
+					}
+					set(
+						$current,
+						"block",
+						lv_block_2_0,
+						"de.tu_bs.cs.isf.cbc.textual.tool.Dsl.BlockStatement");
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)
 	)
 ;
 
@@ -1329,20 +1411,16 @@ ruleJMLAnnotation returns [EObject current=null]
 				{
 					getUnorderedGroupHelper().select(grammarAccess.getJMLAnnotationAccess().getUnorderedGroup(), 0);
 				}
-							({true}?=>(otherlv_1='Pre:'
+							({true}?=>(otherlv_1='@requires'
 							{
-								newLeafNode(otherlv_1, grammarAccess.getJMLAnnotationAccess().getPreKeyword_0_0());
-							}
-							otherlv_2='('
-							{
-								newLeafNode(otherlv_2, grammarAccess.getJMLAnnotationAccess().getLeftParenthesisKeyword_0_1());
+								newLeafNode(otherlv_1, grammarAccess.getJMLAnnotationAccess().getRequiresKeyword_0_0());
 							}
 							(
 								(
 									{
-										newCompositeNode(grammarAccess.getJMLAnnotationAccess().getRequiresConditionParserRuleCall_0_2_0());
+										newCompositeNode(grammarAccess.getJMLAnnotationAccess().getRequiresConditionParserRuleCall_0_1_0());
 									}
-									lv_requires_3_0=ruleCondition
+									lv_requires_2_0=ruleCondition
 									{
 										if ($current==null) {
 											$current = createModelElementForParent(grammarAccess.getJMLAnnotationRule());
@@ -1350,15 +1428,15 @@ ruleJMLAnnotation returns [EObject current=null]
 										set(
 											$current,
 											"requires",
-											lv_requires_3_0,
+											lv_requires_2_0,
 											"de.tu_bs.cs.isf.cbc.textual.tool.Dsl.Condition");
 										afterParserOrEnumRuleCall();
 									}
 								)
 							)
-							otherlv_4=')'
+							otherlv_3=';'
 							{
-								newLeafNode(otherlv_4, grammarAccess.getJMLAnnotationAccess().getRightParenthesisKeyword_0_3());
+								newLeafNode(otherlv_3, grammarAccess.getJMLAnnotationAccess().getSemicolonKeyword_0_2());
 							}
 							))
 				{ 
@@ -1371,20 +1449,16 @@ ruleJMLAnnotation returns [EObject current=null]
 				{
 					getUnorderedGroupHelper().select(grammarAccess.getJMLAnnotationAccess().getUnorderedGroup(), 1);
 				}
-							({true}?=>(otherlv_5='Post:'
+							({true}?=>(otherlv_4='@ensures'
 							{
-								newLeafNode(otherlv_5, grammarAccess.getJMLAnnotationAccess().getPostKeyword_1_0());
-							}
-							otherlv_6='('
-							{
-								newLeafNode(otherlv_6, grammarAccess.getJMLAnnotationAccess().getLeftParenthesisKeyword_1_1());
+								newLeafNode(otherlv_4, grammarAccess.getJMLAnnotationAccess().getEnsuresKeyword_1_0());
 							}
 							(
 								(
 									{
-										newCompositeNode(grammarAccess.getJMLAnnotationAccess().getEnsuresConditionParserRuleCall_1_2_0());
+										newCompositeNode(grammarAccess.getJMLAnnotationAccess().getEnsuresConditionParserRuleCall_1_1_0());
 									}
-									lv_ensures_7_0=ruleCondition
+									lv_ensures_5_0=ruleCondition
 									{
 										if ($current==null) {
 											$current = createModelElementForParent(grammarAccess.getJMLAnnotationRule());
@@ -1392,15 +1466,15 @@ ruleJMLAnnotation returns [EObject current=null]
 										set(
 											$current,
 											"ensures",
-											lv_ensures_7_0,
+											lv_ensures_5_0,
 											"de.tu_bs.cs.isf.cbc.textual.tool.Dsl.Condition");
 										afterParserOrEnumRuleCall();
 									}
 								)
 							)
-							otherlv_8=')'
+							otherlv_6=';'
 							{
-								newLeafNode(otherlv_8, grammarAccess.getJMLAnnotationAccess().getRightParenthesisKeyword_1_3());
+								newLeafNode(otherlv_6, grammarAccess.getJMLAnnotationAccess().getSemicolonKeyword_1_2());
 							}
 							))
 				{ 

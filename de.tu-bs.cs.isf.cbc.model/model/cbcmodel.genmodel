@@ -145,6 +145,11 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cbcmodel.ecore#//SmallRepetitionStatement/postProven"/>
     </genClasses>
     <genClasses ecoreClass="cbcmodel.ecore#//SkipStatement"/>
+    <genClasses ecoreClass="cbcmodel.ecore#//ExtendedJavaStatement">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//ExtendedJavaStatement/xblock"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//ExtendedJavaStatement/xsingle"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//ExtendedJavaStatement/block"/>
+    </genClasses>
     <genClasses ecoreClass="cbcmodel.ecore#//InlineBlockStatement">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//InlineBlockStatement/block"/>
     </genClasses>

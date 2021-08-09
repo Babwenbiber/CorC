@@ -772,88 +772,123 @@ public class DslGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final Action cJavaStatementAction_0 = (Action)cGroup.eContents().get(0);
 		private final Assignment cStatementAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final RuleCall cStatementXJStatementOrBlockParserRuleCall_1_0 = (RuleCall)cStatementAssignment_1.eContents().get(0);
+		private final RuleCall cStatementExtendedJavaStatementParserRuleCall_1_0 = (RuleCall)cStatementAssignment_1.eContents().get(0);
 		
 		//JavaStatement returns AbstractStatement:
 		//    {JavaStatement}
-		//    (statement+=XJStatementOrBlock)+
+		//    (statement+=ExtendedJavaStatement)+
 		//;
 		 public ParserRule getRule() { return rule; }
 		
 		//{JavaStatement}
-		//(statement+=XJStatementOrBlock)+
+		//(statement+=ExtendedJavaStatement)+
 		public Group getGroup() { return cGroup; }
 		
 		//{JavaStatement}
 		public Action getJavaStatementAction_0() { return cJavaStatementAction_0; }
 		
-		//(statement+=XJStatementOrBlock)+
+		//(statement+=ExtendedJavaStatement)+
 		public Assignment getStatementAssignment_1() { return cStatementAssignment_1; }
 		
-		//XJStatementOrBlock
-		public RuleCall getStatementXJStatementOrBlockParserRuleCall_1_0() { return cStatementXJStatementOrBlockParserRuleCall_1_0; }
+		//ExtendedJavaStatement
+		public RuleCall getStatementExtendedJavaStatementParserRuleCall_1_0() { return cStatementExtendedJavaStatementParserRuleCall_1_0; }
+	}
+	public class ExtendedJavaStatementElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.tu_bs.cs.isf.cbc.textual.tool.Dsl.ExtendedJavaStatement");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final Assignment cXblockAssignment_0 = (Assignment)cAlternatives.eContents().get(0);
+		private final RuleCall cXblockXBlockExpressionParserRuleCall_0_0 = (RuleCall)cXblockAssignment_0.eContents().get(0);
+		private final Assignment cXsingleAssignment_1 = (Assignment)cAlternatives.eContents().get(1);
+		private final RuleCall cXsingleXJSingleStatementParserRuleCall_1_0 = (RuleCall)cXsingleAssignment_1.eContents().get(0);
+		private final Assignment cBlockAssignment_2 = (Assignment)cAlternatives.eContents().get(2);
+		private final RuleCall cBlockBlockStatementParserRuleCall_2_0 = (RuleCall)cBlockAssignment_2.eContents().get(0);
+		
+		//ExtendedJavaStatement:
+		////    XJArrayConstructorCall | not a valid statement
+		//    =>xblock=XBlockExpression |
+		//    xsingle=XJSingleStatement |
+		//    block=BlockStatement
+		//;
+		 public ParserRule getRule() { return rule; }
+		
+		////    XJArrayConstructorCall | not a valid statement
+		//    =>xblock=XBlockExpression |
+		//    xsingle=XJSingleStatement |
+		//    block=BlockStatement
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		////    XJArrayConstructorCall | not a valid statement
+		//    =>xblock=XBlockExpression
+		public Assignment getXblockAssignment_0() { return cXblockAssignment_0; }
+		
+		//XBlockExpression
+		public RuleCall getXblockXBlockExpressionParserRuleCall_0_0() { return cXblockXBlockExpressionParserRuleCall_0_0; }
+		
+		//xsingle=XJSingleStatement
+		public Assignment getXsingleAssignment_1() { return cXsingleAssignment_1; }
+		
+		//XJSingleStatement
+		public RuleCall getXsingleXJSingleStatementParserRuleCall_1_0() { return cXsingleXJSingleStatementParserRuleCall_1_0; }
+		
+		//block=BlockStatement
+		public Assignment getBlockAssignment_2() { return cBlockAssignment_2; }
+		
+		//BlockStatement
+		public RuleCall getBlockBlockStatementParserRuleCall_2_0() { return cBlockBlockStatementParserRuleCall_2_0; }
 	}
 	public class JMLAnnotationElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.tu_bs.cs.isf.cbc.textual.tool.Dsl.JMLAnnotation");
 		private final UnorderedGroup cUnorderedGroup = (UnorderedGroup)rule.eContents().get(1);
 		private final Group cGroup_0 = (Group)cUnorderedGroup.eContents().get(0);
-		private final Keyword cPreKeyword_0_0 = (Keyword)cGroup_0.eContents().get(0);
-		private final Keyword cLeftParenthesisKeyword_0_1 = (Keyword)cGroup_0.eContents().get(1);
-		private final Assignment cRequiresAssignment_0_2 = (Assignment)cGroup_0.eContents().get(2);
-		private final RuleCall cRequiresConditionParserRuleCall_0_2_0 = (RuleCall)cRequiresAssignment_0_2.eContents().get(0);
-		private final Keyword cRightParenthesisKeyword_0_3 = (Keyword)cGroup_0.eContents().get(3);
+		private final Keyword cRequiresKeyword_0_0 = (Keyword)cGroup_0.eContents().get(0);
+		private final Assignment cRequiresAssignment_0_1 = (Assignment)cGroup_0.eContents().get(1);
+		private final RuleCall cRequiresConditionParserRuleCall_0_1_0 = (RuleCall)cRequiresAssignment_0_1.eContents().get(0);
+		private final Keyword cSemicolonKeyword_0_2 = (Keyword)cGroup_0.eContents().get(2);
 		private final Group cGroup_1 = (Group)cUnorderedGroup.eContents().get(1);
-		private final Keyword cPostKeyword_1_0 = (Keyword)cGroup_1.eContents().get(0);
-		private final Keyword cLeftParenthesisKeyword_1_1 = (Keyword)cGroup_1.eContents().get(1);
-		private final Assignment cEnsuresAssignment_1_2 = (Assignment)cGroup_1.eContents().get(2);
-		private final RuleCall cEnsuresConditionParserRuleCall_1_2_0 = (RuleCall)cEnsuresAssignment_1_2.eContents().get(0);
-		private final Keyword cRightParenthesisKeyword_1_3 = (Keyword)cGroup_1.eContents().get(3);
+		private final Keyword cEnsuresKeyword_1_0 = (Keyword)cGroup_1.eContents().get(0);
+		private final Assignment cEnsuresAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
+		private final RuleCall cEnsuresConditionParserRuleCall_1_1_0 = (RuleCall)cEnsuresAssignment_1_1.eContents().get(0);
+		private final Keyword cSemicolonKeyword_1_2 = (Keyword)cGroup_1.eContents().get(2);
 		
 		//JMLAnnotation returns JMLAnnotation:
-		//    "Pre:" "(" requires=Condition ")" &
-		//    "Post:" "(" ensures=Condition  ")"
+		//    (("@requires" requires=Condition ";") &
+		//     ("@ensures" ensures=Condition  ";"))
 		//;
 		 public ParserRule getRule() { return rule; }
 		
-		//"Pre:" "(" requires=Condition ")" &
-		//"Post:" "(" ensures=Condition  ")"
+		//(("@requires" requires=Condition ";") &
+		// ("@ensures" ensures=Condition  ";"))
 		public UnorderedGroup getUnorderedGroup() { return cUnorderedGroup; }
 		
-		//"Pre:" "(" requires=Condition ")"
+		//("@requires" requires=Condition ";")
 		public Group getGroup_0() { return cGroup_0; }
 		
-		//"Pre:"
-		public Keyword getPreKeyword_0_0() { return cPreKeyword_0_0; }
-		
-		//"("
-		public Keyword getLeftParenthesisKeyword_0_1() { return cLeftParenthesisKeyword_0_1; }
+		//"@requires"
+		public Keyword getRequiresKeyword_0_0() { return cRequiresKeyword_0_0; }
 		
 		//requires=Condition
-		public Assignment getRequiresAssignment_0_2() { return cRequiresAssignment_0_2; }
+		public Assignment getRequiresAssignment_0_1() { return cRequiresAssignment_0_1; }
 		
 		//Condition
-		public RuleCall getRequiresConditionParserRuleCall_0_2_0() { return cRequiresConditionParserRuleCall_0_2_0; }
+		public RuleCall getRequiresConditionParserRuleCall_0_1_0() { return cRequiresConditionParserRuleCall_0_1_0; }
 		
-		//")"
-		public Keyword getRightParenthesisKeyword_0_3() { return cRightParenthesisKeyword_0_3; }
+		//";"
+		public Keyword getSemicolonKeyword_0_2() { return cSemicolonKeyword_0_2; }
 		
-		//"Post:" "(" ensures=Condition  ")"
+		//("@ensures" ensures=Condition  ";")
 		public Group getGroup_1() { return cGroup_1; }
 		
-		//"Post:"
-		public Keyword getPostKeyword_1_0() { return cPostKeyword_1_0; }
-		
-		//"("
-		public Keyword getLeftParenthesisKeyword_1_1() { return cLeftParenthesisKeyword_1_1; }
+		//"@ensures"
+		public Keyword getEnsuresKeyword_1_0() { return cEnsuresKeyword_1_0; }
 		
 		//ensures=Condition
-		public Assignment getEnsuresAssignment_1_2() { return cEnsuresAssignment_1_2; }
+		public Assignment getEnsuresAssignment_1_1() { return cEnsuresAssignment_1_1; }
 		
 		//Condition
-		public RuleCall getEnsuresConditionParserRuleCall_1_2_0() { return cEnsuresConditionParserRuleCall_1_2_0; }
+		public RuleCall getEnsuresConditionParserRuleCall_1_1_0() { return cEnsuresConditionParserRuleCall_1_1_0; }
 		
-		//")"
-		public Keyword getRightParenthesisKeyword_1_3() { return cRightParenthesisKeyword_1_3; }
+		//";"
+		public Keyword getSemicolonKeyword_1_2() { return cSemicolonKeyword_1_2; }
 	}
 	public class InlineBlockStatementElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.tu_bs.cs.isf.cbc.textual.tool.Dsl.InlineBlockStatement");
@@ -2329,6 +2364,7 @@ public class DslGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 	private final SkipStatementElements pSkipStatement;
 	private final CompositionStatementElements pCompositionStatement;
 	private final JavaStatementElements pJavaStatement;
+	private final ExtendedJavaStatementElements pExtendedJavaStatement;
 	private final JMLAnnotationElements pJMLAnnotation;
 	private final InlineBlockStatementElements pInlineBlockStatement;
 	private final BlockStatementElements pBlockStatement;
@@ -2389,6 +2425,7 @@ public class DslGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 		this.pSkipStatement = new SkipStatementElements();
 		this.pCompositionStatement = new CompositionStatementElements();
 		this.pJavaStatement = new JavaStatementElements();
+		this.pExtendedJavaStatement = new ExtendedJavaStatementElements();
 		this.pJMLAnnotation = new JMLAnnotationElements();
 		this.pInlineBlockStatement = new InlineBlockStatementElements();
 		this.pBlockStatement = new BlockStatementElements();
@@ -2636,7 +2673,7 @@ public class DslGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 	
 	//JavaStatement returns AbstractStatement:
 	//    {JavaStatement}
-	//    (statement+=XJStatementOrBlock)+
+	//    (statement+=ExtendedJavaStatement)+
 	//;
 	public JavaStatementElements getJavaStatementAccess() {
 		return pJavaStatement;
@@ -2646,9 +2683,23 @@ public class DslGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 		return getJavaStatementAccess().getRule();
 	}
 	
+	//ExtendedJavaStatement:
+	////    XJArrayConstructorCall | not a valid statement
+	//    =>xblock=XBlockExpression |
+	//    xsingle=XJSingleStatement |
+	//    block=BlockStatement
+	//;
+	public ExtendedJavaStatementElements getExtendedJavaStatementAccess() {
+		return pExtendedJavaStatement;
+	}
+	
+	public ParserRule getExtendedJavaStatementRule() {
+		return getExtendedJavaStatementAccess().getRule();
+	}
+	
 	//JMLAnnotation returns JMLAnnotation:
-	//    "Pre:" "(" requires=Condition ")" &
-	//    "Post:" "(" ensures=Condition  ")"
+	//    (("@requires" requires=Condition ";") &
+	//     ("@ensures" ensures=Condition  ";"))
 	//;
 	public JMLAnnotationElements getJMLAnnotationAccess() {
 		return pJMLAnnotation;

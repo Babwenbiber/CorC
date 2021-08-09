@@ -17,6 +17,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.Condition;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Division;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Equal;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Expression;
+import de.tu_bs.cs.isf.cbc.cbcmodel.ExtendedJavaStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.FunctionCall;
 import de.tu_bs.cs.isf.cbc.cbcmodel.GlobalConditions;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Greater;
@@ -182,6 +183,9 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 				return; 
 			case CbcmodelPackage.EXPRESSION:
 				sequence_Exists_Foreach_PrimaryExpression(context, (Expression) semanticObject); 
+				return; 
+			case CbcmodelPackage.EXTENDED_JAVA_STATEMENT:
+				sequence_ExtendedJavaStatement(context, (ExtendedJavaStatement) semanticObject); 
 				return; 
 			case CbcmodelPackage.FUNCTION_CALL:
 				sequence_PrimaryExpression(context, (FunctionCall) semanticObject); 
@@ -961,6 +965,18 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	
 	/**
 	 * Contexts:
+	 *     ExtendedJavaStatement returns ExtendedJavaStatement
+	 *
+	 * Constraint:
+	 *     (xblock=XBlockExpression | xsingle=XJSingleStatement | block=BlockStatement)
+	 */
+	protected void sequence_ExtendedJavaStatement(ISerializationContext context, ExtendedJavaStatement semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
 	 *     GlobalConditions returns GlobalConditions
 	 *
 	 * Constraint:
@@ -1046,7 +1062,7 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	 *     JavaStatement returns JavaStatement
 	 *
 	 * Constraint:
-	 *     statement+=XJStatementOrBlock+
+	 *     statement+=ExtendedJavaStatement+
 	 */
 	protected void sequence_JavaStatement(ISerializationContext context, JavaStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

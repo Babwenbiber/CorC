@@ -41,6 +41,7 @@ public class DslParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getVariableStringAccess().getAlternatives_1_1_1_1_2(), "rule__VariableString__Alternatives_1_1_1_1_2");
 			builder.put(grammarAccess.getVariableStringAccess().getAlternatives_1_1_1_1_3_2(), "rule__VariableString__Alternatives_1_1_1_1_3_2");
 			builder.put(grammarAccess.getOperationAccess().getAlternatives(), "rule__Operation__Alternatives");
+			builder.put(grammarAccess.getExtendedJavaStatementAccess().getAlternatives(), "rule__ExtendedJavaStatement__Alternatives");
 			builder.put(grammarAccess.getInlineBlockStatementAccess().getAlternatives(), "rule__InlineBlockStatement__Alternatives");
 			builder.put(grammarAccess.getBlockStatementAccess().getAlternatives_5(), "rule__BlockStatement__Alternatives_5");
 			builder.put(grammarAccess.getConcatAccess().getAlternatives_1_0(), "rule__Concat__Alternatives_1_0");
@@ -429,8 +430,11 @@ public class DslParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getCompositionStatementAccess().getIntermediateConditionAssignment_6(), "rule__CompositionStatement__IntermediateConditionAssignment_6");
 			builder.put(grammarAccess.getCompositionStatementAccess().getSecondStatementAssignment_9(), "rule__CompositionStatement__SecondStatementAssignment_9");
 			builder.put(grammarAccess.getJavaStatementAccess().getStatementAssignment_1(), "rule__JavaStatement__StatementAssignment_1");
-			builder.put(grammarAccess.getJMLAnnotationAccess().getRequiresAssignment_0_2(), "rule__JMLAnnotation__RequiresAssignment_0_2");
-			builder.put(grammarAccess.getJMLAnnotationAccess().getEnsuresAssignment_1_2(), "rule__JMLAnnotation__EnsuresAssignment_1_2");
+			builder.put(grammarAccess.getExtendedJavaStatementAccess().getXblockAssignment_0(), "rule__ExtendedJavaStatement__XblockAssignment_0");
+			builder.put(grammarAccess.getExtendedJavaStatementAccess().getXsingleAssignment_1(), "rule__ExtendedJavaStatement__XsingleAssignment_1");
+			builder.put(grammarAccess.getExtendedJavaStatementAccess().getBlockAssignment_2(), "rule__ExtendedJavaStatement__BlockAssignment_2");
+			builder.put(grammarAccess.getJMLAnnotationAccess().getRequiresAssignment_0_1(), "rule__JMLAnnotation__RequiresAssignment_0_1");
+			builder.put(grammarAccess.getJMLAnnotationAccess().getEnsuresAssignment_1_1(), "rule__JMLAnnotation__EnsuresAssignment_1_1");
 			builder.put(grammarAccess.getInlineBlockStatementAccess().getBlockAssignment_0_1(), "rule__InlineBlockStatement__BlockAssignment_0_1");
 			builder.put(grammarAccess.getInlineBlockStatementAccess().getReferencesAssignment_1_2(), "rule__InlineBlockStatement__ReferencesAssignment_1_2");
 			builder.put(grammarAccess.getBlockStatementAccess().getNameAssignment_2(), "rule__BlockStatement__NameAssignment_2");

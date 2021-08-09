@@ -59,6 +59,7 @@ public class TraverseFormulaAndGenerate {
 	private CbCFormula formula;
 	private Resource resource;
 	private CbcmodelFactory factory;
+	private boolean firstBlockSeen = false;
 
 	TraverseFormulaAndGenerate(JavaVariables vars, GlobalConditions conds, Renaming renaming, URI uri,
 			CbCFormula formula, Resource resource) {
@@ -239,6 +240,11 @@ public class TraverseFormulaAndGenerate {
 	}
 
 	private void traverseBlockStatement(BlockStatement blockStatement) {
+//		if (!firstBlockSeen) {
+//			firstBlockSeen = true;
+//			//TODO: special behavior
+//			return;
+//		}
 		JavaStatement javaStatement = (JavaStatement) blockStatement.getJavaStatement();
 		if (javaStatement == null) {
 			InlineBlockStatement internalBlockStatement = (InlineBlockStatement) blockStatement.getInternalBlockStatement();
@@ -253,9 +259,10 @@ public class TraverseFormulaAndGenerate {
 				javaStatement.setPreCondition(new ConditionExtension(blockStatement.getPreCondition()));
 				javaStatement.setPostCondition(new ConditionExtension(blockStatement.getPostCondition()));
 			}
-			
-			ProveWithKey.createProveJavaStatementWithKey(javaStatement, getListStringFromListVariables(vars.getVariables()),
+			ProveWithKey.createProveBlockStatementWithKey(blockStatement, getListStringFromListVariables(vars.getVariables()),
 					getListStringFromListCondition(conds), renaming, null, uri, numberFile++, false, FilenamePrefix.JAVA_STATEMENT);
+//			ProveWithKey.createProveJavaStatementWithKey(javaStatement, getListStringFromListVariables(vars.getVariables()),
+//					getListStringFromListCondition(conds), renaming, null, uri, numberFile++, false, FilenamePrefix.JAVA_STATEMENT);
 		}
 	}
 	

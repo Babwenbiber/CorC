@@ -99,6 +99,7 @@ class HashTableTest {
 		File overviewFile = new File(dir + "/" + HashTable.OVERVIEW_FILENAME);
 		assertTrue(isContentInFile(overviewFile, 1, "new_content", "new"));
 	}
+
 	
 	
 	boolean isContentInFile(File overviewFile, int lineNumber, String hash, String filename) {

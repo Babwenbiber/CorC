@@ -57,15 +57,13 @@ class DslProposalProvider extends AbstractDslProposalProvider {
         override void complete_BlockStatement(EObject model, RuleCall ruleCall, ContentAssistContext context,
 		ICompletionProposalAcceptor acceptor) {
 		// call implementation of superclass
-		System.out.println("offset is " + context.getOffset())
-		System.out.println("prefix is " + context.getPrefix())
 		super.complete_SelectionStatement(model, ruleCall, context, acceptor)
 		// compute the plain proposal
-			val String proposal = "Block \"<name>\":\n" 
-			+ "Pre: (<precondition>);\n"
-			+ "Post (<postcondition>);\n"
+			val String proposal = "Block <name>:\n" 
+			+ "Pre: (<precondition>)\n"
+			+ "Post: (<postcondition>)\n"
 			+ "{\n"
-			+ "\t\t<statement>\n"
+			+ "\t<statement>\n"
 			+ "}";
 			
 

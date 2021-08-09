@@ -127,8 +127,53 @@ public class FileUtil {
 				e.printStackTrace();
 			}
 		} else if (!fileName.equals(newFileName)) {
-			System.out.println("renaming file " + keyFile);
-			new File(fileName).renameTo(keyFile);
+			System.out.println("renaming file " + location + "/" + fileName + " -> " + keyFile);
+			new File(location + "/" + fileName).renameTo(keyFile);
+			HashTable.saveHashInTmpTable(location, hash, newFileName);
+			return keyFile;
+		}
+		System.out.println("old file " + keyFile);
+		HashTable.saveHashInTmpTable(location, hash, newFileName);
+		return null;
+	}
+	
+	public static File writeJavaFile(String problem, String location, int numberFile, boolean override, String proveName) {
+		String newFileName = "prove" + numberFile + proveName + ".java";
+		File keyFile = new File(location + "/" + newFileName);
+
+		String hash = Hashing.sha256()
+				  .hashString(problem, StandardCharsets.UTF_8)
+				  .toString();
+		
+		String fileName = HashTable.getFileNameFromHashTable(location, hash);
+		
+		
+		if (fileName == null || override) {
+			System.out.println("new file " + keyFile);
+			try {
+				keyFile.getParentFile().mkdirs();
+				keyFile.createNewFile();
+				FileWriter fw = new FileWriter(keyFile);
+				BufferedWriter bw = new BufferedWriter(fw);
+				bw.write(problem);
+
+				bw.close();
+
+				
+				IWorkspace workspace = ResourcesPlugin.getWorkspace();
+				IPath iLocation = Path.fromOSString(keyFile.getAbsolutePath());
+				IFile ifile = workspace.getRoot().getFileForLocation(iLocation);
+				ifile.refreshLocal(0, null);
+				HashTable.saveHashInTmpTable(location, hash, newFileName);
+				return keyFile;
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			} catch (CoreException e) {
+				e.printStackTrace();
+			}
+		} else if (!fileName.equals(newFileName)) {
+			System.out.println("renaming file " + location + "/" + fileName + " -> " + keyFile);
+			new File(location + "/" + fileName).renameTo(keyFile);
 			HashTable.saveHashInTmpTable(location, hash, newFileName);
 			return keyFile;
 		}
