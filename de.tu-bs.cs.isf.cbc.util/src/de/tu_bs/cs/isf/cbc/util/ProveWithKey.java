@@ -44,6 +44,7 @@ import de.uka.ilkd.key.control.KeYEnvironment;
 import de.uka.ilkd.key.gui.MainWindow;
 import de.uka.ilkd.key.java.abstraction.KeYJavaType;
 import de.uka.ilkd.key.logic.op.IObserverFunction;
+import de.uka.ilkd.key.proof.ApplyStrategy.IStopCondition;
 import de.uka.ilkd.key.proof.Goal;
 import de.uka.ilkd.key.proof.Proof;
 import de.uka.ilkd.key.proof.init.ProofInputException;
@@ -270,48 +271,25 @@ public class ProveWithKey {
 		return keyFile;
 	}
 	
-	public static File createProveBlockStatementWithKey(BlockStatement statement, List<String> vars,
-			List<String> conds, Renaming renaming, List<String> refinements, URI uri, int numberFile,
+	public static File createProveBlockStatementWithKey(BlockStatement statement, List<String> vars, List<String> refinements, URI uri, int numberFile,
 			boolean override, String name) {
 		FileUtil.setApplicationUri(uri);
-		String programVariablesString = "";
-		String conditionArraysCreated = "";
-		if (vars != null) {
-			for (String var : vars) {
-				programVariablesString +=  var + "; ";
-				// if variable is an Array add <created> condition for key
-				conditionArraysCreated += getConditionArrayCreated(var);
-			}
-		}
-
-		String globalConditionsString = getGlobalConditionStringFromObject(conds);
 		
 		IProject thisProject = FileUtil.getProject(uri);
-
-		String assignmentString = "";
-		
-		ConditionStrings conditionStrings = new ConditionStrings(statement);
-
-		String stat = Parser.getStringFromObject(statement);
-		System.out.println("stat is " + stat);
-
-
-		if (conditionStrings.pre == null || conditionStrings.pre.length() == 0) {
-			conditionStrings.pre = "true";
+		String statementBody = Parser.replaceBlockStatementsInString(Parser.getStringFromObject(statement.getJavaStatement()));
+		String requiresBody = Parser.getStringFromObject(statement.getJmlAnnotation().getRequires());
+		String ensuresBody = Parser.getStringFromObject(statement.getJmlAnnotation().getEnsures());
+		String variables = "";
+		for(String v: vars) {
+			variables += "\tprivate " + v +";\n";
 		}
-		if (conditionStrings.post == null || conditionStrings.post.length() == 0) {
-			conditionStrings.post = "true";
-		}
-
-		String statementBody = Parser.getStringFromObject(statement.getJavaStatement());
-
 		String problem = 
 			"package provenewBlock;\n\n" + 
 			"class " + statement.getName() + "{\n" +
-			"\tprivate int i;\n" +
+			variables +
 			"\t/*@ public normal_behavior\n" +
-			"\t  @ requires i==2;\n" +
-			"\t  @ ensures i==3;\n" +
+			"\t  @ requires " + requiresBody + ";\n" +
+			"\t  @ ensures " + ensuresBody + ";\n" +
 			"\t*/\n" +
 			"\tpublic void getBlock() {\n" +
 			"\t\t" + statementBody + "\n\t}\n"+

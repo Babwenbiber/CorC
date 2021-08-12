@@ -28,7 +28,7 @@ public class VerifyHandler extends AbstractHandler implements IHandler {
 				} else if (file instanceof CompilationUnit) {
 					cleanFileList.add((IFile)((CompilationUnit)file).getResource());
 				} else if (!(file instanceof IFile)) {
-					throw new ExecutionException("Select only Files.");
+					throw new ExecutionException("Select only Files. with resource " + file.toString());
 				}
 			}
 			VerifyThread thread = new VerifyThread(cleanFileList);

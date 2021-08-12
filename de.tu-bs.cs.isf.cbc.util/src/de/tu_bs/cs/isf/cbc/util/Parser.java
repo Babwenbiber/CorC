@@ -405,6 +405,11 @@ public class Parser {
 		return NodeModelUtils.getTokenText(NodeModelUtils.findActualNodeFor(object));
 	}
 	
+	public static String replaceBlockStatementsInString(String statement) {
+		return statement.replaceAll("Block\s[a-zA-Z0-9]+;", "{}")
+				.replaceAll(" @", "\n@");
+	}
+	
 	// public static void main(String[] args) {
 	//
 	// AbstractStatement st = CbcmodelFactory.eINSTANCE.createAbstractStatement();
