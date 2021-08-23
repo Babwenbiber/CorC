@@ -46,6 +46,8 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.JMLSubtraction;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariable;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariables;
+import de.tu_bs.cs.isf.cbc.cbcmodel.LoopInvariantAnnotation;
+import de.tu_bs.cs.isf.cbc.cbcmodel.LoopInvariantAnnotationStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Lower;
 import de.tu_bs.cs.isf.cbc.cbcmodel.LowerEqual;
 import de.tu_bs.cs.isf.cbc.cbcmodel.MethodStatement;
@@ -288,6 +290,12 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 				return; 
 			case CbcmodelPackage.JAVA_VARIABLES:
 				sequence_JavaVariables(context, (JavaVariables) semanticObject); 
+				return; 
+			case CbcmodelPackage.LOOP_INVARIANT_ANNOTATION:
+				sequence_LoopInvariantAnnotation(context, (LoopInvariantAnnotation) semanticObject); 
+				return; 
+			case CbcmodelPackage.LOOP_INVARIANT_ANNOTATION_STATEMENT:
+				sequence_LoopInvariantAnnotationStatement(context, (LoopInvariantAnnotationStatement) semanticObject); 
 				return; 
 			case CbcmodelPackage.LOWER:
 				sequence_Relation(context, (Lower) semanticObject); 
@@ -1241,10 +1249,19 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	 *     JMLAnnotation returns JMLAnnotation
 	 *
 	 * Constraint:
-	 *     (requires=JMLExpression | ensures=JMLExpression)+
+	 *     (requires=JMLExpression ensures=JMLExpression)
 	 */
 	protected void sequence_JMLAnnotation(ISerializationContext context, JMLAnnotation semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.JML_ANNOTATION__REQUIRES) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.JML_ANNOTATION__REQUIRES));
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.JML_ANNOTATION__ENSURES) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.JML_ANNOTATION__ENSURES));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getJMLAnnotationAccess().getRequiresJMLExpressionParserRuleCall_1_0_3_0(), semanticObject.getRequires());
+		feeder.accept(grammarAccess.getJMLAnnotationAccess().getEnsuresJMLExpressionParserRuleCall_1_1_3_0(), semanticObject.getEnsures());
+		feeder.finish();
 	}
 	
 	
@@ -1986,6 +2003,38 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	 *     (variables+=JavaVariable variables+=JavaVariable*)?
 	 */
 	protected void sequence_JavaVariables(ISerializationContext context, JavaVariables semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     XJSingleStatement returns LoopInvariantAnnotationStatement
+	 *     LoopInvariantAnnotationStatement returns LoopInvariantAnnotationStatement
+	 *     XJStatementOrBlock returns LoopInvariantAnnotationStatement
+	 *
+	 * Constraint:
+	 *     jmlAnnotation=LoopInvariantAnnotation
+	 */
+	protected void sequence_LoopInvariantAnnotationStatement(ISerializationContext context, LoopInvariantAnnotationStatement semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.LOOP_INVARIANT_ANNOTATION_STATEMENT__JML_ANNOTATION) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.LOOP_INVARIANT_ANNOTATION_STATEMENT__JML_ANNOTATION));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getLoopInvariantAnnotationStatementAccess().getJmlAnnotationLoopInvariantAnnotationParserRuleCall_1_0(), semanticObject.getJmlAnnotation());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     LoopInvariantAnnotation returns LoopInvariantAnnotation
+	 *
+	 * Constraint:
+	 *     (loopInvariant=JMLExpression (assignable+=VariableOrMethodName assignable+=VariableOrMethodName*)? decreases=JMLExpression)
+	 */
+	protected void sequence_LoopInvariantAnnotation(ISerializationContext context, LoopInvariantAnnotation semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

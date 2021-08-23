@@ -1445,14 +1445,28 @@ ruleXJSingleStatement returns [EObject current=null]
 			afterParserOrEnumRuleCall();
 		}
 		    |
-		{
-			newCompositeNode(grammarAccess.getXJSingleStatementAccess().getInlineJavaBlockStatementParserRuleCall_10());
-		}
-		this_InlineJavaBlockStatement_10=ruleInlineJavaBlockStatement
-		{
-			$current = $this_InlineJavaBlockStatement_10.current;
-			afterParserOrEnumRuleCall();
-		}
+		(
+			(
+				(ruleLoopInvariantAnnotationStatement)=>
+				{
+					newCompositeNode(grammarAccess.getXJSingleStatementAccess().getLoopInvariantAnnotationStatementParserRuleCall_10_0());
+				}
+				this_LoopInvariantAnnotationStatement_10=ruleLoopInvariantAnnotationStatement
+				{
+					$current = $this_LoopInvariantAnnotationStatement_10.current;
+					afterParserOrEnumRuleCall();
+				}
+			)
+			    |
+			{
+				newCompositeNode(grammarAccess.getXJSingleStatementAccess().getInlineJavaBlockStatementParserRuleCall_10_1());
+			}
+			this_InlineJavaBlockStatement_11=ruleInlineJavaBlockStatement
+			{
+				$current = $this_InlineJavaBlockStatement_11.current;
+				afterParserOrEnumRuleCall();
+			}
+		)
 	)
 ;
 
@@ -1472,103 +1486,310 @@ ruleJMLAnnotation returns [EObject current=null]
 	leaveRule();
 }:
 	(
+		otherlv_0='/*'
+		{
+			newLeafNode(otherlv_0, grammarAccess.getJMLAnnotationAccess().getSolidusAsteriskKeyword_0());
+		}
 		(
-			{ 
-			  getUnorderedGroupHelper().enter(grammarAccess.getJMLAnnotationAccess().getUnorderedGroup());
-			}
 			(
 				(
-		(
-			{getUnorderedGroupHelper().canSelect(grammarAccess.getJMLAnnotationAccess().getUnorderedGroup(), 0)}?=>(
+					otherlv_1='*'
+					{
+						newLeafNode(otherlv_1, grammarAccess.getJMLAnnotationAccess().getAsteriskKeyword_1_0_0());
+					}
+				)*
+				otherlv_2='@'
 				{
-					getUnorderedGroupHelper().select(grammarAccess.getJMLAnnotationAccess().getUnorderedGroup(), 0);
+					newLeafNode(otherlv_2, grammarAccess.getJMLAnnotationAccess().getCommercialAtKeyword_1_0_1());
 				}
-							({true}?=>(otherlv_1='@'
-							{
-								newLeafNode(otherlv_1, grammarAccess.getJMLAnnotationAccess().getCommercialAtKeyword_0_0());
+				otherlv_3='requires'
+				{
+					newLeafNode(otherlv_3, grammarAccess.getJMLAnnotationAccess().getRequiresKeyword_1_0_2());
+				}
+				(
+					(
+						{
+							newCompositeNode(grammarAccess.getJMLAnnotationAccess().getRequiresJMLExpressionParserRuleCall_1_0_3_0());
+						}
+						lv_requires_4_0=ruleJMLExpression
+						{
+							if ($current==null) {
+								$current = createModelElementForParent(grammarAccess.getJMLAnnotationRule());
 							}
-							otherlv_2='requires'
-							{
-								newLeafNode(otherlv_2, grammarAccess.getJMLAnnotationAccess().getRequiresKeyword_0_1());
-							}
-							(
-								(
-									{
-										newCompositeNode(grammarAccess.getJMLAnnotationAccess().getRequiresJMLExpressionParserRuleCall_0_2_0());
-									}
-									lv_requires_3_0=ruleJMLExpression
-									{
-										if ($current==null) {
-											$current = createModelElementForParent(grammarAccess.getJMLAnnotationRule());
-										}
-										set(
-											$current,
-											"requires",
-											lv_requires_3_0,
-											"de.tu_bs.cs.isf.cbc.textual.tool.Dsl.JMLExpression");
-										afterParserOrEnumRuleCall();
-									}
-								)
-							)
-							otherlv_4=';'
-							{
-								newLeafNode(otherlv_4, grammarAccess.getJMLAnnotationAccess().getSemicolonKeyword_0_3());
-							}
-							))
-				{ 
-					getUnorderedGroupHelper().returnFromSelection(grammarAccess.getJMLAnnotationAccess().getUnorderedGroup());
+							set(
+								$current,
+								"requires",
+								lv_requires_4_0,
+								"de.tu_bs.cs.isf.cbc.textual.tool.Dsl.JMLExpression");
+							afterParserOrEnumRuleCall();
+						}
+					)
+				)
+				otherlv_5=';'
+				{
+					newLeafNode(otherlv_5, grammarAccess.getJMLAnnotationAccess().getSemicolonKeyword_1_0_4());
 				}
 			)
-		)|
-		(
-			{getUnorderedGroupHelper().canSelect(grammarAccess.getJMLAnnotationAccess().getUnorderedGroup(), 1)}?=>(
+			(
+				(
+					otherlv_6='*'
+					{
+						newLeafNode(otherlv_6, grammarAccess.getJMLAnnotationAccess().getAsteriskKeyword_1_1_0());
+					}
+				)*
+				otherlv_7='@'
 				{
-					getUnorderedGroupHelper().select(grammarAccess.getJMLAnnotationAccess().getUnorderedGroup(), 1);
+					newLeafNode(otherlv_7, grammarAccess.getJMLAnnotationAccess().getCommercialAtKeyword_1_1_1());
 				}
-							({true}?=>(otherlv_5='@'
-							{
-								newLeafNode(otherlv_5, grammarAccess.getJMLAnnotationAccess().getCommercialAtKeyword_1_0());
+				otherlv_8='ensures'
+				{
+					newLeafNode(otherlv_8, grammarAccess.getJMLAnnotationAccess().getEnsuresKeyword_1_1_2());
+				}
+				(
+					(
+						{
+							newCompositeNode(grammarAccess.getJMLAnnotationAccess().getEnsuresJMLExpressionParserRuleCall_1_1_3_0());
+						}
+						lv_ensures_9_0=ruleJMLExpression
+						{
+							if ($current==null) {
+								$current = createModelElementForParent(grammarAccess.getJMLAnnotationRule());
 							}
-							otherlv_6='ensures'
-							{
-								newLeafNode(otherlv_6, grammarAccess.getJMLAnnotationAccess().getEnsuresKeyword_1_1());
-							}
-							(
-								(
-									{
-										newCompositeNode(grammarAccess.getJMLAnnotationAccess().getEnsuresJMLExpressionParserRuleCall_1_2_0());
-									}
-									lv_ensures_7_0=ruleJMLExpression
-									{
-										if ($current==null) {
-											$current = createModelElementForParent(grammarAccess.getJMLAnnotationRule());
-										}
-										set(
-											$current,
-											"ensures",
-											lv_ensures_7_0,
-											"de.tu_bs.cs.isf.cbc.textual.tool.Dsl.JMLExpression");
-										afterParserOrEnumRuleCall();
-									}
-								)
-							)
-							otherlv_8=';'
-							{
-								newLeafNode(otherlv_8, grammarAccess.getJMLAnnotationAccess().getSemicolonKeyword_1_3());
-							}
-							))
-				{ 
-					getUnorderedGroupHelper().returnFromSelection(grammarAccess.getJMLAnnotationAccess().getUnorderedGroup());
+							set(
+								$current,
+								"ensures",
+								lv_ensures_9_0,
+								"de.tu_bs.cs.isf.cbc.textual.tool.Dsl.JMLExpression");
+							afterParserOrEnumRuleCall();
+						}
+					)
+				)
+				otherlv_10=';'
+				{
+					newLeafNode(otherlv_10, grammarAccess.getJMLAnnotationAccess().getSemicolonKeyword_1_1_4());
 				}
 			)
 		)
-				)+
-				{getUnorderedGroupHelper().canLeave(grammarAccess.getJMLAnnotationAccess().getUnorderedGroup())}?
+		otherlv_11='*/'
+		{
+			newLeafNode(otherlv_11, grammarAccess.getJMLAnnotationAccess().getAsteriskSolidusKeyword_2());
+		}
+	)
+;
+
+// Entry rule entryRuleLoopInvariantAnnotation
+entryRuleLoopInvariantAnnotation returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getLoopInvariantAnnotationRule()); }
+	iv_ruleLoopInvariantAnnotation=ruleLoopInvariantAnnotation
+	{ $current=$iv_ruleLoopInvariantAnnotation.current; }
+	EOF;
+
+// Rule LoopInvariantAnnotation
+ruleLoopInvariantAnnotation returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		otherlv_0='/*'
+		{
+			newLeafNode(otherlv_0, grammarAccess.getLoopInvariantAnnotationAccess().getSolidusAsteriskKeyword_0());
+		}
+		(
+			(
+				(
+					otherlv_1='*'
+					{
+						newLeafNode(otherlv_1, grammarAccess.getLoopInvariantAnnotationAccess().getAsteriskKeyword_1_0_0());
+					}
+				)*
+				otherlv_2='@'
+				{
+					newLeafNode(otherlv_2, grammarAccess.getLoopInvariantAnnotationAccess().getCommercialAtKeyword_1_0_1());
+				}
+				otherlv_3='loop_invariant'
+				{
+					newLeafNode(otherlv_3, grammarAccess.getLoopInvariantAnnotationAccess().getLoop_invariantKeyword_1_0_2());
+				}
+				(
+					(
+						{
+							newCompositeNode(grammarAccess.getLoopInvariantAnnotationAccess().getLoopInvariantJMLExpressionParserRuleCall_1_0_3_0());
+						}
+						lv_loopInvariant_4_0=ruleJMLExpression
+						{
+							if ($current==null) {
+								$current = createModelElementForParent(grammarAccess.getLoopInvariantAnnotationRule());
+							}
+							set(
+								$current,
+								"loopInvariant",
+								lv_loopInvariant_4_0,
+								"de.tu_bs.cs.isf.cbc.textual.tool.Dsl.JMLExpression");
+							afterParserOrEnumRuleCall();
+						}
+					)
+				)
+				otherlv_5=';'
+				{
+					newLeafNode(otherlv_5, grammarAccess.getLoopInvariantAnnotationAccess().getSemicolonKeyword_1_0_4());
+				}
+			)
+			(
+				(
+					otherlv_6='*'
+					{
+						newLeafNode(otherlv_6, grammarAccess.getLoopInvariantAnnotationAccess().getAsteriskKeyword_1_1_0());
+					}
+				)*
+				otherlv_7='@'
+				{
+					newLeafNode(otherlv_7, grammarAccess.getLoopInvariantAnnotationAccess().getCommercialAtKeyword_1_1_1());
+				}
+				otherlv_8='assignable'
+				{
+					newLeafNode(otherlv_8, grammarAccess.getLoopInvariantAnnotationAccess().getAssignableKeyword_1_1_2());
+				}
+				(
+					(
+						{
+							newCompositeNode(grammarAccess.getLoopInvariantAnnotationAccess().getAssignableVariableOrMethodNameParserRuleCall_1_1_3_0());
+						}
+						lv_assignable_9_0=ruleVariableOrMethodName
+						{
+							if ($current==null) {
+								$current = createModelElementForParent(grammarAccess.getLoopInvariantAnnotationRule());
+							}
+							add(
+								$current,
+								"assignable",
+								lv_assignable_9_0,
+								"de.tu_bs.cs.isf.cbc.textual.tool.Dsl.VariableOrMethodName");
+							afterParserOrEnumRuleCall();
+						}
+					)
+				)
+				(
+					otherlv_10=','
+					{
+						newLeafNode(otherlv_10, grammarAccess.getLoopInvariantAnnotationAccess().getCommaKeyword_1_1_4_0());
+					}
+					(
+						(
+							{
+								newCompositeNode(grammarAccess.getLoopInvariantAnnotationAccess().getAssignableVariableOrMethodNameParserRuleCall_1_1_4_1_0());
+							}
+							lv_assignable_11_0=ruleVariableOrMethodName
+							{
+								if ($current==null) {
+									$current = createModelElementForParent(grammarAccess.getLoopInvariantAnnotationRule());
+								}
+								add(
+									$current,
+									"assignable",
+									lv_assignable_11_0,
+									"de.tu_bs.cs.isf.cbc.textual.tool.Dsl.VariableOrMethodName");
+								afterParserOrEnumRuleCall();
+							}
+						)
+					)
+				)*
+				otherlv_12=';'
+				{
+					newLeafNode(otherlv_12, grammarAccess.getLoopInvariantAnnotationAccess().getSemicolonKeyword_1_1_5());
+				}
+			)?
+			(
+				(
+					otherlv_13='*'
+					{
+						newLeafNode(otherlv_13, grammarAccess.getLoopInvariantAnnotationAccess().getAsteriskKeyword_1_2_0());
+					}
+				)*
+				otherlv_14='@'
+				{
+					newLeafNode(otherlv_14, grammarAccess.getLoopInvariantAnnotationAccess().getCommercialAtKeyword_1_2_1());
+				}
+				otherlv_15='decreases'
+				{
+					newLeafNode(otherlv_15, grammarAccess.getLoopInvariantAnnotationAccess().getDecreasesKeyword_1_2_2());
+				}
+				(
+					(
+						{
+							newCompositeNode(grammarAccess.getLoopInvariantAnnotationAccess().getDecreasesJMLExpressionParserRuleCall_1_2_3_0());
+						}
+						lv_decreases_16_0=ruleJMLExpression
+						{
+							if ($current==null) {
+								$current = createModelElementForParent(grammarAccess.getLoopInvariantAnnotationRule());
+							}
+							set(
+								$current,
+								"decreases",
+								lv_decreases_16_0,
+								"de.tu_bs.cs.isf.cbc.textual.tool.Dsl.JMLExpression");
+							afterParserOrEnumRuleCall();
+						}
+					)
+				)
+				otherlv_17=';'
+				{
+					newLeafNode(otherlv_17, grammarAccess.getLoopInvariantAnnotationAccess().getSemicolonKeyword_1_2_4());
+				}
 			)
 		)
-			{ 
-			  getUnorderedGroupHelper().leave(grammarAccess.getJMLAnnotationAccess().getUnorderedGroup());
+		otherlv_18='*/'
+		{
+			newLeafNode(otherlv_18, grammarAccess.getLoopInvariantAnnotationAccess().getAsteriskSolidusKeyword_2());
+		}
+	)
+;
+
+// Entry rule entryRuleLoopInvariantAnnotationStatement
+entryRuleLoopInvariantAnnotationStatement returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getLoopInvariantAnnotationStatementRule()); }
+	iv_ruleLoopInvariantAnnotationStatement=ruleLoopInvariantAnnotationStatement
+	{ $current=$iv_ruleLoopInvariantAnnotationStatement.current; }
+	EOF;
+
+// Rule LoopInvariantAnnotationStatement
+ruleLoopInvariantAnnotationStatement returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		(
+			{
+				$current = forceCreateModelElement(
+					grammarAccess.getLoopInvariantAnnotationStatementAccess().getLoopInvariantAnnotationStatementAction_0(),
+					$current);
 			}
+		)
+		(
+			(
+				{
+					newCompositeNode(grammarAccess.getLoopInvariantAnnotationStatementAccess().getJmlAnnotationLoopInvariantAnnotationParserRuleCall_1_0());
+				}
+				lv_jmlAnnotation_1_0=ruleLoopInvariantAnnotation
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getLoopInvariantAnnotationStatementRule());
+					}
+					set(
+						$current,
+						"jmlAnnotation",
+						lv_jmlAnnotation_1_0,
+						"de.tu_bs.cs.isf.cbc.textual.tool.Dsl.LoopInvariantAnnotation");
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)
 	)
 ;
 
@@ -12195,6 +12416,8 @@ ruleQualifiedNameInStaticImport returns [AntlrDatatypeRuleToken current=new Antl
 	)+
 ;
 
+RULE_ML_COMMENT : 'MyVeryOwnComment!';
+
 RULE_STRING : '"' ('\\' .|~(('\\'|'"')))* '"'?;
 
 RULE_CHARACTER : '\'' ('\\' .|~(('\\'|'\'')))* '\''?;
@@ -12206,8 +12429,6 @@ RULE_INT : '0'..'9' ('0'..'9'|'_')*;
 RULE_DECIMAL : RULE_INT (('e'|'E') ('+'|'-')? RULE_INT)? (('b'|'B') ('i'|'I'|'d'|'D')|('l'|'L'|'d'|'D'|'f'|'F'))?;
 
 RULE_ID : '^'? ('a'..'z'|'A'..'Z'|'$'|'_') ('a'..'z'|'A'..'Z'|'$'|'_'|'0'..'9')*;
-
-RULE_ML_COMMENT : '/*' ( options {greedy=false;} : . )*'*/';
 
 RULE_SL_COMMENT : '//' ~(('\n'|'\r'))* ('\r'? '\n')?;
 

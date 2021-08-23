@@ -97,15 +97,39 @@ XJSingleStatement returns XExpression:
 	XTryCatchFinallyExpression |
 	XSynchronizedExpression |
 	XJEmptyStatement |
-	InlineJavaBlockStatement
+	(=> LoopInvariantAnnotationStatement |
+	InlineJavaBlockStatement)
 ;
 
 
+@Override
+terminal ML_COMMENT:
+	"MyVeryOwnComment!"
+;
+
 JMLAnnotation returns JMLAnnotation:
-//	'/*'( ID
-	/*  ("*"* */ "@" "requires" requires=JMLExpression ";" &
-	 /*("*"* */ "@" "ensures" ensures=JMLExpression  ";" 
-//	)-> '/*'
+	'/*'( 
+	 (
+	 	("*"* "@" "requires" requires=JMLExpression ";")
+	    ("*"* "@" "ensures" ensures=JMLExpression  ";")
+	    ) 
+	) '*/'
+;
+
+LoopInvariantAnnotation returns LoopInvariantAnnotation:
+	'/*'( 
+	 (
+	 	("*"* "@" "loop_invariant" loopInvariant=JMLExpression ";") 
+	    ("*"* "@" "assignable" (assignable+=VariableOrMethodName) ("," assignable+=VariableOrMethodName)* ";")?
+	    ("*"* "@" "decreases" decreases=JMLExpression  ";") 
+	 )
+	) '*/'
+;
+
+
+LoopInvariantAnnotationStatement returns XExpression:
+	{LoopInvariantAnnotationStatement}
+	jmlAnnotation=LoopInvariantAnnotation
 ;
 
 InlineBlockStatement returns AbstractStatement:

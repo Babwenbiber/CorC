@@ -1,5 +1,6 @@
 package de.tu_bs.cs.isf.cbc.util;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -12,13 +13,17 @@ import java.util.regex.Pattern;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
+import org.eclipse.xtext.util.EmfFormatter;
 
+import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 
 import de.tu_bs.cs.isf.cbc.cbcmodel.AbstractStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CompositionTechnique;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Condition;
+import de.tu_bs.cs.isf.cbc.cbcmodel.JMLExpression;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariable;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariables;
 
@@ -402,33 +407,59 @@ public class Parser {
 
 	
 	public static String getStringFromObject(EObject object) {
+//		return EmfFormatter.objToStr(object, new Predicate<EStructuralFeature>() {
+//			@Override
+//			public boolean apply(EStructuralFeature input) {
+//				return false;
+//			}
+//		});
 		return NodeModelUtils.getTokenText(NodeModelUtils.findActualNodeFor(object));
 	}
 	
 	public static String replaceBlockStatementsInString(String statement) {
+		System.out.println("statment matches: " + statement.contains("Block "));
+		while (statement.contains("Block ")) {
+			int pos = statement.indexOf("Block ");
+			String blockName = statement.substring(pos+6).split(";")[0];
+			System.out.println("found block: " + blockName);
+			statement = statement.replaceAll("Block " + blockName + ";", blockName + ".getBlock();");
+		}
 		return statement.replaceAll("Block\s[a-zA-Z0-9]+;", "{}")
 				.replaceAll(" @", "\n@");
 	}
 	
-	// public static void main(String[] args) {
-	//
-	// AbstractStatement st = CbcmodelFactory.eINSTANCE.createAbstractStatement();
-	// Condition con = CbcmodelFactory.eINSTANCE.createCondition();
-	// String s = "int i = 5 + 2; do(x); int y = x(f(ff),g+1,h); int z = 7 - 4; int
-	// u = 8 / 5;";
-	// String c = "x & y | x";
-	// st.setName(s);
-	// con.setName(c);
-	// try {
-	// Parser p = new Parser();
-	// System.out.println(p.findAllVariables(st));
-	// p.addVariableStatementPairs(st);
-	// p.destructConditionAndReplace(con);
-	// System.out.println(p.destructConditionAndReplace(con));
-	// System.out.println(con);
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// }
-	// System.out.println("ende");
-	// }
+	public static String replaceVariablesWithGlobalVariables(List<String> variables, String statement) {
+		List<String> startSeparator = Arrays.asList(" ", "\n", "\t", ";", "\\+", "-", "\\*", "/", "%", "\\^", ",", "=");
+		List<String> endSeparator = Arrays.asList(" ", "\n", "\t", ";", "\\+", "-", "\\*", "/", "%", "\\^", ",", "=", ".");
+		String globalClass = "GlobalJavaVariables.";
+
+		for (String variable: variables) {
+			String varName = variable.split(" ")[1];
+			for (String start: startSeparator) {
+				for (String end: endSeparator) {
+					if (statement.contains(start + varName + end)) {
+						statement = statement.replaceAll(start + varName + end, start + globalClass + varName + end);
+					}
+				}
+			}
+
+			//replace at beginning of the statement
+			String tempStatement = new String(statement.substring(0, varName.length()+1));
+
+			if (tempStatement.substring(0, varName.length()).equals(varName)) {
+
+				for (String end: endSeparator) {
+					if (tempStatement.contains(varName + end)) {
+						tempStatement = tempStatement.replaceAll(varName + end, globalClass + varName + end);
+						break;
+					}
+				}
+			}
+		
+			statement = tempStatement + statement.substring(varName.length()+1);
+
+		}
+		return statement;
+	}
+
 }

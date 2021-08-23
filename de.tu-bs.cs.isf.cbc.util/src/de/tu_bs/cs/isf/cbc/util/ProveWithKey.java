@@ -30,7 +30,6 @@ import org.key_project.util.collection.ImmutableSet;
 import com.google.common.collect.Lists;
 
 import de.tu_bs.cs.isf.cbc.cbcmodel.AbstractStatement;
-import de.tu_bs.cs.isf.cbc.cbcmodel.BlockStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbCFormula;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CompositionTechnique;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Condition;
@@ -271,33 +270,6 @@ public class ProveWithKey {
 		return keyFile;
 	}
 	
-	public static File createProveBlockStatementWithKey(BlockStatement statement, List<String> vars, List<String> refinements, URI uri, int numberFile,
-			boolean override, String name) {
-		FileUtil.setApplicationUri(uri);
-		
-		IProject thisProject = FileUtil.getProject(uri);
-		String statementBody = Parser.replaceBlockStatementsInString(Parser.getStringFromObject(statement.getJavaStatement()));
-		String requiresBody = Parser.getStringFromObject(statement.getJmlAnnotation().getRequires());
-		String ensuresBody = Parser.getStringFromObject(statement.getJmlAnnotation().getEnsures());
-		String variables = "";
-		for(String v: vars) {
-			variables += "\tprivate " + v +";\n";
-		}
-		String problem = 
-			"package provenewBlock;\n\n" + 
-			"class " + statement.getName() + "{\n" +
-			variables +
-			"\t/*@ public normal_behavior\n" +
-			"\t  @ requires " + requiresBody + ";\n" +
-			"\t  @ ensures " + ensuresBody + ";\n" +
-			"\t*/\n" +
-			"\tpublic void getBlock() {\n" +
-			"\t\t" + statementBody + "\n\t}\n"+
-			"}";
-		String location = thisProject.getLocation() + "/src/prove" + uri.trimFileExtension().lastSegment();
-		File keyFile = FileUtil.writeJavaFile(problem, location, numberFile, override, name);
-		return keyFile;
-	}
 	
 	public static File createProveStatementWithKey2(String className, AbstractStatement statement, List<String> vars,
 			List<String> conds, Renaming renaming, URI uri, int numberFile,

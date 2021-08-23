@@ -47,7 +47,7 @@ public class KeyNativeConnection {
 	private static Proof createKeyProof(File location, IProgressMonitor monitor) {
 		try {
 			if (location.getCanonicalPath().contains(".java")) {
-				proveJavaFile(location);
+				proveJavaFile(location, monitor);
 			} else {
 				proveKeyFile(location, monitor);
 			}
@@ -114,6 +114,9 @@ public class KeyNativeConnection {
 			}
 
 			// Show proof result
+		  boolean closed = proof.openGoals().isEmpty();
+          Console.println((closed ? "verified" : "still open") + ".");
+      
 			try {
 				proof.saveToFile(location);
 			} catch (IOException e) {
@@ -127,7 +130,7 @@ public class KeyNativeConnection {
 	}
 
 	
-	private static Proof proveJavaFile(File location) {
+	private static Proof proveJavaFile(File location, IProgressMonitor monitor) {
 		List<File> classPaths = null; // Optionally: Additional specifications for API classes
 	      File bootClassPath = null; // Optionally: Different default specifications for Java API
 	      List<File> includes = null; // Optionally: Additional includes to consider
@@ -185,13 +188,28 @@ public class KeyNativeConnection {
 	                  proof.getSettings().getStrategySettings().setMaxSteps(maxSteps);
 	                  proof.setActiveStrategy(proof.getServices().getProfile().getDefaultStrategyFactory().create(proof, sp));
 	                  // Start auto mode
-	                  env.getUi().getProofControl().startAndWaitForAutoMode(proof);
+	                  if (monitor != null) {
+		                  env.getUi().getProofControl().startAutoMode(proof);
+		                  if (monitor.isCanceled()) {
+		                	  env.getUi().getProofControl().stopAndWaitAutoMode();
+								Console.println("Proof is canceled.");
+		                  }
+	                  } else {
+		                  env.getUi().getProofControl().startAndWaitForAutoMode(proof);
+	                  }
 	                  // Show proof result
 	                  boolean closed = proof.openGoals().isEmpty();
-	                  System.out.println("Contract '" + contract.getDisplayName() + "' of " + contract.getTarget() + " is " + (closed ? "verified" : "still open") + ".");
+	                  Console.println(contract.getTarget() + " is " + (closed ? "verified" : "still open") + ".");
+	                  try {
+	                	String keyLocationFileName = location.getAbsolutePath().substring(0, location.getAbsolutePath().length() - 5) + ".key";
+	                	Console.println("keyfilename: " + keyLocationFileName);
+	      				proof.saveToFile(new File(keyLocationFileName));
+	      			} catch (IOException e) {
+	      				e.printStackTrace();
+	      			}
 	               }
 	               catch (ProofInputException e) {
-	                  System.out.println("Exception at '" + contract.getDisplayName() + "' of " + contract.getTarget() + ":");
+	                  Console.println("Exception at '" + contract.getDisplayName() + "' of " + contract.getTarget() + ":");
 	                  e.printStackTrace();
 	               }
 	               finally {

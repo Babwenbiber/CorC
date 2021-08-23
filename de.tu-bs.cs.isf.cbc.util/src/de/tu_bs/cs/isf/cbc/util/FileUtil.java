@@ -137,6 +137,39 @@ public class FileUtil {
 		return null;
 	}
 	
+	public static File writeToFileFromContent(String content, String location, String name) {
+		File file = new File(location + "/" + name);
+		return writeFileFromJavaFile(file, content);
+	}
+	
+	private static File writeFileFromJavaFile(File file, String content) {
+		try {
+			file.getParentFile().mkdirs();
+			file.createNewFile();
+			FileWriter fw = new FileWriter(file);
+			BufferedWriter bw = new BufferedWriter(fw);
+			bw.write(content);
+	
+			bw.close();
+			
+			refreshDir(file);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		} 
+		return file;
+	}
+	
+	public static void refreshDir(File file) {
+		try {
+			IWorkspace workspace = ResourcesPlugin.getWorkspace();
+			IPath iLocation = Path.fromOSString(file.getAbsolutePath());
+			IFile ifile = workspace.getRoot().getFileForLocation(iLocation);
+			ifile.refreshLocal(0, null);
+		} catch (CoreException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public static File writeJavaFile(String problem, String location, int numberFile, boolean override, String proveName) {
 		String newFileName = "prove" + numberFile + proveName + ".java";
 		File keyFile = new File(location + "/" + newFileName);
@@ -146,31 +179,16 @@ public class FileUtil {
 				  .toString();
 		
 		String fileName = HashTable.getFileNameFromHashTable(location, hash);
+		System.out.println(proveName + " filename from hashtable is " + fileName);
 		
 		
 		if (fileName == null || override) {
 			System.out.println("new file " + keyFile);
-			try {
-				keyFile.getParentFile().mkdirs();
-				keyFile.createNewFile();
-				FileWriter fw = new FileWriter(keyFile);
-				BufferedWriter bw = new BufferedWriter(fw);
-				bw.write(problem);
+			writeFileFromJavaFile(keyFile, problem);
 
-				bw.close();
-
-				
-				IWorkspace workspace = ResourcesPlugin.getWorkspace();
-				IPath iLocation = Path.fromOSString(keyFile.getAbsolutePath());
-				IFile ifile = workspace.getRoot().getFileForLocation(iLocation);
-				ifile.refreshLocal(0, null);
-				HashTable.saveHashInTmpTable(location, hash, newFileName);
-				return keyFile;
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			} catch (CoreException e) {
-				e.printStackTrace();
-			}
+			HashTable.saveHashInTmpTable(location, hash, newFileName);
+			return keyFile;
+			
 		} else if (!fileName.equals(newFileName)) {
 			System.out.println("renaming file " + location + "/" + fileName + " -> " + keyFile);
 			new File(location + "/" + fileName).renameTo(keyFile);

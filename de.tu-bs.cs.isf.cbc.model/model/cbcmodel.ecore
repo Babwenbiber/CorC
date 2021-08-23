@@ -63,6 +63,14 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="ensures" eType="#//JMLExpression"
         containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="LoopInvariantAnnotation">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="loopInvariant" eType="#//JMLExpression"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="assignable" eType="#//VariableOrMethodName" upperBound="-1"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="decreases" eType="#//JMLExpression"
+        containment="true"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Variant">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="var" eType="#//Expression" containment="true"/>
@@ -201,6 +209,11 @@
 	<eStructuralFeatures xsi:type="ecore:EReference" name="jmlAnnotation" eType="#//JMLAnnotation"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="references" eType="#//AbstractStatement"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="LoopInvariantAnnotationStatement" 
+	eSuperTypes="platform:/resource/org.eclipse.xtext.xbase/model/Xbase.ecore#//XExpression">
+	<eStructuralFeatures xsi:type="ecore:EReference" name="jmlAnnotation" eType="#//LoopInvariantAnnotation"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="BlockStatement" eSuperTypes="#//AbstractStatement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="jmlAnnotation" eType="#//JMLAnnotation"
