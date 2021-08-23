@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.tu_bs.cs.isf.cbc.cbcmodel.AbstractStatement;
+import de.tu_bs.cs.isf.cbc.cbcmodel.BlockStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbCFormula;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbcmodelFactory;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbcmodelPackage;
@@ -746,6 +747,11 @@ public class GenerateModelFromCode {
 					"result = " + JavaResourceUtil.getText(returnImpl.getReturnValue()) + ";");
 			parent.setRefinement(retStatement);
 			UpdateConditionsOfChildren.updateRefinedStatement(parent, retStatement);
+		} else if (statement instanceof BlockImpl) {
+			BlockImpl blockImpl = (BlockImpl) statement;
+			BlockStatement blockStatement = createBlock();
+			parent.setRefinement(blockStatement);
+			UpdateConditionsOfChildren.updateRefinedStatement(parent, blockStatement);
 		} else if (statement instanceof ExpressionStatementImpl) {
 			ExpressionStatementImpl exprStatement = (ExpressionStatementImpl) statement;
 			AbstractStatement s = createStatement(JavaResourceUtil.getText(exprStatement.getExpression()) + ";");
@@ -778,7 +784,7 @@ public class GenerateModelFromCode {
 			composition2.getFirstStatement().setRefinement(repStatement);
 			UpdateConditionsOfChildren.updateRefinedStatement(composition2.getFirstStatement(), repStatement);
 
-			// loop variable update, prüfen, ob ich mehrere updates haben kann
+			// loop variable update, prï¿½fen, ob ich mehrere updates haben kann
 			String update = JavaResourceUtil.getText(loop.getUpdates().get(0));
 			AbstractStatement updateStatement = createStatement(update + ";");
 			composition2.getSecondStatement().setRefinement(updateStatement);
@@ -930,6 +936,20 @@ public class GenerateModelFromCode {
 		post2.setName("");
 		statement2.setPostCondition(post2);
 		return compoStatement;
+	}
+
+	public BlockStatement createBlock() {
+		BlockStatement blockStatement = CbcmodelFactory.eINSTANCE.createBlockStatement();
+		blockStatement.setName("blockStatement");
+		Condition pre
+				= CbcmodelFactory.eINSTANCE.createCondition();
+		pre.setName("");
+		blockStatement.setPreCondition(pre);
+		Condition post = CbcmodelFactory.eINSTANCE.createCondition();
+		post.setName("");
+		blockStatement.setPostCondition(post);
+
+		return blockStatement;
 	}
 
 	public SmallRepetitionStatement createRepetition(String guard) {

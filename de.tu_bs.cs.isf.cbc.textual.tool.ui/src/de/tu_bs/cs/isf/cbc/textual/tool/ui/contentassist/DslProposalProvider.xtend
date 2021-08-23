@@ -20,11 +20,11 @@ class DslProposalProvider extends AbstractDslProposalProvider {
 		// compute the plain proposal
 			val String proposal = "{\n"
 				+ "\t<statement>\n"
-				+ "} Intm: (\"<condition>\") {\n"
+				+ "} Intm: (<condition>) {\n"
 				+ "\t<statement>\n"
 				+ "}";
 
-		acceptor.accept(createCompletionProposal(proposal, context))
+		acceptor.accept(createCompletionProposal(proposal, "Composition", null, context))
     }
     
     override void complete_SmallRepetitionStatement(EObject model, RuleCall ruleCall, ContentAssistContext context,
@@ -32,13 +32,13 @@ class DslProposalProvider extends AbstractDslProposalProvider {
 		// call implementation of superclass
 		super.complete_SmallRepetitionStatement(model, ruleCall, context, acceptor)
 		// compute the plain proposal
-			val String proposal = "While (\"<guard>\") Do\n" 
-			+ "\t\tInv: [\"<invariant>\"] Var: [\"<variant>\"]\n"
+			val String proposal = "While (<guard>) Do\n" 
+			+ "\t\tInv: (<invariant>) Var: (<variant>)\n"
 			+ "\t\t{\n"
 			+ "\t\t\t<statement>\n"
 			+ "\t\t} Od";
 
-		acceptor.accept(createCompletionProposal(proposal, context))
+		acceptor.accept(createCompletionProposal(proposal, "Repitition", null, context))
     }
     
     override void complete_SelectionStatement(EObject model, RuleCall ruleCall, ContentAssistContext context,
@@ -46,31 +46,28 @@ class DslProposalProvider extends AbstractDslProposalProvider {
 		// call implementation of superclass
 		super.complete_SelectionStatement(model, ruleCall, context, acceptor)
 		// compute the plain proposal
-			val String proposal = "If (\"<guard>\") Then\n" 
+			val String proposal = "If (<guard>) Then\n" 
 			+ "\t\t{<statement>}\n"
-			+ "\t\tElseif (\"<guard>\") then\n" 
+			+ "\t\tElseif (<guard>) then\n" 
 			+ "\t\t{<statement>} Fi";
 
-		acceptor.accept(createCompletionProposal(proposal, context))
+		acceptor.accept(createCompletionProposal(proposal, "Selection", null, context))
     }
     
         override void complete_BlockStatement(EObject model, RuleCall ruleCall, ContentAssistContext context,
 		ICompletionProposalAcceptor acceptor) {
 		// call implementation of superclass
-		System.out.println("offset is " + context.getOffset())
-		System.out.println("prefix is " + context.getPrefix())
 		super.complete_SelectionStatement(model, ruleCall, context, acceptor)
 		// compute the plain proposal
-			val String proposal = "Block \"<name>\":\n" 
-			+ "@requires \"<precondition>\";\n"
-			+ "@ensure \"<postcondition>\";\n"
-			+ "@assignable \"<modifiable>\";\n"
+			val String proposal = "Block <name>:\n" 
+			+ "Pre: (<precondition>)\n"
+			+ "Post: (<postcondition>)\n"
 			+ "{\n"
-			+ "\t\t<statement>\n"
+			+ "\t<statement>\n"
 			+ "}";
 			
 
-		acceptor.accept(createCompletionProposal(proposal, context))
+		acceptor.accept(createCompletionProposal(proposal, "Block", null, context))
     }
     
      override void complete_CbCFormula(EObject model, RuleCall ruleCall, ContentAssistContext context,
@@ -79,11 +76,11 @@ class DslProposalProvider extends AbstractDslProposalProvider {
 		super.complete_CbCFormula(model, ruleCall, context, acceptor)
 		// compute the plain proposal
 			val String proposal = "Formula \"<formula>\"\n"
-			+ "\tPre: {\"<condition>\"}\n" 
+			+ "\tPre: (<condition>)\n" 
 			+ "\t{<statement>}\n"
-			+ "\tPost: {\"<condition>\"}";
+			+ "\tPost: (<condition>)";
 
-		acceptor.accept(createCompletionProposal(proposal, context))
+		acceptor.accept(createCompletionProposal(proposal, "Formula", null, context))
     }
     
     override void complete_StrengthWeakStatement(EObject model, RuleCall ruleCall, ContentAssistContext context,
@@ -91,11 +88,11 @@ class DslProposalProvider extends AbstractDslProposalProvider {
 		// call implementation of superclass
 		super.complete_StrengthWeakStatement(model, ruleCall, context, acceptor)
 		// compute the plain proposal
-			val String proposal = "Pre: {\"<condition>\"}\n" 
+			val String proposal = "Pre: (<condition>)\n" 
 			+ "\t\t{<statement>}\n"
-			+ "\t\tPost: {\"<condition>\"}";
+			+ "\t\tPost: (<condition>)";
 
-		acceptor.accept(createCompletionProposal(proposal, context))
+		acceptor.accept(createCompletionProposal(proposal, "StrengthWeak", null, context))
     }
     
     override void complete_JavaVariables(EObject model, RuleCall ruleCall, ContentAssistContext context,
@@ -104,9 +101,9 @@ class DslProposalProvider extends AbstractDslProposalProvider {
 		super.complete_JavaVariables(model, ruleCall, context, acceptor)
 		// compute the plain proposal
 			val String proposal = "JavaVariables\n"
-			+ "\tVariables {\"<variable>\", \"<variable>\"}\n";
+			+ "\tVariables [<variable>, <variable>]\n";
 
-		acceptor.accept(createCompletionProposal(proposal, context))
+		acceptor.accept(createCompletionProposal(proposal, "JavaVariables", null, context))
     }
     
     override void complete_GlobalConditions(EObject model, RuleCall ruleCall, ContentAssistContext context,
@@ -115,9 +112,9 @@ class DslProposalProvider extends AbstractDslProposalProvider {
 		super.complete_GlobalConditions(model, ruleCall, context, acceptor)
 		// compute the plain proposal
 			val String proposal = "GlobalConditions\n"
-			+ "\tConditions {\"<condition>\", \"<condition>\"}\n";
+			+ "\tConditions [<condition>, <condition>]\n";
 
-		acceptor.accept(createCompletionProposal(proposal, context))
+		acceptor.accept(createCompletionProposal(proposal, "GlobalConditions", null, context))
     }
     
      override void complete_Renaming(EObject model, RuleCall ruleCall, ContentAssistContext context,
@@ -132,7 +129,7 @@ class DslProposalProvider extends AbstractDslProposalProvider {
 			+ " NewName \"<newName>\"}\n"
 			+ "\t}";
 
-		acceptor.accept(createCompletionProposal(proposal, context))
+		acceptor.accept(createCompletionProposal(proposal, "Renames", null, context))
     }
     
     override void complete_Rename(EObject model, RuleCall ruleCall, ContentAssistContext context,
@@ -144,6 +141,6 @@ class DslProposalProvider extends AbstractDslProposalProvider {
 			+ " Function \"<functionName>\""
 			+ " NewName \"<newName>\"}";
 
-		acceptor.accept(createCompletionProposal(proposal, context))
+		acceptor.accept(createCompletionProposal(proposal, "Rename", null, context))
     }
 }

@@ -5,13 +5,16 @@ package de.tu_bs.cs.isf.cbc.textual.tool.serializer;
 
 import com.google.inject.Inject;
 import de.tu_bs.cs.isf.cbc.cbcmodel.AbstractStatement;
+import de.tu_bs.cs.isf.cbc.cbcmodel.Addition;
 import de.tu_bs.cs.isf.cbc.cbcmodel.And;
+import de.tu_bs.cs.isf.cbc.cbcmodel.ArrayElement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.BlockStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbCFormula;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbCProblem;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbcmodelPackage;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CompositionStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Condition;
+import de.tu_bs.cs.isf.cbc.cbcmodel.Division;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Equal;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Expression;
 import de.tu_bs.cs.isf.cbc.cbcmodel.FunctionCall;
@@ -19,21 +22,47 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.GlobalConditions;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Greater;
 import de.tu_bs.cs.isf.cbc.cbcmodel.GreaterEqual;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Impl;
+import de.tu_bs.cs.isf.cbc.cbcmodel.InlineBlockStatement;
+import de.tu_bs.cs.isf.cbc.cbcmodel.InlineJavaBlockStatement;
+import de.tu_bs.cs.isf.cbc.cbcmodel.JMLAddition;
+import de.tu_bs.cs.isf.cbc.cbcmodel.JMLAnd;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JMLAnnotation;
+import de.tu_bs.cs.isf.cbc.cbcmodel.JMLArrayElement;
+import de.tu_bs.cs.isf.cbc.cbcmodel.JMLDivision;
+import de.tu_bs.cs.isf.cbc.cbcmodel.JMLEqual;
+import de.tu_bs.cs.isf.cbc.cbcmodel.JMLExpression;
+import de.tu_bs.cs.isf.cbc.cbcmodel.JMLFunctionCall;
+import de.tu_bs.cs.isf.cbc.cbcmodel.JMLGreater;
+import de.tu_bs.cs.isf.cbc.cbcmodel.JMLGreaterEqual;
+import de.tu_bs.cs.isf.cbc.cbcmodel.JMLImpl;
+import de.tu_bs.cs.isf.cbc.cbcmodel.JMLLower;
+import de.tu_bs.cs.isf.cbc.cbcmodel.JMLLowerEqual;
+import de.tu_bs.cs.isf.cbc.cbcmodel.JMLModulo;
+import de.tu_bs.cs.isf.cbc.cbcmodel.JMLMultiplication;
+import de.tu_bs.cs.isf.cbc.cbcmodel.JMLNotEqual;
+import de.tu_bs.cs.isf.cbc.cbcmodel.JMLOr;
+import de.tu_bs.cs.isf.cbc.cbcmodel.JMLQualifier;
+import de.tu_bs.cs.isf.cbc.cbcmodel.JMLSubtraction;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariable;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariables;
+import de.tu_bs.cs.isf.cbc.cbcmodel.LoopInvariantAnnotation;
+import de.tu_bs.cs.isf.cbc.cbcmodel.LoopInvariantAnnotationStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Lower;
 import de.tu_bs.cs.isf.cbc.cbcmodel.LowerEqual;
 import de.tu_bs.cs.isf.cbc.cbcmodel.MethodStatement;
+import de.tu_bs.cs.isf.cbc.cbcmodel.Modulo;
+import de.tu_bs.cs.isf.cbc.cbcmodel.Multiplication;
+import de.tu_bs.cs.isf.cbc.cbcmodel.NotEqual;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Or;
+import de.tu_bs.cs.isf.cbc.cbcmodel.Qualifier;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Rename;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Renaming;
 import de.tu_bs.cs.isf.cbc.cbcmodel.ReturnStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.SelectionStatement;
-import de.tu_bs.cs.isf.cbc.cbcmodel.SkipStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.SmallRepetitionStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.StrengthWeakStatement;
+import de.tu_bs.cs.isf.cbc.cbcmodel.Subtraction;
 import de.tu_bs.cs.isf.cbc.cbcmodel.VariableOrMethodName;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Variant;
 import de.tu_bs.cs.isf.cbc.textual.tool.services.DslGrammarAccess;
@@ -129,10 +158,27 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 		if (epackage == CbcmodelPackage.eINSTANCE)
 			switch (semanticObject.eClass().getClassifierID()) {
 			case CbcmodelPackage.ABSTRACT_STATEMENT:
-				sequence_AbstractStatement_Impl(context, (AbstractStatement) semanticObject); 
+				if (rule == grammarAccess.getAbstractStatement_ImplRule()) {
+					sequence_AbstractStatement_Impl(context, (AbstractStatement) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getAbstractStatementRule()) {
+					sequence_AbstractStatement_Impl_SkipStatement(context, (AbstractStatement) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getSkipStatementRule()) {
+					sequence_SkipStatement(context, (AbstractStatement) semanticObject); 
+					return; 
+				}
+				else break;
+			case CbcmodelPackage.ADDITION:
+				sequence_AddMathOperation(context, (Addition) semanticObject); 
 				return; 
 			case CbcmodelPackage.AND:
 				sequence_Concat(context, (And) semanticObject); 
+				return; 
+			case CbcmodelPackage.ARRAY_ELEMENT:
+				sequence_PrimaryExpression(context, (ArrayElement) semanticObject); 
 				return; 
 			case CbcmodelPackage.BLOCK_STATEMENT:
 				sequence_BlockStatement(context, (BlockStatement) semanticObject); 
@@ -148,6 +194,9 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 				return; 
 			case CbcmodelPackage.CONDITION:
 				sequence_Condition(context, (Condition) semanticObject); 
+				return; 
+			case CbcmodelPackage.DIVISION:
+				sequence_MultiMathOperation(context, (Division) semanticObject); 
 				return; 
 			case CbcmodelPackage.EQUAL:
 				sequence_Relation(context, (Equal) semanticObject); 
@@ -170,8 +219,68 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 			case CbcmodelPackage.IMPL:
 				sequence_Implication(context, (Impl) semanticObject); 
 				return; 
+			case CbcmodelPackage.INLINE_BLOCK_STATEMENT:
+				sequence_InlineBlockStatement(context, (InlineBlockStatement) semanticObject); 
+				return; 
+			case CbcmodelPackage.INLINE_JAVA_BLOCK_STATEMENT:
+				sequence_InlineJavaBlockStatement(context, (InlineJavaBlockStatement) semanticObject); 
+				return; 
+			case CbcmodelPackage.JML_ADDITION:
+				sequence_JMLAddMathOperation(context, (JMLAddition) semanticObject); 
+				return; 
+			case CbcmodelPackage.JML_AND:
+				sequence_JMLConcat(context, (JMLAnd) semanticObject); 
+				return; 
 			case CbcmodelPackage.JML_ANNOTATION:
 				sequence_JMLAnnotation(context, (JMLAnnotation) semanticObject); 
+				return; 
+			case CbcmodelPackage.JML_ARRAY_ELEMENT:
+				sequence_JMLPrimaryExpression(context, (JMLArrayElement) semanticObject); 
+				return; 
+			case CbcmodelPackage.JML_DIVISION:
+				sequence_JMLMultiMathOperation(context, (JMLDivision) semanticObject); 
+				return; 
+			case CbcmodelPackage.JML_EQUAL:
+				sequence_JMLRelation(context, (JMLEqual) semanticObject); 
+				return; 
+			case CbcmodelPackage.JML_EXPRESSION:
+				sequence_JMLExists_JMLForeach_JMLPrimaryExpression(context, (JMLExpression) semanticObject); 
+				return; 
+			case CbcmodelPackage.JML_FUNCTION_CALL:
+				sequence_JMLPrimaryExpression(context, (JMLFunctionCall) semanticObject); 
+				return; 
+			case CbcmodelPackage.JML_GREATER:
+				sequence_JMLRelation(context, (JMLGreater) semanticObject); 
+				return; 
+			case CbcmodelPackage.JML_GREATER_EQUAL:
+				sequence_JMLRelation(context, (JMLGreaterEqual) semanticObject); 
+				return; 
+			case CbcmodelPackage.JML_IMPL:
+				sequence_JMLImplication(context, (JMLImpl) semanticObject); 
+				return; 
+			case CbcmodelPackage.JML_LOWER:
+				sequence_JMLRelation(context, (JMLLower) semanticObject); 
+				return; 
+			case CbcmodelPackage.JML_LOWER_EQUAL:
+				sequence_JMLRelation(context, (JMLLowerEqual) semanticObject); 
+				return; 
+			case CbcmodelPackage.JML_MODULO:
+				sequence_JMLMultiMathOperation(context, (JMLModulo) semanticObject); 
+				return; 
+			case CbcmodelPackage.JML_MULTIPLICATION:
+				sequence_JMLMultiMathOperation(context, (JMLMultiplication) semanticObject); 
+				return; 
+			case CbcmodelPackage.JML_NOT_EQUAL:
+				sequence_JMLRelation(context, (JMLNotEqual) semanticObject); 
+				return; 
+			case CbcmodelPackage.JML_OR:
+				sequence_JMLConcat(context, (JMLOr) semanticObject); 
+				return; 
+			case CbcmodelPackage.JML_QUALIFIER:
+				sequence_JMLQualifiedExpression(context, (JMLQualifier) semanticObject); 
+				return; 
+			case CbcmodelPackage.JML_SUBTRACTION:
+				sequence_JMLAddMathOperation(context, (JMLSubtraction) semanticObject); 
 				return; 
 			case CbcmodelPackage.JAVA_STATEMENT:
 				sequence_JavaStatement(context, (JavaStatement) semanticObject); 
@@ -182,6 +291,12 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 			case CbcmodelPackage.JAVA_VARIABLES:
 				sequence_JavaVariables(context, (JavaVariables) semanticObject); 
 				return; 
+			case CbcmodelPackage.LOOP_INVARIANT_ANNOTATION:
+				sequence_LoopInvariantAnnotation(context, (LoopInvariantAnnotation) semanticObject); 
+				return; 
+			case CbcmodelPackage.LOOP_INVARIANT_ANNOTATION_STATEMENT:
+				sequence_LoopInvariantAnnotationStatement(context, (LoopInvariantAnnotationStatement) semanticObject); 
+				return; 
 			case CbcmodelPackage.LOWER:
 				sequence_Relation(context, (Lower) semanticObject); 
 				return; 
@@ -191,8 +306,20 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 			case CbcmodelPackage.METHOD_STATEMENT:
 				sequence_MethodStatement(context, (MethodStatement) semanticObject); 
 				return; 
+			case CbcmodelPackage.MODULO:
+				sequence_MultiMathOperation(context, (Modulo) semanticObject); 
+				return; 
+			case CbcmodelPackage.MULTIPLICATION:
+				sequence_MultiMathOperation(context, (Multiplication) semanticObject); 
+				return; 
+			case CbcmodelPackage.NOT_EQUAL:
+				sequence_Relation(context, (NotEqual) semanticObject); 
+				return; 
 			case CbcmodelPackage.OR:
 				sequence_Concat(context, (Or) semanticObject); 
+				return; 
+			case CbcmodelPackage.QUALIFIER:
+				sequence_QualifiedExpression(context, (Qualifier) semanticObject); 
 				return; 
 			case CbcmodelPackage.RENAME:
 				sequence_Rename(context, (Rename) semanticObject); 
@@ -206,14 +333,14 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 			case CbcmodelPackage.SELECTION_STATEMENT:
 				sequence_SelectionStatement(context, (SelectionStatement) semanticObject); 
 				return; 
-			case CbcmodelPackage.SKIP_STATEMENT:
-				sequence_SkipStatement(context, (SkipStatement) semanticObject); 
-				return; 
 			case CbcmodelPackage.SMALL_REPETITION_STATEMENT:
 				sequence_SmallRepetitionStatement(context, (SmallRepetitionStatement) semanticObject); 
 				return; 
 			case CbcmodelPackage.STRENGTH_WEAK_STATEMENT:
 				sequence_StrengthWeakStatement(context, (StrengthWeakStatement) semanticObject); 
+				return; 
+			case CbcmodelPackage.SUBTRACTION:
+				sequence_AddMathOperation(context, (Subtraction) semanticObject); 
 				return; 
 			case CbcmodelPackage.VARIABLE_OR_METHOD_NAME:
 				sequence_VariableOrMethodName(context, (VariableOrMethodName) semanticObject); 
@@ -367,8 +494,8 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 					sequence_XJEmptyStatement(context, (XJSemicolonStatement) semanticObject); 
 					return; 
 				}
-				else if (rule == grammarAccess.getXJStatementOrBlockRule()
-						|| rule == grammarAccess.getXJSingleStatementRule()) {
+				else if (rule == grammarAccess.getXJSingleStatementRule()
+						|| rule == grammarAccess.getXJStatementOrBlockRule()) {
 					sequence_XJEmptyStatement_XJSemicolonStatement(context, (XJSemicolonStatement) semanticObject); 
 					return; 
 				}
@@ -573,7 +700,6 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	
 	/**
 	 * Contexts:
-	 *     AbstractStatement returns AbstractStatement
 	 *     AbstractStatement_Impl returns AbstractStatement
 	 *
 	 * Constraint:
@@ -592,14 +718,128 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	
 	/**
 	 * Contexts:
-	 *     AbstractStatement returns BlockStatement
+	 *     AbstractStatement returns AbstractStatement
+	 *
+	 * Constraint:
+	 *     (name=CodeString | name=';')
+	 */
+	protected void sequence_AbstractStatement_Impl_SkipStatement(ISerializationContext context, AbstractStatement semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Expression returns Addition
+	 *     Implication returns Addition
+	 *     Implication.Impl_1_0_0 returns Addition
+	 *     Concat returns Addition
+	 *     Concat.And_1_0_0_0 returns Addition
+	 *     Concat.Or_1_0_1_0 returns Addition
+	 *     Foreach returns Addition
+	 *     Exists returns Addition
+	 *     Relation returns Addition
+	 *     Relation.Lower_1_0_0_0 returns Addition
+	 *     Relation.Greater_1_0_1_0 returns Addition
+	 *     Relation.Equal_1_0_2_0 returns Addition
+	 *     Relation.NotEqual_1_0_3_0 returns Addition
+	 *     Relation.LowerEqual_1_0_4_0 returns Addition
+	 *     Relation.GreaterEqual_1_0_5_0 returns Addition
+	 *     MultiMathOperation returns Addition
+	 *     MultiMathOperation.Multiplication_1_0_0_0 returns Addition
+	 *     MultiMathOperation.Division_1_0_1_0 returns Addition
+	 *     MultiMathOperation.Modulo_1_0_2_0 returns Addition
+	 *     AddMathOperation returns Addition
+	 *     AddMathOperation.Addition_1_0_0_0 returns Addition
+	 *     AddMathOperation.Subtraction_1_0_1_0 returns Addition
+	 *     QualifiedExpression returns Addition
+	 *     QualifiedExpression.Qualifier_1_0_0_0 returns Addition
+	 *     PrimaryExpression returns Addition
+	 *
+	 * Constraint:
+	 *     (left=AddMathOperation_Addition_1_0_0_0 right=QualifiedExpression)
+	 */
+	protected void sequence_AddMathOperation(ISerializationContext context, Addition semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.ADDITION__LEFT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.ADDITION__LEFT));
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.EXPRESSION__RIGHT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.EXPRESSION__RIGHT));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getAddMathOperationAccess().getAdditionLeftAction_1_0_0_0(), semanticObject.getLeft());
+		feeder.accept(grammarAccess.getAddMathOperationAccess().getRightQualifiedExpressionParserRuleCall_1_1_0(), semanticObject.getRight());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Expression returns Subtraction
+	 *     Implication returns Subtraction
+	 *     Implication.Impl_1_0_0 returns Subtraction
+	 *     Concat returns Subtraction
+	 *     Concat.And_1_0_0_0 returns Subtraction
+	 *     Concat.Or_1_0_1_0 returns Subtraction
+	 *     Foreach returns Subtraction
+	 *     Exists returns Subtraction
+	 *     Relation returns Subtraction
+	 *     Relation.Lower_1_0_0_0 returns Subtraction
+	 *     Relation.Greater_1_0_1_0 returns Subtraction
+	 *     Relation.Equal_1_0_2_0 returns Subtraction
+	 *     Relation.NotEqual_1_0_3_0 returns Subtraction
+	 *     Relation.LowerEqual_1_0_4_0 returns Subtraction
+	 *     Relation.GreaterEqual_1_0_5_0 returns Subtraction
+	 *     MultiMathOperation returns Subtraction
+	 *     MultiMathOperation.Multiplication_1_0_0_0 returns Subtraction
+	 *     MultiMathOperation.Division_1_0_1_0 returns Subtraction
+	 *     MultiMathOperation.Modulo_1_0_2_0 returns Subtraction
+	 *     AddMathOperation returns Subtraction
+	 *     AddMathOperation.Addition_1_0_0_0 returns Subtraction
+	 *     AddMathOperation.Subtraction_1_0_1_0 returns Subtraction
+	 *     QualifiedExpression returns Subtraction
+	 *     QualifiedExpression.Qualifier_1_0_0_0 returns Subtraction
+	 *     PrimaryExpression returns Subtraction
+	 *
+	 * Constraint:
+	 *     (left=AddMathOperation_Subtraction_1_0_1_0 right=QualifiedExpression)
+	 */
+	protected void sequence_AddMathOperation(ISerializationContext context, Subtraction semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.SUBTRACTION__LEFT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.SUBTRACTION__LEFT));
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.EXPRESSION__RIGHT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.EXPRESSION__RIGHT));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getAddMathOperationAccess().getSubtractionLeftAction_1_0_1_0(), semanticObject.getLeft());
+		feeder.accept(grammarAccess.getAddMathOperationAccess().getRightQualifiedExpressionParserRuleCall_1_1_0(), semanticObject.getRight());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     CbCProblem returns BlockStatement
 	 *     BlockStatement returns BlockStatement
 	 *
 	 * Constraint:
-	 *     (name=EString jmlAnnotation=JMLAnnotation? javaStatement=JavaStatement)
+	 *     (name=EString jmlAnnotation=JMLAnnotation javaStatement=JavaStatement)
 	 */
 	protected void sequence_BlockStatement(ISerializationContext context, BlockStatement semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.ABSTRACT_STATEMENT__NAME) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.ABSTRACT_STATEMENT__NAME));
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.BLOCK_STATEMENT__JML_ANNOTATION) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.BLOCK_STATEMENT__JML_ANNOTATION));
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.BLOCK_STATEMENT__JAVA_STATEMENT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.BLOCK_STATEMENT__JAVA_STATEMENT));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getBlockStatementAccess().getNameEStringParserRuleCall_2_0(), semanticObject.getName());
+		feeder.accept(grammarAccess.getBlockStatementAccess().getJmlAnnotationJMLAnnotationParserRuleCall_4_0(), semanticObject.getJmlAnnotation());
+		feeder.accept(grammarAccess.getBlockStatementAccess().getJavaStatementJavaStatementParserRuleCall_6_0(), semanticObject.getJavaStatement());
+		feeder.finish();
 	}
 	
 	
@@ -670,23 +910,33 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	/**
 	 * Contexts:
 	 *     Expression returns And
+	 *     Implication returns And
+	 *     Implication.Impl_1_0_0 returns And
+	 *     Concat returns And
+	 *     Concat.And_1_0_0_0 returns And
+	 *     Concat.Or_1_0_1_0 returns And
 	 *     Foreach returns And
 	 *     Exists returns And
 	 *     Relation returns And
 	 *     Relation.Lower_1_0_0_0 returns And
 	 *     Relation.Greater_1_0_1_0 returns And
 	 *     Relation.Equal_1_0_2_0 returns And
-	 *     Relation.LowerEqual_1_0_3_0 returns And
-	 *     Relation.GreaterEqual_1_0_4_0 returns And
-	 *     Implication returns And
-	 *     Implication.Impl_1_0_0 returns And
-	 *     Concat returns And
-	 *     Concat.And_1_0_0_0 returns And
-	 *     Concat.Or_1_0_1_0 returns And
+	 *     Relation.NotEqual_1_0_3_0 returns And
+	 *     Relation.LowerEqual_1_0_4_0 returns And
+	 *     Relation.GreaterEqual_1_0_5_0 returns And
+	 *     MultiMathOperation returns And
+	 *     MultiMathOperation.Multiplication_1_0_0_0 returns And
+	 *     MultiMathOperation.Division_1_0_1_0 returns And
+	 *     MultiMathOperation.Modulo_1_0_2_0 returns And
+	 *     AddMathOperation returns And
+	 *     AddMathOperation.Addition_1_0_0_0 returns And
+	 *     AddMathOperation.Subtraction_1_0_1_0 returns And
+	 *     QualifiedExpression returns And
+	 *     QualifiedExpression.Qualifier_1_0_0_0 returns And
 	 *     PrimaryExpression returns And
 	 *
 	 * Constraint:
-	 *     (left=Concat_And_1_0_0_0 right=PrimaryExpression)
+	 *     (left=Concat_And_1_0_0_0 right=Foreach)
 	 */
 	protected void sequence_Concat(ISerializationContext context, And semanticObject) {
 		if (errorAcceptor != null) {
@@ -697,7 +947,7 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getConcatAccess().getAndLeftAction_1_0_0_0(), semanticObject.getLeft());
-		feeder.accept(grammarAccess.getConcatAccess().getRightPrimaryExpressionParserRuleCall_1_1_0(), semanticObject.getRight());
+		feeder.accept(grammarAccess.getConcatAccess().getRightForeachParserRuleCall_1_1_0(), semanticObject.getRight());
 		feeder.finish();
 	}
 	
@@ -705,23 +955,33 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	/**
 	 * Contexts:
 	 *     Expression returns Or
+	 *     Implication returns Or
+	 *     Implication.Impl_1_0_0 returns Or
+	 *     Concat returns Or
+	 *     Concat.And_1_0_0_0 returns Or
+	 *     Concat.Or_1_0_1_0 returns Or
 	 *     Foreach returns Or
 	 *     Exists returns Or
 	 *     Relation returns Or
 	 *     Relation.Lower_1_0_0_0 returns Or
 	 *     Relation.Greater_1_0_1_0 returns Or
 	 *     Relation.Equal_1_0_2_0 returns Or
-	 *     Relation.LowerEqual_1_0_3_0 returns Or
-	 *     Relation.GreaterEqual_1_0_4_0 returns Or
-	 *     Implication returns Or
-	 *     Implication.Impl_1_0_0 returns Or
-	 *     Concat returns Or
-	 *     Concat.And_1_0_0_0 returns Or
-	 *     Concat.Or_1_0_1_0 returns Or
+	 *     Relation.NotEqual_1_0_3_0 returns Or
+	 *     Relation.LowerEqual_1_0_4_0 returns Or
+	 *     Relation.GreaterEqual_1_0_5_0 returns Or
+	 *     MultiMathOperation returns Or
+	 *     MultiMathOperation.Multiplication_1_0_0_0 returns Or
+	 *     MultiMathOperation.Division_1_0_1_0 returns Or
+	 *     MultiMathOperation.Modulo_1_0_2_0 returns Or
+	 *     AddMathOperation returns Or
+	 *     AddMathOperation.Addition_1_0_0_0 returns Or
+	 *     AddMathOperation.Subtraction_1_0_1_0 returns Or
+	 *     QualifiedExpression returns Or
+	 *     QualifiedExpression.Qualifier_1_0_0_0 returns Or
 	 *     PrimaryExpression returns Or
 	 *
 	 * Constraint:
-	 *     (left=Concat_Or_1_0_1_0 right=PrimaryExpression)
+	 *     (left=Concat_Or_1_0_1_0 right=Foreach)
 	 */
 	protected void sequence_Concat(ISerializationContext context, Or semanticObject) {
 		if (errorAcceptor != null) {
@@ -732,7 +992,7 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getConcatAccess().getOrLeftAction_1_0_1_0(), semanticObject.getLeft());
-		feeder.accept(grammarAccess.getConcatAccess().getRightPrimaryExpressionParserRuleCall_1_1_0(), semanticObject.getRight());
+		feeder.accept(grammarAccess.getConcatAccess().getRightForeachParserRuleCall_1_1_0(), semanticObject.getRight());
 		feeder.finish();
 	}
 	
@@ -758,24 +1018,34 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	/**
 	 * Contexts:
 	 *     Expression returns Expression
+	 *     Implication returns Expression
+	 *     Implication.Impl_1_0_0 returns Expression
+	 *     Concat returns Expression
+	 *     Concat.And_1_0_0_0 returns Expression
+	 *     Concat.Or_1_0_1_0 returns Expression
 	 *     Foreach returns Expression
 	 *     Exists returns Expression
 	 *     Relation returns Expression
 	 *     Relation.Lower_1_0_0_0 returns Expression
 	 *     Relation.Greater_1_0_1_0 returns Expression
 	 *     Relation.Equal_1_0_2_0 returns Expression
-	 *     Relation.LowerEqual_1_0_3_0 returns Expression
-	 *     Relation.GreaterEqual_1_0_4_0 returns Expression
-	 *     Implication returns Expression
-	 *     Implication.Impl_1_0_0 returns Expression
-	 *     Concat returns Expression
-	 *     Concat.And_1_0_0_0 returns Expression
-	 *     Concat.Or_1_0_1_0 returns Expression
+	 *     Relation.NotEqual_1_0_3_0 returns Expression
+	 *     Relation.LowerEqual_1_0_4_0 returns Expression
+	 *     Relation.GreaterEqual_1_0_5_0 returns Expression
+	 *     MultiMathOperation returns Expression
+	 *     MultiMathOperation.Multiplication_1_0_0_0 returns Expression
+	 *     MultiMathOperation.Division_1_0_1_0 returns Expression
+	 *     MultiMathOperation.Modulo_1_0_2_0 returns Expression
+	 *     AddMathOperation returns Expression
+	 *     AddMathOperation.Addition_1_0_0_0 returns Expression
+	 *     AddMathOperation.Subtraction_1_0_1_0 returns Expression
+	 *     QualifiedExpression returns Expression
+	 *     QualifiedExpression.Qualifier_1_0_0_0 returns Expression
 	 *     PrimaryExpression returns Expression
 	 *
 	 * Constraint:
 	 *     (
-	 *         (foreach='(\foreach' type=JvmTypeReference var=VariableOrMethodName right=Exists) | 
+	 *         (foreach='(\forall' type=JvmTypeReference var=VariableOrMethodName right=Exists) | 
 	 *         (exists='(\exists' type=JvmTypeReference var=VariableOrMethodName right=Relation) | 
 	 *         isTrue?='true'
 	 *     )?
@@ -800,19 +1070,29 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	/**
 	 * Contexts:
 	 *     Expression returns Impl
+	 *     Implication returns Impl
+	 *     Implication.Impl_1_0_0 returns Impl
+	 *     Concat returns Impl
+	 *     Concat.And_1_0_0_0 returns Impl
+	 *     Concat.Or_1_0_1_0 returns Impl
 	 *     Foreach returns Impl
 	 *     Exists returns Impl
 	 *     Relation returns Impl
 	 *     Relation.Lower_1_0_0_0 returns Impl
 	 *     Relation.Greater_1_0_1_0 returns Impl
 	 *     Relation.Equal_1_0_2_0 returns Impl
-	 *     Relation.LowerEqual_1_0_3_0 returns Impl
-	 *     Relation.GreaterEqual_1_0_4_0 returns Impl
-	 *     Implication returns Impl
-	 *     Implication.Impl_1_0_0 returns Impl
-	 *     Concat returns Impl
-	 *     Concat.And_1_0_0_0 returns Impl
-	 *     Concat.Or_1_0_1_0 returns Impl
+	 *     Relation.NotEqual_1_0_3_0 returns Impl
+	 *     Relation.LowerEqual_1_0_4_0 returns Impl
+	 *     Relation.GreaterEqual_1_0_5_0 returns Impl
+	 *     MultiMathOperation returns Impl
+	 *     MultiMathOperation.Multiplication_1_0_0_0 returns Impl
+	 *     MultiMathOperation.Division_1_0_1_0 returns Impl
+	 *     MultiMathOperation.Modulo_1_0_2_0 returns Impl
+	 *     AddMathOperation returns Impl
+	 *     AddMathOperation.Addition_1_0_0_0 returns Impl
+	 *     AddMathOperation.Subtraction_1_0_1_0 returns Impl
+	 *     QualifiedExpression returns Impl
+	 *     QualifiedExpression.Qualifier_1_0_0_0 returns Impl
 	 *     PrimaryExpression returns Impl
 	 *
 	 * Constraint:
@@ -834,13 +1114,851 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	
 	/**
 	 * Contexts:
+	 *     AbstractStatement returns InlineBlockStatement
+	 *     InlineBlockStatement returns InlineBlockStatement
+	 *
+	 * Constraint:
+	 *     references=[BlockStatement|ID]
+	 */
+	protected void sequence_InlineBlockStatement(ISerializationContext context, InlineBlockStatement semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.ABSTRACT_STATEMENT__REFERENCES) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.ABSTRACT_STATEMENT__REFERENCES));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getInlineBlockStatementAccess().getReferencesBlockStatementIDTerminalRuleCall_2_0_1(), semanticObject.eGet(CbcmodelPackage.Literals.ABSTRACT_STATEMENT__REFERENCES, false));
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     XJSingleStatement returns InlineJavaBlockStatement
+	 *     InlineJavaBlockStatement returns InlineJavaBlockStatement
+	 *     XJStatementOrBlock returns InlineJavaBlockStatement
+	 *
+	 * Constraint:
+	 *     (jmlAnnotation=JMLAnnotation references=[BlockStatement|ID])
+	 */
+	protected void sequence_InlineJavaBlockStatement(ISerializationContext context, InlineJavaBlockStatement semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.INLINE_JAVA_BLOCK_STATEMENT__JML_ANNOTATION) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.INLINE_JAVA_BLOCK_STATEMENT__JML_ANNOTATION));
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.INLINE_JAVA_BLOCK_STATEMENT__REFERENCES) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.INLINE_JAVA_BLOCK_STATEMENT__REFERENCES));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getInlineJavaBlockStatementAccess().getJmlAnnotationJMLAnnotationParserRuleCall_1_0(), semanticObject.getJmlAnnotation());
+		feeder.accept(grammarAccess.getInlineJavaBlockStatementAccess().getReferencesBlockStatementIDTerminalRuleCall_3_0_1(), semanticObject.eGet(CbcmodelPackage.Literals.INLINE_JAVA_BLOCK_STATEMENT__REFERENCES, false));
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     JMLExpression returns JMLAddition
+	 *     JMLImplication returns JMLAddition
+	 *     JMLImplication.JMLImpl_1_0_0 returns JMLAddition
+	 *     JMLConcat returns JMLAddition
+	 *     JMLConcat.JMLAnd_1_0_0_0 returns JMLAddition
+	 *     JMLConcat.JMLOr_1_0_1_0 returns JMLAddition
+	 *     JMLForeach returns JMLAddition
+	 *     JMLExists returns JMLAddition
+	 *     JMLRelation returns JMLAddition
+	 *     JMLRelation.JMLLower_1_0_0_0 returns JMLAddition
+	 *     JMLRelation.JMLGreater_1_0_1_0 returns JMLAddition
+	 *     JMLRelation.JMLEqual_1_0_2_0 returns JMLAddition
+	 *     JMLRelation.JMLNotEqual_1_0_3_0 returns JMLAddition
+	 *     JMLRelation.JMLLowerEqual_1_0_4_0 returns JMLAddition
+	 *     JMLRelation.JMLGreaterEqual_1_0_5_0 returns JMLAddition
+	 *     JMLMultiMathOperation returns JMLAddition
+	 *     JMLMultiMathOperation.JMLMultiplication_1_0_0_0 returns JMLAddition
+	 *     JMLMultiMathOperation.JMLDivision_1_0_1_0 returns JMLAddition
+	 *     JMLMultiMathOperation.JMLModulo_1_0_2_0 returns JMLAddition
+	 *     JMLAddMathOperation returns JMLAddition
+	 *     JMLAddMathOperation.JMLAddition_1_0_0_0 returns JMLAddition
+	 *     JMLAddMathOperation.JMLSubtraction_1_0_1_0 returns JMLAddition
+	 *     JMLQualifiedExpression returns JMLAddition
+	 *     JMLQualifiedExpression.JMLQualifier_1_0_0_0 returns JMLAddition
+	 *     JMLPrimaryExpression returns JMLAddition
+	 *
+	 * Constraint:
+	 *     (left=JMLAddMathOperation_JMLAddition_1_0_0_0 right=JMLQualifiedExpression)
+	 */
+	protected void sequence_JMLAddMathOperation(ISerializationContext context, JMLAddition semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.JML_ADDITION__LEFT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.JML_ADDITION__LEFT));
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.JML_EXPRESSION__RIGHT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.JML_EXPRESSION__RIGHT));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getJMLAddMathOperationAccess().getJMLAdditionLeftAction_1_0_0_0(), semanticObject.getLeft());
+		feeder.accept(grammarAccess.getJMLAddMathOperationAccess().getRightJMLQualifiedExpressionParserRuleCall_1_1_0(), semanticObject.getRight());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     JMLExpression returns JMLSubtraction
+	 *     JMLImplication returns JMLSubtraction
+	 *     JMLImplication.JMLImpl_1_0_0 returns JMLSubtraction
+	 *     JMLConcat returns JMLSubtraction
+	 *     JMLConcat.JMLAnd_1_0_0_0 returns JMLSubtraction
+	 *     JMLConcat.JMLOr_1_0_1_0 returns JMLSubtraction
+	 *     JMLForeach returns JMLSubtraction
+	 *     JMLExists returns JMLSubtraction
+	 *     JMLRelation returns JMLSubtraction
+	 *     JMLRelation.JMLLower_1_0_0_0 returns JMLSubtraction
+	 *     JMLRelation.JMLGreater_1_0_1_0 returns JMLSubtraction
+	 *     JMLRelation.JMLEqual_1_0_2_0 returns JMLSubtraction
+	 *     JMLRelation.JMLNotEqual_1_0_3_0 returns JMLSubtraction
+	 *     JMLRelation.JMLLowerEqual_1_0_4_0 returns JMLSubtraction
+	 *     JMLRelation.JMLGreaterEqual_1_0_5_0 returns JMLSubtraction
+	 *     JMLMultiMathOperation returns JMLSubtraction
+	 *     JMLMultiMathOperation.JMLMultiplication_1_0_0_0 returns JMLSubtraction
+	 *     JMLMultiMathOperation.JMLDivision_1_0_1_0 returns JMLSubtraction
+	 *     JMLMultiMathOperation.JMLModulo_1_0_2_0 returns JMLSubtraction
+	 *     JMLAddMathOperation returns JMLSubtraction
+	 *     JMLAddMathOperation.JMLAddition_1_0_0_0 returns JMLSubtraction
+	 *     JMLAddMathOperation.JMLSubtraction_1_0_1_0 returns JMLSubtraction
+	 *     JMLQualifiedExpression returns JMLSubtraction
+	 *     JMLQualifiedExpression.JMLQualifier_1_0_0_0 returns JMLSubtraction
+	 *     JMLPrimaryExpression returns JMLSubtraction
+	 *
+	 * Constraint:
+	 *     (left=JMLAddMathOperation_JMLSubtraction_1_0_1_0 right=JMLQualifiedExpression)
+	 */
+	protected void sequence_JMLAddMathOperation(ISerializationContext context, JMLSubtraction semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.JML_SUBTRACTION__LEFT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.JML_SUBTRACTION__LEFT));
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.JML_EXPRESSION__RIGHT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.JML_EXPRESSION__RIGHT));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getJMLAddMathOperationAccess().getJMLSubtractionLeftAction_1_0_1_0(), semanticObject.getLeft());
+		feeder.accept(grammarAccess.getJMLAddMathOperationAccess().getRightJMLQualifiedExpressionParserRuleCall_1_1_0(), semanticObject.getRight());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
 	 *     JMLAnnotation returns JMLAnnotation
 	 *
 	 * Constraint:
-	 *     (requires=Condition | ensures=Condition)+
+	 *     (requires=JMLExpression ensures=JMLExpression)
 	 */
 	protected void sequence_JMLAnnotation(ISerializationContext context, JMLAnnotation semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.JML_ANNOTATION__REQUIRES) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.JML_ANNOTATION__REQUIRES));
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.JML_ANNOTATION__ENSURES) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.JML_ANNOTATION__ENSURES));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getJMLAnnotationAccess().getRequiresJMLExpressionParserRuleCall_1_0_3_0(), semanticObject.getRequires());
+		feeder.accept(grammarAccess.getJMLAnnotationAccess().getEnsuresJMLExpressionParserRuleCall_1_1_3_0(), semanticObject.getEnsures());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     JMLExpression returns JMLAnd
+	 *     JMLImplication returns JMLAnd
+	 *     JMLImplication.JMLImpl_1_0_0 returns JMLAnd
+	 *     JMLConcat returns JMLAnd
+	 *     JMLConcat.JMLAnd_1_0_0_0 returns JMLAnd
+	 *     JMLConcat.JMLOr_1_0_1_0 returns JMLAnd
+	 *     JMLForeach returns JMLAnd
+	 *     JMLExists returns JMLAnd
+	 *     JMLRelation returns JMLAnd
+	 *     JMLRelation.JMLLower_1_0_0_0 returns JMLAnd
+	 *     JMLRelation.JMLGreater_1_0_1_0 returns JMLAnd
+	 *     JMLRelation.JMLEqual_1_0_2_0 returns JMLAnd
+	 *     JMLRelation.JMLNotEqual_1_0_3_0 returns JMLAnd
+	 *     JMLRelation.JMLLowerEqual_1_0_4_0 returns JMLAnd
+	 *     JMLRelation.JMLGreaterEqual_1_0_5_0 returns JMLAnd
+	 *     JMLMultiMathOperation returns JMLAnd
+	 *     JMLMultiMathOperation.JMLMultiplication_1_0_0_0 returns JMLAnd
+	 *     JMLMultiMathOperation.JMLDivision_1_0_1_0 returns JMLAnd
+	 *     JMLMultiMathOperation.JMLModulo_1_0_2_0 returns JMLAnd
+	 *     JMLAddMathOperation returns JMLAnd
+	 *     JMLAddMathOperation.JMLAddition_1_0_0_0 returns JMLAnd
+	 *     JMLAddMathOperation.JMLSubtraction_1_0_1_0 returns JMLAnd
+	 *     JMLQualifiedExpression returns JMLAnd
+	 *     JMLQualifiedExpression.JMLQualifier_1_0_0_0 returns JMLAnd
+	 *     JMLPrimaryExpression returns JMLAnd
+	 *
+	 * Constraint:
+	 *     (left=JMLConcat_JMLAnd_1_0_0_0 right=JMLForeach)
+	 */
+	protected void sequence_JMLConcat(ISerializationContext context, JMLAnd semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.JML_AND__LEFT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.JML_AND__LEFT));
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.JML_EXPRESSION__RIGHT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.JML_EXPRESSION__RIGHT));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getJMLConcatAccess().getJMLAndLeftAction_1_0_0_0(), semanticObject.getLeft());
+		feeder.accept(grammarAccess.getJMLConcatAccess().getRightJMLForeachParserRuleCall_1_1_0(), semanticObject.getRight());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     JMLExpression returns JMLOr
+	 *     JMLImplication returns JMLOr
+	 *     JMLImplication.JMLImpl_1_0_0 returns JMLOr
+	 *     JMLConcat returns JMLOr
+	 *     JMLConcat.JMLAnd_1_0_0_0 returns JMLOr
+	 *     JMLConcat.JMLOr_1_0_1_0 returns JMLOr
+	 *     JMLForeach returns JMLOr
+	 *     JMLExists returns JMLOr
+	 *     JMLRelation returns JMLOr
+	 *     JMLRelation.JMLLower_1_0_0_0 returns JMLOr
+	 *     JMLRelation.JMLGreater_1_0_1_0 returns JMLOr
+	 *     JMLRelation.JMLEqual_1_0_2_0 returns JMLOr
+	 *     JMLRelation.JMLNotEqual_1_0_3_0 returns JMLOr
+	 *     JMLRelation.JMLLowerEqual_1_0_4_0 returns JMLOr
+	 *     JMLRelation.JMLGreaterEqual_1_0_5_0 returns JMLOr
+	 *     JMLMultiMathOperation returns JMLOr
+	 *     JMLMultiMathOperation.JMLMultiplication_1_0_0_0 returns JMLOr
+	 *     JMLMultiMathOperation.JMLDivision_1_0_1_0 returns JMLOr
+	 *     JMLMultiMathOperation.JMLModulo_1_0_2_0 returns JMLOr
+	 *     JMLAddMathOperation returns JMLOr
+	 *     JMLAddMathOperation.JMLAddition_1_0_0_0 returns JMLOr
+	 *     JMLAddMathOperation.JMLSubtraction_1_0_1_0 returns JMLOr
+	 *     JMLQualifiedExpression returns JMLOr
+	 *     JMLQualifiedExpression.JMLQualifier_1_0_0_0 returns JMLOr
+	 *     JMLPrimaryExpression returns JMLOr
+	 *
+	 * Constraint:
+	 *     (left=JMLConcat_JMLOr_1_0_1_0 right=JMLForeach)
+	 */
+	protected void sequence_JMLConcat(ISerializationContext context, JMLOr semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.JML_OR__LEFT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.JML_OR__LEFT));
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.JML_EXPRESSION__RIGHT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.JML_EXPRESSION__RIGHT));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getJMLConcatAccess().getJMLOrLeftAction_1_0_1_0(), semanticObject.getLeft());
+		feeder.accept(grammarAccess.getJMLConcatAccess().getRightJMLForeachParserRuleCall_1_1_0(), semanticObject.getRight());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     JMLExpression returns JMLExpression
+	 *     JMLImplication returns JMLExpression
+	 *     JMLImplication.JMLImpl_1_0_0 returns JMLExpression
+	 *     JMLConcat returns JMLExpression
+	 *     JMLConcat.JMLAnd_1_0_0_0 returns JMLExpression
+	 *     JMLConcat.JMLOr_1_0_1_0 returns JMLExpression
+	 *     JMLForeach returns JMLExpression
+	 *     JMLExists returns JMLExpression
+	 *     JMLRelation returns JMLExpression
+	 *     JMLRelation.JMLLower_1_0_0_0 returns JMLExpression
+	 *     JMLRelation.JMLGreater_1_0_1_0 returns JMLExpression
+	 *     JMLRelation.JMLEqual_1_0_2_0 returns JMLExpression
+	 *     JMLRelation.JMLNotEqual_1_0_3_0 returns JMLExpression
+	 *     JMLRelation.JMLLowerEqual_1_0_4_0 returns JMLExpression
+	 *     JMLRelation.JMLGreaterEqual_1_0_5_0 returns JMLExpression
+	 *     JMLMultiMathOperation returns JMLExpression
+	 *     JMLMultiMathOperation.JMLMultiplication_1_0_0_0 returns JMLExpression
+	 *     JMLMultiMathOperation.JMLDivision_1_0_1_0 returns JMLExpression
+	 *     JMLMultiMathOperation.JMLModulo_1_0_2_0 returns JMLExpression
+	 *     JMLAddMathOperation returns JMLExpression
+	 *     JMLAddMathOperation.JMLAddition_1_0_0_0 returns JMLExpression
+	 *     JMLAddMathOperation.JMLSubtraction_1_0_1_0 returns JMLExpression
+	 *     JMLQualifiedExpression returns JMLExpression
+	 *     JMLQualifiedExpression.JMLQualifier_1_0_0_0 returns JMLExpression
+	 *     JMLPrimaryExpression returns JMLExpression
+	 *
+	 * Constraint:
+	 *     (
+	 *         (foreach='(\forall' type=JvmTypeReference var=VariableOrMethodName right=JMLExists) | 
+	 *         (exists='(\exists' type=JvmTypeReference var=VariableOrMethodName right=JMLRelation) | 
+	 *         isTrue?='true'
+	 *     )?
+	 */
+	protected void sequence_JMLExists_JMLForeach_JMLPrimaryExpression(ISerializationContext context, JMLExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     JMLExpression returns JMLImpl
+	 *     JMLImplication returns JMLImpl
+	 *     JMLImplication.JMLImpl_1_0_0 returns JMLImpl
+	 *     JMLConcat returns JMLImpl
+	 *     JMLConcat.JMLAnd_1_0_0_0 returns JMLImpl
+	 *     JMLConcat.JMLOr_1_0_1_0 returns JMLImpl
+	 *     JMLForeach returns JMLImpl
+	 *     JMLExists returns JMLImpl
+	 *     JMLRelation returns JMLImpl
+	 *     JMLRelation.JMLLower_1_0_0_0 returns JMLImpl
+	 *     JMLRelation.JMLGreater_1_0_1_0 returns JMLImpl
+	 *     JMLRelation.JMLEqual_1_0_2_0 returns JMLImpl
+	 *     JMLRelation.JMLNotEqual_1_0_3_0 returns JMLImpl
+	 *     JMLRelation.JMLLowerEqual_1_0_4_0 returns JMLImpl
+	 *     JMLRelation.JMLGreaterEqual_1_0_5_0 returns JMLImpl
+	 *     JMLMultiMathOperation returns JMLImpl
+	 *     JMLMultiMathOperation.JMLMultiplication_1_0_0_0 returns JMLImpl
+	 *     JMLMultiMathOperation.JMLDivision_1_0_1_0 returns JMLImpl
+	 *     JMLMultiMathOperation.JMLModulo_1_0_2_0 returns JMLImpl
+	 *     JMLAddMathOperation returns JMLImpl
+	 *     JMLAddMathOperation.JMLAddition_1_0_0_0 returns JMLImpl
+	 *     JMLAddMathOperation.JMLSubtraction_1_0_1_0 returns JMLImpl
+	 *     JMLQualifiedExpression returns JMLImpl
+	 *     JMLQualifiedExpression.JMLQualifier_1_0_0_0 returns JMLImpl
+	 *     JMLPrimaryExpression returns JMLImpl
+	 *
+	 * Constraint:
+	 *     (left=JMLImplication_JMLImpl_1_0_0 right=JMLConcat)
+	 */
+	protected void sequence_JMLImplication(ISerializationContext context, JMLImpl semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.JML_IMPL__LEFT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.JML_IMPL__LEFT));
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.JML_EXPRESSION__RIGHT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.JML_EXPRESSION__RIGHT));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getJMLImplicationAccess().getJMLImplLeftAction_1_0_0(), semanticObject.getLeft());
+		feeder.accept(grammarAccess.getJMLImplicationAccess().getRightJMLConcatParserRuleCall_1_1_0(), semanticObject.getRight());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     JMLExpression returns JMLDivision
+	 *     JMLImplication returns JMLDivision
+	 *     JMLImplication.JMLImpl_1_0_0 returns JMLDivision
+	 *     JMLConcat returns JMLDivision
+	 *     JMLConcat.JMLAnd_1_0_0_0 returns JMLDivision
+	 *     JMLConcat.JMLOr_1_0_1_0 returns JMLDivision
+	 *     JMLForeach returns JMLDivision
+	 *     JMLExists returns JMLDivision
+	 *     JMLRelation returns JMLDivision
+	 *     JMLRelation.JMLLower_1_0_0_0 returns JMLDivision
+	 *     JMLRelation.JMLGreater_1_0_1_0 returns JMLDivision
+	 *     JMLRelation.JMLEqual_1_0_2_0 returns JMLDivision
+	 *     JMLRelation.JMLNotEqual_1_0_3_0 returns JMLDivision
+	 *     JMLRelation.JMLLowerEqual_1_0_4_0 returns JMLDivision
+	 *     JMLRelation.JMLGreaterEqual_1_0_5_0 returns JMLDivision
+	 *     JMLMultiMathOperation returns JMLDivision
+	 *     JMLMultiMathOperation.JMLMultiplication_1_0_0_0 returns JMLDivision
+	 *     JMLMultiMathOperation.JMLDivision_1_0_1_0 returns JMLDivision
+	 *     JMLMultiMathOperation.JMLModulo_1_0_2_0 returns JMLDivision
+	 *     JMLAddMathOperation returns JMLDivision
+	 *     JMLAddMathOperation.JMLAddition_1_0_0_0 returns JMLDivision
+	 *     JMLAddMathOperation.JMLSubtraction_1_0_1_0 returns JMLDivision
+	 *     JMLQualifiedExpression returns JMLDivision
+	 *     JMLQualifiedExpression.JMLQualifier_1_0_0_0 returns JMLDivision
+	 *     JMLPrimaryExpression returns JMLDivision
+	 *
+	 * Constraint:
+	 *     (left=JMLMultiMathOperation_JMLDivision_1_0_1_0 right=JMLAddMathOperation)
+	 */
+	protected void sequence_JMLMultiMathOperation(ISerializationContext context, JMLDivision semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.JML_DIVISION__LEFT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.JML_DIVISION__LEFT));
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.JML_EXPRESSION__RIGHT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.JML_EXPRESSION__RIGHT));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getJMLMultiMathOperationAccess().getJMLDivisionLeftAction_1_0_1_0(), semanticObject.getLeft());
+		feeder.accept(grammarAccess.getJMLMultiMathOperationAccess().getRightJMLAddMathOperationParserRuleCall_1_1_0(), semanticObject.getRight());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     JMLExpression returns JMLModulo
+	 *     JMLImplication returns JMLModulo
+	 *     JMLImplication.JMLImpl_1_0_0 returns JMLModulo
+	 *     JMLConcat returns JMLModulo
+	 *     JMLConcat.JMLAnd_1_0_0_0 returns JMLModulo
+	 *     JMLConcat.JMLOr_1_0_1_0 returns JMLModulo
+	 *     JMLForeach returns JMLModulo
+	 *     JMLExists returns JMLModulo
+	 *     JMLRelation returns JMLModulo
+	 *     JMLRelation.JMLLower_1_0_0_0 returns JMLModulo
+	 *     JMLRelation.JMLGreater_1_0_1_0 returns JMLModulo
+	 *     JMLRelation.JMLEqual_1_0_2_0 returns JMLModulo
+	 *     JMLRelation.JMLNotEqual_1_0_3_0 returns JMLModulo
+	 *     JMLRelation.JMLLowerEqual_1_0_4_0 returns JMLModulo
+	 *     JMLRelation.JMLGreaterEqual_1_0_5_0 returns JMLModulo
+	 *     JMLMultiMathOperation returns JMLModulo
+	 *     JMLMultiMathOperation.JMLMultiplication_1_0_0_0 returns JMLModulo
+	 *     JMLMultiMathOperation.JMLDivision_1_0_1_0 returns JMLModulo
+	 *     JMLMultiMathOperation.JMLModulo_1_0_2_0 returns JMLModulo
+	 *     JMLAddMathOperation returns JMLModulo
+	 *     JMLAddMathOperation.JMLAddition_1_0_0_0 returns JMLModulo
+	 *     JMLAddMathOperation.JMLSubtraction_1_0_1_0 returns JMLModulo
+	 *     JMLQualifiedExpression returns JMLModulo
+	 *     JMLQualifiedExpression.JMLQualifier_1_0_0_0 returns JMLModulo
+	 *     JMLPrimaryExpression returns JMLModulo
+	 *
+	 * Constraint:
+	 *     (left=JMLMultiMathOperation_JMLModulo_1_0_2_0 right=JMLAddMathOperation)
+	 */
+	protected void sequence_JMLMultiMathOperation(ISerializationContext context, JMLModulo semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.JML_MODULO__LEFT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.JML_MODULO__LEFT));
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.JML_EXPRESSION__RIGHT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.JML_EXPRESSION__RIGHT));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getJMLMultiMathOperationAccess().getJMLModuloLeftAction_1_0_2_0(), semanticObject.getLeft());
+		feeder.accept(grammarAccess.getJMLMultiMathOperationAccess().getRightJMLAddMathOperationParserRuleCall_1_1_0(), semanticObject.getRight());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     JMLExpression returns JMLMultiplication
+	 *     JMLImplication returns JMLMultiplication
+	 *     JMLImplication.JMLImpl_1_0_0 returns JMLMultiplication
+	 *     JMLConcat returns JMLMultiplication
+	 *     JMLConcat.JMLAnd_1_0_0_0 returns JMLMultiplication
+	 *     JMLConcat.JMLOr_1_0_1_0 returns JMLMultiplication
+	 *     JMLForeach returns JMLMultiplication
+	 *     JMLExists returns JMLMultiplication
+	 *     JMLRelation returns JMLMultiplication
+	 *     JMLRelation.JMLLower_1_0_0_0 returns JMLMultiplication
+	 *     JMLRelation.JMLGreater_1_0_1_0 returns JMLMultiplication
+	 *     JMLRelation.JMLEqual_1_0_2_0 returns JMLMultiplication
+	 *     JMLRelation.JMLNotEqual_1_0_3_0 returns JMLMultiplication
+	 *     JMLRelation.JMLLowerEqual_1_0_4_0 returns JMLMultiplication
+	 *     JMLRelation.JMLGreaterEqual_1_0_5_0 returns JMLMultiplication
+	 *     JMLMultiMathOperation returns JMLMultiplication
+	 *     JMLMultiMathOperation.JMLMultiplication_1_0_0_0 returns JMLMultiplication
+	 *     JMLMultiMathOperation.JMLDivision_1_0_1_0 returns JMLMultiplication
+	 *     JMLMultiMathOperation.JMLModulo_1_0_2_0 returns JMLMultiplication
+	 *     JMLAddMathOperation returns JMLMultiplication
+	 *     JMLAddMathOperation.JMLAddition_1_0_0_0 returns JMLMultiplication
+	 *     JMLAddMathOperation.JMLSubtraction_1_0_1_0 returns JMLMultiplication
+	 *     JMLQualifiedExpression returns JMLMultiplication
+	 *     JMLQualifiedExpression.JMLQualifier_1_0_0_0 returns JMLMultiplication
+	 *     JMLPrimaryExpression returns JMLMultiplication
+	 *
+	 * Constraint:
+	 *     (left=JMLMultiMathOperation_JMLMultiplication_1_0_0_0 right=JMLAddMathOperation)
+	 */
+	protected void sequence_JMLMultiMathOperation(ISerializationContext context, JMLMultiplication semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.JML_MULTIPLICATION__LEFT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.JML_MULTIPLICATION__LEFT));
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.JML_EXPRESSION__RIGHT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.JML_EXPRESSION__RIGHT));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getJMLMultiMathOperationAccess().getJMLMultiplicationLeftAction_1_0_0_0(), semanticObject.getLeft());
+		feeder.accept(grammarAccess.getJMLMultiMathOperationAccess().getRightJMLAddMathOperationParserRuleCall_1_1_0(), semanticObject.getRight());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     JMLExpression returns JMLArrayElement
+	 *     JMLImplication returns JMLArrayElement
+	 *     JMLImplication.JMLImpl_1_0_0 returns JMLArrayElement
+	 *     JMLConcat returns JMLArrayElement
+	 *     JMLConcat.JMLAnd_1_0_0_0 returns JMLArrayElement
+	 *     JMLConcat.JMLOr_1_0_1_0 returns JMLArrayElement
+	 *     JMLForeach returns JMLArrayElement
+	 *     JMLExists returns JMLArrayElement
+	 *     JMLRelation returns JMLArrayElement
+	 *     JMLRelation.JMLLower_1_0_0_0 returns JMLArrayElement
+	 *     JMLRelation.JMLGreater_1_0_1_0 returns JMLArrayElement
+	 *     JMLRelation.JMLEqual_1_0_2_0 returns JMLArrayElement
+	 *     JMLRelation.JMLNotEqual_1_0_3_0 returns JMLArrayElement
+	 *     JMLRelation.JMLLowerEqual_1_0_4_0 returns JMLArrayElement
+	 *     JMLRelation.JMLGreaterEqual_1_0_5_0 returns JMLArrayElement
+	 *     JMLMultiMathOperation returns JMLArrayElement
+	 *     JMLMultiMathOperation.JMLMultiplication_1_0_0_0 returns JMLArrayElement
+	 *     JMLMultiMathOperation.JMLDivision_1_0_1_0 returns JMLArrayElement
+	 *     JMLMultiMathOperation.JMLModulo_1_0_2_0 returns JMLArrayElement
+	 *     JMLAddMathOperation returns JMLArrayElement
+	 *     JMLAddMathOperation.JMLAddition_1_0_0_0 returns JMLArrayElement
+	 *     JMLAddMathOperation.JMLSubtraction_1_0_1_0 returns JMLArrayElement
+	 *     JMLQualifiedExpression returns JMLArrayElement
+	 *     JMLQualifiedExpression.JMLQualifier_1_0_0_0 returns JMLArrayElement
+	 *     JMLPrimaryExpression returns JMLArrayElement
+	 *
+	 * Constraint:
+	 *     (array=VariableOrMethodName (element+=JMLExpression element+=JMLExpression*)?)
+	 */
+	protected void sequence_JMLPrimaryExpression(ISerializationContext context, JMLArrayElement semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     JMLExpression returns JMLFunctionCall
+	 *     JMLImplication returns JMLFunctionCall
+	 *     JMLImplication.JMLImpl_1_0_0 returns JMLFunctionCall
+	 *     JMLConcat returns JMLFunctionCall
+	 *     JMLConcat.JMLAnd_1_0_0_0 returns JMLFunctionCall
+	 *     JMLConcat.JMLOr_1_0_1_0 returns JMLFunctionCall
+	 *     JMLForeach returns JMLFunctionCall
+	 *     JMLExists returns JMLFunctionCall
+	 *     JMLRelation returns JMLFunctionCall
+	 *     JMLRelation.JMLLower_1_0_0_0 returns JMLFunctionCall
+	 *     JMLRelation.JMLGreater_1_0_1_0 returns JMLFunctionCall
+	 *     JMLRelation.JMLEqual_1_0_2_0 returns JMLFunctionCall
+	 *     JMLRelation.JMLNotEqual_1_0_3_0 returns JMLFunctionCall
+	 *     JMLRelation.JMLLowerEqual_1_0_4_0 returns JMLFunctionCall
+	 *     JMLRelation.JMLGreaterEqual_1_0_5_0 returns JMLFunctionCall
+	 *     JMLMultiMathOperation returns JMLFunctionCall
+	 *     JMLMultiMathOperation.JMLMultiplication_1_0_0_0 returns JMLFunctionCall
+	 *     JMLMultiMathOperation.JMLDivision_1_0_1_0 returns JMLFunctionCall
+	 *     JMLMultiMathOperation.JMLModulo_1_0_2_0 returns JMLFunctionCall
+	 *     JMLAddMathOperation returns JMLFunctionCall
+	 *     JMLAddMathOperation.JMLAddition_1_0_0_0 returns JMLFunctionCall
+	 *     JMLAddMathOperation.JMLSubtraction_1_0_1_0 returns JMLFunctionCall
+	 *     JMLQualifiedExpression returns JMLFunctionCall
+	 *     JMLQualifiedExpression.JMLQualifier_1_0_0_0 returns JMLFunctionCall
+	 *     JMLPrimaryExpression returns JMLFunctionCall
+	 *
+	 * Constraint:
+	 *     (func=VariableOrMethodName (args+=JMLExpression args+=JMLExpression*)?)
+	 */
+	protected void sequence_JMLPrimaryExpression(ISerializationContext context, JMLFunctionCall semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     JMLExpression returns JMLQualifier
+	 *     JMLImplication returns JMLQualifier
+	 *     JMLImplication.JMLImpl_1_0_0 returns JMLQualifier
+	 *     JMLConcat returns JMLQualifier
+	 *     JMLConcat.JMLAnd_1_0_0_0 returns JMLQualifier
+	 *     JMLConcat.JMLOr_1_0_1_0 returns JMLQualifier
+	 *     JMLForeach returns JMLQualifier
+	 *     JMLExists returns JMLQualifier
+	 *     JMLRelation returns JMLQualifier
+	 *     JMLRelation.JMLLower_1_0_0_0 returns JMLQualifier
+	 *     JMLRelation.JMLGreater_1_0_1_0 returns JMLQualifier
+	 *     JMLRelation.JMLEqual_1_0_2_0 returns JMLQualifier
+	 *     JMLRelation.JMLNotEqual_1_0_3_0 returns JMLQualifier
+	 *     JMLRelation.JMLLowerEqual_1_0_4_0 returns JMLQualifier
+	 *     JMLRelation.JMLGreaterEqual_1_0_5_0 returns JMLQualifier
+	 *     JMLMultiMathOperation returns JMLQualifier
+	 *     JMLMultiMathOperation.JMLMultiplication_1_0_0_0 returns JMLQualifier
+	 *     JMLMultiMathOperation.JMLDivision_1_0_1_0 returns JMLQualifier
+	 *     JMLMultiMathOperation.JMLModulo_1_0_2_0 returns JMLQualifier
+	 *     JMLAddMathOperation returns JMLQualifier
+	 *     JMLAddMathOperation.JMLAddition_1_0_0_0 returns JMLQualifier
+	 *     JMLAddMathOperation.JMLSubtraction_1_0_1_0 returns JMLQualifier
+	 *     JMLQualifiedExpression returns JMLQualifier
+	 *     JMLQualifiedExpression.JMLQualifier_1_0_0_0 returns JMLQualifier
+	 *     JMLPrimaryExpression returns JMLQualifier
+	 *
+	 * Constraint:
+	 *     (left=JMLQualifiedExpression_JMLQualifier_1_0_0_0 right=JMLPrimaryExpression)
+	 */
+	protected void sequence_JMLQualifiedExpression(ISerializationContext context, JMLQualifier semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.JML_QUALIFIER__LEFT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.JML_QUALIFIER__LEFT));
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.JML_EXPRESSION__RIGHT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.JML_EXPRESSION__RIGHT));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getJMLQualifiedExpressionAccess().getJMLQualifierLeftAction_1_0_0_0(), semanticObject.getLeft());
+		feeder.accept(grammarAccess.getJMLQualifiedExpressionAccess().getRightJMLPrimaryExpressionParserRuleCall_1_1_0(), semanticObject.getRight());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     JMLExpression returns JMLEqual
+	 *     JMLImplication returns JMLEqual
+	 *     JMLImplication.JMLImpl_1_0_0 returns JMLEqual
+	 *     JMLConcat returns JMLEqual
+	 *     JMLConcat.JMLAnd_1_0_0_0 returns JMLEqual
+	 *     JMLConcat.JMLOr_1_0_1_0 returns JMLEqual
+	 *     JMLForeach returns JMLEqual
+	 *     JMLExists returns JMLEqual
+	 *     JMLRelation returns JMLEqual
+	 *     JMLRelation.JMLLower_1_0_0_0 returns JMLEqual
+	 *     JMLRelation.JMLGreater_1_0_1_0 returns JMLEqual
+	 *     JMLRelation.JMLEqual_1_0_2_0 returns JMLEqual
+	 *     JMLRelation.JMLNotEqual_1_0_3_0 returns JMLEqual
+	 *     JMLRelation.JMLLowerEqual_1_0_4_0 returns JMLEqual
+	 *     JMLRelation.JMLGreaterEqual_1_0_5_0 returns JMLEqual
+	 *     JMLMultiMathOperation returns JMLEqual
+	 *     JMLMultiMathOperation.JMLMultiplication_1_0_0_0 returns JMLEqual
+	 *     JMLMultiMathOperation.JMLDivision_1_0_1_0 returns JMLEqual
+	 *     JMLMultiMathOperation.JMLModulo_1_0_2_0 returns JMLEqual
+	 *     JMLAddMathOperation returns JMLEqual
+	 *     JMLAddMathOperation.JMLAddition_1_0_0_0 returns JMLEqual
+	 *     JMLAddMathOperation.JMLSubtraction_1_0_1_0 returns JMLEqual
+	 *     JMLQualifiedExpression returns JMLEqual
+	 *     JMLQualifiedExpression.JMLQualifier_1_0_0_0 returns JMLEqual
+	 *     JMLPrimaryExpression returns JMLEqual
+	 *
+	 * Constraint:
+	 *     (left=JMLRelation_JMLEqual_1_0_2_0 right=JMLMultiMathOperation)
+	 */
+	protected void sequence_JMLRelation(ISerializationContext context, JMLEqual semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.JML_EQUAL__LEFT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.JML_EQUAL__LEFT));
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.JML_EXPRESSION__RIGHT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.JML_EXPRESSION__RIGHT));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getJMLRelationAccess().getJMLEqualLeftAction_1_0_2_0(), semanticObject.getLeft());
+		feeder.accept(grammarAccess.getJMLRelationAccess().getRightJMLMultiMathOperationParserRuleCall_1_1_0(), semanticObject.getRight());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     JMLExpression returns JMLGreater
+	 *     JMLImplication returns JMLGreater
+	 *     JMLImplication.JMLImpl_1_0_0 returns JMLGreater
+	 *     JMLConcat returns JMLGreater
+	 *     JMLConcat.JMLAnd_1_0_0_0 returns JMLGreater
+	 *     JMLConcat.JMLOr_1_0_1_0 returns JMLGreater
+	 *     JMLForeach returns JMLGreater
+	 *     JMLExists returns JMLGreater
+	 *     JMLRelation returns JMLGreater
+	 *     JMLRelation.JMLLower_1_0_0_0 returns JMLGreater
+	 *     JMLRelation.JMLGreater_1_0_1_0 returns JMLGreater
+	 *     JMLRelation.JMLEqual_1_0_2_0 returns JMLGreater
+	 *     JMLRelation.JMLNotEqual_1_0_3_0 returns JMLGreater
+	 *     JMLRelation.JMLLowerEqual_1_0_4_0 returns JMLGreater
+	 *     JMLRelation.JMLGreaterEqual_1_0_5_0 returns JMLGreater
+	 *     JMLMultiMathOperation returns JMLGreater
+	 *     JMLMultiMathOperation.JMLMultiplication_1_0_0_0 returns JMLGreater
+	 *     JMLMultiMathOperation.JMLDivision_1_0_1_0 returns JMLGreater
+	 *     JMLMultiMathOperation.JMLModulo_1_0_2_0 returns JMLGreater
+	 *     JMLAddMathOperation returns JMLGreater
+	 *     JMLAddMathOperation.JMLAddition_1_0_0_0 returns JMLGreater
+	 *     JMLAddMathOperation.JMLSubtraction_1_0_1_0 returns JMLGreater
+	 *     JMLQualifiedExpression returns JMLGreater
+	 *     JMLQualifiedExpression.JMLQualifier_1_0_0_0 returns JMLGreater
+	 *     JMLPrimaryExpression returns JMLGreater
+	 *
+	 * Constraint:
+	 *     (left=JMLRelation_JMLGreater_1_0_1_0 right=JMLMultiMathOperation)
+	 */
+	protected void sequence_JMLRelation(ISerializationContext context, JMLGreater semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.JML_GREATER__LEFT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.JML_GREATER__LEFT));
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.JML_EXPRESSION__RIGHT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.JML_EXPRESSION__RIGHT));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getJMLRelationAccess().getJMLGreaterLeftAction_1_0_1_0(), semanticObject.getLeft());
+		feeder.accept(grammarAccess.getJMLRelationAccess().getRightJMLMultiMathOperationParserRuleCall_1_1_0(), semanticObject.getRight());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     JMLExpression returns JMLGreaterEqual
+	 *     JMLImplication returns JMLGreaterEqual
+	 *     JMLImplication.JMLImpl_1_0_0 returns JMLGreaterEqual
+	 *     JMLConcat returns JMLGreaterEqual
+	 *     JMLConcat.JMLAnd_1_0_0_0 returns JMLGreaterEqual
+	 *     JMLConcat.JMLOr_1_0_1_0 returns JMLGreaterEqual
+	 *     JMLForeach returns JMLGreaterEqual
+	 *     JMLExists returns JMLGreaterEqual
+	 *     JMLRelation returns JMLGreaterEqual
+	 *     JMLRelation.JMLLower_1_0_0_0 returns JMLGreaterEqual
+	 *     JMLRelation.JMLGreater_1_0_1_0 returns JMLGreaterEqual
+	 *     JMLRelation.JMLEqual_1_0_2_0 returns JMLGreaterEqual
+	 *     JMLRelation.JMLNotEqual_1_0_3_0 returns JMLGreaterEqual
+	 *     JMLRelation.JMLLowerEqual_1_0_4_0 returns JMLGreaterEqual
+	 *     JMLRelation.JMLGreaterEqual_1_0_5_0 returns JMLGreaterEqual
+	 *     JMLMultiMathOperation returns JMLGreaterEqual
+	 *     JMLMultiMathOperation.JMLMultiplication_1_0_0_0 returns JMLGreaterEqual
+	 *     JMLMultiMathOperation.JMLDivision_1_0_1_0 returns JMLGreaterEqual
+	 *     JMLMultiMathOperation.JMLModulo_1_0_2_0 returns JMLGreaterEqual
+	 *     JMLAddMathOperation returns JMLGreaterEqual
+	 *     JMLAddMathOperation.JMLAddition_1_0_0_0 returns JMLGreaterEqual
+	 *     JMLAddMathOperation.JMLSubtraction_1_0_1_0 returns JMLGreaterEqual
+	 *     JMLQualifiedExpression returns JMLGreaterEqual
+	 *     JMLQualifiedExpression.JMLQualifier_1_0_0_0 returns JMLGreaterEqual
+	 *     JMLPrimaryExpression returns JMLGreaterEqual
+	 *
+	 * Constraint:
+	 *     (left=JMLRelation_JMLGreaterEqual_1_0_5_0 right=JMLMultiMathOperation)
+	 */
+	protected void sequence_JMLRelation(ISerializationContext context, JMLGreaterEqual semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.JML_GREATER_EQUAL__LEFT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.JML_GREATER_EQUAL__LEFT));
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.JML_EXPRESSION__RIGHT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.JML_EXPRESSION__RIGHT));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getJMLRelationAccess().getJMLGreaterEqualLeftAction_1_0_5_0(), semanticObject.getLeft());
+		feeder.accept(grammarAccess.getJMLRelationAccess().getRightJMLMultiMathOperationParserRuleCall_1_1_0(), semanticObject.getRight());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     JMLExpression returns JMLLower
+	 *     JMLImplication returns JMLLower
+	 *     JMLImplication.JMLImpl_1_0_0 returns JMLLower
+	 *     JMLConcat returns JMLLower
+	 *     JMLConcat.JMLAnd_1_0_0_0 returns JMLLower
+	 *     JMLConcat.JMLOr_1_0_1_0 returns JMLLower
+	 *     JMLForeach returns JMLLower
+	 *     JMLExists returns JMLLower
+	 *     JMLRelation returns JMLLower
+	 *     JMLRelation.JMLLower_1_0_0_0 returns JMLLower
+	 *     JMLRelation.JMLGreater_1_0_1_0 returns JMLLower
+	 *     JMLRelation.JMLEqual_1_0_2_0 returns JMLLower
+	 *     JMLRelation.JMLNotEqual_1_0_3_0 returns JMLLower
+	 *     JMLRelation.JMLLowerEqual_1_0_4_0 returns JMLLower
+	 *     JMLRelation.JMLGreaterEqual_1_0_5_0 returns JMLLower
+	 *     JMLMultiMathOperation returns JMLLower
+	 *     JMLMultiMathOperation.JMLMultiplication_1_0_0_0 returns JMLLower
+	 *     JMLMultiMathOperation.JMLDivision_1_0_1_0 returns JMLLower
+	 *     JMLMultiMathOperation.JMLModulo_1_0_2_0 returns JMLLower
+	 *     JMLAddMathOperation returns JMLLower
+	 *     JMLAddMathOperation.JMLAddition_1_0_0_0 returns JMLLower
+	 *     JMLAddMathOperation.JMLSubtraction_1_0_1_0 returns JMLLower
+	 *     JMLQualifiedExpression returns JMLLower
+	 *     JMLQualifiedExpression.JMLQualifier_1_0_0_0 returns JMLLower
+	 *     JMLPrimaryExpression returns JMLLower
+	 *
+	 * Constraint:
+	 *     (left=JMLRelation_JMLLower_1_0_0_0 right=JMLMultiMathOperation)
+	 */
+	protected void sequence_JMLRelation(ISerializationContext context, JMLLower semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.JML_LOWER__LEFT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.JML_LOWER__LEFT));
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.JML_EXPRESSION__RIGHT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.JML_EXPRESSION__RIGHT));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getJMLRelationAccess().getJMLLowerLeftAction_1_0_0_0(), semanticObject.getLeft());
+		feeder.accept(grammarAccess.getJMLRelationAccess().getRightJMLMultiMathOperationParserRuleCall_1_1_0(), semanticObject.getRight());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     JMLExpression returns JMLLowerEqual
+	 *     JMLImplication returns JMLLowerEqual
+	 *     JMLImplication.JMLImpl_1_0_0 returns JMLLowerEqual
+	 *     JMLConcat returns JMLLowerEqual
+	 *     JMLConcat.JMLAnd_1_0_0_0 returns JMLLowerEqual
+	 *     JMLConcat.JMLOr_1_0_1_0 returns JMLLowerEqual
+	 *     JMLForeach returns JMLLowerEqual
+	 *     JMLExists returns JMLLowerEqual
+	 *     JMLRelation returns JMLLowerEqual
+	 *     JMLRelation.JMLLower_1_0_0_0 returns JMLLowerEqual
+	 *     JMLRelation.JMLGreater_1_0_1_0 returns JMLLowerEqual
+	 *     JMLRelation.JMLEqual_1_0_2_0 returns JMLLowerEqual
+	 *     JMLRelation.JMLNotEqual_1_0_3_0 returns JMLLowerEqual
+	 *     JMLRelation.JMLLowerEqual_1_0_4_0 returns JMLLowerEqual
+	 *     JMLRelation.JMLGreaterEqual_1_0_5_0 returns JMLLowerEqual
+	 *     JMLMultiMathOperation returns JMLLowerEqual
+	 *     JMLMultiMathOperation.JMLMultiplication_1_0_0_0 returns JMLLowerEqual
+	 *     JMLMultiMathOperation.JMLDivision_1_0_1_0 returns JMLLowerEqual
+	 *     JMLMultiMathOperation.JMLModulo_1_0_2_0 returns JMLLowerEqual
+	 *     JMLAddMathOperation returns JMLLowerEqual
+	 *     JMLAddMathOperation.JMLAddition_1_0_0_0 returns JMLLowerEqual
+	 *     JMLAddMathOperation.JMLSubtraction_1_0_1_0 returns JMLLowerEqual
+	 *     JMLQualifiedExpression returns JMLLowerEqual
+	 *     JMLQualifiedExpression.JMLQualifier_1_0_0_0 returns JMLLowerEqual
+	 *     JMLPrimaryExpression returns JMLLowerEqual
+	 *
+	 * Constraint:
+	 *     (left=JMLRelation_JMLLowerEqual_1_0_4_0 right=JMLMultiMathOperation)
+	 */
+	protected void sequence_JMLRelation(ISerializationContext context, JMLLowerEqual semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.JML_LOWER_EQUAL__LEFT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.JML_LOWER_EQUAL__LEFT));
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.JML_EXPRESSION__RIGHT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.JML_EXPRESSION__RIGHT));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getJMLRelationAccess().getJMLLowerEqualLeftAction_1_0_4_0(), semanticObject.getLeft());
+		feeder.accept(grammarAccess.getJMLRelationAccess().getRightJMLMultiMathOperationParserRuleCall_1_1_0(), semanticObject.getRight());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     JMLExpression returns JMLNotEqual
+	 *     JMLImplication returns JMLNotEqual
+	 *     JMLImplication.JMLImpl_1_0_0 returns JMLNotEqual
+	 *     JMLConcat returns JMLNotEqual
+	 *     JMLConcat.JMLAnd_1_0_0_0 returns JMLNotEqual
+	 *     JMLConcat.JMLOr_1_0_1_0 returns JMLNotEqual
+	 *     JMLForeach returns JMLNotEqual
+	 *     JMLExists returns JMLNotEqual
+	 *     JMLRelation returns JMLNotEqual
+	 *     JMLRelation.JMLLower_1_0_0_0 returns JMLNotEqual
+	 *     JMLRelation.JMLGreater_1_0_1_0 returns JMLNotEqual
+	 *     JMLRelation.JMLEqual_1_0_2_0 returns JMLNotEqual
+	 *     JMLRelation.JMLNotEqual_1_0_3_0 returns JMLNotEqual
+	 *     JMLRelation.JMLLowerEqual_1_0_4_0 returns JMLNotEqual
+	 *     JMLRelation.JMLGreaterEqual_1_0_5_0 returns JMLNotEqual
+	 *     JMLMultiMathOperation returns JMLNotEqual
+	 *     JMLMultiMathOperation.JMLMultiplication_1_0_0_0 returns JMLNotEqual
+	 *     JMLMultiMathOperation.JMLDivision_1_0_1_0 returns JMLNotEqual
+	 *     JMLMultiMathOperation.JMLModulo_1_0_2_0 returns JMLNotEqual
+	 *     JMLAddMathOperation returns JMLNotEqual
+	 *     JMLAddMathOperation.JMLAddition_1_0_0_0 returns JMLNotEqual
+	 *     JMLAddMathOperation.JMLSubtraction_1_0_1_0 returns JMLNotEqual
+	 *     JMLQualifiedExpression returns JMLNotEqual
+	 *     JMLQualifiedExpression.JMLQualifier_1_0_0_0 returns JMLNotEqual
+	 *     JMLPrimaryExpression returns JMLNotEqual
+	 *
+	 * Constraint:
+	 *     (left=JMLRelation_JMLNotEqual_1_0_3_0 right=JMLMultiMathOperation)
+	 */
+	protected void sequence_JMLRelation(ISerializationContext context, JMLNotEqual semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.JML_NOT_EQUAL__LEFT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.JML_NOT_EQUAL__LEFT));
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.JML_EXPRESSION__RIGHT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.JML_EXPRESSION__RIGHT));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getJMLRelationAccess().getJMLNotEqualLeftAction_1_0_3_0(), semanticObject.getLeft());
+		feeder.accept(grammarAccess.getJMLRelationAccess().getRightJMLMultiMathOperationParserRuleCall_1_1_0(), semanticObject.getRight());
+		feeder.finish();
 	}
 	
 	
@@ -849,7 +1967,7 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	 *     JavaStatement returns JavaStatement
 	 *
 	 * Constraint:
-	 *     name+=XJStatementOrBlock+
+	 *     statement+=XJStatementOrBlock+
 	 */
 	protected void sequence_JavaStatement(ISerializationContext context, JavaStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -861,15 +1979,18 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	 *     JavaVariable returns JavaVariable
 	 *
 	 * Constraint:
-	 *     name=EString
+	 *     (type=JvmTypeReference var=VariableOrMethodName)
 	 */
 	protected void sequence_JavaVariable(ISerializationContext context, JavaVariable semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.JAVA_VARIABLE__NAME) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.JAVA_VARIABLE__NAME));
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.JAVA_VARIABLE__TYPE) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.JAVA_VARIABLE__TYPE));
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.JAVA_VARIABLE__VAR) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.JAVA_VARIABLE__VAR));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getJavaVariableAccess().getNameEStringParserRuleCall_1_0(), semanticObject.getName());
+		feeder.accept(grammarAccess.getJavaVariableAccess().getTypeJvmTypeReferenceParserRuleCall_1_0(), semanticObject.getType());
+		feeder.accept(grammarAccess.getJavaVariableAccess().getVarVariableOrMethodNameParserRuleCall_2_0(), semanticObject.getVar());
 		feeder.finish();
 	}
 	
@@ -882,6 +2003,38 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	 *     (variables+=JavaVariable variables+=JavaVariable*)?
 	 */
 	protected void sequence_JavaVariables(ISerializationContext context, JavaVariables semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     XJSingleStatement returns LoopInvariantAnnotationStatement
+	 *     LoopInvariantAnnotationStatement returns LoopInvariantAnnotationStatement
+	 *     XJStatementOrBlock returns LoopInvariantAnnotationStatement
+	 *
+	 * Constraint:
+	 *     jmlAnnotation=LoopInvariantAnnotation
+	 */
+	protected void sequence_LoopInvariantAnnotationStatement(ISerializationContext context, LoopInvariantAnnotationStatement semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.LOOP_INVARIANT_ANNOTATION_STATEMENT__JML_ANNOTATION) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.LOOP_INVARIANT_ANNOTATION_STATEMENT__JML_ANNOTATION));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getLoopInvariantAnnotationStatementAccess().getJmlAnnotationLoopInvariantAnnotationParserRuleCall_1_0(), semanticObject.getJmlAnnotation());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     LoopInvariantAnnotation returns LoopInvariantAnnotation
+	 *
+	 * Constraint:
+	 *     (loopInvariant=JMLExpression (assignable+=VariableOrMethodName assignable+=VariableOrMethodName*)? decreases=JMLExpression)
+	 */
+	protected void sequence_LoopInvariantAnnotation(ISerializationContext context, LoopInvariantAnnotation semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -907,20 +2060,201 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	
 	/**
 	 * Contexts:
+	 *     Expression returns Division
+	 *     Implication returns Division
+	 *     Implication.Impl_1_0_0 returns Division
+	 *     Concat returns Division
+	 *     Concat.And_1_0_0_0 returns Division
+	 *     Concat.Or_1_0_1_0 returns Division
+	 *     Foreach returns Division
+	 *     Exists returns Division
+	 *     Relation returns Division
+	 *     Relation.Lower_1_0_0_0 returns Division
+	 *     Relation.Greater_1_0_1_0 returns Division
+	 *     Relation.Equal_1_0_2_0 returns Division
+	 *     Relation.NotEqual_1_0_3_0 returns Division
+	 *     Relation.LowerEqual_1_0_4_0 returns Division
+	 *     Relation.GreaterEqual_1_0_5_0 returns Division
+	 *     MultiMathOperation returns Division
+	 *     MultiMathOperation.Multiplication_1_0_0_0 returns Division
+	 *     MultiMathOperation.Division_1_0_1_0 returns Division
+	 *     MultiMathOperation.Modulo_1_0_2_0 returns Division
+	 *     AddMathOperation returns Division
+	 *     AddMathOperation.Addition_1_0_0_0 returns Division
+	 *     AddMathOperation.Subtraction_1_0_1_0 returns Division
+	 *     QualifiedExpression returns Division
+	 *     QualifiedExpression.Qualifier_1_0_0_0 returns Division
+	 *     PrimaryExpression returns Division
+	 *
+	 * Constraint:
+	 *     (left=MultiMathOperation_Division_1_0_1_0 right=AddMathOperation)
+	 */
+	protected void sequence_MultiMathOperation(ISerializationContext context, Division semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.DIVISION__LEFT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.DIVISION__LEFT));
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.EXPRESSION__RIGHT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.EXPRESSION__RIGHT));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getMultiMathOperationAccess().getDivisionLeftAction_1_0_1_0(), semanticObject.getLeft());
+		feeder.accept(grammarAccess.getMultiMathOperationAccess().getRightAddMathOperationParserRuleCall_1_1_0(), semanticObject.getRight());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Expression returns Modulo
+	 *     Implication returns Modulo
+	 *     Implication.Impl_1_0_0 returns Modulo
+	 *     Concat returns Modulo
+	 *     Concat.And_1_0_0_0 returns Modulo
+	 *     Concat.Or_1_0_1_0 returns Modulo
+	 *     Foreach returns Modulo
+	 *     Exists returns Modulo
+	 *     Relation returns Modulo
+	 *     Relation.Lower_1_0_0_0 returns Modulo
+	 *     Relation.Greater_1_0_1_0 returns Modulo
+	 *     Relation.Equal_1_0_2_0 returns Modulo
+	 *     Relation.NotEqual_1_0_3_0 returns Modulo
+	 *     Relation.LowerEqual_1_0_4_0 returns Modulo
+	 *     Relation.GreaterEqual_1_0_5_0 returns Modulo
+	 *     MultiMathOperation returns Modulo
+	 *     MultiMathOperation.Multiplication_1_0_0_0 returns Modulo
+	 *     MultiMathOperation.Division_1_0_1_0 returns Modulo
+	 *     MultiMathOperation.Modulo_1_0_2_0 returns Modulo
+	 *     AddMathOperation returns Modulo
+	 *     AddMathOperation.Addition_1_0_0_0 returns Modulo
+	 *     AddMathOperation.Subtraction_1_0_1_0 returns Modulo
+	 *     QualifiedExpression returns Modulo
+	 *     QualifiedExpression.Qualifier_1_0_0_0 returns Modulo
+	 *     PrimaryExpression returns Modulo
+	 *
+	 * Constraint:
+	 *     (left=MultiMathOperation_Modulo_1_0_2_0 right=AddMathOperation)
+	 */
+	protected void sequence_MultiMathOperation(ISerializationContext context, Modulo semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.MODULO__LEFT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.MODULO__LEFT));
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.EXPRESSION__RIGHT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.EXPRESSION__RIGHT));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getMultiMathOperationAccess().getModuloLeftAction_1_0_2_0(), semanticObject.getLeft());
+		feeder.accept(grammarAccess.getMultiMathOperationAccess().getRightAddMathOperationParserRuleCall_1_1_0(), semanticObject.getRight());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Expression returns Multiplication
+	 *     Implication returns Multiplication
+	 *     Implication.Impl_1_0_0 returns Multiplication
+	 *     Concat returns Multiplication
+	 *     Concat.And_1_0_0_0 returns Multiplication
+	 *     Concat.Or_1_0_1_0 returns Multiplication
+	 *     Foreach returns Multiplication
+	 *     Exists returns Multiplication
+	 *     Relation returns Multiplication
+	 *     Relation.Lower_1_0_0_0 returns Multiplication
+	 *     Relation.Greater_1_0_1_0 returns Multiplication
+	 *     Relation.Equal_1_0_2_0 returns Multiplication
+	 *     Relation.NotEqual_1_0_3_0 returns Multiplication
+	 *     Relation.LowerEqual_1_0_4_0 returns Multiplication
+	 *     Relation.GreaterEqual_1_0_5_0 returns Multiplication
+	 *     MultiMathOperation returns Multiplication
+	 *     MultiMathOperation.Multiplication_1_0_0_0 returns Multiplication
+	 *     MultiMathOperation.Division_1_0_1_0 returns Multiplication
+	 *     MultiMathOperation.Modulo_1_0_2_0 returns Multiplication
+	 *     AddMathOperation returns Multiplication
+	 *     AddMathOperation.Addition_1_0_0_0 returns Multiplication
+	 *     AddMathOperation.Subtraction_1_0_1_0 returns Multiplication
+	 *     QualifiedExpression returns Multiplication
+	 *     QualifiedExpression.Qualifier_1_0_0_0 returns Multiplication
+	 *     PrimaryExpression returns Multiplication
+	 *
+	 * Constraint:
+	 *     (left=MultiMathOperation_Multiplication_1_0_0_0 right=AddMathOperation)
+	 */
+	protected void sequence_MultiMathOperation(ISerializationContext context, Multiplication semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.MULTIPLICATION__LEFT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.MULTIPLICATION__LEFT));
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.EXPRESSION__RIGHT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.EXPRESSION__RIGHT));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getMultiMathOperationAccess().getMultiplicationLeftAction_1_0_0_0(), semanticObject.getLeft());
+		feeder.accept(grammarAccess.getMultiMathOperationAccess().getRightAddMathOperationParserRuleCall_1_1_0(), semanticObject.getRight());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Expression returns ArrayElement
+	 *     Implication returns ArrayElement
+	 *     Implication.Impl_1_0_0 returns ArrayElement
+	 *     Concat returns ArrayElement
+	 *     Concat.And_1_0_0_0 returns ArrayElement
+	 *     Concat.Or_1_0_1_0 returns ArrayElement
+	 *     Foreach returns ArrayElement
+	 *     Exists returns ArrayElement
+	 *     Relation returns ArrayElement
+	 *     Relation.Lower_1_0_0_0 returns ArrayElement
+	 *     Relation.Greater_1_0_1_0 returns ArrayElement
+	 *     Relation.Equal_1_0_2_0 returns ArrayElement
+	 *     Relation.NotEqual_1_0_3_0 returns ArrayElement
+	 *     Relation.LowerEqual_1_0_4_0 returns ArrayElement
+	 *     Relation.GreaterEqual_1_0_5_0 returns ArrayElement
+	 *     MultiMathOperation returns ArrayElement
+	 *     MultiMathOperation.Multiplication_1_0_0_0 returns ArrayElement
+	 *     MultiMathOperation.Division_1_0_1_0 returns ArrayElement
+	 *     MultiMathOperation.Modulo_1_0_2_0 returns ArrayElement
+	 *     AddMathOperation returns ArrayElement
+	 *     AddMathOperation.Addition_1_0_0_0 returns ArrayElement
+	 *     AddMathOperation.Subtraction_1_0_1_0 returns ArrayElement
+	 *     QualifiedExpression returns ArrayElement
+	 *     QualifiedExpression.Qualifier_1_0_0_0 returns ArrayElement
+	 *     PrimaryExpression returns ArrayElement
+	 *
+	 * Constraint:
+	 *     (array=VariableOrMethodName (element+=Expression element+=Expression*)?)
+	 */
+	protected void sequence_PrimaryExpression(ISerializationContext context, ArrayElement semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
 	 *     Expression returns FunctionCall
+	 *     Implication returns FunctionCall
+	 *     Implication.Impl_1_0_0 returns FunctionCall
+	 *     Concat returns FunctionCall
+	 *     Concat.And_1_0_0_0 returns FunctionCall
+	 *     Concat.Or_1_0_1_0 returns FunctionCall
 	 *     Foreach returns FunctionCall
 	 *     Exists returns FunctionCall
 	 *     Relation returns FunctionCall
 	 *     Relation.Lower_1_0_0_0 returns FunctionCall
 	 *     Relation.Greater_1_0_1_0 returns FunctionCall
 	 *     Relation.Equal_1_0_2_0 returns FunctionCall
-	 *     Relation.LowerEqual_1_0_3_0 returns FunctionCall
-	 *     Relation.GreaterEqual_1_0_4_0 returns FunctionCall
-	 *     Implication returns FunctionCall
-	 *     Implication.Impl_1_0_0 returns FunctionCall
-	 *     Concat returns FunctionCall
-	 *     Concat.And_1_0_0_0 returns FunctionCall
-	 *     Concat.Or_1_0_1_0 returns FunctionCall
+	 *     Relation.NotEqual_1_0_3_0 returns FunctionCall
+	 *     Relation.LowerEqual_1_0_4_0 returns FunctionCall
+	 *     Relation.GreaterEqual_1_0_5_0 returns FunctionCall
+	 *     MultiMathOperation returns FunctionCall
+	 *     MultiMathOperation.Multiplication_1_0_0_0 returns FunctionCall
+	 *     MultiMathOperation.Division_1_0_1_0 returns FunctionCall
+	 *     MultiMathOperation.Modulo_1_0_2_0 returns FunctionCall
+	 *     AddMathOperation returns FunctionCall
+	 *     AddMathOperation.Addition_1_0_0_0 returns FunctionCall
+	 *     AddMathOperation.Subtraction_1_0_1_0 returns FunctionCall
+	 *     QualifiedExpression returns FunctionCall
+	 *     QualifiedExpression.Qualifier_1_0_0_0 returns FunctionCall
 	 *     PrimaryExpression returns FunctionCall
 	 *
 	 * Constraint:
@@ -933,24 +2267,79 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	
 	/**
 	 * Contexts:
+	 *     Expression returns Qualifier
+	 *     Implication returns Qualifier
+	 *     Implication.Impl_1_0_0 returns Qualifier
+	 *     Concat returns Qualifier
+	 *     Concat.And_1_0_0_0 returns Qualifier
+	 *     Concat.Or_1_0_1_0 returns Qualifier
+	 *     Foreach returns Qualifier
+	 *     Exists returns Qualifier
+	 *     Relation returns Qualifier
+	 *     Relation.Lower_1_0_0_0 returns Qualifier
+	 *     Relation.Greater_1_0_1_0 returns Qualifier
+	 *     Relation.Equal_1_0_2_0 returns Qualifier
+	 *     Relation.NotEqual_1_0_3_0 returns Qualifier
+	 *     Relation.LowerEqual_1_0_4_0 returns Qualifier
+	 *     Relation.GreaterEqual_1_0_5_0 returns Qualifier
+	 *     MultiMathOperation returns Qualifier
+	 *     MultiMathOperation.Multiplication_1_0_0_0 returns Qualifier
+	 *     MultiMathOperation.Division_1_0_1_0 returns Qualifier
+	 *     MultiMathOperation.Modulo_1_0_2_0 returns Qualifier
+	 *     AddMathOperation returns Qualifier
+	 *     AddMathOperation.Addition_1_0_0_0 returns Qualifier
+	 *     AddMathOperation.Subtraction_1_0_1_0 returns Qualifier
+	 *     QualifiedExpression returns Qualifier
+	 *     QualifiedExpression.Qualifier_1_0_0_0 returns Qualifier
+	 *     PrimaryExpression returns Qualifier
+	 *
+	 * Constraint:
+	 *     (left=QualifiedExpression_Qualifier_1_0_0_0 right=PrimaryExpression)
+	 */
+	protected void sequence_QualifiedExpression(ISerializationContext context, Qualifier semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.QUALIFIER__LEFT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.QUALIFIER__LEFT));
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.EXPRESSION__RIGHT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.EXPRESSION__RIGHT));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getQualifiedExpressionAccess().getQualifierLeftAction_1_0_0_0(), semanticObject.getLeft());
+		feeder.accept(grammarAccess.getQualifiedExpressionAccess().getRightPrimaryExpressionParserRuleCall_1_1_0(), semanticObject.getRight());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
 	 *     Expression returns Equal
+	 *     Implication returns Equal
+	 *     Implication.Impl_1_0_0 returns Equal
+	 *     Concat returns Equal
+	 *     Concat.And_1_0_0_0 returns Equal
+	 *     Concat.Or_1_0_1_0 returns Equal
 	 *     Foreach returns Equal
 	 *     Exists returns Equal
 	 *     Relation returns Equal
 	 *     Relation.Lower_1_0_0_0 returns Equal
 	 *     Relation.Greater_1_0_1_0 returns Equal
 	 *     Relation.Equal_1_0_2_0 returns Equal
-	 *     Relation.LowerEqual_1_0_3_0 returns Equal
-	 *     Relation.GreaterEqual_1_0_4_0 returns Equal
-	 *     Implication returns Equal
-	 *     Implication.Impl_1_0_0 returns Equal
-	 *     Concat returns Equal
-	 *     Concat.And_1_0_0_0 returns Equal
-	 *     Concat.Or_1_0_1_0 returns Equal
+	 *     Relation.NotEqual_1_0_3_0 returns Equal
+	 *     Relation.LowerEqual_1_0_4_0 returns Equal
+	 *     Relation.GreaterEqual_1_0_5_0 returns Equal
+	 *     MultiMathOperation returns Equal
+	 *     MultiMathOperation.Multiplication_1_0_0_0 returns Equal
+	 *     MultiMathOperation.Division_1_0_1_0 returns Equal
+	 *     MultiMathOperation.Modulo_1_0_2_0 returns Equal
+	 *     AddMathOperation returns Equal
+	 *     AddMathOperation.Addition_1_0_0_0 returns Equal
+	 *     AddMathOperation.Subtraction_1_0_1_0 returns Equal
+	 *     QualifiedExpression returns Equal
+	 *     QualifiedExpression.Qualifier_1_0_0_0 returns Equal
 	 *     PrimaryExpression returns Equal
 	 *
 	 * Constraint:
-	 *     (left=Relation_Equal_1_0_2_0 right=Implication)
+	 *     (left=Relation_Equal_1_0_2_0 right=MultiMathOperation)
 	 */
 	protected void sequence_Relation(ISerializationContext context, Equal semanticObject) {
 		if (errorAcceptor != null) {
@@ -961,7 +2350,7 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getRelationAccess().getEqualLeftAction_1_0_2_0(), semanticObject.getLeft());
-		feeder.accept(grammarAccess.getRelationAccess().getRightImplicationParserRuleCall_1_1_0(), semanticObject.getRight());
+		feeder.accept(grammarAccess.getRelationAccess().getRightMultiMathOperationParserRuleCall_1_1_0(), semanticObject.getRight());
 		feeder.finish();
 	}
 	
@@ -969,23 +2358,33 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	/**
 	 * Contexts:
 	 *     Expression returns Greater
+	 *     Implication returns Greater
+	 *     Implication.Impl_1_0_0 returns Greater
+	 *     Concat returns Greater
+	 *     Concat.And_1_0_0_0 returns Greater
+	 *     Concat.Or_1_0_1_0 returns Greater
 	 *     Foreach returns Greater
 	 *     Exists returns Greater
 	 *     Relation returns Greater
 	 *     Relation.Lower_1_0_0_0 returns Greater
 	 *     Relation.Greater_1_0_1_0 returns Greater
 	 *     Relation.Equal_1_0_2_0 returns Greater
-	 *     Relation.LowerEqual_1_0_3_0 returns Greater
-	 *     Relation.GreaterEqual_1_0_4_0 returns Greater
-	 *     Implication returns Greater
-	 *     Implication.Impl_1_0_0 returns Greater
-	 *     Concat returns Greater
-	 *     Concat.And_1_0_0_0 returns Greater
-	 *     Concat.Or_1_0_1_0 returns Greater
+	 *     Relation.NotEqual_1_0_3_0 returns Greater
+	 *     Relation.LowerEqual_1_0_4_0 returns Greater
+	 *     Relation.GreaterEqual_1_0_5_0 returns Greater
+	 *     MultiMathOperation returns Greater
+	 *     MultiMathOperation.Multiplication_1_0_0_0 returns Greater
+	 *     MultiMathOperation.Division_1_0_1_0 returns Greater
+	 *     MultiMathOperation.Modulo_1_0_2_0 returns Greater
+	 *     AddMathOperation returns Greater
+	 *     AddMathOperation.Addition_1_0_0_0 returns Greater
+	 *     AddMathOperation.Subtraction_1_0_1_0 returns Greater
+	 *     QualifiedExpression returns Greater
+	 *     QualifiedExpression.Qualifier_1_0_0_0 returns Greater
 	 *     PrimaryExpression returns Greater
 	 *
 	 * Constraint:
-	 *     (left=Relation_Greater_1_0_1_0 right=Implication)
+	 *     (left=Relation_Greater_1_0_1_0 right=MultiMathOperation)
 	 */
 	protected void sequence_Relation(ISerializationContext context, Greater semanticObject) {
 		if (errorAcceptor != null) {
@@ -996,7 +2395,7 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getRelationAccess().getGreaterLeftAction_1_0_1_0(), semanticObject.getLeft());
-		feeder.accept(grammarAccess.getRelationAccess().getRightImplicationParserRuleCall_1_1_0(), semanticObject.getRight());
+		feeder.accept(grammarAccess.getRelationAccess().getRightMultiMathOperationParserRuleCall_1_1_0(), semanticObject.getRight());
 		feeder.finish();
 	}
 	
@@ -1004,23 +2403,33 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	/**
 	 * Contexts:
 	 *     Expression returns GreaterEqual
+	 *     Implication returns GreaterEqual
+	 *     Implication.Impl_1_0_0 returns GreaterEqual
+	 *     Concat returns GreaterEqual
+	 *     Concat.And_1_0_0_0 returns GreaterEqual
+	 *     Concat.Or_1_0_1_0 returns GreaterEqual
 	 *     Foreach returns GreaterEqual
 	 *     Exists returns GreaterEqual
 	 *     Relation returns GreaterEqual
 	 *     Relation.Lower_1_0_0_0 returns GreaterEqual
 	 *     Relation.Greater_1_0_1_0 returns GreaterEqual
 	 *     Relation.Equal_1_0_2_0 returns GreaterEqual
-	 *     Relation.LowerEqual_1_0_3_0 returns GreaterEqual
-	 *     Relation.GreaterEqual_1_0_4_0 returns GreaterEqual
-	 *     Implication returns GreaterEqual
-	 *     Implication.Impl_1_0_0 returns GreaterEqual
-	 *     Concat returns GreaterEqual
-	 *     Concat.And_1_0_0_0 returns GreaterEqual
-	 *     Concat.Or_1_0_1_0 returns GreaterEqual
+	 *     Relation.NotEqual_1_0_3_0 returns GreaterEqual
+	 *     Relation.LowerEqual_1_0_4_0 returns GreaterEqual
+	 *     Relation.GreaterEqual_1_0_5_0 returns GreaterEqual
+	 *     MultiMathOperation returns GreaterEqual
+	 *     MultiMathOperation.Multiplication_1_0_0_0 returns GreaterEqual
+	 *     MultiMathOperation.Division_1_0_1_0 returns GreaterEqual
+	 *     MultiMathOperation.Modulo_1_0_2_0 returns GreaterEqual
+	 *     AddMathOperation returns GreaterEqual
+	 *     AddMathOperation.Addition_1_0_0_0 returns GreaterEqual
+	 *     AddMathOperation.Subtraction_1_0_1_0 returns GreaterEqual
+	 *     QualifiedExpression returns GreaterEqual
+	 *     QualifiedExpression.Qualifier_1_0_0_0 returns GreaterEqual
 	 *     PrimaryExpression returns GreaterEqual
 	 *
 	 * Constraint:
-	 *     (left=Relation_GreaterEqual_1_0_4_0 right=Implication)
+	 *     (left=Relation_GreaterEqual_1_0_5_0 right=MultiMathOperation)
 	 */
 	protected void sequence_Relation(ISerializationContext context, GreaterEqual semanticObject) {
 		if (errorAcceptor != null) {
@@ -1030,8 +2439,8 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.EXPRESSION__RIGHT));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getRelationAccess().getGreaterEqualLeftAction_1_0_4_0(), semanticObject.getLeft());
-		feeder.accept(grammarAccess.getRelationAccess().getRightImplicationParserRuleCall_1_1_0(), semanticObject.getRight());
+		feeder.accept(grammarAccess.getRelationAccess().getGreaterEqualLeftAction_1_0_5_0(), semanticObject.getLeft());
+		feeder.accept(grammarAccess.getRelationAccess().getRightMultiMathOperationParserRuleCall_1_1_0(), semanticObject.getRight());
 		feeder.finish();
 	}
 	
@@ -1039,23 +2448,33 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	/**
 	 * Contexts:
 	 *     Expression returns Lower
+	 *     Implication returns Lower
+	 *     Implication.Impl_1_0_0 returns Lower
+	 *     Concat returns Lower
+	 *     Concat.And_1_0_0_0 returns Lower
+	 *     Concat.Or_1_0_1_0 returns Lower
 	 *     Foreach returns Lower
 	 *     Exists returns Lower
 	 *     Relation returns Lower
 	 *     Relation.Lower_1_0_0_0 returns Lower
 	 *     Relation.Greater_1_0_1_0 returns Lower
 	 *     Relation.Equal_1_0_2_0 returns Lower
-	 *     Relation.LowerEqual_1_0_3_0 returns Lower
-	 *     Relation.GreaterEqual_1_0_4_0 returns Lower
-	 *     Implication returns Lower
-	 *     Implication.Impl_1_0_0 returns Lower
-	 *     Concat returns Lower
-	 *     Concat.And_1_0_0_0 returns Lower
-	 *     Concat.Or_1_0_1_0 returns Lower
+	 *     Relation.NotEqual_1_0_3_0 returns Lower
+	 *     Relation.LowerEqual_1_0_4_0 returns Lower
+	 *     Relation.GreaterEqual_1_0_5_0 returns Lower
+	 *     MultiMathOperation returns Lower
+	 *     MultiMathOperation.Multiplication_1_0_0_0 returns Lower
+	 *     MultiMathOperation.Division_1_0_1_0 returns Lower
+	 *     MultiMathOperation.Modulo_1_0_2_0 returns Lower
+	 *     AddMathOperation returns Lower
+	 *     AddMathOperation.Addition_1_0_0_0 returns Lower
+	 *     AddMathOperation.Subtraction_1_0_1_0 returns Lower
+	 *     QualifiedExpression returns Lower
+	 *     QualifiedExpression.Qualifier_1_0_0_0 returns Lower
 	 *     PrimaryExpression returns Lower
 	 *
 	 * Constraint:
-	 *     (left=Relation_Lower_1_0_0_0 right=Implication)
+	 *     (left=Relation_Lower_1_0_0_0 right=MultiMathOperation)
 	 */
 	protected void sequence_Relation(ISerializationContext context, Lower semanticObject) {
 		if (errorAcceptor != null) {
@@ -1066,7 +2485,7 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getRelationAccess().getLowerLeftAction_1_0_0_0(), semanticObject.getLeft());
-		feeder.accept(grammarAccess.getRelationAccess().getRightImplicationParserRuleCall_1_1_0(), semanticObject.getRight());
+		feeder.accept(grammarAccess.getRelationAccess().getRightMultiMathOperationParserRuleCall_1_1_0(), semanticObject.getRight());
 		feeder.finish();
 	}
 	
@@ -1074,23 +2493,33 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	/**
 	 * Contexts:
 	 *     Expression returns LowerEqual
+	 *     Implication returns LowerEqual
+	 *     Implication.Impl_1_0_0 returns LowerEqual
+	 *     Concat returns LowerEqual
+	 *     Concat.And_1_0_0_0 returns LowerEqual
+	 *     Concat.Or_1_0_1_0 returns LowerEqual
 	 *     Foreach returns LowerEqual
 	 *     Exists returns LowerEqual
 	 *     Relation returns LowerEqual
 	 *     Relation.Lower_1_0_0_0 returns LowerEqual
 	 *     Relation.Greater_1_0_1_0 returns LowerEqual
 	 *     Relation.Equal_1_0_2_0 returns LowerEqual
-	 *     Relation.LowerEqual_1_0_3_0 returns LowerEqual
-	 *     Relation.GreaterEqual_1_0_4_0 returns LowerEqual
-	 *     Implication returns LowerEqual
-	 *     Implication.Impl_1_0_0 returns LowerEqual
-	 *     Concat returns LowerEqual
-	 *     Concat.And_1_0_0_0 returns LowerEqual
-	 *     Concat.Or_1_0_1_0 returns LowerEqual
+	 *     Relation.NotEqual_1_0_3_0 returns LowerEqual
+	 *     Relation.LowerEqual_1_0_4_0 returns LowerEqual
+	 *     Relation.GreaterEqual_1_0_5_0 returns LowerEqual
+	 *     MultiMathOperation returns LowerEqual
+	 *     MultiMathOperation.Multiplication_1_0_0_0 returns LowerEqual
+	 *     MultiMathOperation.Division_1_0_1_0 returns LowerEqual
+	 *     MultiMathOperation.Modulo_1_0_2_0 returns LowerEqual
+	 *     AddMathOperation returns LowerEqual
+	 *     AddMathOperation.Addition_1_0_0_0 returns LowerEqual
+	 *     AddMathOperation.Subtraction_1_0_1_0 returns LowerEqual
+	 *     QualifiedExpression returns LowerEqual
+	 *     QualifiedExpression.Qualifier_1_0_0_0 returns LowerEqual
 	 *     PrimaryExpression returns LowerEqual
 	 *
 	 * Constraint:
-	 *     (left=Relation_LowerEqual_1_0_3_0 right=Implication)
+	 *     (left=Relation_LowerEqual_1_0_4_0 right=MultiMathOperation)
 	 */
 	protected void sequence_Relation(ISerializationContext context, LowerEqual semanticObject) {
 		if (errorAcceptor != null) {
@@ -1100,8 +2529,53 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.EXPRESSION__RIGHT));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getRelationAccess().getLowerEqualLeftAction_1_0_3_0(), semanticObject.getLeft());
-		feeder.accept(grammarAccess.getRelationAccess().getRightImplicationParserRuleCall_1_1_0(), semanticObject.getRight());
+		feeder.accept(grammarAccess.getRelationAccess().getLowerEqualLeftAction_1_0_4_0(), semanticObject.getLeft());
+		feeder.accept(grammarAccess.getRelationAccess().getRightMultiMathOperationParserRuleCall_1_1_0(), semanticObject.getRight());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Expression returns NotEqual
+	 *     Implication returns NotEqual
+	 *     Implication.Impl_1_0_0 returns NotEqual
+	 *     Concat returns NotEqual
+	 *     Concat.And_1_0_0_0 returns NotEqual
+	 *     Concat.Or_1_0_1_0 returns NotEqual
+	 *     Foreach returns NotEqual
+	 *     Exists returns NotEqual
+	 *     Relation returns NotEqual
+	 *     Relation.Lower_1_0_0_0 returns NotEqual
+	 *     Relation.Greater_1_0_1_0 returns NotEqual
+	 *     Relation.Equal_1_0_2_0 returns NotEqual
+	 *     Relation.NotEqual_1_0_3_0 returns NotEqual
+	 *     Relation.LowerEqual_1_0_4_0 returns NotEqual
+	 *     Relation.GreaterEqual_1_0_5_0 returns NotEqual
+	 *     MultiMathOperation returns NotEqual
+	 *     MultiMathOperation.Multiplication_1_0_0_0 returns NotEqual
+	 *     MultiMathOperation.Division_1_0_1_0 returns NotEqual
+	 *     MultiMathOperation.Modulo_1_0_2_0 returns NotEqual
+	 *     AddMathOperation returns NotEqual
+	 *     AddMathOperation.Addition_1_0_0_0 returns NotEqual
+	 *     AddMathOperation.Subtraction_1_0_1_0 returns NotEqual
+	 *     QualifiedExpression returns NotEqual
+	 *     QualifiedExpression.Qualifier_1_0_0_0 returns NotEqual
+	 *     PrimaryExpression returns NotEqual
+	 *
+	 * Constraint:
+	 *     (left=Relation_NotEqual_1_0_3_0 right=MultiMathOperation)
+	 */
+	protected void sequence_Relation(ISerializationContext context, NotEqual semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.NOT_EQUAL__LEFT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.NOT_EQUAL__LEFT));
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.EXPRESSION__RIGHT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.EXPRESSION__RIGHT));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getRelationAccess().getNotEqualLeftAction_1_0_3_0(), semanticObject.getLeft());
+		feeder.accept(grammarAccess.getRelationAccess().getRightMultiMathOperationParserRuleCall_1_1_0(), semanticObject.getRight());
 		feeder.finish();
 	}
 	
@@ -1176,13 +2650,12 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	
 	/**
 	 * Contexts:
-	 *     AbstractStatement returns SkipStatement
-	 *     SkipStatement returns SkipStatement
+	 *     SkipStatement returns AbstractStatement
 	 *
 	 * Constraint:
 	 *     name=';'
 	 */
-	protected void sequence_SkipStatement(ISerializationContext context, SkipStatement semanticObject) {
+	protected void sequence_SkipStatement(ISerializationContext context, AbstractStatement semanticObject) {
 		if (errorAcceptor != null) {
 			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.ABSTRACT_STATEMENT__NAME) == ValueTransient.YES)
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.ABSTRACT_STATEMENT__NAME));
@@ -1269,15 +2742,15 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	 *     Variant returns Variant
 	 *
 	 * Constraint:
-	 *     name=EString
+	 *     var=MultiMathOperation
 	 */
 	protected void sequence_Variant(ISerializationContext context, Variant semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.VARIANT__NAME) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.VARIANT__NAME));
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.VARIANT__VAR) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.VARIANT__VAR));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getVariantAccess().getNameEStringParserRuleCall_1_0(), semanticObject.getName());
+		feeder.accept(grammarAccess.getVariantAccess().getVarMultiMathOperationParserRuleCall_1_0(), semanticObject.getVar());
 		feeder.finish();
 	}
 	

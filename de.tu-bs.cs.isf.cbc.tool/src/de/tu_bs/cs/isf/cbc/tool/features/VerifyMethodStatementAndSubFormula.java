@@ -29,6 +29,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.Rename;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Renaming;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.MethodStatementImpl;
 import de.tu_bs.cs.isf.cbc.tool.helper.GetDiagramUtil;
+import de.tu_bs.cs.isf.cbc.tool.helper.StringParser;
 import de.tu_bs.cs.isf.cbc.util.FilenamePrefix;
 import de.tu_bs.cs.isf.cbc.util.ProveWithKey;
 import de.tu_bs.cs.isf.taxonomy.graphiti.features.MyAbstractAsynchronousCustomFeature;
@@ -119,11 +120,14 @@ public class VerifyMethodStatementAndSubFormula extends MyAbstractAsynchronousCu
 					List<JavaVariable> vars = mergeJavaVariables(varsMethod, varsFormula);
 					List<Condition> conds = mergeGlobalConditions(condsMethod, condsFormula);
 					List<Rename> renaming = mergeRenaming(renamingMethod, renamingFormula);
-					prove = ProveWithKey.proveMethodFormulaWithKey(formula.getStatement().getPreCondition(), statement.getPreCondition(), vars, 
-							conds, renaming, getDiagram().eResource().getURI(), monitor, FilenamePrefix.METHOD);
+					prove = ProveWithKey.proveMethodFormulaWithKey(formula.getStatement().getPreCondition().getName(), statement.getPreCondition().getName(), 
+							 StringParser.getVariableListToStringList(vars),
+								StringParser.getConditionListToStringList(conds), renaming, getDiagram().eResource().getURI(), monitor, FilenamePrefix.METHOD);
 					if (prove) {
-						prove = ProveWithKey.proveMethodFormulaWithKey(statement.getPostCondition(), formula.getStatement().getPostCondition(), vars, 
-								conds, renaming, getDiagram().eResource().getURI(), monitor, FilenamePrefix.METHOD);
+						prove = ProveWithKey.proveMethodFormulaWithKey(statement.getPostCondition().getName(), formula.getStatement().getPostCondition().getName(), 
+								 StringParser.getVariableListToStringList(vars),
+									StringParser.getConditionListToStringList(conds),
+								renaming, getDiagram().eResource().getURI(), monitor, FilenamePrefix.METHOD);
 					}
 					if (prove) {
 						statement.setProven(true);

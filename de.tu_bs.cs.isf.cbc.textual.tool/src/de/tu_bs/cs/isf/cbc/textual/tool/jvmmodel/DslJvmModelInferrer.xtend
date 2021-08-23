@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 import org.eclipse.emf.ecore.resource.Resource
 import java.util.Objects
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaStatement
+import de.tu_bs.cs.isf.cbc.util.Parser
 
 /**
  * <p>Infers a JVM model from the source model.</p>
@@ -62,7 +63,12 @@ class DslJvmModelInferrer extends AbstractModelInferrer {
 	 */
 	def dispatch void infer(CbCProblem element, IJvmDeclaredTypeAcceptor acceptor, boolean isPreIndexingPhase) {
 		// Here you explain how your model is mapped to Java elements, by writing the actual translation code.
-		System.out.println("inferio");
+//		var vars = element.getJavaVariable();
+//		System.out.println("inferio " + Parser.getStringFromObject(vars));
+//		for(v: vars.variables) {
+//			System.out.println("type " + Parser.getStringFromObject(v.type));
+//		} 
+		
 //		acceptor.accept(element.toClass("de.tu_bs.cs.isf.cbc.cbcmodel")) [
 //			
 //			var JavaVariables vars = element.getJavaVariable();

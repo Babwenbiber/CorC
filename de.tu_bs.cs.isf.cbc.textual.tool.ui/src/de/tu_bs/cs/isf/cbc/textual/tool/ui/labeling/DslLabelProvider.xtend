@@ -17,6 +17,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.impl.SmallRepetitionStatementImpl
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider
 import org.eclipse.xtext.ui.label.DefaultEObjectLabelProvider
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.MethodStatementImpl
+import de.tu_bs.cs.isf.cbc.cbcmodel.string_saver.ConditionExtension
 
 /**
  * Provides labels for EObjects.
@@ -34,32 +35,32 @@ class DslLabelProvider extends DefaultEObjectLabelProvider {
 	
 	def text(Condition condition) {
 		//TODO:
-//		if (condition.eContainer instanceof SmallRepetitionStatement) {
-//			var statement = condition.eContainer as SmallRepetitionStatement
-//			if (statement.invariant.equals(condition)) {
-//				'invariant: ' + condition.name
-//			} else if (statement.guard.equals(condition)) {
-//				'guard: ' + condition.name
-//			}
-//		} else if (condition.eContainer instanceof CompositionStatement) {
-//			var statement = condition.eContainer as CompositionStatement
-//			if (statement.intermediateCondition.equals(condition)) {
-//				'intm: ' + condition.name
-//			}
-//		} else if (condition.eContainer instanceof SelectionStatement) {
-//			var statement = condition.eContainer as SelectionStatement
-//			if (statement.guards.contains(condition)) {
-//				var int i = statement.guards.indexOf(condition)
-//				'guard' + i +  ': ' + condition.name
-//			}
-//		} else if (condition.eContainer instanceof CbCFormula) {
-//			var formula = condition.eContainer as CbCFormula
-//			if (formula.preCondition.equals(condition)) {
-//				'pre: ' + condition.name
-//			} else if (formula.postCondition.equals(condition)) {
-//				'post: ' + condition.name
-//			}
-//		} 
+		if (condition.eContainer instanceof SmallRepetitionStatement) {
+			var statement = condition.eContainer as SmallRepetitionStatement
+			if (statement.invariant.equals(condition)) {
+				'Invariant: ' + new ConditionExtension(condition).stringRepresentation
+			} else if (statement.guard.equals(condition)) {
+				'Guard: ' + condition.name
+			}
+		} else if (condition.eContainer instanceof CompositionStatement) {
+			var statement = condition.eContainer as CompositionStatement
+			if (statement.intermediateCondition.equals(condition)) {
+				'Intm: ' + condition.name
+			}
+		} else if (condition.eContainer instanceof SelectionStatement) {
+			var statement = condition.eContainer as SelectionStatement
+			if (statement.guards.contains(condition)) {
+				var int i = statement.guards.indexOf(condition)
+				'Guard' + i +  ': ' + condition.name
+			}
+		} else if (condition.eContainer instanceof CbCFormula) {
+			var formula = condition.eContainer as CbCFormula
+			if (formula.preCondition.equals(condition)) {
+				'Pre: ' + condition.name
+			} else if (formula.postCondition.equals(condition)) {
+				'Post: ' + condition.name
+			}
+		} 
 	}
 	
 	def text(Variant variant) {

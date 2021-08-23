@@ -12,6 +12,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.GlobalConditions;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariables;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Renaming;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.AbstractStatementImpl;
+import de.tu_bs.cs.isf.cbc.tool.helper.StringParser;
 import de.tu_bs.cs.isf.cbc.tool.helper.UpdateConditionsOfChildren;
 import de.tu_bs.cs.isf.cbc.util.Console;
 import de.tu_bs.cs.isf.cbc.util.FilenamePrefix;
@@ -89,7 +90,8 @@ public class GenerateIntermediateConditionFeature2 extends MyAbstractAsynchronou
 				String weakestPre = "";
 
 				if (CompareMethodBodies.readAndTestMethodBodyWithJaMoPP2(statement.getName())) {
-					weakestPre = ProveWithKey.proveUseWeakestPreWithKey(statement, vars, conds, renaming, getDiagram().eResource().getURI(), monitor, FilenamePrefix.COMPOSITION);
+					weakestPre = ProveWithKey.proveUseWeakestPreWithKey(statement, StringParser.getVariableListToStringList(vars.getVariables()),
+							StringParser.getConditionListToStringList(conds.getConditions()), renaming, getDiagram().eResource().getURI(), monitor, FilenamePrefix.COMPOSITION);
 				} else {
 					Console.println("Statement is not in correct format.");
 				}

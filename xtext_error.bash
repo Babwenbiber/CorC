@@ -1,0 +1,5 @@
+#!/bin/bash
+sed "/@Suppress/d" de.tu_bs.cs.isf.cbc.textual.tool.ide/src-gen/de/tu_bs/cs/isf/cbc/textual/tool/ide/contentassist/antlr/internal/InternalDslLexer.java > tmp && mv tmp de.tu_bs.cs.isf.cbc.textual.tool.ide/src-gen/de/tu_bs/cs/isf/cbc/textual/tool/ide/contentassist/antlr/internal/InternalDslLexer.java
+sed  "/@Suppress/d" de.tu_bs.cs.isf.cbc.textual.tool.ide/src-gen/de/tu_bs/cs/isf/cbc/textual/tool/ide/contentassist/antlr/internal/InternalDslParser.java  > tmp && mv tmp  de.tu_bs.cs.isf.cbc.textual.tool.ide/src-gen/de/tu_bs/cs/isf/cbc/textual/tool/ide/contentassist/antlr/internal/InternalDslParser.java
+sed "/@Suppress/d" de.tu_bs.cs.isf.cbc.textual.tool/src-gen/de/tu_bs/cs/isf/cbc/textual/tool/parser/antlr/internal/InternalDslLexer.java > tmp && mv tmp  de.tu_bs.cs.isf.cbc.textual.tool/src-gen/de/tu_bs/cs/isf/cbc/textual/tool/parser/antlr/internal/InternalDslLexer.java
+sed  "/@Suppress/d" de.tu_bs.cs.isf.cbc.textual.tool/src-gen/de/tu_bs/cs/isf/cbc/textual/tool/parser/antlr/internal/InternalDslParser.java > tmp && mv tmp de.tu_bs.cs.isf.cbc.textual.tool/src-gen/de/tu_bs/cs/isf/cbc/textual/tool/parser/antlr/internal/InternalDslParser.java

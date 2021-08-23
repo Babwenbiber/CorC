@@ -32,6 +32,9 @@ class CustomJvmModelGenerator implements IGenerator{
 		if (resource.allContents.filter(Renaming).hasNext) {
 			renaming = resource.allContents.filter(Renaming).next
 		}
+		if (!resource.allContents.filter(CbCFormula).hasNext) {
+			return
+		}		
 		var formula = resource.allContents.filter(CbCFormula).next;
 		val TraverseFormulaAndGenerate traverser = new TraverseFormulaAndGenerate(vars, conds, renaming, resource.URI, formula, resource)
 		formula = traverser.traverseFormulaAndGenerate()

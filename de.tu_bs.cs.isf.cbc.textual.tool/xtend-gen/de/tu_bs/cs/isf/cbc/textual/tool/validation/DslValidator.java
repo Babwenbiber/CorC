@@ -3,12 +3,12 @@
  */
 package de.tu_bs.cs.isf.cbc.textual.tool.validation;
 
-import com.google.common.base.Objects;
 import com.google.common.collect.Iterators;
 import de.tu_bs.cs.isf.cbc.cbcmodel.AbstractStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbCFormula;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbcmodelPackage;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Condition;
+import de.tu_bs.cs.isf.cbc.cbcmodel.Expression;
 import de.tu_bs.cs.isf.cbc.cbcmodel.MethodStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.ReturnStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.SelectionStatement;
@@ -17,6 +17,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.SmallRepetitionStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.StrengthWeakStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.AbstractStatementImpl;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.ReturnStatementImpl;
+import de.tu_bs.cs.isf.cbc.cbcmodel.string_saver.ConditionExtension;
 import de.tu_bs.cs.isf.cbc.util.FilenamePrefix;
 import de.tu_bs.cs.isf.cbc.util.ProveWithKey;
 import de.tu_bs.cs.isf.toolkit.support.compare.CompareMethodBodies;
@@ -38,7 +39,7 @@ public class DslValidator extends AbstractDslValidator {
   public void checkSyntaxOfStatement(final AbstractStatement statement) {
     boolean _equals = statement.getClass().equals(AbstractStatementImpl.class);
     if (_equals) {
-      if (((!Objects.equal(statement.getName(), null)) && (!statement.getName().isEmpty()))) {
+      if (((statement.getName() != null) && (!statement.getName().isEmpty()))) {
         boolean _readAndTestMethodBodyWithJaMoPP2 = CompareMethodBodies.readAndTestMethodBodyWithJaMoPP2(statement.getName());
         boolean _not = (!_readAndTestMethodBodyWithJaMoPP2);
         if (_not) {
@@ -51,10 +52,10 @@ public class DslValidator extends AbstractDslValidator {
   }
   
   @Check
-  public void checkSyntaxOfRetunrStatement(final ReturnStatement statement) {
+  public void checkSyntaxOfReturnStatement(final ReturnStatement statement) {
     boolean _equals = statement.getClass().equals(ReturnStatementImpl.class);
     if (_equals) {
-      if (((!Objects.equal(statement.getName(), null)) && (!statement.getName().isEmpty()))) {
+      if (((statement.getName() != null) && (!statement.getName().isEmpty()))) {
         boolean _readAndTestMethodBodyWithJaMoPP2 = CompareMethodBodies.readAndTestMethodBodyWithJaMoPP2(statement.getName());
         boolean _not = (!_readAndTestMethodBodyWithJaMoPP2);
         if (_not) {
@@ -67,8 +68,21 @@ public class DslValidator extends AbstractDslValidator {
   }
   
   @Check
-  public Object checkSyntaxOfCondition(final Condition condition) {
-    return null;
+  public void checkSyntaxOfCondition(final Condition condition) {
+    Expression _condition = condition.getCondition();
+    boolean _tripleNotEquals = (_condition != null);
+    if (_tripleNotEquals) {
+      final ConditionExtension cond = new ConditionExtension(condition);
+      if (((!cond.stringRepresentation.contains("forall")) && (!cond.stringRepresentation.contains("exists")))) {
+        boolean _readAndTestAssertWithJaMoPP = CompareMethodBodies.readAndTestAssertWithJaMoPP(cond.stringRepresentation.replaceAll("->", "&"));
+        boolean _not = (!_readAndTestAssertWithJaMoPP);
+        if (_not) {
+          this.warning("Condition has not the correct syntax.", 
+            CbcmodelPackage.Literals.CONDITION__NAME, 
+            DslValidator.INVALID_NAME);
+        }
+      }
+    }
   }
   
   @Check(CheckType.EXPENSIVE)

@@ -6,10 +6,12 @@ import org.eclipse.graphiti.features.context.ICustomContext;
 import org.eclipse.graphiti.features.custom.AbstractCustomFeature;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 
+import de.tu_bs.cs.isf.cbc.cbcmodel.JavaStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.MethodStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.ReturnStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.StrengthWeakStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.AbstractStatementImpl;
+import de.tu_bs.cs.isf.cbc.cbcmodel.impl.ConditionImpl;
 
 /**
  * Class that allows to add and edit name of statements
@@ -43,15 +45,17 @@ public class RenameStatementFeature extends AbstractCustomFeature {
  
     @Override
     public boolean canExecute(ICustomContext context) {
-        boolean ret = false;
-        PictogramElement[] pes = context.getPictogramElements();
-        if (pes != null && pes.length == 1) {
-            Object bo = getBusinessObjectForPictogramElement(pes[0]);
-            if (bo != null && bo.getClass().equals(AbstractStatementImpl.class) || bo instanceof ReturnStatement || bo instanceof MethodStatement || bo instanceof StrengthWeakStatement) {
-                ret = true;
-            }
-        }
-        return ret;
+    	return true;
+//        boolean ret = false;
+//        PictogramElement[] pes = context.getPictogramElements();
+//        if (pes != null && pes.length == 1) {
+//            Object bo = getBusinessObjectForPictogramElement(pes[0]);
+//            if (bo != null && bo.getClass().equals(AbstractStatementImpl.class) || bo instanceof ReturnStatement || bo instanceof MethodStatement ||
+//            		bo instanceof StrengthWeakStatement || bo instanceof ConditionImpl || bo instanceof JavaStatement) {
+//                ret = true;
+//            }
+//        }
+//        return ret;
     }
  
     @Override
@@ -59,7 +63,8 @@ public class RenameStatementFeature extends AbstractCustomFeature {
         PictogramElement[] pes = context.getPictogramElements();
         if (pes != null && pes.length == 1) {
             Object bo = getBusinessObjectForPictogramElement(pes[0]);
-            if (bo.getClass().equals(AbstractStatementImpl.class) || bo instanceof ReturnStatement || bo instanceof MethodStatement || bo instanceof StrengthWeakStatement) {
+//            if (bo.getClass().equals(AbstractStatementImpl.class) || bo instanceof ReturnStatement || bo instanceof MethodStatement || bo instanceof StrengthWeakStatement ||
+//            		bo instanceof ConditionImpl || bo instanceof JavaStatement) {
             	IDirectEditingInfo directEditingInfo = getFeatureProvider().getDirectEditingInfo();
     			directEditingInfo.setMainPictogramElement(pes[0]);
     			directEditingInfo.setPictogramElement(pes[0]);
@@ -67,7 +72,7 @@ public class RenameStatementFeature extends AbstractCustomFeature {
     			directEditingInfo.setActive(true);
 
             	getFeatureProvider().getDiagramTypeProvider().getDiagramBehavior().refresh();
-            }
+//            }
         }
     }
  

@@ -1,14 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="cbcmodel" nsURI="http://www.example.org/cbcmodel" nsPrefix="cbcmodel">
+<eClassifiers xsi:type="ecore:EClass" name="CbCProblem">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cbcformula" eType="#//CbCFormula"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="globalcondition" eType="#//GlobalConditions"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="javaVariable" eType="#//JavaVariables"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="renaming" eType="#//Renaming"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="refinements" eType="#//MethodRefinements"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="method" eType="#//Method"
+        containment="true"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CbCFormula">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="statement" lowerBound="1"
-        eType="#//AbstractStatement" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="preCondition" lowerBound="1"
-        eType="#//Condition" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="postCondition" lowerBound="1"
-        eType="#//Condition" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="preCondition" eType="#//Condition"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="statement" eType="#//AbstractStatement"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="postCondition" eType="#//Condition"
+        containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="proven" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="comment" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="compositionTechnique" eType="#//CompositionTechnique"
@@ -20,114 +34,57 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="methodName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         defaultValueLiteral=""/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Condition">
-   <eStructuralFeatures xsi:type="ecore:EReference" name="condition" eType="#//Expression" containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="AbstractStatement">
+  <eClassifiers xsi:type="ecore:EClass" name="AbstractStatement" eSuperTypes="#//CbCProblem">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="refinement" eType="#//AbstractStatement"
         containment="true" eOpposite="#//AbstractStatement/parent"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="parent" eType="#//AbstractStatement"
         eOpposite="#//AbstractStatement/refinement"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="postCondition" eType="#//Condition"
-        containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="preCondition" eType="#//Condition"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="proven" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="comment" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SkipStatement" eSuperTypes="#//AbstractStatement"/>
-  <eClassifiers xsi:type="ecore:EClass" name="JavaStatement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="name" upperBound="-1" eType="ecore:EClass ../../org.eclipse.xtext.xbase/model/Xbase.ecore#//XExpression"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="postCondition" eType="#//Condition"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="preCondition" eType="#//Condition"
-        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="references" eType="#//BlockStatement"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="proven" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="comment" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="JMLAnnotation">
-  	<eStructuralFeatures xsi:type="ecore:EReference" name="requires" eType="#//Condition" containment="true"/>
-  	<eStructuralFeatures xsi:type="ecore:EReference" name="ensures" eType="#//Condition" containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="BlockStatement" eSuperTypes="#//AbstractStatement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="javaStatement" lowerBound="1"
-        eType="#//JavaStatement" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="jmlAnnotation" lowerBound="1"
-        eType="#//JMLAnnotation" containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="CompositionStatement" eSuperTypes="#//AbstractStatement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="firstStatement" lowerBound="1"
-        eType="#//AbstractStatement" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="secondStatement" lowerBound="1"
-        eType="#//AbstractStatement" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="intermediateCondition"
-        lowerBound="1" eType="#//Condition" containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SelectionStatement" eSuperTypes="#//AbstractStatement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="guards" upperBound="-1"
-        eType="#//Condition" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="commands" upperBound="-1"
-        eType="#//AbstractStatement" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="preProve" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="RepetitionStatement" eSuperTypes="#//AbstractStatement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="guard" lowerBound="1" eType="#//Condition"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="invariant" lowerBound="1"
-        eType="#//Condition" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="startStatement" lowerBound="1"
-        eType="#//AbstractStatement" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="variant" lowerBound="1"
-        eType="#//Variant" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="loopStatement" lowerBound="1"
-        eType="#//AbstractStatement" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="endStatement" lowerBound="1"
-        eType="#//AbstractStatement" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="variantProven" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="MethodStatement" eSuperTypes="#//AbstractStatement"/>
-  <eClassifiers xsi:type="ecore:EClass" name="Variant">
+  <eClassifiers xsi:type="ecore:EClass" name="Condition">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="condition" eType="#//Expression"
+        containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ReturnStatement" eSuperTypes="#//AbstractStatement"/>
   <eClassifiers xsi:type="ecore:EClass" name="Method">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="code" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Composition3Statement" eSuperTypes="#//AbstractStatement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="thirdStatement" lowerBound="1"
-        eType="#//AbstractStatement" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="secondStatement" lowerBound="1"
-        eType="#//AbstractStatement" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="firstStatement" lowerBound="1"
-        eType="#//AbstractStatement" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="secondIntermediateCondition"
-        lowerBound="1" eType="#//Condition" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="firstIntermediateCondition"
-        lowerBound="1" eType="#//Condition" containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SmallRepetitionStatement" eSuperTypes="#//AbstractStatement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="loopStatement" lowerBound="1"
-        eType="#//AbstractStatement" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="variant" lowerBound="1"
-        eType="#//Variant" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="invariant" lowerBound="1"
-        eType="#//Condition" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="guard" lowerBound="1" eType="#//Condition"
+  <eClassifiers xsi:type="ecore:EClass" name="JMLAnnotation">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="requires" eType="#//JMLExpression"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="variantProven" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="preProven" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="postProven" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ensures" eType="#//JMLExpression"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="LoopInvariantAnnotation">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="loopInvariant" eType="#//JMLExpression"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="assignable" eType="#//VariableOrMethodName" upperBound="-1"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="decreases" eType="#//JMLExpression"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Variant">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="var" eType="#//Expression" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="JavaVariables">
     <eStructuralFeatures xsi:type="ecore:EReference" name="variables" upperBound="-1"
         eType="#//JavaVariable" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="JavaVariable">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
-        defaultValueLiteral="int a"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="ecore:EClass platform:/resource/org.eclipse.xtext.common.types/model/JavaVMTypes.ecore#//JvmTypeReference"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="var" eType="#//VariableOrMethodName"
+        containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="kind" unique="false" eType="#//VariableKind"
         defaultValueLiteral="LOCAL"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="displayedName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
@@ -146,25 +103,31 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="function" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="newName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="CbCProblem">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="method" eType="#//Method"
+  <eClassifiers xsi:type="ecore:EClass" name="Expression">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="foreach" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="ecore:EClass platform:/resource/org.eclipse.xtext.common.types/model/JavaVMTypes.ecore#//JvmTypeReference"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="globalcondition" eType="#//GlobalConditions"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="var" eType="#//VariableOrMethodName"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="cbcformula" lowerBound="1"
-        eType="#//CbCFormula" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="javaVariable" eType="#//JavaVariables"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="right" eType="#//Expression"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="renaming" eType="#//Renaming"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="preIter" eType="#//Expression"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="refinements" eType="#//MethodRefinements"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="postIter" eType="#//Expression"
         containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="exists" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isTrue" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="VariableOrMethodName">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MethodStatement" eSuperTypes="#//AbstractStatement"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ReturnStatement" eSuperTypes="#//AbstractStatement"/>
   <eClassifiers xsi:type="ecore:EClass" name="StrengthWeakStatement" eSuperTypes="#//AbstractStatement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="weakPreCondition" lowerBound="1"
-        eType="#//Condition" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="strongPostCondition" lowerBound="1"
-        eType="#//Condition" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="weakPreCondition" eType="#//Condition"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="strongPostCondition" eType="#//Condition"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MethodRefinements">
     <eStructuralFeatures xsi:type="ecore:EReference" name="productvariants" upperBound="-1"
@@ -183,20 +146,87 @@
   <eClassifiers xsi:type="ecore:EClass" name="ProductVariant">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="refinementChain" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-
-  <eClassifiers xsi:type="ecore:EClass" name="VariableOrMethodName">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  <eClassifiers xsi:type="ecore:EClass" name="JavaStatement" eSuperTypes="#//AbstractStatement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="statement" upperBound="-1"
+       eType="ecore:EClass platform:/resource/org.eclipse.xtext.xbase/model/Xbase.ecore#//XExpression"
+        containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Expression">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="foreach" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="ecore:EClass platform:/resource/org.eclipse.xtext.common.types/model/JavaVMTypes.ecore#//JvmTypeReference"
+  <eClassifiers xsi:type="ecore:EClass" name="CompositionStatement" eSuperTypes="#//AbstractStatement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="firstStatement" eType="#//AbstractStatement"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="var" eType="#//VariableOrMethodName"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="intermediateCondition"
+        eType="#//Condition" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="secondStatement" eType="#//AbstractStatement"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="right" eType="#//Expression"
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Composition3Statement" eSuperTypes="#//AbstractStatement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="thirdStatement" lowerBound="1"
+        eType="#//AbstractStatement" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="secondStatement" lowerBound="1"
+        eType="#//AbstractStatement" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="firstStatement" lowerBound="1"
+        eType="#//AbstractStatement" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="secondIntermediateCondition"
+        lowerBound="1" eType="#//Condition" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="firstIntermediateCondition"
+        lowerBound="1" eType="#//Condition" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RepetitionStatement" eSuperTypes="#//AbstractStatement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="guard" lowerBound="1" eType="#//Condition"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="exists" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isTrue" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="invariant" lowerBound="1"
+        eType="#//Condition" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="startStatement" lowerBound="1"
+        eType="#//AbstractStatement" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="variant" lowerBound="1"
+        eType="#//Variant" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="loopStatement" lowerBound="1"
+        eType="#//AbstractStatement" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="endStatement" lowerBound="1"
+        eType="#//AbstractStatement" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="variantProven" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SmallRepetitionStatement" eSuperTypes="#//AbstractStatement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="loopStatement" lowerBound="1"
+        eType="#//AbstractStatement" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="variant" lowerBound="1"
+        eType="#//Variant" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="invariant" lowerBound="1"
+        eType="#//Condition" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="guard" lowerBound="1" eType="#//Condition"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="variantProven" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="preProven" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="postProven" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SkipStatement" eSuperTypes="#//AbstractStatement"/>
+  <eClassifiers xsi:type="ecore:EClass" name="InlineBlockStatement" eSuperTypes="#//AbstractStatement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="block" eType="#//AbstractStatement"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="InlineJavaBlockStatement" 
+	eSuperTypes="platform:/resource/org.eclipse.xtext.xbase/model/Xbase.ecore#//XExpression">
+	<eStructuralFeatures xsi:type="ecore:EReference" name="jmlAnnotation" eType="#//JMLAnnotation"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="references" eType="#//AbstractStatement"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="LoopInvariantAnnotationStatement" 
+	eSuperTypes="platform:/resource/org.eclipse.xtext.xbase/model/Xbase.ecore#//XExpression">
+	<eStructuralFeatures xsi:type="ecore:EReference" name="jmlAnnotation" eType="#//LoopInvariantAnnotation"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BlockStatement" eSuperTypes="#//AbstractStatement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="jmlAnnotation" eType="#//JMLAnnotation"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="javaStatement" eType="#//AbstractStatement"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SelectionStatement" eSuperTypes="#//AbstractStatement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="guards" upperBound="-1"
+        eType="#//Condition" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="commands" upperBound="-1"
+        eType="#//AbstractStatement" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="preProve" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Lower" eSuperTypes="#//Expression">
     <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//Expression"
@@ -207,6 +237,10 @@
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Equal" eSuperTypes="#//Expression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//Expression"
+        containment="true"/>
+  </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="NotEqual" eSuperTypes="#//Expression">
     <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//Expression"
         containment="true"/>
   </eClassifiers>
@@ -230,10 +264,125 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//Expression"
         containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Multiplication" eSuperTypes="#//Expression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//Expression"
+        containment="true"/>
+  </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Division" eSuperTypes="#//Expression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//Expression"
+        containment="true"/>
+  </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Modulo" eSuperTypes="#//Expression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//Expression"
+        containment="true"/>
+  </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Addition" eSuperTypes="#//Expression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//Expression"
+        containment="true"/>
+  </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Subtraction" eSuperTypes="#//Expression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//Expression"
+        containment="true"/>
+  </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="Qualifier" eSuperTypes="#//Expression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//Expression"
+        containment="true"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="FunctionCall" eSuperTypes="#//Expression">
     <eStructuralFeatures xsi:type="ecore:EReference" name="func" eType="#//VariableOrMethodName"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="args" upperBound="-1" eType="#//Expression"
         containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ArrayElement" eSuperTypes="#//Expression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="array" eType="#//VariableOrMethodName"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="element" upperBound="-1" eType="#//Expression"
+        containment="true"/>
+  </eClassifiers>
+  
+  
+ <eClassifiers xsi:type="ecore:EClass" name="JMLExpression">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="foreach" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="ecore:EClass platform:/resource/org.eclipse.xtext.common.types/model/JavaVMTypes.ecore#//JvmTypeReference"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="var" eType="#//VariableOrMethodName"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="right" eType="#//JMLExpression"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="exists" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isTrue" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="JMLImpl" eSuperTypes="#//JMLExpression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//JMLExpression"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="JMLAnd" eSuperTypes="#//JMLExpression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//JMLExpression"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="JMLOr" eSuperTypes="#//JMLExpression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//JMLExpression"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="JMLLower" eSuperTypes="#//JMLExpression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//JMLExpression"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="JMLGreater" eSuperTypes="#//JMLExpression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//JMLExpression"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="JMLEqual" eSuperTypes="#//JMLExpression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//JMLExpression"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="JMLNotEqual" eSuperTypes="#//JMLExpression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//JMLExpression"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="JMLLowerEqual" eSuperTypes="#//JMLExpression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//JMLExpression"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="JMLGreaterEqual" eSuperTypes="#//JMLExpression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//JMLExpression"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="JMLMultiplication" eSuperTypes="#//JMLExpression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//JMLExpression"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="JMLDivision" eSuperTypes="#//JMLExpression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//JMLExpression"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="JMLModulo" eSuperTypes="#//JMLExpression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//JMLExpression"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="JMLAddition" eSuperTypes="#//JMLExpression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//JMLExpression"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="JMLSubtraction" eSuperTypes="#//JMLExpression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//JMLExpression"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="JMLQualifier" eSuperTypes="#//JMLExpression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//JMLExpression"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="JMLFunctionCall" eSuperTypes="#//JMLExpression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="func" eType="#//VariableOrMethodName"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="args" upperBound="-1" eType="#//JMLExpression"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="JMLArrayElement" eSuperTypes="#//JMLExpression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="array" eType="#//VariableOrMethodName"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="element" upperBound="-1"
+        eType="#//JMLExpression" containment="true"/>
   </eClassifiers>
 </ecore:EPackage>

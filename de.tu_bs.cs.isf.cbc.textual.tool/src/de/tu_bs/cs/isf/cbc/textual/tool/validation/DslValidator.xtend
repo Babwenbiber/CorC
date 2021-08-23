@@ -20,6 +20,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.MethodStatement
 import de.tu_bs.cs.isf.cbc.cbcmodel.SkipStatement
 import de.tu_bs.cs.isf.cbc.cbcmodel.StrengthWeakStatement
 import de.tu_bs.cs.isf.cbc.util.FilenamePrefix
+import de.tu_bs.cs.isf.cbc.cbcmodel.string_saver.ConditionExtension
 
 /**
  * This class contains custom validation rules. 
@@ -34,7 +35,7 @@ class DslValidator extends AbstractDslValidator {
 	@Check
 	def checkSyntaxOfStatement(AbstractStatement statement) {
 		if (statement.class.equals(AbstractStatementImpl)) {
-			if (statement.name != null && !statement.name.isEmpty) {
+			if (statement.name !== null && !statement.name.isEmpty) {
 				if (!CompareMethodBodies.readAndTestMethodBodyWithJaMoPP2(statement.name)) {
 					warning('Statement has not the correct syntax.', 
 						CbcmodelPackage.Literals.ABSTRACT_STATEMENT__NAME,
@@ -45,9 +46,9 @@ class DslValidator extends AbstractDslValidator {
 	}
 	
 	@Check
-	def checkSyntaxOfRetunrStatement(ReturnStatement statement) {
+	def checkSyntaxOfReturnStatement(ReturnStatement statement) {
 		if (statement.class.equals(ReturnStatementImpl)) {
-			if (statement.name != null && !statement.name.isEmpty) {
+			if (statement.name !== null && !statement.name.isEmpty) {
 				if (!CompareMethodBodies.readAndTestMethodBodyWithJaMoPP2(statement.name)) {
 					warning('Statement has not the correct syntax.', 
 						CbcmodelPackage.Literals.ABSTRACT_STATEMENT__NAME,
@@ -59,13 +60,16 @@ class DslValidator extends AbstractDslValidator {
 	
 	@Check
 	def checkSyntaxOfCondition(Condition condition) {
-//		if (condition.condition != null && !condition.condition.isEmpty && !condition.name.contains("forall") && !condition.name.contains("exists")) {
-//			if (!CompareMethodBodies.readAndTestAssertWithJaMoPP(condition.name.replaceAll("->", "&"))) {
-//				warning('Condition has not the correct syntax.', 
-//					CbcmodelPackage.Literals.CONDITION__NAME,
-//					INVALID_NAME)
-//			}
-//		}
+		if (condition.condition !== null) {
+			val cond = new ConditionExtension(condition)
+			if (!cond.stringRepresentation.contains("forall") && !cond.stringRepresentation.contains("exists")) {
+				if (!CompareMethodBodies.readAndTestAssertWithJaMoPP(cond.stringRepresentation.replaceAll("->", "&"))) {
+					warning('Condition has not the correct syntax.', 
+						CbcmodelPackage.Literals.CONDITION__NAME,
+						INVALID_NAME)
+				}
+			}
+		}
 	}
 	
 	@Check(CheckType.EXPENSIVE)
@@ -195,6 +199,7 @@ class DslValidator extends AbstractDslValidator {
 			info('PreCondition of SelectionStatement is not proved.', 
 					CbcmodelPackage.Literals.SELECTION_STATEMENT__PRE_PROVE,
 					NOT_PROVED)
+					//TODO:  should be CbcmodelPackage.Literals.SELECTION_STATEMENT__PRE_PROVE
 		}
 	}
 }

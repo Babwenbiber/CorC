@@ -13,8 +13,8 @@ public class FilenamePrefix {
 	public final static String JAVA_STATEMENT = "java_statement";
 	public final static String PRE_IMPL = "pre_impl";
 	public final static String POST_IMPL = "post_impl";
-	public final static String VARIANT = "_variant";
-	public final static String VARIANT2 = "_variant2";
+	public final static String VARIANT = "variant1";
+	public final static String VARIANT2 = "variant";
 	public final static String PRE = "_pre";
 	public final static String POST= "_post";
 }

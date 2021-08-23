@@ -3,6 +3,7 @@ package de.tu_bs.cs.isf.cbc.tool.helper;
 import org.eclipse.emf.ecore.EObject;
 
 import de.tu_bs.cs.isf.cbc.cbcmodel.AbstractStatement;
+import de.tu_bs.cs.isf.cbc.cbcmodel.BlockStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbCFormula;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Composition3Statement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CompositionStatement;
@@ -232,6 +233,19 @@ public class UpdateConditionsOfChildren {
 				childReturn.getPostCondition().setName(formula.getStatement().getPostCondition().getName());
 			}
 
+		} else if (refinedStatement instanceof BlockStatement) {
+			BlockStatement childBlock = (BlockStatement) refinedStatement;
+			CbCFormula formula = getFormula(parentStatement);
+			if (formula != null) {
+				if (!childBlock.getPreCondition().getName().equals(preParent.getName()) || !childBlock
+						.getPostCondition().getName().equals(formula.getStatement().getPostCondition().getName())) {
+					refinedStatement.setProven(false);
+				}
+
+				childBlock.getPreCondition().setName(preParent.getName());
+				childBlock.getPostCondition().setName(formula.getStatement().getPostCondition().getName());
+			}
+
 		} else if (refinedStatement instanceof StrengthWeakStatement) {
 			StrengthWeakStatement childStrengthWeak = (StrengthWeakStatement) refinedStatement;
 			refinedStatement.setProven(false);
@@ -334,6 +348,18 @@ public class UpdateConditionsOfChildren {
 			if (loopStatement.getRefinement() != null) {
 				setAllStatementsUnproven(loopStatement.getRefinement());
 			}
+
+		} else if (statement instanceof BlockStatement) {
+			BlockStatement childSel = (BlockStatement) statement;
+//			childSel.setPreProve(false);
+//			for (int i = 0; i < childSel.getCommands().size(); i++) {
+//				AbstractStatement childStatement = childSel.getCommands().get(i);
+//
+//				childStatement.setProven(false);
+//				if (childStatement.getRefinement() != null) {
+//					setAllStatementsUnproven(childStatement.getRefinement());
+//				}
+//			}
 
 		} else if (statement instanceof SelectionStatement) {
 			SelectionStatement childSel = (SelectionStatement) statement;
