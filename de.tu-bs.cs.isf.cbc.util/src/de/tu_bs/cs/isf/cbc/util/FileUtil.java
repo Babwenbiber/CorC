@@ -127,8 +127,71 @@ public class FileUtil {
 				e.printStackTrace();
 			}
 		} else if (!fileName.equals(newFileName)) {
-			System.out.println("renaming file " + keyFile);
-			new File(fileName).renameTo(keyFile);
+			System.out.println("renaming file " + location + "/" + fileName + " -> " + keyFile);
+			new File(location + "/" + fileName).renameTo(keyFile);
+			HashTable.saveHashInTmpTable(location, hash, newFileName);
+			return keyFile;
+		}
+		System.out.println("old file " + keyFile);
+		HashTable.saveHashInTmpTable(location, hash, newFileName);
+		return null;
+	}
+	
+	public static File writeToFileFromContent(String content, String location, String name) {
+		File file = new File(location + "/" + name);
+		return writeFileFromJavaFile(file, content);
+	}
+	
+	private static File writeFileFromJavaFile(File file, String content) {
+		try {
+			file.getParentFile().mkdirs();
+			file.createNewFile();
+			FileWriter fw = new FileWriter(file);
+			BufferedWriter bw = new BufferedWriter(fw);
+			bw.write(content);
+	
+			bw.close();
+			
+			refreshDir(file);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		} 
+		return file;
+	}
+	
+	public static void refreshDir(File file) {
+		try {
+			IWorkspace workspace = ResourcesPlugin.getWorkspace();
+			IPath iLocation = Path.fromOSString(file.getAbsolutePath());
+			IFile ifile = workspace.getRoot().getFileForLocation(iLocation);
+			ifile.refreshLocal(0, null);
+		} catch (CoreException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static File writeJavaFile(String problem, String location, int numberFile, boolean override, String proveName) {
+		String newFileName = "prove" + numberFile + proveName + ".java";
+		File keyFile = new File(location + "/" + newFileName);
+
+		String hash = Hashing.sha256()
+				  .hashString(problem, StandardCharsets.UTF_8)
+				  .toString();
+		
+		String fileName = HashTable.getFileNameFromHashTable(location, hash);
+		System.out.println(proveName + " filename from hashtable is " + fileName);
+		
+		
+		if (fileName == null || override) {
+			System.out.println("new file " + keyFile);
+			writeFileFromJavaFile(keyFile, problem);
+
+			HashTable.saveHashInTmpTable(location, hash, newFileName);
+			return keyFile;
+			
+		} else if (!fileName.equals(newFileName)) {
+			System.out.println("renaming file " + location + "/" + fileName + " -> " + keyFile);
+			new File(location + "/" + fileName).renameTo(keyFile);
 			HashTable.saveHashInTmpTable(location, hash, newFileName);
 			return keyFile;
 		}

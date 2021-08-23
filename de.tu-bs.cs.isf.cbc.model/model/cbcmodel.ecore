@@ -58,9 +58,17 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="code" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="JMLAnnotation">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="requires" eType="#//Condition"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="requires" eType="#//JMLExpression"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="ensures" eType="#//Condition"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ensures" eType="#//JMLExpression"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="LoopInvariantAnnotation">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="loopInvariant" eType="#//JMLExpression"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="assignable" eType="#//VariableOrMethodName" upperBound="-1"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="decreases" eType="#//JMLExpression"
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Variant">
@@ -140,7 +148,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="JavaStatement" eSuperTypes="#//AbstractStatement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="statement" upperBound="-1"
-        eType="ecore:EClass platform:/resource/org.eclipse.xtext.xbase/model/Xbase.ecore#//XExpression"
+       eType="ecore:EClass platform:/resource/org.eclipse.xtext.xbase/model/Xbase.ecore#//XExpression"
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CompositionStatement" eSuperTypes="#//AbstractStatement">
@@ -192,17 +200,25 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="postProven" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SkipStatement" eSuperTypes="#//AbstractStatement"/>
-
   <eClassifiers xsi:type="ecore:EClass" name="InlineBlockStatement" eSuperTypes="#//AbstractStatement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="block" eType="#//AbstractStatement"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="InlineJavaBlockStatement" 
+	eSuperTypes="platform:/resource/org.eclipse.xtext.xbase/model/Xbase.ecore#//XExpression">
+	<eStructuralFeatures xsi:type="ecore:EReference" name="jmlAnnotation" eType="#//JMLAnnotation"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="references" eType="#//AbstractStatement"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="LoopInvariantAnnotationStatement" 
+	eSuperTypes="platform:/resource/org.eclipse.xtext.xbase/model/Xbase.ecore#//XExpression">
+	<eStructuralFeatures xsi:type="ecore:EReference" name="jmlAnnotation" eType="#//LoopInvariantAnnotation"
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="BlockStatement" eSuperTypes="#//AbstractStatement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="jmlAnnotation" eType="#//JMLAnnotation"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="javaStatement" eType="#//AbstractStatement"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="internalBlockStatement" eType="#//AbstractStatement"
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SelectionStatement" eSuperTypes="#//AbstractStatement">
@@ -283,5 +299,90 @@
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="element" upperBound="-1" eType="#//Expression"
         containment="true"/>
+  </eClassifiers>
+  
+  
+ <eClassifiers xsi:type="ecore:EClass" name="JMLExpression">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="foreach" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="ecore:EClass platform:/resource/org.eclipse.xtext.common.types/model/JavaVMTypes.ecore#//JvmTypeReference"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="var" eType="#//VariableOrMethodName"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="right" eType="#//JMLExpression"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="exists" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isTrue" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="JMLImpl" eSuperTypes="#//JMLExpression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//JMLExpression"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="JMLAnd" eSuperTypes="#//JMLExpression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//JMLExpression"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="JMLOr" eSuperTypes="#//JMLExpression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//JMLExpression"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="JMLLower" eSuperTypes="#//JMLExpression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//JMLExpression"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="JMLGreater" eSuperTypes="#//JMLExpression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//JMLExpression"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="JMLEqual" eSuperTypes="#//JMLExpression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//JMLExpression"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="JMLNotEqual" eSuperTypes="#//JMLExpression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//JMLExpression"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="JMLLowerEqual" eSuperTypes="#//JMLExpression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//JMLExpression"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="JMLGreaterEqual" eSuperTypes="#//JMLExpression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//JMLExpression"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="JMLMultiplication" eSuperTypes="#//JMLExpression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//JMLExpression"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="JMLDivision" eSuperTypes="#//JMLExpression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//JMLExpression"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="JMLModulo" eSuperTypes="#//JMLExpression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//JMLExpression"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="JMLAddition" eSuperTypes="#//JMLExpression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//JMLExpression"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="JMLSubtraction" eSuperTypes="#//JMLExpression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//JMLExpression"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="JMLQualifier" eSuperTypes="#//JMLExpression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//JMLExpression"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="JMLFunctionCall" eSuperTypes="#//JMLExpression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="func" eType="#//VariableOrMethodName"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="args" upperBound="-1" eType="#//JMLExpression"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="JMLArrayElement" eSuperTypes="#//JMLExpression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="array" eType="#//VariableOrMethodName"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="element" upperBound="-1"
+        eType="#//JMLExpression" containment="true"/>
   </eClassifiers>
 </ecore:EPackage>

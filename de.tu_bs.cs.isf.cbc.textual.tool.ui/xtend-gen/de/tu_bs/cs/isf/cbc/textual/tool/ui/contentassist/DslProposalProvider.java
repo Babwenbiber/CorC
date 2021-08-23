@@ -37,14 +37,8 @@ public class DslProposalProvider extends AbstractDslProposalProvider {
   
   @Override
   public void complete_BlockStatement(final EObject model, final RuleCall ruleCall, final ContentAssistContext context, final ICompletionProposalAcceptor acceptor) {
-    int _offset = context.getOffset();
-    String _plus = ("offset is " + Integer.valueOf(_offset));
-    System.out.println(_plus);
-    String _prefix = context.getPrefix();
-    String _plus_1 = ("prefix is " + _prefix);
-    System.out.println(_plus_1);
     super.complete_SelectionStatement(model, ruleCall, context, acceptor);
-    final String proposal = ((((("Block \"<name>\":\n" + "Pre: (<precondition>);\n") + "Post (<postcondition>);\n") + "{\n") + "\t\t<statement>\n") + "}");
+    final String proposal = ((((("Block <name>:\n" + "Pre: (<precondition>)\n") + "Post: (<postcondition>)\n") + "{\n") + "\t<statement>\n") + "}");
     acceptor.accept(this.createCompletionProposal(proposal, "Block", null, context));
   }
   

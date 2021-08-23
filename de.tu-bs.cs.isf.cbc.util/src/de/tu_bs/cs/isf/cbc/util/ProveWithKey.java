@@ -43,6 +43,7 @@ import de.uka.ilkd.key.control.KeYEnvironment;
 import de.uka.ilkd.key.gui.MainWindow;
 import de.uka.ilkd.key.java.abstraction.KeYJavaType;
 import de.uka.ilkd.key.logic.op.IObserverFunction;
+import de.uka.ilkd.key.proof.ApplyStrategy.IStopCondition;
 import de.uka.ilkd.key.proof.Goal;
 import de.uka.ilkd.key.proof.Proof;
 import de.uka.ilkd.key.proof.init.ProofInputException;
@@ -65,7 +66,7 @@ public class ProveWithKey {
 		if (variants == null || variants.size() == 0) {
 			File location = createProveStatementWithKey(statement, vars, conds, renaming, null, uri, 0, true, name, returnVariable);
 			Console.println("Verify Pre -> {Statement} Post");
-			return proveWithKey(location, monitor);
+			return KeyNativeConnection.proveWithKey(location, monitor);
 		} else {
 			boolean proven = true;
 			for (int i = 0; i < variants.size(); i++) {
@@ -75,7 +76,7 @@ public class ProveWithKey {
 						true, name, returnVariable);
 				Console.println("Verify Pre -> {Statement} Post");
 
-				if (!proveWithKey(location, monitor)) {
+				if (!KeyNativeConnection.proveWithKey(location, monitor)) {
 					proven = false;
 				}
 			}
@@ -88,7 +89,7 @@ public class ProveWithKey {
 		if (variants == null || variants.size() == 0) {
 			File location = createProveJavaStatementWithKey(statement, vars, conds, renaming, null, uri, 0, true, name);
 			Console.println("Verify Pre -> {JavaStatement} Post");
-			return proveWithKey(location, monitor);
+			return KeyNativeConnection.proveWithKey(location, monitor);
 		} else {
 			boolean proven = true;
 			for (int i = 0; i < variants.size(); i++) {
@@ -98,7 +99,7 @@ public class ProveWithKey {
 						true, name);
 				Console.println("Verify Pre -> {JavaStatement} Post");
 
-				if (!proveWithKey(location, monitor)) {
+				if (!KeyNativeConnection.proveWithKey(location, monitor)) {
 					proven = false;
 				}
 			}
@@ -109,7 +110,7 @@ public class ProveWithKey {
 	public static boolean proveStatementWithKey2(String className, AbstractStatement statement, List<String> vars, List<String> conds, Renaming renaming, URI uri, IProgressMonitor monitor) {
 		File location = createProveStatementWithKey2(className, statement, vars, conds, renaming, uri, 0, true);
 		Console.println("Verify Pre -> {Statement} Post");
-		return proveWithKey(location, monitor);
+		return KeyNativeConnection.proveWithKey(location, monitor);
 	}
 
 	
@@ -269,6 +270,7 @@ public class ProveWithKey {
 		return keyFile;
 	}
 	
+	
 	public static File createProveStatementWithKey2(String className, AbstractStatement statement, List<String> vars,
 			List<String> conds, Renaming renaming, URI uri, int numberFile,
 			boolean override) {
@@ -369,6 +371,37 @@ public class ProveWithKey {
 	
 	private static File writeFile(String problem, String location, int numberFile, boolean override) {
 		File keyFile = new File(location + "/prove" + numberFile + ".key");
+		File keyHelperFile = new File(location + "/helper.key");
+		if (!keyFile.exists() || override) {
+			try {
+				keyFile.getParentFile().mkdirs();
+				keyFile.createNewFile();
+				FileWriter fw = new FileWriter(keyFile);
+				BufferedWriter bw = new BufferedWriter(fw);
+	
+				bw.write(problem);
+				bw.close();
+				
+				if (!keyHelperFile.exists()) {
+					keyHelperFile.createNewFile();
+				}
+				IWorkspace workspace = ResourcesPlugin.getWorkspace();    
+				IPath iLocation = Path.fromOSString(keyFile.getAbsolutePath()); 
+				IFile ifile = workspace.getRoot().getFileForLocation(iLocation);
+				ifile.refreshLocal(0, null);
+				return keyFile;
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			} catch (CoreException e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+		
+	}
+	
+	private static File writeJavaFile(String problem, String location, int numberFile, boolean override) {
+		File keyFile = new File(location + "/prove" + numberFile + ".java");
 		File keyHelperFile = new File(location + "/helper.key");
 		if (!keyFile.exists() || override) {
 			try {
@@ -574,16 +607,7 @@ public class ProveWithKey {
 		return null;
 	}
 
-	public static boolean proveWithKey(File location, IProgressMonitor monitor) {
-		Proof proof = createKeyProof(location, monitor);
-		if (proof != null) {
-			// Show proof result
-			boolean closed = proof.openGoals().isEmpty();
-			Console.println("Proof is closed: " + closed);
-			return closed;
-		}
-		return false;
-	}
+	
 
 	private static String useRenamingCondition(Renaming renaming, String toRename) {
 		for (Rename rename : renaming.getRename()) {
@@ -630,14 +654,14 @@ public class ProveWithKey {
 			List<String> conds, Renaming renaming, URI uri, IProgressMonitor monitor, String name) {
 		File location = createProvePreWithKey(invariant, preCondition, vars, conds, renaming, uri, 0, true, name);
 		Console.println("Verify Pre -> Invariant");
-		return proveWithKey(location, monitor);
+		return KeyNativeConnection.proveWithKey(location, monitor);
 	}
 
 	public static boolean provePostWithKey(String invariant, String guard, String postCondition,
 			List<String> vars, List<String> conds, Renaming renaming, URI uri, IProgressMonitor monitor, String name) {
 		File location = createProvePostWithKey(invariant, guard, postCondition, vars, conds, renaming, uri, 0, true, name);
 		Console.println("Verify (Invariant & !Guard) -> Post");
-		return proveWithKey(location, monitor);
+		return KeyNativeConnection.proveWithKey(location, monitor);
 	}
 	
 
@@ -685,7 +709,7 @@ public class ProveWithKey {
 			List<String> conds, Renaming renaming, URI uri, IProgressMonitor monitor, String name) {
 		File location = createProvePreSelWithKey(guards, preCondition, vars, conds, renaming, uri, 0, true, name);
 		Console.println("Verify Pre -> GvGvG...");
-		return proveWithKey(location, monitor);
+		return KeyNativeConnection.proveWithKey(location, monitor);
 	}
 	
 	public static File createProvePreSelWithKey(List<String> guards, String preCondition, List<String> vars,
@@ -734,7 +758,7 @@ public class ProveWithKey {
 			List<String> conds, Renaming renaming, URI uri, IProgressMonitor monitor) {
 		File location = createProveVariantWithKey(code, invariant, vars, conds, renaming, uri, 0, true);
 		Console.println("Verify Pre -> {WhileStatement} (true)");
-		return proveWithKey(location, monitor);
+		return KeyNativeConnection.proveWithKey(location, monitor);
 	}
 
 	public static File createProveVariantWithKey(String code, String invariant, List<String> vars,
@@ -771,7 +795,7 @@ public class ProveWithKey {
 		File location = createProveVariant2WithKey(code, invariant, guard, variant, vars, conds, renaming, uri, 0,
 				true, name);
 		Console.println("Verify Pre -> {WhileStatement} (variant<variant0 & variant >= 0)");
-		return proveWithKey(location, monitor);
+		return KeyNativeConnection.proveWithKey(location, monitor);
 	}
 	
 	public static File createProveVariant2WithKey(String code, String invariant, String guard, String variant,
@@ -824,14 +848,14 @@ public class ProveWithKey {
 			List<String> conds, Renaming renaming, URI uri, IProgressMonitor monitor) {
 		File location = createProvePreImplPreWithKey(preParent, preChild, vars, conds, renaming, uri, 0, true, FilenamePrefix.PRE_IMPL);
 		Console.println("Verify PreParent -> PreChild");
-		return proveWithKey(location, monitor);
+		return KeyNativeConnection.proveWithKey(location, monitor);
 	}
 
 	public static boolean provePostImplPostWithKey(String postParent, String postChild, List<String> vars,
 			List<String> conds, Renaming renaming, URI uri, IProgressMonitor monitor) {
 		File location = createProvePostImplPostWithKey(postChild, postParent, vars, conds, renaming, uri, 0, true, FilenamePrefix.POST_IMPL);
 		Console.println("Verify PostChild -> PostParent");
-		return proveWithKey(location, monitor);
+		return KeyNativeConnection.proveWithKey(location, monitor);
 	}
 
 	public static File createProvePreImplPreWithKey(String preParent, String preChild, List<String> vars,
@@ -949,7 +973,7 @@ public class ProveWithKey {
 			de.tu_bs.cs.isf.taxonomy.model.taxonomy.Renaming renaming, URI uri, IProgressMonitor monitor, String name) {
 		File location = createProvePreImplPreWithKey(preParent, preChild, vars, conds, renaming, uri, 0, true, name);
 		Console.println("Verify PreParent -> PreChild");
-		return proveWithKey(location, monitor);
+		return KeyNativeConnection.proveWithKey(location, monitor);
 	}
 
 	public static boolean provePostImplPostWithKey(String postParent, String postChild,
@@ -958,7 +982,7 @@ public class ProveWithKey {
 			de.tu_bs.cs.isf.taxonomy.model.taxonomy.Renaming renaming, URI uri, IProgressMonitor monitor, String name) {
 		File location = createProvePreImplPreWithKey(postChild, postParent, vars, conds, renaming, uri, 0, true, name);
 		Console.println("Verify PostChild -> PostParent");
-		return proveWithKey(location, monitor);
+		return KeyNativeConnection.proveWithKey(location, monitor);
 	}
 
 	public static File createProvePreImplPreWithKey(String preParent, String preChild,
@@ -1022,7 +1046,7 @@ public class ProveWithKey {
 			List<String> conds, List<Rename> renaming, URI uri, IProgressMonitor monitor, String name) {
 		File location = createProveMethodFormulaWithKey(second, first, vars, conds, renaming, uri, 0, true, name);
 		Console.println("Verify Condition -> Condition");
-		return proveWithKey(location, monitor);
+		return KeyNativeConnection.proveWithKey(location, monitor);
 	}
 
 	public static File createProveMethodFormulaWithKey(String second, String first, List<String> vars,
@@ -1063,7 +1087,7 @@ public class ProveWithKey {
 			List<String> conds, Renaming renaming, URI uri, IProgressMonitor monitor, String name) {
 		File location = createProveUseWeakestPreWithKey(statement, vars, conds, renaming, uri, 0, true, name);
 		Console.println("Verify Pre -> {Statement} Post");
-		return createWPWithKey(location, monitor);
+		return KeyNativeConnection.createWPWithKey(location, monitor);
 	}
 
 	private static File createProveUseWeakestPreWithKey(AbstractStatement statement, List<String> vars,
@@ -1110,214 +1134,7 @@ public class ProveWithKey {
 		return globalConditionsString;
 	}
 	
-	
-	public static String createWPWithKey(File location, IProgressMonitor monitor) {
-		Proof proof = createKeyProof(location, monitor);
-		if (proof != null) {
-			String wp = "";
-			Iterator<Goal> it = proof.openGoals().iterator();
-			Goal goal = it.next();
-			String[] goalString = goal.toString().split("==>");
-			String antecedent = goalString[0].trim();
-			String succedent = goalString[1].trim();
-			wp += "(";
-			if (antecedent.isEmpty()) {
-				wp += succedent;
-			} else {
-				if (succedent.isEmpty()) {
-					wp += "!(" + antecedent + ")";
-				} else {
-					wp += antecedent + " -> " + succedent;
-				}
-			}
-			wp += ")";
-			if (it.hasNext()) {
-				goal = it.next();
-				goalString = goal.toString().split("==>");
-				antecedent = goalString[0].trim();
-				succedent = goalString[1].trim();
-				wp += " & (";
-				if (antecedent.isEmpty()) {
-					wp += succedent;
-				} else {
-					if (succedent.isEmpty()) {
-						wp += "!" + antecedent;
-					} else {
-						wp += antecedent + " -> " + succedent;
-					}
-				}
-				wp += ")";
-			}
-			Console.println("Weakest precondition is: " + wp);
-			return wp;
-		}
-		return "";
-	}
 
-	private static Proof createKeyProof(File location, IProgressMonitor monitor) {
-		Proof proof = null;
-		List<File> classPaths = null; // Optionally: Additional specifications
-										// for API classes
-		File bootClassPath = null; // Optionally: Different default
-									// specifications for Java API
-		List<File> includes = null; // Optionally: Additional includes to
-									// consider
-		try {
-			// Ensure that Taclets are parsed
-			if (!ProofSettings.isChoiceSettingInitialised()) {
-				KeYEnvironment<?> env = KeYEnvironment.load(location, classPaths, bootClassPath, includes);
-				env.dispose();
-			}
-			// Set Taclet options
-			ChoiceSettings choiceSettings = ProofSettings.DEFAULT_SETTINGS.getChoiceSettings();
-			HashMap<String, String> oldSettings = choiceSettings.getDefaultChoices();
-			HashMap<String, String> newSettings = new HashMap<String, String>(oldSettings);
-			newSettings.putAll(MiscTools.getDefaultTacletOptions());
-			newSettings.put("runtimeExceptions", "runtimeExceptions:ban");
-			choiceSettings.setDefaultChoices(newSettings);
-			// Load source code
-			KeYEnvironment<?> env = KeYEnvironment.load(location, classPaths, bootClassPath, includes);
-			proof = env.getLoadedProof();
-			// Set proof strategy options
-			StrategyProperties sp = proof.getSettings().getStrategySettings().getActiveStrategyProperties();
-			sp.setProperty(StrategyProperties.METHOD_OPTIONS_KEY, StrategyProperties.METHOD_CONTRACT);
-			sp.setProperty(StrategyProperties.LOOP_OPTIONS_KEY, StrategyProperties.LOOP_EXPAND);
-			sp.setProperty(StrategyProperties.DEP_OPTIONS_KEY, StrategyProperties.DEP_ON);
-			sp.setProperty(StrategyProperties.QUERY_OPTIONS_KEY, StrategyProperties.QUERY_RESTRICTED);// StrategyProperties.QUERY_ON
-			sp.setProperty(StrategyProperties.NON_LIN_ARITH_OPTIONS_KEY, StrategyProperties.NON_LIN_ARITH_DEF_OPS);
-			sp.setProperty(StrategyProperties.STOPMODE_OPTIONS_KEY, StrategyProperties.STOPMODE_NONCLOSE);
-			proof.getSettings().getStrategySettings().setActiveStrategyProperties(sp);
-			// Make sure that the new options are used
-			int maxSteps = 20000;
-			ProofSettings.DEFAULT_SETTINGS.getStrategySettings().setMaxSteps(maxSteps);
-			ProofSettings.DEFAULT_SETTINGS.getStrategySettings().setActiveStrategyProperties(sp);
-			proof.getSettings().getStrategySettings().setMaxSteps(maxSteps);
-			proof.setActiveStrategy(proof.getServices().getProfile().getDefaultStrategyFactory().create(proof, sp));
-			// Start auto mode
-			Console.println("Start proof: " + location.getName());
-			if (monitor != null) {
-				env.getUi().getProofControl().startAutoMode(proof);
-				while (env.getUi().getProofControl().isInAutoMode()) {
-					if (monitor.isCanceled()) {
-						env.getUi().getProofControl().stopAndWaitAutoMode();
-						Console.println("Proof is canceled.");
-					}
-				}
-			} else {
-				env.getUi().getProofControl().startAndWaitForAutoMode(proof);
-			}
-
-			// Show proof result
-			try {
-				proof.saveToFile(location);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		} catch (ProblemLoaderException e) {
-			Console.println("Exception at '" + e.getCause() + "'");
-			e.printStackTrace();
-		}
-		return proof;
-	}
-	
-	public static void createKeyProofUserstudy(File location, int proofCounter) {
-		File keyFile = null;
-		List<File> classPaths = null; // Optionally: Additional specifications
-										// for API classes
-		File bootClassPath = null; // Optionally: Different default
-									// specifications for Java API
-		List<File> includes = null; // Optionally: Additional includes to
-									// consider
-		try {
-			// Ensure that Taclets are parsed
-			if (!ProofSettings.isChoiceSettingInitialised()) {
-				KeYEnvironment<?> env = KeYEnvironment.load(location, classPaths, bootClassPath, includes);
-				env.dispose();
-			}
-			// Set Taclet options
-			ChoiceSettings choiceSettings = ProofSettings.DEFAULT_SETTINGS.getChoiceSettings();
-			HashMap<String, String> oldSettings = choiceSettings.getDefaultChoices();
-			HashMap<String, String> newSettings = new HashMap<String, String>(oldSettings);
-			newSettings.putAll(MiscTools.getDefaultTacletOptions());
-			newSettings.put("runtimeExceptions", "runtimeExceptions:ban");
-			choiceSettings.setDefaultChoices(newSettings);
-			// Load source code
-			KeYEnvironment<?> env = KeYEnvironment.load(location, classPaths, bootClassPath, includes);
-			// proof = env.getLoadedProof();
-			try {
-				// List all specifications of all types in the source location
-				// (not classPaths and bootClassPath)
-				final List<Contract> proofContracts = new LinkedList<Contract>();
-				Set<KeYJavaType> kjts = env.getJavaInfo().getAllKeYJavaTypes();
-				for (KeYJavaType type : kjts) {
-					if (!KeYTypeUtil.isLibraryClass(type)) {
-						ImmutableSet<IObserverFunction> targets = env.getSpecificationRepository().getContractTargets(type);
-						for (IObserverFunction target : targets) {
-							ImmutableSet<Contract> contracts = env.getSpecificationRepository().getContracts(type, target);
-							for (Contract contract : contracts) {
-								proofContracts.add(contract);
-							}
-						}
-					}
-				}
-				// Perform proofs
-				Contract contract = proofContracts.get(0);
-				Proof proof = null;
-				try {
-					// Create proof
-					proof = env.createProof(contract.createProofObl(env.getInitConfig(), contract));
-					// Set proof strategy options
-					StrategyProperties sp = proof.getSettings().getStrategySettings().getActiveStrategyProperties();
-					sp.setProperty(StrategyProperties.METHOD_OPTIONS_KEY, StrategyProperties.METHOD_EXPAND);
-					sp.setProperty(StrategyProperties.LOOP_OPTIONS_KEY, StrategyProperties.LOOP_INVARIANT);
-					sp.setProperty(StrategyProperties.DEP_OPTIONS_KEY, StrategyProperties.DEP_ON);
-					sp.setProperty(StrategyProperties.QUERY_OPTIONS_KEY, StrategyProperties.QUERY_RESTRICTED);// StrategyProperties.QUERY_ON
-					sp.setProperty(StrategyProperties.NON_LIN_ARITH_OPTIONS_KEY, StrategyProperties.NON_LIN_ARITH_DEF_OPS);
-					sp.setProperty(StrategyProperties.STOPMODE_OPTIONS_KEY, StrategyProperties.STOPMODE_DEFAULT);
-					proof.getSettings().getStrategySettings().setActiveStrategyProperties(sp);
-					// Make sure that the new options are used
-					int maxSteps = 5000;
-					ProofSettings.DEFAULT_SETTINGS.getStrategySettings().setMaxSteps(maxSteps);
-					ProofSettings.DEFAULT_SETTINGS.getStrategySettings().setActiveStrategyProperties(sp);
-					proof.getSettings().getStrategySettings().setMaxSteps(maxSteps);
-					proof.setActiveStrategy(proof.getServices().getProfile().getDefaultStrategyFactory().create(proof, sp));
-					// Start auto mode
-//						MainWindow.getInstance().setVisible(true);
-					env.getUi().getProofControl().startAndWaitForAutoMode(proof);
-					// Show proof result
-					Console.println("Proof is closed: " + proof.openGoals().isEmpty());
-	                try {
-	                	String locationWithoutFileEnding = location.toString().substring(0, location.toString().indexOf("."));
-	                	keyFile = new File(locationWithoutFileEnding + ".proof");
-	    				proof.saveToFile(keyFile);
-	    				IWorkspace workspace = ResourcesPlugin.getWorkspace();    
-	    				IPath iLocation = Path.fromOSString(keyFile.getAbsolutePath()); 
-	    				IFile ifile = workspace.getRoot().getFileForLocation(iLocation);
-	    				ifile.refreshLocal(0, null);
-	    			} catch (IOException | CoreException e) {
-	    				e.printStackTrace();
-	    			}
-				} catch (ProofInputException e) {
-					Console.println(
-							"Exception at '" + contract.getDisplayName() + "' of " + contract.getTarget() + ":");
-					e.printStackTrace();
-				} finally {
-					if (proof != null) {
-						proof.dispose(); // Ensure always that all instances
-											// of Proof are disposed
-					}
-				}
-			} finally {
-				env.dispose(); // Ensure always that all instances of
-								// KeYEnvironment are disposed
-			}
-			MainWindow.getInstance().loadProblem(keyFile);
-			MainWindow.getInstance().setVisible(true);
-		} catch (ProblemLoaderException e) {
-			Console.println("Exception at '" + e.getCause() + "'");
-			e.printStackTrace();
-		}
-	}
 
 	
 	private static String getProgramVariableString(List<String> vars) {

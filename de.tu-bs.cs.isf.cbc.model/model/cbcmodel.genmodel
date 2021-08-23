@@ -61,6 +61,11 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//JMLAnnotation/requires"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//JMLAnnotation/ensures"/>
     </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//LoopInvariantAnnotation">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//LoopInvariantAnnotation/loopInvariant"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//LoopInvariantAnnotation/assignable"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//LoopInvariantAnnotation/decreases"/>
+    </genClasses>
     <genClasses ecoreClass="cbcmodel.ecore#//Variant">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cbcmodel.ecore#//Variant/name"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//Variant/var"/>
@@ -148,10 +153,16 @@
     <genClasses ecoreClass="cbcmodel.ecore#//InlineBlockStatement">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//InlineBlockStatement/block"/>
     </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//InlineJavaBlockStatement">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//InlineJavaBlockStatement/jmlAnnotation"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//InlineJavaBlockStatement/references"/>
+    </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//LoopInvariantAnnotationStatement">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//LoopInvariantAnnotationStatement/jmlAnnotation"/>
+    </genClasses>
     <genClasses ecoreClass="cbcmodel.ecore#//BlockStatement">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//BlockStatement/jmlAnnotation"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//BlockStatement/javaStatement"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//BlockStatement/internalBlockStatement"/>
     </genClasses>
     <genClasses ecoreClass="cbcmodel.ecore#//SelectionStatement">
       <genFeatures children="true" createChild="true" propertySortChoices="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//SelectionStatement/guards"/>
@@ -210,6 +221,67 @@
     <genClasses ecoreClass="cbcmodel.ecore#//ArrayElement">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//ArrayElement/array"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//ArrayElement/element"/>
+    </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//JMLExpression">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cbcmodel.ecore#//JMLExpression/foreach"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//JMLExpression/type"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//JMLExpression/var"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//JMLExpression/right"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cbcmodel.ecore#//JMLExpression/exists"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cbcmodel.ecore#//JMLExpression/isTrue"/>
+    </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//JMLImpl">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//JMLImpl/left"/>
+    </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//JMLAnd">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//JMLAnd/left"/>
+    </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//JMLOr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//JMLOr/left"/>
+    </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//JMLLower">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//JMLLower/left"/>
+    </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//JMLGreater">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//JMLGreater/left"/>
+    </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//JMLEqual">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//JMLEqual/left"/>
+    </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//JMLNotEqual">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//JMLNotEqual/left"/>
+    </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//JMLLowerEqual">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//JMLLowerEqual/left"/>
+    </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//JMLGreaterEqual">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//JMLGreaterEqual/left"/>
+    </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//JMLMultiplication">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//JMLMultiplication/left"/>
+    </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//JMLDivision">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//JMLDivision/left"/>
+    </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//JMLModulo">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//JMLModulo/left"/>
+    </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//JMLAddition">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//JMLAddition/left"/>
+    </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//JMLSubtraction">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//JMLSubtraction/left"/>
+    </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//JMLQualifier">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//JMLQualifier/left"/>
+    </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//JMLFunctionCall">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//JMLFunctionCall/func"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//JMLFunctionCall/args"/>
+    </genClasses>
+    <genClasses ecoreClass="cbcmodel.ecore#//JMLArrayElement">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//JMLArrayElement/array"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//JMLArrayElement/element"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 
+import de.tu_bs.cs.isf.cbc.util.KeyNativeConnection;
 import de.tu_bs.cs.isf.cbc.util.ProveWithKey;
 
 public class VerifyThread extends Thread {
@@ -20,7 +21,7 @@ public class VerifyThread extends Thread {
 	public void run() {
 		for (IFile iFile : fileList) {
 			File file = iFile.getLocation().toFile();
-			ProveWithKey.proveWithKey(file, null);
+			KeyNativeConnection.proveWithKey(file, null);
 		}
     }
 

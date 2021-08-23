@@ -15,6 +15,12 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.xtext.xbase.XBasicForLoopExpression;
+import org.eclipse.xtext.xbase.XForLoopExpression;
+import org.eclipse.xtext.xbase.XWhileExpression;
+import org.eclipse.xtext.xbase.XIfExpression;
+import org.eclipse.xtext.xbase.XExpression;
+import org.eclipse.xtext.xbase.XBlockExpression;
 
 import de.tu_bs.cs.isf.cbc.cbcmodel.AbstractStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbCFormula;
@@ -25,6 +31,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.Condition;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Expression;
 import de.tu_bs.cs.isf.cbc.cbcmodel.GlobalConditions;
 import de.tu_bs.cs.isf.cbc.cbcmodel.InlineBlockStatement;
+import de.tu_bs.cs.isf.cbc.cbcmodel.InlineJavaBlockStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariable;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariables;
@@ -47,6 +54,7 @@ import de.tu_bs.cs.isf.cbc.util.FileUtil;
 import de.tu_bs.cs.isf.cbc.util.FilenamePrefix;
 import de.tu_bs.cs.isf.cbc.util.HashTable;
 import de.tu_bs.cs.isf.cbc.util.Parser;
+import de.tu_bs.cs.isf.cbc.util.ProveJavaWithKey;
 import de.tu_bs.cs.isf.cbc.util.ProveWithKey;
 
 public class TraverseFormulaAndGenerate {
@@ -59,6 +67,7 @@ public class TraverseFormulaAndGenerate {
 	private CbCFormula formula;
 	private Resource resource;
 	private CbcmodelFactory factory;
+	private boolean firstBlockSeen = false;
 
 	TraverseFormulaAndGenerate(JavaVariables vars, GlobalConditions conds, Renaming renaming, URI uri,
 			CbCFormula formula, Resource resource) {
@@ -66,6 +75,7 @@ public class TraverseFormulaAndGenerate {
 		this.conds = conds;
 		this.renaming = renaming;
 		this.uri = uri;
+		System.out.println("uri is " + uri.path());
 		this.numberFile = 0;
 		this.formula = formula;
 		this.resource = resource;
@@ -74,13 +84,17 @@ public class TraverseFormulaAndGenerate {
 		CbCFormulaSingleton.init(formula);
 	}
 
-	public CbCFormula traverseFormulaAndGenerate() {		
+	public CbCFormula traverseFormulaAndGenerate() {	
+		ProveJavaWithKey.createJavaGlobalVariables(getListStringFromListVariables(vars.getVariables()), uri);
+		
 		AbstractStatement statement = formula.getStatement();
 		statement.setPreCondition(new ConditionExtension(formula.getPreCondition()));
 		statement.setPostCondition(new ConditionExtension(formula.getPostCondition()));
 		System.out.println("lessgo Traverse");
 		castStatementAndTraverse(statement);
 		String location =  FileUtil.getProject(uri).getLocation() + "/src/prove" + uri.trimFileExtension().lastSegment();
+		System.out.println("LOCATION IS" + location + "\nUri is  still " + uri.path());
+
 		HashTable.overrideOldOverview(location);
 		
 		return CbCFormulaSingleton.getCbCFormula();
@@ -142,21 +156,21 @@ public class TraverseFormulaAndGenerate {
 			ConditionExtension requires;
 			ConditionExtension ensures;
 			
-			try {
-				requires = new ConditionExtension(blockStatement.getJmlAnnotation().getRequires());
-				ensures = new ConditionExtension(blockStatement.getJmlAnnotation().getEnsures());
-			} catch (java.lang.NullPointerException exc) {
-				requires = new ConditionExtension(blockStatement.getPreCondition());
-				ensures = new ConditionExtension(blockStatement.getPostCondition());
-			}
-			ConditionExtension pre = new ConditionExtension(blockStatement.getPreCondition());
-			ConditionExtension post = new ConditionExtension(blockStatement.getPostCondition());
-			ProveWithKey.createProveRequiresWithKey(pre.stringRepresentation,
-					requires.stringRepresentation,  getListStringFromListVariables(vars.getVariables()),
-					getListStringFromListCondition(conds), renaming, uri, numberFile++, false, FilenamePrefix.PRE_IMPL);
-			ProveWithKey.createProveEnsuresWithKey(post.stringRepresentation,
-					ensures.stringRepresentation,  getListStringFromListVariables(vars.getVariables()),
-					getListStringFromListCondition(conds), renaming, uri, numberFile++, false, FilenamePrefix.POST_IMPL);
+//			try {
+//				requires = new ConditionExtension(blockStatement.getJmlAnnotation().getRequires());
+//				ensures = new ConditionExtension(blockStatement.getJmlAnnotation().getEnsures());
+//			} catch (java.lang.NullPointerException exc) {
+//				requires = new ConditionExtension(blockStatement.getPreCondition());
+//				ensures = new ConditionExtension(blockStatement.getPostCondition());
+//			}
+//			ConditionExtension pre = new ConditionExtension(blockStatement.getPreCondition());
+//			ConditionExtension post = new ConditionExtension(blockStatement.getPostCondition());
+//			ProveWithKey.createProveRequiresWithKey(pre.stringRepresentation,
+//					requires.stringRepresentation,  getListStringFromListVariables(vars.getVariables()),
+//					getListStringFromListCondition(conds), renaming, uri, numberFile++, false, FilenamePrefix.PRE_IMPL);
+//			ProveWithKey.createProveEnsuresWithKey(post.stringRepresentation,
+//					ensures.stringRepresentation,  getListStringFromListVariables(vars.getVariables()),
+//					getListStringFromListCondition(conds), renaming, uri, numberFile++, false, FilenamePrefix.POST_IMPL);
 			traverseBlockStatement(blockStatement);
 		} else if (statement instanceof InlineBlockStatement) {
 			
@@ -239,23 +253,64 @@ public class TraverseFormulaAndGenerate {
 	}
 
 	private void traverseBlockStatement(BlockStatement blockStatement) {
+		if (!firstBlockSeen) {
+			firstBlockSeen = true;
+			ProveWithKey.createProvePreImplPreWithKey(new ConditionExtension((Condition)blockStatement.getPreCondition()).stringRepresentation,
+					Parser.rewriteJMLConditionToKeY(Parser.getStringFromObject(blockStatement.getJmlAnnotation().getRequires())),
+					getListStringFromListVariables(vars.getVariables()),
+					getListStringFromListCondition(conds), renaming, uri, numberFile++, false, FilenamePrefix.PRE_IMPL);
+			ProveWithKey.createProvePostImplPostWithKey(new ConditionExtension((Condition)blockStatement.getPostCondition()).stringRepresentation,
+					Parser.rewriteJMLConditionToKeY(Parser.getStringFromObject(blockStatement.getJmlAnnotation().getEnsures())),
+					getListStringFromListVariables(vars.getVariables()),
+					getListStringFromListCondition(conds), renaming, uri, numberFile++, false, FilenamePrefix.POST_IMPL);
+		}
 		JavaStatement javaStatement = (JavaStatement) blockStatement.getJavaStatement();
-		if (javaStatement == null) {
-			InlineBlockStatement internalBlockStatement = (InlineBlockStatement) blockStatement.getInternalBlockStatement();
-			internalBlockStatement.setPreCondition(blockStatement.getPreCondition());
-			internalBlockStatement.setPostCondition(blockStatement.getPostCondition());
-			castStatementAndTraverse(internalBlockStatement);
-		} else {
-			try {
-				javaStatement.setPreCondition(new ConditionExtension(blockStatement.getJmlAnnotation().getRequires()));
-				javaStatement.setPostCondition(new ConditionExtension(blockStatement.getJmlAnnotation().getEnsures()));
-			} catch (java.lang.NullPointerException exc) {
-				javaStatement.setPreCondition(new ConditionExtension(blockStatement.getPreCondition()));
-				javaStatement.setPostCondition(new ConditionExtension(blockStatement.getPostCondition()));
-			}
+//		if (javaStatement == null) {
+//			InlineBlockStatement internalBlockStatement = (InlineBlockStatement) blockStatement.getInternalBlockStatement();
+//			internalBlockStatement.setPreCondition(blockStatement.getPreCondition());
+//			internalBlockStatement.setPostCondition(blockStatement.getPostCondition());
+//			castStatementAndTraverse(internalBlockStatement);
+//		} else {
+//			try {
+//				javaStatement.setPreCondition(new ConditionExtension(blockStatement.getJmlAnnotation().getRequires()));
+//				javaStatement.setPostCondition(new ConditionExtension(blockStatement.getJmlAnnotation().getEnsures()));
+//			} catch (java.lang.NullPointerException exc) {
+//				javaStatement.setPreCondition(new ConditionExtension(blockStatement.getPreCondition()));
+//				javaStatement.setPostCondition(new ConditionExtension(blockStatement.getPostCondition()));
+//			}
 			
-			ProveWithKey.createProveJavaStatementWithKey(javaStatement, getListStringFromListVariables(vars.getVariables()),
-					getListStringFromListCondition(conds), renaming, null, uri, numberFile++, false, FilenamePrefix.JAVA_STATEMENT);
+			ProveJavaWithKey.createProveBlockStatementWithKey(blockStatement, getListStringFromListVariables(vars.getVariables()),
+					null, uri, numberFile++, false, FilenamePrefix.JAVA_STATEMENT);
+			if (javaStatement != null) {
+				EList<XExpression> statements = javaStatement.getStatement();
+				for (XExpression s: statements) {
+					System.out.println("statement is " + Parser.getStringFromObject(s));
+					checkJavaStatementForBlock(s);
+					
+				}
+			}
+//			ProveWithKey.createProveJavaStatementWithKey(javaStatement, getListStringFromListVariables(vars.getVariables()),
+//					getListStringFromListCondition(conds), renaming, null, uri, numberFile++, false, FilenamePrefix.JAVA_STATEMENT);
+//		}
+	}
+	
+	private void checkJavaStatementForBlock(XExpression s) {
+		if (s instanceof XBasicForLoopExpression) {
+			for (XExpression e: ((XBlockExpression)((XBasicForLoopExpression) s).getEachExpression()).getExpressions()) {
+				checkJavaStatementForBlock(e);
+			}
+		} else if (s instanceof XForLoopExpression) {
+			for (XExpression e: ((XBlockExpression)((XForLoopExpression) s).getEachExpression()).getExpressions()) {
+				checkJavaStatementForBlock(e);
+			}
+		} else if (s instanceof XWhileExpression) {
+			checkJavaStatementForBlock(((XBlockExpression)((XWhileExpression) s).getBody()));
+		} else if (s instanceof XIfExpression) {
+			checkJavaStatementForBlock(((XIfExpression) s).getThen());
+		} else if (s instanceof InlineJavaBlockStatement) {
+			BlockStatement newBlockStatement = (BlockStatement)((InlineJavaBlockStatement)s).getReferences();
+			newBlockStatement.setJmlAnnotation(((InlineJavaBlockStatement)s).getJmlAnnotation());
+			traverseBlockStatement(newBlockStatement);
 		}
 	}
 	

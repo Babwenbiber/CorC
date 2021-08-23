@@ -37,6 +37,7 @@ public class HashTable {
 	}
 	
 	public static boolean fileExistsInOverview(String location, String filename) {
+		System.out.println("check if exists " + filename);
 		File overviewFile = new File(location + "/" + OVERVIEW_TMP_FILENAME);
 		if (overviewFile.exists() && overviewFile.canRead()) {
 			Scanner fileReader;
@@ -52,18 +53,20 @@ public class HashTable {
 				}
 				String fileName = line[0];
 				String fileHash = line[1];
-				if (fileName.equals(filename)) {
+//				System.out.println("checking filename " + fileName + " and " + filename);
+				if (fileName.equals(filename) || (fileName.contains(".java") && (fileName.split("\\.")[0] + ".class").equals(filename))) {
 					fileReader.close();
 					return true;
 				}
 			}
 			fileReader.close();
 		}
+		System.out.println("false ");
 		return false;
 	}
 	
 	public static void saveHashInTmpTable(String location, String hash, String filename) {
-//	    System.out.println("saving " + location + "/"+ filename);
+	    System.out.println("saving " + location + "/"+ filename);
 		FileWriter fw;
 		try {
 			File file = new File(location + "/" + OVERVIEW_TMP_FILENAME);
@@ -86,7 +89,9 @@ public class HashTable {
 	            if (!fileExistsInOverview(location, file.getName()) && 
 	            		!file.getName().equals(OVERVIEW_FILENAME) &&
 	            		!file.getName().equals(OVERVIEW_TMP_FILENAME) &&
-	            		!file.getName().equals("helper.key")
+	            		!file.getName().equals("helper.key") &&
+	            		!file.getName().equals("GlobalJavaVariables.java") &&
+	            		!file.getName().equals("GlobalJavaVariables.class")
 	            		) {
 		    	    System.out.println("delete" + file.getName());
 	            	file.delete();
