@@ -30,6 +30,7 @@ import org.key_project.util.collection.ImmutableSet;
 import com.google.common.collect.Lists;
 
 import de.tu_bs.cs.isf.cbc.cbcmodel.AbstractStatement;
+import de.tu_bs.cs.isf.cbc.cbcmodel.BlockStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbCFormula;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CompositionTechnique;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Condition;
@@ -56,6 +57,7 @@ import de.uka.ilkd.key.util.KeYTypeUtil;
 import de.uka.ilkd.key.util.MiscTools;
 import de.tu_bs.cs.isf.cbc.cbcmodel.singleton.CbCFormulaSingleton;
 import de.tu_bs.cs.isf.cbc.cbcmodel.string_saver.ConditionExtension;
+import de.tu_bs.cs.isf.cbc.cbcmodel.string_saver.JMLExpressionExtension;
 
 public class ProveWithKey {
 	public static final String REGEX_ORIGINAL = "original";
@@ -84,20 +86,20 @@ public class ProveWithKey {
 		}
 	}
 	
-	public static boolean proveJavaStatementWithKey(JavaStatement statement, List<String> vars, List<String> conds,
+	public static boolean proveBlockStatementFromVizWithKey(BlockStatement statement, List<String> vars, List<String> conds,
 			Renaming renaming, EList<ProductVariant> variants, URI uri, IProgressMonitor monitor, String name) {
 		if (variants == null || variants.size() == 0) {
-			File location = createProveJavaStatementWithKey(statement, vars, conds, renaming, null, uri, 0, true, name);
-			Console.println("Verify Pre -> {JavaStatement} Post");
+			File location = createProveBlockStatementFromVizWithKey(statement, vars, conds, renaming, null, uri, 0, true, name);
+			Console.println("Verify Pre -> {BlockStatement} Post");
 			return KeyNativeConnection.proveWithKey(location, monitor);
 		} else {
 			boolean proven = true;
 			for (int i = 0; i < variants.size(); i++) {
 				ProductVariant variant = (ProductVariant) variants.get(i);
 				List<String> refinements = Lists.newArrayList(variant.getRefinementChain().split(","));
-				File location = createProveJavaStatementWithKey(statement, vars, conds, renaming, refinements, uri, i,
+				File location = createProveBlockStatementFromVizWithKey(statement, vars, conds, renaming, refinements, uri, i,
 						true, name);
-				Console.println("Verify Pre -> {JavaStatement} Post");
+				Console.println("Verify Pre -> {BlockStatement} Post");
 
 				if (!KeyNativeConnection.proveWithKey(location, monitor)) {
 					proven = false;
@@ -165,7 +167,8 @@ public class ProveWithKey {
 			conditonStrings.post = useRenamingCondition(renaming, conditonStrings.post);
 			stat = useRenamingStatement(renaming, stat);
 		}
-
+		conditonStrings.pre = removeModifiableString(conditonStrings.pre, vars);
+		conditonStrings.post = removeModifiableString(conditonStrings.post, vars);
 		for (String var : unmodifiedVariables) {
 			String varName = var.substring(var.indexOf(" ") + 1);
 			programVariablesString += var + "_old; ";
@@ -187,17 +190,18 @@ public class ProveWithKey {
 			}
 		}
 
-		String problem = "\\javaSource \"" + thisProject.getLocation() + "/\";" + "\\include \"helper.key\";"
+		String problem = "\\javaSource \"" + thisProject.getLocation() + "/\";\n" +
+				"\\include \"helper.key\";\n"
 				+ "\\programVariables {" + programVariablesString + " Heap heapAtPre;}" + "\\problem {(" + conditonStrings.pre + " "
-				+ globalConditionsString + conditionArraysCreated + " & wellFormed(heap) ) -> {heapAtPre := heap"
-				+ assignmentString + "} \\<{" + stat + "}\\> (" + conditonStrings.post + ")}";
-
+				+ globalConditionsString + conditionArraysCreated + " & wellFormed(heap) )\n -> {heapAtPre := heap"
+				+ assignmentString + "}\n \\<{" + stat + "}\\>\n (" + conditonStrings.post + ")}";
+		
 		String location = thisProject.getLocation() + "/src/prove" + uri.trimFileExtension().lastSegment();
 		File keyFile = FileUtil.writeFile(problem, location, numberFile, override, name);
 		return keyFile;
 	}
 	
-	public static File createProveJavaStatementWithKey(JavaStatement statement, List<String> vars,
+	public static File createProveBlockStatementFromVizWithKey(BlockStatement statement, List<String> vars,
 			List<String> conds, Renaming renaming, List<String> refinements, URI uri, int numberFile,
 			boolean override, String name) {
 		FileUtil.setApplicationUri(uri);
@@ -220,8 +224,7 @@ public class ProveWithKey {
 		ConditionStrings conditionStrings = new ConditionStrings(statement);
 		List<String> modifiables = Parser.getModifiedVarsFromCondition(conditionStrings.post);
 
-		String stat = Parser.getStringFromObject(statement);
-		System.out.println("stat is " + stat);
+		String stat = statement.getName() + ".getBlock();";
 
 		List<String> unmodifiedVariables = Parser.getUnmodifiedVars(modifiables, vars);
 
@@ -260,13 +263,15 @@ public class ProveWithKey {
 			}
 		}
 
-		String problem = "\\javaSource \"" + thisProject.getLocation() + "/\";" + "\\include \"helper.key\";"
+		String problem = "\\javaSource \"" + thisProject.getLocation() + "/\";\n"
+				+ "\\include \"helper.key\";\n"
 				+ "\\programVariables {" + programVariablesString + " Heap heapAtPre;}" + "\\problem {(" + conditionStrings.pre + " "
 				+ globalConditionsString + conditionArraysCreated + " & wellFormed(heap) ) -> {heapAtPre := heap"
 				+ assignmentString + "} \\<{" + stat + "}\\> (" + conditionStrings.post + ")}";
 
 		String location = thisProject.getLocation() + "/src/prove" + uri.trimFileExtension().lastSegment();
 		File keyFile = FileUtil.writeFile(problem, location, numberFile, override, name);
+		System.out.println(problem);
 		return keyFile;
 	}
 	
@@ -607,7 +612,17 @@ public class ProveWithKey {
 		return null;
 	}
 
-	
+	private static String removeModifiableString(String original, List<String> variables) {
+		for (String var: variables) {
+			String strippedVar = "";
+			if (var.split(" ").length == 2) {
+				strippedVar = var.split(" ")[1];
+			}
+			original = original.replace("modifiable("+strippedVar+");", "");
+		}
+		return original;
+	}
+
 
 	private static String useRenamingCondition(Renaming renaming, String toRename) {
 		for (Rename rename : renaming.getRename()) {

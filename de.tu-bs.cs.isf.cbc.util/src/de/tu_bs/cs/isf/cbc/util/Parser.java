@@ -308,7 +308,7 @@ public class Parser {
 		List<String> unmodifiedVariables = Lists.newArrayList();
 		if (!modifiedVars.contains("\\everything")) {
 			for (String var : declaredVariables) {
-				String varName = var;
+				String varName = var.split(" ")[1]; //int i becomes i
 				if (!modifiedVars.contains(varName)) {
 					unmodifiedVariables.add(varName);
 				}

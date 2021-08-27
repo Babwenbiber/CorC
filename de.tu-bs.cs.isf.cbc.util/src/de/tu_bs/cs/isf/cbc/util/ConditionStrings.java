@@ -1,10 +1,12 @@
 package de.tu_bs.cs.isf.cbc.util;
 
 import de.tu_bs.cs.isf.cbc.cbcmodel.AbstractStatement;
+import de.tu_bs.cs.isf.cbc.cbcmodel.BlockStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbCFormula;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Condition;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.string_saver.ConditionExtension;
+import de.tu_bs.cs.isf.cbc.cbcmodel.string_saver.JMLExpressionExtension;
 
 public class ConditionStrings {
 	public String pre;
@@ -19,6 +21,11 @@ public class ConditionStrings {
 		postFormula = getStringFromCondition(statement.getPostCondition());
 	}
 	
+	
+	public ConditionStrings(BlockStatement statement) {
+		pre = ((JMLExpressionExtension)statement.getJmlAnnotation().getRequires()).stringRepresentation; 
+		post = ((JMLExpressionExtension)statement.getJmlAnnotation().getEnsures()).stringRepresentation; 
+	}
 	
 	public ConditionStrings(AbstractStatement statement) {
 		pre = getStringFromCondition(statement.getPreCondition());

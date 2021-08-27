@@ -1,15 +1,31 @@
 package de.tu_bs.cs.isf.cbc.tool.features;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.internal.resources.Workspace;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IncrementalProjectBuilder;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ICustomContext;
 import org.eclipse.graphiti.mm.pictograms.Shape;
-
+import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.jface.text.source.SourceViewer;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.ide.IDE;
+import org.eclipse.xtext.ui.editor.XtextEditor;
 import de.tu_bs.cs.isf.cbc.cbcmodel.AbstractStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.BlockStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbCFormula;
@@ -30,6 +46,8 @@ import de.tu_bs.cs.isf.cbc.tool.helper.StringParser;
 import de.tu_bs.cs.isf.cbc.util.Console;
 import de.tu_bs.cs.isf.cbc.util.ConstructCodeBlock;
 import de.tu_bs.cs.isf.cbc.util.FilenamePrefix;
+import de.tu_bs.cs.isf.cbc.util.ListParser;
+import de.tu_bs.cs.isf.cbc.util.ProveJavaWithKey;
 import de.tu_bs.cs.isf.cbc.util.ProveWithKey;
 import de.tu_bs.cs.isf.taxonomy.graphiti.features.MyAbstractAsynchronousCustomFeature;
 
@@ -114,36 +132,6 @@ public class VerifyAllStatements extends MyAbstractAsynchronousCustomFeature {
 		}
 		return prove;
 	}
-
-//    if (refinement.getClass().equals(AbstractStatementImpl.class)) {
-//		String allStatements =  refinement.getName().replace("\n", "");
-//		}
-//		return statements;
-//		//return refinement.getName()  + "\n";
-//	} else if (refinement.getClass().equals(SkipStatementImpl.class)) {
-//		return ";\n";
-//	} else if (refinement.getClass().equals(ReturnStatementImpl.class)) {
-//		return "return " + refinement.getName()  + "\n";
-//	} else if (refinement.getClass().equals(MethodStatementImpl.class)) {
-//		return refinement.getName()  + "();\n";
-//	}else if (refinement.getClass().equals(SelectionStatementImpl.class)) {
-//		return constructSelection((SelectionStatement) refinement);
-//	} else if (refinement.getClass().equals(CompositionStatementImpl.class)) {
-//		return constructComposition((CompositionStatement) refinement);
-//	} else if (refinement.getClass().equals(Composition3StatementImpl.class)) {
-//		return constructComposition3((Composition3Statement) refinement);
-//	} else if (refinement.getClass().equals(RepetitionStatementImpl.class)) {
-//		return constructRepetition((RepetitionStatement) refinement);
-//	} else if (refinement.getClass().equals(SmallRepetitionStatementImpl.class)) {
-//		return constructSmallRepetition((SmallRepetitionStatement) refinement);
-//	} else if (refinement.getClass().equals(StrengthWeakStatementImpl.class)) {
-//		if (refinement.getRefinement() != null) {
-//			return constructCodeBlockOfChildStatement(refinement.getRefinement());
-//		} else {
-//			return refinement.getName() + ";\n";
-//		}
-//	}
-//	return null;
     
     private static boolean proveCompositionStatement(AbstractStatement statement, JavaVariables vars, GlobalConditions conds, Renaming renaming, URI uri, IProgressMonitor monitor) {
     	boolean prove1, prove2 = false;
@@ -213,25 +201,6 @@ public class VerifyAllStatements extends MyAbstractAsynchronousCustomFeature {
 		}
     }
 	
-
-	private static boolean proveJavaStatement(JavaStatement statement, JavaVariables vars, GlobalConditions conds, 
-			Renaming renaming, URI uri, IProgressMonitor monitor) {
-		if (!statement.isProven()) {
-			boolean prove = false;
-			EList<ProductVariant> variants = null;
-			prove = ProveWithKey.proveJavaStatementWithKey(statement,  StringParser.getVariableListToStringList(vars),
-					StringParser.getConditionListToStringList(conds), renaming, variants, uri, monitor, FilenamePrefix.JAVA_STATEMENT );
-			if (prove) {
-				statement.setProven(true);
-			} else {
-				statement.setProven(false);
-			}
-	    	return prove;
-		} else {
-			Console.println("Abstract statement: " + statement.getName() +" already true");
-			return true;
-		}
-    }
     
     private static boolean proveSelectionStatement(AbstractStatement statement, JavaVariables vars, GlobalConditions conds, Renaming renaming, URI uri, IProgressMonitor monitor) {
     	boolean prove = true;
@@ -263,17 +232,40 @@ public class VerifyAllStatements extends MyAbstractAsynchronousCustomFeature {
     
     private static boolean proveBlockStatement(AbstractStatement statement, JavaVariables vars, GlobalConditions conds, Renaming renaming, URI uri, IProgressMonitor monitor) {
     	boolean prove = false;
-    	BlockStatement blockStatement = (BlockStatement) statement;
+    	BlockStatement blockStatement = (BlockStatement) statement;   	
     	
-		prove = proveJavaStatement((JavaStatement)blockStatement.getJavaStatement(), vars, conds, renaming, uri, monitor);
-    	
-    	
-    	if (prove && true)  {
-    		statement.setProven(true);
-    	} else {
-    		statement.setProven(false);
-    	}
-		return (prove && true);
+		if (!statement.isProven()) {
+			ProveJavaWithKey.createJavaGlobalVariables(ListParser.getListStringFromListVariables(vars.getVariables()), uri);
+			try {
+				IProject project = null;
+				final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+				project = workspace.getRoot().getFile(new Path("foo/src/block_stuff.cbctxt")).getProject();
+				project.build(IncrementalProjectBuilder.FULL_BUILD, monitor);
+				
+			} catch (CoreException e) {
+				e.printStackTrace();
+			}
+
+//			EList<ProductVariant> variants = null;
+//			prove = ProveWithKey.proveBlockStatementFromVizWithKey(blockStatement,  StringParser.getVariableListToStringList(vars),
+//					StringParser.getConditionListToStringList(conds), renaming, variants, uri, monitor, FilenamePrefix.JAVA_STATEMENT );
+//			if (prove) {
+//				statement.setProven(true);
+//			} else {
+//				statement.setProven(false);
+//			}
+	    	return prove;
+		} else {
+			Console.println("Block statement: " + statement.getName() +" already true");
+			return true;
+		}
+		
+//    	if (prove && true)  {
+//    		statement.setProven(true);
+//    	} else {
+//    		statement.setProven(false);
+//    	}
+//		return (prove && true);
     }
 
 	private static boolean proveRepetitionStatement(AbstractStatement statement, JavaVariables vars, GlobalConditions conds, Renaming renaming, URI uri, IProgressMonitor monitor) {

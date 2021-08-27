@@ -43,6 +43,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.JMLAnnotation;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariables;
 import de.tu_bs.cs.isf.cbc.cbcmodel.SelectionStatement;
+import de.tu_bs.cs.isf.cbc.cbcmodel.string_saver.JMLExpressionExtension;
 import de.tu_bs.cs.isf.cbc.tool.diagram.CbCImageProvider;
 import de.tu_bs.cs.isf.cbc.tool.helper.UpdateModifiableOfConditions;
 import de.tu_bs.cs.isf.cbc.util.FileUtil;
@@ -72,10 +73,10 @@ public class BlockPattern extends IdPattern implements IPattern {
 	// Separating lines:
 	private static final String ID_HEADER_SEPARATER = "headerSeparater";
 	private static final String ID_BLOCK_HEADER_SEPARATER = "blockHeaderSeparater";
-	private static final String ID_STATEMENT_HEADER_SEPARATER = "statementHeaderSeparater";
+	private static final String ID_STATEMENT_HEADER_SEPARATOR = "statementHeaderSeparater";
 	private static final String ID_CONDITION_SEP = "conditionSep";
-	private static final String ID_BLOCK_CONDITION_SEPARATER = "blockConditionSeparater";
-	private static final String ID_STATEMENT_BLOCK_SEPARATER = "statementBlockSeparater";
+	private static final String ID_BLOCK_CONDITION_SEPARATOR = "blockConditionSeparater";
+	private static final String ID_STATEMENT_BLOCK_SEPARATOR = "statementBlockSeparater";
 
 	/**
 	 * Constructor of the class
@@ -109,18 +110,18 @@ public class BlockPattern extends IdPattern implements IPattern {
 		BlockStatement statement = CbcmodelFactory.eINSTANCE.createBlockStatement();
 		statement.setName("Block-Statement");
 		Condition pre = CbcmodelFactory.eINSTANCE.createCondition();
-		pre.setName("1");
+		pre.setName("");
 		statement.setPreCondition(pre);
 		Condition post = CbcmodelFactory.eINSTANCE.createCondition();
-		post.setName("2");
+		post.setName("");
 		statement.setPostCondition(post);
-		Condition preBlock = CbcmodelFactory.eINSTANCE.createCondition();
-		preBlock.setName("3");
-		Condition postBlock = CbcmodelFactory.eINSTANCE.createCondition();
-		postBlock.setName("4");
+		JMLExpressionExtension requires = new JMLExpressionExtension(CbcmodelFactory.eINSTANCE.createJMLAnnotation().getRequires());
+		requires.stringRepresentation = "i=1";
+		JMLExpressionExtension ensures = new JMLExpressionExtension(CbcmodelFactory.eINSTANCE.createJMLAnnotation().getEnsures());
+		ensures.stringRepresentation = "i=3";
 		JMLAnnotation annotation = CbcmodelFactory.eINSTANCE.createJMLAnnotation();
-		annotation.setRequires(preBlock);
-		annotation.setEnsures(postBlock);
+		annotation.setRequires(requires);
+		annotation.setEnsures(ensures);
 		statement.setJmlAnnotation(annotation);
 
 		addGraphicalRepresentation(context, statement);
@@ -159,15 +160,15 @@ public class BlockPattern extends IdPattern implements IPattern {
 		link(outerContainerShape, addedStatement);
 
 		// Statement name
-		Shape textShape = setContent(ID_NAME_TEXT, addedStatement.getJavaStatement().getName(), 
+		Shape textShape = setContent(ID_NAME_TEXT, addedStatement.getName(),
 				true, outerContainerShape, peCreateService, gaService);
 		Shape preShape = setContent(ID_PRE_TEXT, "{" + addedStatement.getPreCondition().getName() + "}", 
 				false, outerContainerShape, peCreateService, gaService);
 		Shape postShape = setContent(ID_POST_TEXT, "{" + addedStatement.getPostCondition().getName() + "}",
 				false, outerContainerShape, peCreateService, gaService);
-		Shape preBlockShape = setContent(ID_PRE_BLOCK_TEXT, "{" + addedStatement.getJmlAnnotation().getRequires().getName() + "}", 
+		Shape preBlockShape = setContent(ID_PRE_BLOCK_TEXT, "{" + ((JMLExpressionExtension)addedStatement.getJmlAnnotation().getRequires()).stringRepresentation + "}", 
 				true, outerContainerShape, peCreateService, gaService);
-		Shape postBlockShape = setContent(ID_POST_BLOCK_TEXT, "{" + addedStatement.getJmlAnnotation().getEnsures().getName() + "}", 
+		Shape postBlockShape = setContent(ID_POST_BLOCK_TEXT, "{" +  ((JMLExpressionExtension)addedStatement.getJmlAnnotation().getEnsures()).stringRepresentation + "}", 
 				true, outerContainerShape, peCreateService, gaService);
 
 		Shape proveShape = peCreateService.createShape(outerContainerShape, false);
@@ -182,10 +183,10 @@ public class BlockPattern extends IdPattern implements IPattern {
 		
 		createSeperator(ID_HEADER_SEPARATER, outerContainerShape, peCreateService, gaService);
 		createSeperator(ID_BLOCK_HEADER_SEPARATER, outerContainerShape, peCreateService, gaService);
-		createSeperator(ID_STATEMENT_HEADER_SEPARATER, outerContainerShape, peCreateService, gaService);
+		createSeperator(ID_STATEMENT_HEADER_SEPARATOR, outerContainerShape, peCreateService, gaService);
 		createSeperator(ID_CONDITION_SEP, outerContainerShape, peCreateService, gaService);
-		createSeperator(ID_BLOCK_CONDITION_SEPARATER, outerContainerShape, peCreateService, gaService);
-		createSeperator(ID_STATEMENT_BLOCK_SEPARATER, outerContainerShape, peCreateService, gaService);
+		createSeperator(ID_BLOCK_CONDITION_SEPARATOR, outerContainerShape, peCreateService, gaService);
+		createSeperator(ID_STATEMENT_BLOCK_SEPARATOR, outerContainerShape, peCreateService, gaService);
 
 		peCreateService.createChopboxAnchor(outerContainerShape);
 		peCreateService.createChopboxAnchor(textShape);
@@ -193,7 +194,7 @@ public class BlockPattern extends IdPattern implements IPattern {
 		peCreateService.createChopboxAnchor(postBlockShape);
 
 		link(outerContainerShape, addedStatement);
-		link(textShape, addedStatement.getJavaStatement());
+		link(textShape, addedStatement);
 		link(preShape, addedStatement.getPreCondition());
 		link(postShape, addedStatement.getPostCondition());
 		link(preBlockShape, addedStatement.getJmlAnnotation().getRequires());
@@ -260,13 +261,13 @@ public class BlockPattern extends IdPattern implements IPattern {
 			return drawLine(context, 0, 0.1, 1, 0.1);
 		} else if (id.equals(ID_BLOCK_HEADER_SEPARATER)) {
 			return drawLine(context, 0, 1.0/3+0.1, 1, 1.0/3+0.1);
-		} else if (id.equals(ID_STATEMENT_HEADER_SEPARATER)) {
+		} else if (id.equals(ID_STATEMENT_HEADER_SEPARATOR)) {
 			return drawLine(context, 0, 2.0/3+0.1, 1, 2.0/3+0.1);
 		} else if (id.equals(ID_CONDITION_SEP)) {
 			return drawLine(context, 0.5, 0, 0.5, 2.0/3);
-		} else if (id.equals(ID_BLOCK_CONDITION_SEPARATER)) {
+		} else if (id.equals(ID_BLOCK_CONDITION_SEPARATOR)) {
 			return drawLine(context, 0, 1.0/3, 1, 1.0/3);
-		} else if (id.equals(ID_STATEMENT_BLOCK_SEPARATER)) {
+		} else if (id.equals(ID_STATEMENT_BLOCK_SEPARATOR)) {
 			return drawLine(context, 0, 2.0/3, 1, 2.0/3);
 		}
 		
@@ -353,11 +354,14 @@ public class BlockPattern extends IdPattern implements IPattern {
 			
 			String newText = "";
 			if (id.equals(ID_NAME_TEXT)) {
-				JavaStatement domainObject = (JavaStatement) context.getDomainObject();
+				BlockStatement domainObject = (BlockStatement) context.getDomainObject();
 				newText = domainObject.getName();
-			} else if (id.equals(ID_PRE_BLOCK_TEXT) || id.equals(ID_POST_BLOCK_TEXT) || id.equals(ID_PRE_TEXT) || id.equals(ID_POST_TEXT)) {
+			} else if (id.equals(ID_PRE_TEXT) || id.equals(ID_POST_TEXT)) {
 				Condition domainObject = (Condition) context.getDomainObject();
 				newText = "{" + domainObject.getName() + "}";
+			} else if (id.equals(ID_PRE_BLOCK_TEXT) || id.equals(ID_POST_BLOCK_TEXT)) {
+				JMLExpressionExtension domainObject = (JMLExpressionExtension) context.getDomainObject();
+				newText = "{" + domainObject.stringRepresentation + "}";
 			} else {
 				return false;
 			}
@@ -400,9 +404,13 @@ public class BlockPattern extends IdPattern implements IPattern {
 			}
 		}
 		return false;
+	}	
+
+	public void squareTwoNumbers(Integer i, Integer j) {
+		i = i*i;
+		j = j*j;		
 	}
-
-
+	
 	@Override
 	public int getEditingType() {
 		return TYPE_MULTILINETEXT;
@@ -453,39 +461,5 @@ public class BlockPattern extends IdPattern implements IPattern {
 		FileUtil.setApplicationUri(getDiagram().eResource().getURI());
 		UpdateModifiableOfConditions.updateAssignmentStatement(statement);
 		updatePictogramElement(context.getPictogramElement());
-	}
-
-	@Override
-	public void delete(IDeleteContext context) {
-//		Shape shape = (Shape) context.getPictogramElement();
-//		ContainerShape container = shape.getContainer();
-//		BlockStatement statement = (BlockStatement) getBusinessObjectForPictogramElement(
-//				context.getPictogramElement());
-//		if (statement != null && statement.eContainer() != null
-//				&& statement.eContainer() instanceof BlockStatement) {
-//			int indexToDelete = getIndex(shape.getGraphicsAlgorithm());
-//			BlockStatement blockStatement = (BlockStatement) statement.eContainer();
-//			int indexInSelSt = blockStatement.getCommands().indexOf(statement);
-//			blockStatement.getGuards().remove(indexInSelSt);
-//			super.delete(context);
-//			List<Shape> shapesToDelete = new ArrayList<Shape>();
-//			for (Shape childShape : container.getChildren()) {
-//				if (getIndex(childShape.getGraphicsAlgorithm()) == indexToDelete) {
-//					shapesToDelete.add(childShape);
-//				}
-//			}
-//			for (Shape deleteShape : shapesToDelete) {
-//				EcoreUtil.delete(deleteShape, true);
-//			}
-//
-//			for (Shape childShape : container.getChildren()) {
-//				if (getIndex(childShape.getGraphicsAlgorithm()) > indexToDelete) {
-//					setIndex(childShape.getGraphicsAlgorithm(), getIndex(childShape.getGraphicsAlgorithm()) - 1);
-//				}
-//			}
-//			layoutPictogramElement(container);
-//		} else {
-			super.delete(context);
-//		}
 	}
 }

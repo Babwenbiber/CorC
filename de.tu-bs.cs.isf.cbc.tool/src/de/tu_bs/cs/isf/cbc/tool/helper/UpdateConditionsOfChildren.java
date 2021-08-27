@@ -243,7 +243,7 @@ public class UpdateConditionsOfChildren {
 				}
 
 				childBlock.getPreCondition().setName(preParent.getName());
-				childBlock.getPostCondition().setName(formula.getStatement().getPostCondition().getName());
+				childBlock.getPostCondition().setName(postParent.getName());
 			}
 
 		} else if (refinedStatement instanceof StrengthWeakStatement) {
