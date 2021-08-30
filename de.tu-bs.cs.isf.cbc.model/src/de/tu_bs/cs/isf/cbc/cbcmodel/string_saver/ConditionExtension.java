@@ -11,7 +11,10 @@ public class ConditionExtension extends ConditionImpl{
 	
 	public ConditionExtension(Condition condition) {
 		super();
-		if (condition instanceof ConditionExtension) {
+		if (condition == null) {
+			stringRepresentation = "";
+			return;
+		} else if (condition instanceof ConditionExtension) {
 			stringRepresentation = ((ConditionExtension)condition).stringRepresentation;
 		} else if (condition instanceof ConditionImpl) {
 			stringRepresentation = NodeModelUtils.getTokenText(NodeModelUtils.findActualNodeFor(condition));

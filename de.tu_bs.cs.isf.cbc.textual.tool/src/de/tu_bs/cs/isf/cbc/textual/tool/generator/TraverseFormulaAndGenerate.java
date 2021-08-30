@@ -60,15 +60,16 @@ import de.tu_bs.cs.isf.cbc.util.ProveWithKey;
 
 public class TraverseFormulaAndGenerate {
 
-	private JavaVariables vars;
-	private GlobalConditions conds;
-	private Renaming renaming;
-	private URI uri;
-	private int numberFile;
-	private CbCFormula formula;
-	private Resource resource;
-	private CbcmodelFactory factory;
-	private boolean firstBlockSeen = false;
+	protected JavaVariables vars;
+	protected GlobalConditions conds;
+	protected Renaming renaming;
+	protected URI uri;
+	protected int numberFile;
+	protected CbCFormula formula;
+	protected Resource resource;
+	protected CbcmodelFactory factory;
+	protected boolean firstBlockSeen = false;
+	protected boolean parseFormula = true;
 
 	TraverseFormulaAndGenerate(JavaVariables vars, GlobalConditions conds, Renaming renaming, URI uri,
 			CbCFormula formula, Resource resource) {
@@ -101,7 +102,7 @@ public class TraverseFormulaAndGenerate {
 		return CbCFormulaSingleton.getCbCFormula();
 	}
 
-	private void castStatementAndTraverse(AbstractStatement statement) {
+	protected void castStatementAndTraverse(AbstractStatement statement) {
 		if (statement.getClass().equals(AbstractStatementImpl.class)) {
 			ProveWithKey.createProveStatementWithKey(statement,  ListParser.getListStringFromListVariables(vars.getVariables()),
 					ListParser.getListStringFromListCondition(conds), renaming, null, uri, numberFile++, false, FilenamePrefix.STATEMENT, "");
@@ -253,17 +254,29 @@ public class TraverseFormulaAndGenerate {
 		castStatementAndTraverse(secondStatement);
 	}
 
-	private void traverseBlockStatement(BlockStatement blockStatement) {
+	protected void traverseBlockStatement(BlockStatement blockStatement) {
+		String blockName; 
+		String preName; 
+		String postName; 
+		if (parseFormula) {
+			blockName = FilenamePrefix.JAVA_STATEMENT;
+			preName = FilenamePrefix.PRE_IMPL;
+			postName = FilenamePrefix.POST_IMPL;
+		} else {
+			blockName = blockStatement.getName();
+			preName = blockStatement.getName() + "_pre";
+			postName = blockStatement.getName() + "_post";
+		}
 		if (!firstBlockSeen) {
 			firstBlockSeen = true;
 			ProveWithKey.createProvePreImplPreWithKey(new ConditionExtension((Condition)blockStatement.getPreCondition()).stringRepresentation,
 					Parser.rewriteJMLConditionToKeY(Parser.getStringFromObject(blockStatement.getJmlAnnotation().getRequires())),
 					ListParser.getListStringFromListVariables(vars.getVariables()),
-					ListParser.getListStringFromListCondition(conds), renaming, uri, numberFile++, false, FilenamePrefix.PRE_IMPL);
+					ListParser.getListStringFromListCondition(conds), renaming, uri, numberFile++, false, preName, parseFormula);
 			ProveWithKey.createProvePostImplPostWithKey(new ConditionExtension((Condition)blockStatement.getPostCondition()).stringRepresentation,
 					Parser.rewriteJMLConditionToKeY(Parser.getStringFromObject(blockStatement.getJmlAnnotation().getEnsures())),
 					ListParser.getListStringFromListVariables(vars.getVariables()),
-					ListParser.getListStringFromListCondition(conds), renaming, uri, numberFile++, false, FilenamePrefix.POST_IMPL);
+					ListParser.getListStringFromListCondition(conds), renaming, uri, numberFile++, false, postName, parseFormula);
 		}
 		JavaStatement javaStatement = (JavaStatement) blockStatement.getJavaStatement();
 //		if (javaStatement == null) {
@@ -279,9 +292,9 @@ public class TraverseFormulaAndGenerate {
 //				javaStatement.setPreCondition(new ConditionExtension(blockStatement.getPreCondition()));
 //				javaStatement.setPostCondition(new ConditionExtension(blockStatement.getPostCondition()));
 //			}
-			
+
 			ProveJavaWithKey.createProveBlockStatementWithKey(blockStatement, ListParser.getListStringFromListVariables(vars.getVariables()),
-					null, uri, numberFile++, false, FilenamePrefix.JAVA_STATEMENT);
+					null, uri, numberFile++, false, blockName, parseFormula);
 			if (javaStatement != null) {
 				EList<XExpression> statements = javaStatement.getStatement();
 				for (XExpression s: statements) {

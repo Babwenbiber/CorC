@@ -876,8 +876,16 @@ public class ProveWithKey {
 	public static File createProvePreImplPreWithKey(String preParent, String preChild, List<String> vars,
 			List<String> conds, Renaming renaming, URI uri, int numberFile, boolean override, String name) {
 		
+		return createProvePreImplPreWithKey(preParent, 
+				preChild, vars, conds, renaming, uri, numberFile, override, name, true);
+		
+	}
+	
+	public static File createProvePreImplPreWithKey(String preParent, String preChild, List<String> vars,
+			List<String> conds, Renaming renaming, URI uri, int numberFile, boolean override, String name, boolean writeToSeparateDir) {
+		
 		return createProvePreWithKey(Parser.getConditionFromCondition(preParent), 
-				Parser.getConditionFromCondition(preChild), vars, conds, renaming, uri, numberFile, override, name);
+				Parser.getConditionFromCondition(preChild), vars, conds, renaming, uri, numberFile, override, name, writeToSeparateDir);
 		
 	}
 	
@@ -889,6 +897,13 @@ public class ProveWithKey {
 	
 	public static File createProvePreWithKey(String preParent, String preChild, List<String> vars,
 			List<String> conds, Renaming renaming, URI uri, int numberFile, boolean override, String name) {
+		return createProvePreWithKey(preParent, preChild, vars,
+			 conds, renaming, uri, numberFile, override, name, true);
+	}
+	
+	public static File createProvePreWithKey(String preParent, String preChild, List<String> vars,
+			List<String> conds, Renaming renaming, URI uri, int numberFile, boolean override, String name, 
+			boolean parseFormula) {
 //		String programVariablesString = "";
 //		if (vars != null) {
 //			for (String var : vars) {
@@ -925,16 +940,31 @@ public class ProveWithKey {
 				+ programVariablesString + " Heap heapAtPre;}" + "\\problem {(" + preParent + " "
 				+ globalConditionsString + ") -> {heapAtPre := heap} (" + preChild + ")}";
 
-		String location = thisProject.getLocation() + "/src/prove" + uri.trimFileExtension().lastSegment();
-		File keyFile = FileUtil.writeFile(problem, location, numberFile, override, name );
+		String location;
+		File keyFile;
+		if (parseFormula) {
+			location = thisProject.getLocation() + "/src/prove" + uri.trimFileExtension().lastSegment();
+			keyFile = FileUtil.writeFile(problem, location, numberFile, override, name);
+		} else {
+			location = uri.trimFileExtension().path();
+			keyFile = FileUtil.writeFile(problem, location, override, name + ".key");
+		}
 		return keyFile;
 	}
 
 	public static File createProvePostImplPostWithKey(String postParent, String postChild, List<String> vars,
 			List<String> conds, Renaming renaming, URI uri, int numberFile, boolean override, String name) {
 		
+		return createProvePostImplPostWithKey(postParent, 
+				postChild, vars, conds, renaming, uri, numberFile, override, name, true);
+		
+	}
+	
+	public static File createProvePostImplPostWithKey(String postParent, String postChild, List<String> vars,
+			List<String> conds, Renaming renaming, URI uri, int numberFile, boolean override, String name, boolean writeToSeparateDir) {
+		
 		return createProvePostWithKey(Parser.getConditionFromCondition(postParent), 
-				Parser.getConditionFromCondition(postChild), vars, conds, renaming, uri, numberFile, override, name);
+				Parser.getConditionFromCondition(postChild), vars, conds, renaming, uri, numberFile, override, name, writeToSeparateDir);
 		
 	}
 	
@@ -943,9 +973,16 @@ public class ProveWithKey {
 
 		return createProvePostWithKey(Parser.getConditionFromCondition(postParent), Parser.getConditionFromCondition(ensures), vars, conds, renaming, uri, numberFile, override, name);
 	}
-	
+
 	public static File createProvePostWithKey(String postParent, String postChild, List<String> vars,
 			List<String> conds, Renaming renaming, URI uri, int numberFile, boolean override, String name) {
+		return createProvePostWithKey(postParent, postChild, vars,
+			 conds, renaming, uri, numberFile, override, name, true);
+		
+	}
+	public static File createProvePostWithKey(String postParent, String postChild, List<String> vars,
+			List<String> conds, Renaming renaming, URI uri, int numberFile, boolean override, String name, 
+			boolean parseFormula) {
 
 		String programVariablesString = "";
 		if (vars != null) {
@@ -977,8 +1014,17 @@ public class ProveWithKey {
 				+ programVariablesString + " Heap heapAtPre;}" + "\\problem {(" + postChild + " "
 				+ globalConditionsString + ") -> {heapAtPre := heap} (" + postParent + ")}";
 
-		String location = thisProject.getLocation() + "/src/prove" + uri.trimFileExtension().lastSegment();
-		File keyFile = FileUtil.writeFile(problem, location, numberFile, override, name );
+		
+		String location;
+		File keyFile;
+		if (parseFormula) {
+			location = thisProject.getLocation() + "/src/prove" + uri.trimFileExtension().lastSegment();
+			keyFile = FileUtil.writeFile(problem, location, numberFile, override, name);
+		} else {
+			location = uri.trimFileExtension().path();
+			keyFile = FileUtil.writeFile(problem, location, override, name + ".key");
+		}
+		 
 		return keyFile;
 	}
 	

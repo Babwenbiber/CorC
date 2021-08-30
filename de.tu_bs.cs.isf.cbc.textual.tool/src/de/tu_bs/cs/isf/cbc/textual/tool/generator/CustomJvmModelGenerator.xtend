@@ -14,6 +14,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 import org.eclipse.xtext.generator.IGenerator
 import org.eclipse.xtext.generator.IFileSystemAccess
+import de.tu_bs.cs.isf.cbc.cbcmodel.BlockStatement
 
 class CustomJvmModelGenerator implements IGenerator{
 
@@ -32,7 +33,13 @@ class CustomJvmModelGenerator implements IGenerator{
 		if (resource.allContents.filter(Renaming).hasNext) {
 			renaming = resource.allContents.filter(Renaming).next
 		}
+//		resource.allContents.head.eClass.name
 		if (!resource.allContents.filter(CbCFormula).hasNext) {
+			var block = resource.allContents.filter(BlockStatement).next;
+			val TraverseBlockAndGenerate traverser = new TraverseBlockAndGenerate(
+				resource.URI, block, resource
+			)
+			block = traverser.traverseBlockAndGenerate()
 			return
 		}		
 		var formula = resource.allContents.filter(CbCFormula).next;

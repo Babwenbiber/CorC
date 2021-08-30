@@ -91,6 +91,10 @@ public class FileUtil {
 
 	public static File writeFile(String problem, String location, int numberFile, boolean override, String proveName) {
 		String newFileName = "prove" + numberFile + proveName + ".key";
+		return writeFile(problem, location, override, newFileName);
+	}
+	
+	public static File writeFile(String problem, String location, boolean override, String newFileName) {
 		File keyFile = new File(location + "/" + newFileName);
 		File keyHelperFile = new File(location + "/helper.key");
 
@@ -169,9 +173,7 @@ public class FileUtil {
 			e.printStackTrace();
 		}
 	}
-	
-	public static File writeJavaFile(String problem, String location, int numberFile, boolean override, String proveName) {
-		String newFileName = "prove" + numberFile + proveName + ".java";
+	public static File writeJavaFile(String problem, String location, boolean override, String newFileName) {
 		File keyFile = new File(location + "/" + newFileName);
 
 		String hash = Hashing.sha256()
@@ -179,7 +181,7 @@ public class FileUtil {
 				  .toString();
 		
 		String fileName = HashTable.getFileNameFromHashTable(location, hash);
-		System.out.println(proveName + " filename from hashtable is " + fileName);
+		System.out.println( " filename from hashtable is " + fileName);
 		
 		
 		if (fileName == null || override) {
@@ -198,6 +200,11 @@ public class FileUtil {
 		System.out.println("old file " + keyFile);
 		HashTable.saveHashInTmpTable(location, hash, newFileName);
 		return null;
+	}
+	
+	public static File writeJavaFile(String problem, String location, int numberFile, boolean override, String proveName) {
+		String newFileName = "prove" + numberFile + proveName + ".java";
+		return writeJavaFile(problem, location, override, newFileName);
 	}
 	
 	public static IProject getProject(URI uri) {
