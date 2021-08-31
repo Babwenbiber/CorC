@@ -12,6 +12,10 @@ public class ProveJavaWithKey {
 
 	public static File createProveBlockStatementWithKey(BlockStatement statement, List<String> vars, List<String> refinements, URI uri, int numberFile,
 			boolean override, String name) {
+		return createProveBlockStatementWithKey(statement, vars, refinements, uri, numberFile, override, name, true);
+	}
+	public static File createProveBlockStatementWithKey(BlockStatement statement, List<String> vars, List<String> refinements, URI uri, int numberFile,
+			boolean override, String name, boolean parseFormula) {
 		FileUtil.setApplicationUri(uri);
 		
 		IProject thisProject = FileUtil.getProject(uri);
@@ -22,8 +26,14 @@ public class ProveJavaWithKey {
 				Parser.getStringFromObject(statement.getJmlAnnotation().getRequires()));
 		String ensuresBody = Parser.replaceVariablesWithGlobalVariables(vars,
 				Parser.getStringFromObject(statement.getJmlAnnotation().getEnsures()));
+		String packageName;
+		if (parseFormula) {
+			packageName = "prove" + uri.trimFileExtension().lastSegment();
+		} else {
+			String[] tmp = uri.path().split("/");
+			packageName = tmp[tmp.length - 1];
+		}
 
-		String packageName = "prove" + uri.trimFileExtension().lastSegment();
 		String problem = 
 			"package "+ packageName + ";\n\n" + 
 			"class " + statement.getName() + "{\n" +
@@ -34,8 +44,16 @@ public class ProveJavaWithKey {
 			"\tpublic static void getBlock() {\n" +
 			"\t\t" + statementBody + "\n\t}\n"+
 			"}";
-		String location = thisProject.getLocation() + "/src/prove" + uri.trimFileExtension().lastSegment();
-		File keyFile = FileUtil.writeJavaFile(problem, location, numberFile, override, name);
+		String location;
+		File keyFile;
+		if (parseFormula) {
+			location = thisProject.getLocation() + "/src/prove" + uri.trimFileExtension().lastSegment();
+			keyFile = FileUtil.writeJavaFile(problem, location, numberFile, override, name);
+		} else {
+			location = uri.trimFileExtension().path();
+			keyFile = FileUtil.writeJavaFile(problem, location, override, name + ".java");
+		}
+		 
 		return keyFile;
 	}
 	

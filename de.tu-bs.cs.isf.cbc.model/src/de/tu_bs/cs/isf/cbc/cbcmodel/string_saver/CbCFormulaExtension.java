@@ -10,6 +10,8 @@ public class CbCFormulaExtension extends CbCFormulaImpl{
 	
 	public CbCFormulaExtension(CbCFormula formula) {
 		super();
+		if (formula == null) 
+			return;
 		if (formula instanceof CbCFormulaImpl) {
 			this.name = formula.getName();
 			stringRepresentation = name;

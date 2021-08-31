@@ -43,6 +43,7 @@ public class DslParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getOperationAccess().getAlternatives(), "rule__Operation__Alternatives");
 			builder.put(grammarAccess.getXJSingleStatementAccess().getAlternatives(), "rule__XJSingleStatement__Alternatives");
 			builder.put(grammarAccess.getXJSingleStatementAccess().getAlternatives_10(), "rule__XJSingleStatement__Alternatives_10");
+			builder.put(grammarAccess.getBlockStatementAccess().getAlternatives_5_1(), "rule__BlockStatement__Alternatives_5_1");
 			builder.put(grammarAccess.getConcatAccess().getAlternatives_1_0(), "rule__Concat__Alternatives_1_0");
 			builder.put(grammarAccess.getForeachAccess().getAlternatives(), "rule__Foreach__Alternatives");
 			builder.put(grammarAccess.getExistsAccess().getAlternatives(), "rule__Exists__Alternatives");
@@ -128,6 +129,8 @@ public class DslParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getLoopInvariantAnnotationStatementAccess().getGroup(), "rule__LoopInvariantAnnotationStatement__Group__0");
 			builder.put(grammarAccess.getInlineBlockStatementAccess().getGroup(), "rule__InlineBlockStatement__Group__0");
 			builder.put(grammarAccess.getBlockStatementAccess().getGroup(), "rule__BlockStatement__Group__0");
+			builder.put(grammarAccess.getBlockStatementAccess().getGroup_5(), "rule__BlockStatement__Group_5__0");
+			builder.put(grammarAccess.getBlockStatementAccess().getGroup_5_1_1(), "rule__BlockStatement__Group_5_1_1__0");
 			builder.put(grammarAccess.getInlineJavaBlockStatementAccess().getGroup(), "rule__InlineJavaBlockStatement__Group__0");
 			builder.put(grammarAccess.getSelectionStatementAccess().getGroup(), "rule__SelectionStatement__Group__0");
 			builder.put(grammarAccess.getSelectionStatementAccess().getGroup_9(), "rule__SelectionStatement__Group_9__0");
@@ -497,7 +500,8 @@ public class DslParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getInlineBlockStatementAccess().getReferencesAssignment_2(), "rule__InlineBlockStatement__ReferencesAssignment_2");
 			builder.put(grammarAccess.getBlockStatementAccess().getNameAssignment_2(), "rule__BlockStatement__NameAssignment_2");
 			builder.put(grammarAccess.getBlockStatementAccess().getJmlAnnotationAssignment_4(), "rule__BlockStatement__JmlAnnotationAssignment_4");
-			builder.put(grammarAccess.getBlockStatementAccess().getJavaStatementAssignment_6(), "rule__BlockStatement__JavaStatementAssignment_6");
+			builder.put(grammarAccess.getBlockStatementAccess().getJavaStatementAssignment_5_1_0(), "rule__BlockStatement__JavaStatementAssignment_5_1_0");
+			builder.put(grammarAccess.getBlockStatementAccess().getCbcStatementAssignment_5_1_1_1(), "rule__BlockStatement__CbcStatementAssignment_5_1_1_1");
 			builder.put(grammarAccess.getInlineJavaBlockStatementAccess().getJmlAnnotationAssignment_1(), "rule__InlineJavaBlockStatement__JmlAnnotationAssignment_1");
 			builder.put(grammarAccess.getInlineJavaBlockStatementAccess().getReferencesAssignment_3(), "rule__InlineJavaBlockStatement__ReferencesAssignment_3");
 			builder.put(grammarAccess.getSelectionStatementAccess().getGuardsAssignment_3(), "rule__SelectionStatement__GuardsAssignment_3");

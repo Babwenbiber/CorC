@@ -824,22 +824,10 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	 *     BlockStatement returns BlockStatement
 	 *
 	 * Constraint:
-	 *     (name=EString jmlAnnotation=JMLAnnotation javaStatement=JavaStatement)
+	 *     (name=EString jmlAnnotation=JMLAnnotation (javaStatement=JavaStatement | cbcStatement=AbstractStatement))
 	 */
 	protected void sequence_BlockStatement(ISerializationContext context, BlockStatement semanticObject) {
-		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.ABSTRACT_STATEMENT__NAME) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.ABSTRACT_STATEMENT__NAME));
-			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.BLOCK_STATEMENT__JML_ANNOTATION) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.BLOCK_STATEMENT__JML_ANNOTATION));
-			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.BLOCK_STATEMENT__JAVA_STATEMENT) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.BLOCK_STATEMENT__JAVA_STATEMENT));
-		}
-		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getBlockStatementAccess().getNameEStringParserRuleCall_2_0(), semanticObject.getName());
-		feeder.accept(grammarAccess.getBlockStatementAccess().getJmlAnnotationJMLAnnotationParserRuleCall_4_0(), semanticObject.getJmlAnnotation());
-		feeder.accept(grammarAccess.getBlockStatementAccess().getJavaStatementJavaStatementParserRuleCall_6_0(), semanticObject.getJavaStatement());
-		feeder.finish();
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	

@@ -220,6 +220,8 @@
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="javaStatement" eType="#//AbstractStatement"
         containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cbcStatement" eType="#//AbstractStatement"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SelectionStatement" eSuperTypes="#//AbstractStatement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="guards" upperBound="-1"
