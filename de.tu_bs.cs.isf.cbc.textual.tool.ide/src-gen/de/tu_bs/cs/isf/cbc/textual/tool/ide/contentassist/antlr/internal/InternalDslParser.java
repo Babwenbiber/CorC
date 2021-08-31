@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 
+@SuppressWarnings("all")
 public class InternalDslParser extends AbstractInternalContentAssistParser {
 	public static final String[] tokenNames = new String[] {
 		"<invalid>", "<EOR>", "<DOWN>", "<UP>", "RULE_ANY_OTHER", "RULE_CHARACTER", 

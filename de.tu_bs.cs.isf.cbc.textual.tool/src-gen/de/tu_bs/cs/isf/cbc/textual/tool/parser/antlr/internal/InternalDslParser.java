@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 
+@SuppressWarnings("all")
 public class InternalDslParser extends AbstractInternalAntlrParser {
 	public static final String[] tokenNames = new String[] {
 		"<invalid>", "<EOR>", "<DOWN>", "<UP>", "RULE_ANY_OTHER", "RULE_CHARACTER", 
