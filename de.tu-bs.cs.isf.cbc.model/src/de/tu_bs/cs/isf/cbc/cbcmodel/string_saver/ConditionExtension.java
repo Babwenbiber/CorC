@@ -3,8 +3,11 @@ package de.tu_bs.cs.isf.cbc.cbcmodel.string_saver;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 
+import de.tu_bs.cs.isf.cbc.cbcmodel.CbcmodelFactory;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Condition;
+import de.tu_bs.cs.isf.cbc.cbcmodel.JMLExpression;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.ConditionImpl;
+import de.tu_bs.cs.isf.cbc.cbcmodel.impl.JMLExpressionImpl;
 
 public class ConditionExtension extends ConditionImpl{
 	public String stringRepresentation;
@@ -20,6 +23,19 @@ public class ConditionExtension extends ConditionImpl{
 			stringRepresentation = NodeModelUtils.getTokenText(NodeModelUtils.findActualNodeFor(condition));
 		} 
 		this.condition = EcoreUtil.copy(condition.getCondition());
+	}
+	
+	public ConditionExtension(JMLExpression jmlExpression) {
+		super();
+		if (jmlExpression == null) {
+			stringRepresentation = "";
+			return;
+		} else if (jmlExpression instanceof JMLExpressionExtension) {
+			stringRepresentation = ((JMLExpressionExtension)jmlExpression).stringRepresentation;
+		} else if (jmlExpression instanceof JMLExpressionImpl) {
+			stringRepresentation = NodeModelUtils.getTokenText(NodeModelUtils.findActualNodeFor(jmlExpression));
+		} 
+		this.condition = CbcmodelFactory.eINSTANCE.createExpression();
 	}
 	
 	public ConditionExtension(Condition condition1, Condition condition2) {
