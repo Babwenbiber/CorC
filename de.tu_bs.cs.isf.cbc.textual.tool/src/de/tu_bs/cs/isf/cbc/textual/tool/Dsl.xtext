@@ -141,7 +141,7 @@ BlockStatement returns AbstractStatement:
 {BlockStatement}
 		'Block' name=EString ':'
 				(jmlAnnotation=JMLAnnotation)
-			'{' javaStatement=JavaStatement '}'	 
+			('{' (javaStatement=JavaStatement  | "CbC:" cbcStatement=AbstractStatement)'}')			
 	;
 
 InlineJavaBlockStatement returns XExpression:

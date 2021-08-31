@@ -1185,23 +1185,29 @@ public class DslGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 		private final Keyword cColonKeyword_3 = (Keyword)cGroup.eContents().get(3);
 		private final Assignment cJmlAnnotationAssignment_4 = (Assignment)cGroup.eContents().get(4);
 		private final RuleCall cJmlAnnotationJMLAnnotationParserRuleCall_4_0 = (RuleCall)cJmlAnnotationAssignment_4.eContents().get(0);
-		private final Keyword cLeftCurlyBracketKeyword_5 = (Keyword)cGroup.eContents().get(5);
-		private final Assignment cJavaStatementAssignment_6 = (Assignment)cGroup.eContents().get(6);
-		private final RuleCall cJavaStatementJavaStatementParserRuleCall_6_0 = (RuleCall)cJavaStatementAssignment_6.eContents().get(0);
-		private final Keyword cRightCurlyBracketKeyword_7 = (Keyword)cGroup.eContents().get(7);
+		private final Group cGroup_5 = (Group)cGroup.eContents().get(5);
+		private final Keyword cLeftCurlyBracketKeyword_5_0 = (Keyword)cGroup_5.eContents().get(0);
+		private final Alternatives cAlternatives_5_1 = (Alternatives)cGroup_5.eContents().get(1);
+		private final Assignment cJavaStatementAssignment_5_1_0 = (Assignment)cAlternatives_5_1.eContents().get(0);
+		private final RuleCall cJavaStatementJavaStatementParserRuleCall_5_1_0_0 = (RuleCall)cJavaStatementAssignment_5_1_0.eContents().get(0);
+		private final Group cGroup_5_1_1 = (Group)cAlternatives_5_1.eContents().get(1);
+		private final Keyword cCbCKeyword_5_1_1_0 = (Keyword)cGroup_5_1_1.eContents().get(0);
+		private final Assignment cCbcStatementAssignment_5_1_1_1 = (Assignment)cGroup_5_1_1.eContents().get(1);
+		private final RuleCall cCbcStatementAbstractStatementParserRuleCall_5_1_1_1_0 = (RuleCall)cCbcStatementAssignment_5_1_1_1.eContents().get(0);
+		private final Keyword cRightCurlyBracketKeyword_5_2 = (Keyword)cGroup_5.eContents().get(2);
 		
 		//BlockStatement returns AbstractStatement:
 		//{BlockStatement}
 		//        'Block' name=EString ':'
 		//                (jmlAnnotation=JMLAnnotation)
-		//            '{' javaStatement=JavaStatement '}'
+		//            ('{' (javaStatement=JavaStatement  | "CbC:" cbcStatement=AbstractStatement)'}')
 		//    ;
 		 public ParserRule getRule() { return rule; }
 		
 		//{BlockStatement}
 		//        'Block' name=EString ':'
 		//                (jmlAnnotation=JMLAnnotation)
-		//            '{' javaStatement=JavaStatement '}'
+		//            ('{' (javaStatement=JavaStatement  | "CbC:" cbcStatement=AbstractStatement)'}')
 		public Group getGroup() { return cGroup; }
 		
 		//{BlockStatement}
@@ -1225,17 +1231,35 @@ public class DslGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 		//JMLAnnotation
 		public RuleCall getJmlAnnotationJMLAnnotationParserRuleCall_4_0() { return cJmlAnnotationJMLAnnotationParserRuleCall_4_0; }
 		
+		//('{' (javaStatement=JavaStatement  | "CbC:" cbcStatement=AbstractStatement)'}')
+		public Group getGroup_5() { return cGroup_5; }
+		
 		//'{'
-		public Keyword getLeftCurlyBracketKeyword_5() { return cLeftCurlyBracketKeyword_5; }
+		public Keyword getLeftCurlyBracketKeyword_5_0() { return cLeftCurlyBracketKeyword_5_0; }
+		
+		//(javaStatement=JavaStatement  | "CbC:" cbcStatement=AbstractStatement)
+		public Alternatives getAlternatives_5_1() { return cAlternatives_5_1; }
 		
 		//javaStatement=JavaStatement
-		public Assignment getJavaStatementAssignment_6() { return cJavaStatementAssignment_6; }
+		public Assignment getJavaStatementAssignment_5_1_0() { return cJavaStatementAssignment_5_1_0; }
 		
 		//JavaStatement
-		public RuleCall getJavaStatementJavaStatementParserRuleCall_6_0() { return cJavaStatementJavaStatementParserRuleCall_6_0; }
+		public RuleCall getJavaStatementJavaStatementParserRuleCall_5_1_0_0() { return cJavaStatementJavaStatementParserRuleCall_5_1_0_0; }
+		
+		//"CbC:" cbcStatement=AbstractStatement
+		public Group getGroup_5_1_1() { return cGroup_5_1_1; }
+		
+		//"CbC:"
+		public Keyword getCbCKeyword_5_1_1_0() { return cCbCKeyword_5_1_1_0; }
+		
+		//cbcStatement=AbstractStatement
+		public Assignment getCbcStatementAssignment_5_1_1_1() { return cCbcStatementAssignment_5_1_1_1; }
+		
+		//AbstractStatement
+		public RuleCall getCbcStatementAbstractStatementParserRuleCall_5_1_1_1_0() { return cCbcStatementAbstractStatementParserRuleCall_5_1_1_1_0; }
 		
 		//'}'
-		public Keyword getRightCurlyBracketKeyword_7() { return cRightCurlyBracketKeyword_7; }
+		public Keyword getRightCurlyBracketKeyword_5_2() { return cRightCurlyBracketKeyword_5_2; }
 	}
 	public class InlineJavaBlockStatementElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.tu_bs.cs.isf.cbc.textual.tool.Dsl.InlineJavaBlockStatement");
@@ -3776,7 +3800,7 @@ public class DslGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 	//{BlockStatement}
 	//        'Block' name=EString ':'
 	//                (jmlAnnotation=JMLAnnotation)
-	//            '{' javaStatement=JavaStatement '}'
+	//            ('{' (javaStatement=JavaStatement  | "CbC:" cbcStatement=AbstractStatement)'}')
 	//    ;
 	public BlockStatementElements getBlockStatementAccess() {
 		return pBlockStatement;

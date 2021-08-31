@@ -1909,33 +1909,63 @@ ruleBlockStatement returns [EObject current=null]
 				}
 			)
 		)
-		otherlv_5='{'
-		{
-			newLeafNode(otherlv_5, grammarAccess.getBlockStatementAccess().getLeftCurlyBracketKeyword_5());
-		}
 		(
+			otherlv_5='{'
+			{
+				newLeafNode(otherlv_5, grammarAccess.getBlockStatementAccess().getLeftCurlyBracketKeyword_5_0());
+			}
 			(
-				{
-					newCompositeNode(grammarAccess.getBlockStatementAccess().getJavaStatementJavaStatementParserRuleCall_6_0());
-				}
-				lv_javaStatement_6_0=ruleJavaStatement
-				{
-					if ($current==null) {
-						$current = createModelElementForParent(grammarAccess.getBlockStatementRule());
+				(
+					(
+						{
+							newCompositeNode(grammarAccess.getBlockStatementAccess().getJavaStatementJavaStatementParserRuleCall_5_1_0_0());
+						}
+						lv_javaStatement_6_0=ruleJavaStatement
+						{
+							if ($current==null) {
+								$current = createModelElementForParent(grammarAccess.getBlockStatementRule());
+							}
+							set(
+								$current,
+								"javaStatement",
+								lv_javaStatement_6_0,
+								"de.tu_bs.cs.isf.cbc.textual.tool.Dsl.JavaStatement");
+							afterParserOrEnumRuleCall();
+						}
+					)
+				)
+				    |
+				(
+					otherlv_7='CbC:'
+					{
+						newLeafNode(otherlv_7, grammarAccess.getBlockStatementAccess().getCbCKeyword_5_1_1_0());
 					}
-					set(
-						$current,
-						"javaStatement",
-						lv_javaStatement_6_0,
-						"de.tu_bs.cs.isf.cbc.textual.tool.Dsl.JavaStatement");
-					afterParserOrEnumRuleCall();
-				}
+					(
+						(
+							{
+								newCompositeNode(grammarAccess.getBlockStatementAccess().getCbcStatementAbstractStatementParserRuleCall_5_1_1_1_0());
+							}
+							lv_cbcStatement_8_0=ruleAbstractStatement
+							{
+								if ($current==null) {
+									$current = createModelElementForParent(grammarAccess.getBlockStatementRule());
+								}
+								set(
+									$current,
+									"cbcStatement",
+									lv_cbcStatement_8_0,
+									"de.tu_bs.cs.isf.cbc.textual.tool.Dsl.AbstractStatement");
+								afterParserOrEnumRuleCall();
+							}
+						)
+					)
+				)
 			)
+			otherlv_9='}'
+			{
+				newLeafNode(otherlv_9, grammarAccess.getBlockStatementAccess().getRightCurlyBracketKeyword_5_2());
+			}
 		)
-		otherlv_7='}'
-		{
-			newLeafNode(otherlv_7, grammarAccess.getBlockStatementAccess().getRightCurlyBracketKeyword_7());
-		}
 	)
 ;
 
