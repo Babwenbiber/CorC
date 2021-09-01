@@ -255,9 +255,9 @@ public class TraverseFormulaAndGenerate {
 		}
 		JavaStatement javaStatement = (JavaStatement) blockStatement.getJavaStatement();
 
-		if (javaStatement != null) {
-			ProveJavaWithKey.createProveBlockStatementWithKey(blockStatement, ListParser.getListStringFromListVariables(vars.getVariables()),
+		ProveJavaWithKey.createProveBlockStatementWithKey(blockStatement, ListParser.getListStringFromListVariables(vars.getVariables()),
 				null, uri, numberFile++, false, blockName, parseFormula);
+		if (javaStatement != null) {	
 			EList<XExpression> statements = javaStatement.getStatement();
 			for (XExpression s: statements) {
 				System.out.println("statement is " + Parser.getStringFromObject(s));

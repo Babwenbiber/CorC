@@ -45,7 +45,11 @@ public class ListParser {
 	static public List<String> getListStringFromListVariables(EList<JavaVariable> variables) {
 		List<String> strList = new ArrayList<String>();
 		for(JavaVariable v: variables) {
-			strList.add(new JavaVariableExtension(v).stringRepresentation);
+			if (v instanceof JavaVariableExtension) {
+				strList.add(((JavaVariableExtension)v).stringRepresentation);
+			}else {
+				strList.add(new JavaVariableExtension(v).stringRepresentation);
+			}
 		}
 		return strList;
 	}

@@ -4,6 +4,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 
+import de.tu_bs.cs.isf.cbc.cbcmodel.CbcmodelFactory;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariable;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.JavaVariableImpl;
 
@@ -24,5 +25,11 @@ public class JavaVariableExtension extends JavaVariableImpl {
 		}
 		this.var = EcoreUtil.copy(javaVariable.getVar());
 		this.type = EcoreUtil.copy(javaVariable.getType());
+	}
+	
+	public JavaVariableExtension(String type, String name) {
+		stringRepresentation = type + " " + name;
+//		this.var = CbcmodelFactory.eINSTANCE.createV;
+//		this.type = EcoreUtil.copy(javaVariable.getType());
 	}
 }

@@ -19,9 +19,15 @@ public class ProveJavaWithKey {
 		FileUtil.setApplicationUri(uri);
 		
 		IProject thisProject = FileUtil.getProject(uri);
-		String statementBody = Parser.replaceVariablesWithGlobalVariables(vars, 
-				Parser.replaceBlockStatementsInString(
-						Parser.getStringFromObject(statement.getJavaStatement())));
+		String statementBody;
+		if (statement.getJavaStatement() != null) {
+			statementBody = Parser.replaceVariablesWithGlobalVariables(vars, 
+					Parser.replaceBlockStatementsInString(
+							Parser.getStringFromObject(statement.getJavaStatement())));
+		} else {
+			statementBody = "";
+		}
+				
 		String requiresBody = Parser.replaceVariablesWithGlobalVariables(vars,
 				Parser.getStringFromObject(statement.getJmlAnnotation().getRequires()));
 		String ensuresBody = Parser.replaceVariablesWithGlobalVariables(vars,
