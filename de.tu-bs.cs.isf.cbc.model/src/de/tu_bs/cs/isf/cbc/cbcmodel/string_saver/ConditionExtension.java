@@ -1,6 +1,7 @@
 package de.tu_bs.cs.isf.cbc.cbcmodel.string_saver;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbcmodelFactory;
@@ -20,7 +21,16 @@ public class ConditionExtension extends ConditionImpl{
 		} else if (condition instanceof ConditionExtension) {
 			stringRepresentation = ((ConditionExtension)condition).stringRepresentation;
 		} else if (condition instanceof ConditionImpl) {
-			stringRepresentation = NodeModelUtils.getTokenText(NodeModelUtils.findActualNodeFor(condition));
+			ICompositeNode node = NodeModelUtils.findActualNodeFor(condition);
+			if (node == null) {
+				if (condition.getName() != null) {
+					stringRepresentation = condition.getName();
+				} else {
+					stringRepresentation = "";
+				}
+			} else {
+				stringRepresentation = NodeModelUtils.getTokenText(node);
+			}
 		} 
 		this.condition = EcoreUtil.copy(condition.getCondition());
 	}

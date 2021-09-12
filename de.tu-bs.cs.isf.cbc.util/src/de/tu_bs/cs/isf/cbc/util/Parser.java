@@ -16,6 +16,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.util.EmfFormatter;
+import org.emftext.language.java.statements.impl.ConditionalImpl;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
@@ -26,6 +27,9 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.Condition;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JMLExpression;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariable;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariables;
+import de.tu_bs.cs.isf.cbc.cbcmodel.impl.ConditionImpl;
+import de.tu_bs.cs.isf.cbc.cbcmodel.string_saver.ConditionExtension;
+import de.tu_bs.cs.isf.cbc.cbcmodel.string_saver.JMLExpressionExtension;
 
 public class Parser {
 	public static final String KEYWORD_JML_PRE = "requires";
@@ -413,6 +417,13 @@ public class Parser {
 //				return false;
 //			}
 //		});
+		if (object instanceof ConditionalImpl && ((ConditionImpl)object).getName() != null) {
+			return ((ConditionImpl)object).getName();
+		} else if (object instanceof ConditionExtension) {
+			return ((ConditionExtension)object).stringRepresentation;
+		} else if (object instanceof JMLExpressionExtension) {
+			return ((JMLExpressionExtension)object).stringRepresentation;
+		}
 		return NodeModelUtils.getTokenText(NodeModelUtils.findActualNodeFor(object));
 	}
 	

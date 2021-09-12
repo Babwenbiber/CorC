@@ -1,7 +1,10 @@
 package de.tu_bs.cs.isf.cbc.textual.tool.generator;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -46,6 +49,21 @@ public class TraverseBlockAndGenerate extends TraverseFormulaAndGenerate {
 		this.parseFormula = false;
 		this.block = block;
 		this.vars = getVariablesFromGlobalVarsFile();
+		saveCurrentPath();
+	}
+	
+	
+	private void saveCurrentPath() {
+		try {
+		String str = uri.path();
+		String path = ResourcesPlugin.getWorkspace().getRoot().getLocation().toString() + "/context.txt";
+	    BufferedWriter writer = new BufferedWriter(new FileWriter(path));
+	    writer.write(str);
+	    
+	    writer.close();
+		} catch (IOException e) {
+			System.err.println("couldnt save current context " + e.toString());
+		}
 	}
 	
 	public BlockStatement traverseBlockAndGenerate() {	

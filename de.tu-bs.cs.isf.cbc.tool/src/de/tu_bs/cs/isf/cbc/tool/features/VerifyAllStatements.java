@@ -85,6 +85,9 @@ public class VerifyAllStatements extends MyAbstractAsynchronousCustomFeature {
  
     @Override
     public void execute(ICustomContext context, IProgressMonitor monitor) {
+    	String ws = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString();
+    	URI uri = URI.createFileURI(ws + getDiagram().eResource().getURI()
+    			.trimSegments(1).toPlatformString(true)+ "/");
     	JavaVariables vars = null;
 		Renaming renaming = null;
 		CbCFormula formula = null;
@@ -103,7 +106,7 @@ public class VerifyAllStatements extends MyAbstractAsynchronousCustomFeature {
 		}
 		AbstractStatement statement = formula.getStatement();
 		boolean prove = false;
-		prove = proveChildStatement(statement.getRefinement(), vars, conds, renaming, getDiagram().eResource().getURI(), null);	
+		prove = proveChildStatement(statement.getRefinement(), vars, conds, renaming, uri, null);	
 		if (prove) {
 			statement.setProven(true);
 		} else {
@@ -236,27 +239,19 @@ public class VerifyAllStatements extends MyAbstractAsynchronousCustomFeature {
     	
 		if (!statement.isProven()) {
 			ProveJavaWithKey.createJavaGlobalVariables(ListParser.getListStringFromListVariables(vars.getVariables()), uri);
-			try {
-				IProject project = null;
-				final IWorkspace workspace = ResourcesPlugin.getWorkspace();
-				project = workspace.getRoot().getFile(new Path("foo/src/block_stuff.cbctxt")).getProject();
-				project.build(IncrementalProjectBuilder.FULL_BUILD, monitor);
-				
-			} catch (CoreException e) {
-				e.printStackTrace();
+			
+			EList<ProductVariant> variants = null;
+			prove = ProveWithKey.proveBlockStatementFromVizWithKey(blockStatement,  StringParser.getVariableListToStringList(vars),
+					StringParser.getConditionListToStringList(conds), renaming, variants, uri, monitor, FilenamePrefix.JAVA_STATEMENT );
+			if (prove) {
+				statement.setProven(true);
+			} else {
+				statement.setProven(false);
 			}
-
-//			EList<ProductVariant> variants = null;
-//			prove = ProveWithKey.proveBlockStatementFromVizWithKey(blockStatement,  StringParser.getVariableListToStringList(vars),
-//					StringParser.getConditionListToStringList(conds), renaming, variants, uri, monitor, FilenamePrefix.JAVA_STATEMENT );
-//			if (prove) {
-//				statement.setProven(true);
-//			} else {
-//				statement.setProven(false);
-//			}
+			System.out.println("block is proven: " + prove);
 	    	return prove;
 		} else {
-			Console.println("Block statement: " + statement.getName() +" already true");
+			Console.println("Block statement: " + statement.getName() + " already true");
 			return true;
 		}
 		

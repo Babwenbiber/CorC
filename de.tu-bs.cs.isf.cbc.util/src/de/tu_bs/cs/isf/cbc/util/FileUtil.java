@@ -138,7 +138,7 @@ public class FileUtil {
 		}
 		System.out.println("old file " + keyFile);
 		HashTable.saveHashInTmpTable(location, hash, newFileName);
-		return null;
+		return keyFile;
 	}
 	
 	public static File writeToFileFromContent(String content, String location, String name) {

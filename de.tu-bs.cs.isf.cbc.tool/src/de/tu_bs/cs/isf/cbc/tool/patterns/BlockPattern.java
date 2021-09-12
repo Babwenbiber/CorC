@@ -1,8 +1,17 @@
 package de.tu_bs.cs.isf.cbc.tool.patterns;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.common.CommonPlugin;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.graphiti.features.IReason;
@@ -23,6 +32,7 @@ import org.eclipse.graphiti.mm.algorithms.styles.Point;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.Diagram;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
+import org.eclipse.graphiti.mm.pictograms.PictogramLink;
 import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.pattern.IPattern;
 import org.eclipse.graphiti.pattern.id.IdLayoutContext;
@@ -40,6 +50,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.CbCFormula;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbcmodelFactory;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Condition;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JMLAnnotation;
+import de.tu_bs.cs.isf.cbc.cbcmodel.JMLExpression;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariables;
 import de.tu_bs.cs.isf.cbc.cbcmodel.SelectionStatement;
@@ -47,6 +58,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.string_saver.JMLExpressionExtension;
 import de.tu_bs.cs.isf.cbc.tool.diagram.CbCImageProvider;
 import de.tu_bs.cs.isf.cbc.tool.helper.UpdateModifiableOfConditions;
 import de.tu_bs.cs.isf.cbc.util.FileUtil;
+import de.tu_bs.cs.isf.cbc.util.Parser;
 import de.tu_bs.cs.isf.toolkit.support.compare.CompareMethodBodies;
 
 /**
@@ -116,9 +128,9 @@ public class BlockPattern extends IdPattern implements IPattern {
 		post.setName("");
 		statement.setPostCondition(post);
 		JMLExpressionExtension requires = new JMLExpressionExtension(CbcmodelFactory.eINSTANCE.createJMLAnnotation().getRequires());
-		requires.stringRepresentation = "i=1";
+		requires.stringRepresentation = "";
 		JMLExpressionExtension ensures = new JMLExpressionExtension(CbcmodelFactory.eINSTANCE.createJMLAnnotation().getEnsures());
-		ensures.stringRepresentation = "i=3";
+		ensures.stringRepresentation = "";
 		JMLAnnotation annotation = CbcmodelFactory.eINSTANCE.createJMLAnnotation();
 		annotation.setRequires(requires);
 		annotation.setEnsures(ensures);
@@ -346,6 +358,8 @@ public class BlockPattern extends IdPattern implements IPattern {
 		return Reason.createFalseReason();
 	}
 
+
+	
 	@Override
 	protected boolean update(IdUpdateContext context, String id) {
 		if (context.getGraphicsAlgorithm() instanceof MultiText &&
@@ -356,16 +370,48 @@ public class BlockPattern extends IdPattern implements IPattern {
 			if (id.equals(ID_NAME_TEXT)) {
 				BlockStatement domainObject = (BlockStatement) context.getDomainObject();
 				newText = domainObject.getName();
+				JMLStrings jmlStrings = getBlockFromJavaBlockFile(domainObject.getName());
+				Object o = getBusinessObjectForPictogramElement(context.getPictogramElement());
+				if (jmlStrings != null && o instanceof BlockStatement) {
+					BlockStatement block = (BlockStatement) o;
+					
+					Diagram diagram = getDiagram();
+					EList<PictogramLink> links = diagram.getPictogramLinks();
+					for(PictogramLink link: links) {
+						EList<EObject> objects = link.getBusinessObjects();
+						for (EObject object: objects) {
+							System.out.println("eobject: " + object.toString());
+							if ( object.equals(block.getJmlAnnotation().getRequires())) {
+								JMLExpressionExtension jmlExt = new JMLExpressionExtension((JMLExpression)object);
+								jmlExt.stringRepresentation = jmlStrings.requires;
+								((MultiText)link.getPictogramElement().getGraphicsAlgorithm()).setValue(jmlStrings.requires);
+							} else if ( object.equals(block.getJmlAnnotation().getEnsures())) {
+//								((JMLExpressionExtension)object).stringRepresentation = jmlStrings.ensures;
+								((MultiText)link.getPictogramElement().getGraphicsAlgorithm()).setValue(jmlStrings.ensures);
+							}
+						}
+					}
+					JMLExpressionExtension jmlReq = new JMLExpressionExtension(block.getJmlAnnotation().getRequires());
+					JMLExpressionExtension jmlEns= new JMLExpressionExtension(block.getJmlAnnotation().getEnsures());
+					jmlReq.stringRepresentation = jmlStrings.requires;
+					jmlEns.stringRepresentation = jmlStrings.ensures;
+					block.getJmlAnnotation().setRequires(jmlReq);
+					block.getJmlAnnotation().setEnsures(jmlEns);
+//					block.setJmlAnnotation(null);
+//					block.getJmlAnnotation();
+//					 getPictogramElementForBusinessObject(block.getJmlAnnotation().getRequires());
+				}
+				nameText.setValue(newText);
 			} else if (id.equals(ID_PRE_TEXT) || id.equals(ID_POST_TEXT)) {
 				Condition domainObject = (Condition) context.getDomainObject();
 				newText = "{" + domainObject.getName() + "}";
+				nameText.setValue(newText);
 			} else if (id.equals(ID_PRE_BLOCK_TEXT) || id.equals(ID_POST_BLOCK_TEXT)) {
-				JMLExpressionExtension domainObject = (JMLExpressionExtension) context.getDomainObject();
-				newText = "{" + domainObject.stringRepresentation + "}";
+//				JMLExpressionExtension domainObject = new JMLExpressionExtension((JMLExpression)context.getDomainObject());
+//				newText = "{" + domainObject.stringRepresentation + "}";
 			} else {
 				return false;
 			}
-			nameText.setValue(newText);
 			return true;	
 		} else if (id.equals(ID_MAIN_RECTANGLE)) {
 			RoundedRectangle rectangle = (RoundedRectangle) context.getGraphicsAlgorithm();
@@ -406,9 +452,52 @@ public class BlockPattern extends IdPattern implements IPattern {
 		return false;
 	}	
 
-	public void squareTwoNumbers(Integer i, Integer j) {
-		i = i*i;
-		j = j*j;		
+	String getBlockFilePath() {
+		try {
+			StringBuilder builder = new StringBuilder();
+			String path = ResourcesPlugin.getWorkspace().getRoot().getLocation().toString();
+			File contextFile = new File(path + "/context.txt");
+			Scanner reader = new Scanner(contextFile);
+			while (reader.hasNextLine()) {
+				String data = reader.nextLine();
+				builder.append(data);
+				System.out.println(data);
+			}
+			reader.close();
+			return builder.toString();
+		} catch (FileNotFoundException e) {
+			System.out.println("An error occurred.");
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	JMLStrings getBlockFromJavaBlockFile(String blockName) {
+		try {
+	    	String requires = ""; 
+	    	String ensures = ""; 
+			  String path = getBlockFilePath();
+			  File blockJavaFile = new File(path + "/" + blockName + ".java");
+			  Scanner blockReader = new Scanner(blockJavaFile);
+			  int lineNumber = 1;
+			  while (blockReader.hasNextLine()) {
+			    String data = blockReader.nextLine();
+			    if (lineNumber == 5) {
+			    	requires = data.split("requires")[1].split(";")[0].replaceAll("GlobalJavaVariables.", "");
+				    System.out.println(requires);
+			    } else if (lineNumber == 6) {
+			    	ensures = data.split("ensures")[1].split(";")[0].replaceAll("GlobalJavaVariables.", "");
+				    System.out.println(ensures);
+			    }
+			    lineNumber++;
+			  }
+			  blockReader.close();
+			  return new JMLStrings(requires, ensures);
+	    } catch (FileNotFoundException e) {
+	      System.out.println("An error occurred.");
+	      e.printStackTrace();
+	      return null;
+	    }
 	}
 	
 	@Override
@@ -461,5 +550,14 @@ public class BlockPattern extends IdPattern implements IPattern {
 		FileUtil.setApplicationUri(getDiagram().eResource().getURI());
 		UpdateModifiableOfConditions.updateAssignmentStatement(statement);
 		updatePictogramElement(context.getPictogramElement());
+	}
+	
+	class JMLStrings {
+		public String requires;
+		public String ensures;
+		public JMLStrings(String _requires, String _ensures) {
+			requires = _requires;
+			ensures = _ensures;
+		}
 	}
 }
