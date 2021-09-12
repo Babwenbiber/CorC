@@ -11,6 +11,7 @@ import org.eclipse.graphiti.features.custom.ICustomFeature;
 import org.eclipse.graphiti.mm.pictograms.Connection;
 import org.eclipse.graphiti.pattern.DefaultFeatureProviderWithPatterns;
 
+import de.tu_bs.cs.isf.cbc.tool.features.AddGlobalVariablesForBlock;
 import de.tu_bs.cs.isf.cbc.tool.features.AddPseudoCodeToMethodFeature;
 import de.tu_bs.cs.isf.cbc.tool.features.ChangeNameOfAssociatedClassFeature;
 import de.tu_bs.cs.isf.cbc.tool.features.ChangeNameOfAssociatedMethodFeature;
@@ -139,6 +140,7 @@ public class CbCFeatureProvider extends DefaultFeatureProviderWithPatterns {
 	@Override
 	public ICustomFeature[] getCustomFeatures(ICustomContext context) {
 		return new ICustomFeature[] { 
+				new AddGlobalVariablesForBlock(this),
 				new AddPseudoCodeToMethodFeature(this), 
 				new PrintFormulaFeature(this),
 				new ExtractMethodStubsFeature(this), //!

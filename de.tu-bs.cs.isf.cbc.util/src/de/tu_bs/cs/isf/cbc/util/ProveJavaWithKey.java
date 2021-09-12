@@ -64,10 +64,20 @@ public class ProveJavaWithKey {
 	}
 	
 	public static File createJavaGlobalVariables(List<String> vars, URI uri) {
+		return createJavaGlobalVariables(vars, uri, true);
+	}
+	
+	public static File createJavaGlobalVariables(List<String> vars, URI uri, boolean saveInSeparateDir) {
 		FileUtil.setApplicationUri(uri);
 		String packageName = "prove" + uri.trimFileExtension().lastSegment();
-
 		IProject thisProject = FileUtil.getProject(uri);
+		String location;
+		if (saveInSeparateDir) {
+			location = thisProject.getLocation() + "/src/prove" + uri.trimFileExtension().lastSegment();
+		} else {
+			location = uri.path();
+			packageName = uri.trimFileExtension().segment(uri.segmentCount()-2);
+		}
 		String variables = "";
 		for(String v: vars) {
 			variables += "\tpublic static " + v +";\n";
@@ -77,8 +87,13 @@ public class ProveJavaWithKey {
 			"class GlobalJavaVariables {\n" +
 			variables +
 			"}";
-		String location = thisProject.getLocation() + "/src/prove" + uri.trimFileExtension().lastSegment();
+		if (saveInSeparateDir) {
+			location = thisProject.getLocation() + "/src/prove" + uri.trimFileExtension().lastSegment();
+		} else {
+			location = uri.path();
+		}
 		File javaFile = FileUtil.writeToFileFromContent(problem, location, "GlobalJavaVariables.java");
 		return javaFile;
 	}
+	
 }
