@@ -43,6 +43,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.JMLNotEqual;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JMLOr;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JMLQualifier;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JMLSubtraction;
+import de.tu_bs.cs.isf.cbc.cbcmodel.JMLWhileExpression;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariable;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariables;
@@ -281,6 +282,9 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 				return; 
 			case CbcmodelPackage.JML_SUBTRACTION:
 				sequence_JMLAddMathOperation(context, (JMLSubtraction) semanticObject); 
+				return; 
+			case CbcmodelPackage.JML_WHILE_EXPRESSION:
+				sequence_JMLWhileExpression(context, (JMLWhileExpression) semanticObject); 
 				return; 
 			case CbcmodelPackage.JAVA_STATEMENT:
 				sequence_JavaStatement(context, (JavaStatement) semanticObject); 
@@ -1247,8 +1251,8 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.JML_ANNOTATION__ENSURES));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getJMLAnnotationAccess().getRequiresJMLExpressionParserRuleCall_1_0_3_0(), semanticObject.getRequires());
-		feeder.accept(grammarAccess.getJMLAnnotationAccess().getEnsuresJMLExpressionParserRuleCall_1_1_3_0(), semanticObject.getEnsures());
+		feeder.accept(grammarAccess.getJMLAnnotationAccess().getRequiresJMLExpressionParserRuleCall_1_0_2_0(), semanticObject.getRequires());
+		feeder.accept(grammarAccess.getJMLAnnotationAccess().getEnsuresJMLExpressionParserRuleCall_1_1_2_0(), semanticObject.getEnsures());
 		feeder.finish();
 	}
 	
@@ -1952,6 +1956,29 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	
 	/**
 	 * Contexts:
+	 *     JMLWhileExpression returns JMLWhileExpression
+	 *     XJSingleStatement returns JMLWhileExpression
+	 *     XJStatementOrBlock returns JMLWhileExpression
+	 *
+	 * Constraint:
+	 *     (annotation=LoopInvariantAnnotationStatement while=XWhileExpression)
+	 */
+	protected void sequence_JMLWhileExpression(ISerializationContext context, JMLWhileExpression semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.JML_WHILE_EXPRESSION__ANNOTATION) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.JML_WHILE_EXPRESSION__ANNOTATION));
+			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.JML_WHILE_EXPRESSION__WHILE) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.JML_WHILE_EXPRESSION__WHILE));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getJMLWhileExpressionAccess().getAnnotationLoopInvariantAnnotationStatementParserRuleCall_1_0_0(), semanticObject.getAnnotation());
+		feeder.accept(grammarAccess.getJMLWhileExpressionAccess().getWhileXWhileExpressionParserRuleCall_1_1_0(), semanticObject.getWhile());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
 	 *     JavaStatement returns JavaStatement
 	 *
 	 * Constraint:
@@ -1997,9 +2024,7 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	
 	/**
 	 * Contexts:
-	 *     XJSingleStatement returns LoopInvariantAnnotationStatement
 	 *     LoopInvariantAnnotationStatement returns LoopInvariantAnnotationStatement
-	 *     XJStatementOrBlock returns LoopInvariantAnnotationStatement
 	 *
 	 * Constraint:
 	 *     jmlAnnotation=LoopInvariantAnnotation
@@ -2720,7 +2745,7 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.VARIABLE_OR_METHOD_NAME__NAME));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getVariableOrMethodNameAccess().getNameIDTerminalRuleCall_0(), semanticObject.getName());
+		feeder.accept(grammarAccess.getVariableOrMethodNameAccess().getNameIDTerminalRuleCall_0_0(), semanticObject.getName());
 		feeder.finish();
 	}
 	

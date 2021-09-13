@@ -84,6 +84,11 @@ JavaStatement returns AbstractStatement:
 	(statement+=XJStatementOrBlock)+
 ;
 
+JMLWhileExpression returns XExpression:
+	{JMLWhileExpression}
+	(annotation=LoopInvariantAnnotationStatement
+	 while=XWhileExpression);
+
 @Override
 XJSingleStatement returns XExpression:
 //	XJArrayConstructorCall | not a valid statement
@@ -92,13 +97,12 @@ XJSingleStatement returns XExpression:
 	XIfExpression |
 	XForLoopExpression |
 	XBasicForLoopExpression |
-	XWhileExpression |
+	JMLWhileExpression |
 	XJTryWithResourcesStatement |
 	XTryCatchFinallyExpression |
 	XSynchronizedExpression |
 	XJEmptyStatement |
-	(=> LoopInvariantAnnotationStatement |
-	InlineJavaBlockStatement)
+	=> InlineJavaBlockStatement
 ;
 
 
@@ -110,20 +114,21 @@ terminal ML_COMMENT:
 JMLAnnotation returns JMLAnnotation:
 	'/*'( 
 	 (
-	 	("*"* "@" "requires" requires=JMLExpression ";")
-	    ("*"* "@" "ensures" ensures=JMLExpression  ";")
+	 	("@"+ "requires" requires=JMLExpression ";")
+	    ("@"+ "ensures" ensures=JMLExpression  ";")
 	    ) 
-	) '*/'
+	    
+	) '@'* '*/'
 ;
 
 LoopInvariantAnnotation returns LoopInvariantAnnotation:
 	'/*'( 
 	 (
-	 	("*"* "@" "loop_invariant" loopInvariant=JMLExpression ";") 
-	    ("*"* "@" "assignable" (assignable+=VariableOrMethodName) ("," assignable+=VariableOrMethodName)* ";")?
-	    ("*"* "@" "decreases" decreases=JMLExpression  ";") 
+	 	("@"+ "loop_invariant" loopInvariant=JMLExpression ";") 
+	    ("@"+ "assignable" (assignable+=VariableOrMethodName) ("," assignable+=VariableOrMethodName)* ";")?
+	    ("@"+ "decreasing" decreases=JMLExpression  ";") 
 	 )
-	) '*/'
+	) '@'* '*/'
 ;
 
 
@@ -203,7 +208,7 @@ Expression:
 	Implication;
 	
 VariableOrMethodName:
-	name=ID;
+	name=ID ("[" "*" "]")?;
 	
 Implication returns Expression:
 	Concat (( {Impl.left=current} '->') right=Concat)*;

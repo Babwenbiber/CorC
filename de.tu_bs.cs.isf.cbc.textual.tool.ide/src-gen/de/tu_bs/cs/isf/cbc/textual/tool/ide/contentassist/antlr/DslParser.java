@@ -42,7 +42,6 @@ public class DslParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getVariableStringAccess().getAlternatives_1_1_1_1_3_2(), "rule__VariableString__Alternatives_1_1_1_1_3_2");
 			builder.put(grammarAccess.getOperationAccess().getAlternatives(), "rule__Operation__Alternatives");
 			builder.put(grammarAccess.getXJSingleStatementAccess().getAlternatives(), "rule__XJSingleStatement__Alternatives");
-			builder.put(grammarAccess.getXJSingleStatementAccess().getAlternatives_10(), "rule__XJSingleStatement__Alternatives_10");
 			builder.put(grammarAccess.getBlockStatementAccess().getAlternatives_5_1(), "rule__BlockStatement__Alternatives_5_1");
 			builder.put(grammarAccess.getConcatAccess().getAlternatives_1_0(), "rule__Concat__Alternatives_1_0");
 			builder.put(grammarAccess.getForeachAccess().getAlternatives(), "rule__Foreach__Alternatives");
@@ -116,6 +115,8 @@ public class DslParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getConditionAccess().getGroup(), "rule__Condition__Group__0");
 			builder.put(grammarAccess.getCompositionStatementAccess().getGroup(), "rule__CompositionStatement__Group__0");
 			builder.put(grammarAccess.getJavaStatementAccess().getGroup(), "rule__JavaStatement__Group__0");
+			builder.put(grammarAccess.getJMLWhileExpressionAccess().getGroup(), "rule__JMLWhileExpression__Group__0");
+			builder.put(grammarAccess.getJMLWhileExpressionAccess().getGroup_1(), "rule__JMLWhileExpression__Group_1__0");
 			builder.put(grammarAccess.getJMLAnnotationAccess().getGroup(), "rule__JMLAnnotation__Group__0");
 			builder.put(grammarAccess.getJMLAnnotationAccess().getGroup_1(), "rule__JMLAnnotation__Group_1__0");
 			builder.put(grammarAccess.getJMLAnnotationAccess().getGroup_1_0(), "rule__JMLAnnotation__Group_1_0__0");
@@ -124,7 +125,7 @@ public class DslParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getLoopInvariantAnnotationAccess().getGroup_1(), "rule__LoopInvariantAnnotation__Group_1__0");
 			builder.put(grammarAccess.getLoopInvariantAnnotationAccess().getGroup_1_0(), "rule__LoopInvariantAnnotation__Group_1_0__0");
 			builder.put(grammarAccess.getLoopInvariantAnnotationAccess().getGroup_1_1(), "rule__LoopInvariantAnnotation__Group_1_1__0");
-			builder.put(grammarAccess.getLoopInvariantAnnotationAccess().getGroup_1_1_4(), "rule__LoopInvariantAnnotation__Group_1_1_4__0");
+			builder.put(grammarAccess.getLoopInvariantAnnotationAccess().getGroup_1_1_3(), "rule__LoopInvariantAnnotation__Group_1_1_3__0");
 			builder.put(grammarAccess.getLoopInvariantAnnotationAccess().getGroup_1_2(), "rule__LoopInvariantAnnotation__Group_1_2__0");
 			builder.put(grammarAccess.getLoopInvariantAnnotationStatementAccess().getGroup(), "rule__LoopInvariantAnnotationStatement__Group__0");
 			builder.put(grammarAccess.getInlineBlockStatementAccess().getGroup(), "rule__InlineBlockStatement__Group__0");
@@ -147,6 +148,8 @@ public class DslParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getRenamingAccess().getGroup(), "rule__Renaming__Group__0");
 			builder.put(grammarAccess.getRenamingAccess().getGroup_2(), "rule__Renaming__Group_2__0");
 			builder.put(grammarAccess.getRenameAccess().getGroup(), "rule__Rename__Group__0");
+			builder.put(grammarAccess.getVariableOrMethodNameAccess().getGroup(), "rule__VariableOrMethodName__Group__0");
+			builder.put(grammarAccess.getVariableOrMethodNameAccess().getGroup_1(), "rule__VariableOrMethodName__Group_1__0");
 			builder.put(grammarAccess.getImplicationAccess().getGroup(), "rule__Implication__Group__0");
 			builder.put(grammarAccess.getImplicationAccess().getGroup_1(), "rule__Implication__Group_1__0");
 			builder.put(grammarAccess.getImplicationAccess().getGroup_1_0(), "rule__Implication__Group_1_0__0");
@@ -490,12 +493,14 @@ public class DslParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getCompositionStatementAccess().getIntermediateConditionAssignment_6(), "rule__CompositionStatement__IntermediateConditionAssignment_6");
 			builder.put(grammarAccess.getCompositionStatementAccess().getSecondStatementAssignment_9(), "rule__CompositionStatement__SecondStatementAssignment_9");
 			builder.put(grammarAccess.getJavaStatementAccess().getStatementAssignment_1(), "rule__JavaStatement__StatementAssignment_1");
-			builder.put(grammarAccess.getJMLAnnotationAccess().getRequiresAssignment_1_0_3(), "rule__JMLAnnotation__RequiresAssignment_1_0_3");
-			builder.put(grammarAccess.getJMLAnnotationAccess().getEnsuresAssignment_1_1_3(), "rule__JMLAnnotation__EnsuresAssignment_1_1_3");
-			builder.put(grammarAccess.getLoopInvariantAnnotationAccess().getLoopInvariantAssignment_1_0_3(), "rule__LoopInvariantAnnotation__LoopInvariantAssignment_1_0_3");
-			builder.put(grammarAccess.getLoopInvariantAnnotationAccess().getAssignableAssignment_1_1_3(), "rule__LoopInvariantAnnotation__AssignableAssignment_1_1_3");
-			builder.put(grammarAccess.getLoopInvariantAnnotationAccess().getAssignableAssignment_1_1_4_1(), "rule__LoopInvariantAnnotation__AssignableAssignment_1_1_4_1");
-			builder.put(grammarAccess.getLoopInvariantAnnotationAccess().getDecreasesAssignment_1_2_3(), "rule__LoopInvariantAnnotation__DecreasesAssignment_1_2_3");
+			builder.put(grammarAccess.getJMLWhileExpressionAccess().getAnnotationAssignment_1_0(), "rule__JMLWhileExpression__AnnotationAssignment_1_0");
+			builder.put(grammarAccess.getJMLWhileExpressionAccess().getWhileAssignment_1_1(), "rule__JMLWhileExpression__WhileAssignment_1_1");
+			builder.put(grammarAccess.getJMLAnnotationAccess().getRequiresAssignment_1_0_2(), "rule__JMLAnnotation__RequiresAssignment_1_0_2");
+			builder.put(grammarAccess.getJMLAnnotationAccess().getEnsuresAssignment_1_1_2(), "rule__JMLAnnotation__EnsuresAssignment_1_1_2");
+			builder.put(grammarAccess.getLoopInvariantAnnotationAccess().getLoopInvariantAssignment_1_0_2(), "rule__LoopInvariantAnnotation__LoopInvariantAssignment_1_0_2");
+			builder.put(grammarAccess.getLoopInvariantAnnotationAccess().getAssignableAssignment_1_1_2(), "rule__LoopInvariantAnnotation__AssignableAssignment_1_1_2");
+			builder.put(grammarAccess.getLoopInvariantAnnotationAccess().getAssignableAssignment_1_1_3_1(), "rule__LoopInvariantAnnotation__AssignableAssignment_1_1_3_1");
+			builder.put(grammarAccess.getLoopInvariantAnnotationAccess().getDecreasesAssignment_1_2_2(), "rule__LoopInvariantAnnotation__DecreasesAssignment_1_2_2");
 			builder.put(grammarAccess.getLoopInvariantAnnotationStatementAccess().getJmlAnnotationAssignment_1(), "rule__LoopInvariantAnnotationStatement__JmlAnnotationAssignment_1");
 			builder.put(grammarAccess.getInlineBlockStatementAccess().getReferencesAssignment_2(), "rule__InlineBlockStatement__ReferencesAssignment_2");
 			builder.put(grammarAccess.getBlockStatementAccess().getNameAssignment_2(), "rule__BlockStatement__NameAssignment_2");
@@ -524,7 +529,7 @@ public class DslParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getRenameAccess().getTypeAssignment_3(), "rule__Rename__TypeAssignment_3");
 			builder.put(grammarAccess.getRenameAccess().getFunctionAssignment_5(), "rule__Rename__FunctionAssignment_5");
 			builder.put(grammarAccess.getRenameAccess().getNewNameAssignment_7(), "rule__Rename__NewNameAssignment_7");
-			builder.put(grammarAccess.getVariableOrMethodNameAccess().getNameAssignment(), "rule__VariableOrMethodName__NameAssignment");
+			builder.put(grammarAccess.getVariableOrMethodNameAccess().getNameAssignment_0(), "rule__VariableOrMethodName__NameAssignment_0");
 			builder.put(grammarAccess.getImplicationAccess().getRightAssignment_1_1(), "rule__Implication__RightAssignment_1_1");
 			builder.put(grammarAccess.getConcatAccess().getRightAssignment_1_1(), "rule__Concat__RightAssignment_1_1");
 			builder.put(grammarAccess.getForeachAccess().getForeachAssignment_1_0(), "rule__Foreach__ForeachAssignment_1_0");

@@ -119,6 +119,10 @@
     <genClasses ecoreClass="cbcmodel.ecore#//JavaStatement">
       <genFeatures createChild="false" ecoreFeature="ecore:EReference cbcmodel.ecore#//JavaStatement/statement"/>
     </genClasses>
+     <genClasses ecoreClass="cbcmodel.ecore#//JMLWhileExpression">
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference cbcmodel.ecore#//JMLWhileExpression/annotation"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference cbcmodel.ecore#//JMLWhileExpression/while"/>
+    </genClasses>
     <genClasses ecoreClass="cbcmodel.ecore#//CompositionStatement">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//CompositionStatement/firstStatement"/>
       <genFeatures children="true" createChild="true" propertySortChoices="true" ecoreFeature="ecore:EReference cbcmodel.ecore#//CompositionStatement/intermediateCondition"/>
