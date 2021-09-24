@@ -6,16 +6,10 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
@@ -27,8 +21,6 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.key_project.util.collection.ImmutableSet;
-
 import com.google.common.collect.Lists;
 
 import de.tu_bs.cs.isf.cbc.cbcmodel.AbstractStatement;
@@ -36,30 +28,14 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.BlockStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbCFormula;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CompositionTechnique;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Condition;
-import de.tu_bs.cs.isf.cbc.cbcmodel.JavaStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.ProductVariant;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Rename;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Renaming;
-import de.tu_bs.cs.isf.cbc.cbcmodel.VariableKind;
-import de.tu_bs.cs.isf.cbc.cbcmodel.Variant;
 import de.uka.ilkd.key.control.KeYEnvironment;
-import de.uka.ilkd.key.gui.MainWindow;
-import de.uka.ilkd.key.java.abstraction.KeYJavaType;
-import de.uka.ilkd.key.logic.op.IObserverFunction;
-import de.uka.ilkd.key.proof.ApplyStrategy.IStopCondition;
-import de.uka.ilkd.key.proof.Goal;
 import de.uka.ilkd.key.proof.Proof;
-import de.uka.ilkd.key.proof.init.ProofInputException;
 import de.uka.ilkd.key.proof.io.ProblemLoaderException;
-import de.uka.ilkd.key.settings.ChoiceSettings;
-import de.uka.ilkd.key.settings.ProofSettings;
-import de.uka.ilkd.key.speclang.Contract;
-import de.uka.ilkd.key.strategy.StrategyProperties;
-import de.uka.ilkd.key.util.KeYTypeUtil;
-import de.uka.ilkd.key.util.MiscTools;
 import de.tu_bs.cs.isf.cbc.cbcmodel.singleton.CbCFormulaSingleton;
 import de.tu_bs.cs.isf.cbc.cbcmodel.string_saver.ConditionExtension;
-import de.tu_bs.cs.isf.cbc.cbcmodel.string_saver.JMLExpressionExtension;
 
 public class ProveWithKey {
 	public static final String REGEX_ORIGINAL = "original";

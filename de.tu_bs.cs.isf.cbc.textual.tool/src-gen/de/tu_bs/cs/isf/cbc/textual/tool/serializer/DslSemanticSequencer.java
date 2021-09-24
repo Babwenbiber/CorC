@@ -7,7 +7,6 @@ import com.google.inject.Inject;
 import de.tu_bs.cs.isf.cbc.cbcmodel.AbstractStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Addition;
 import de.tu_bs.cs.isf.cbc.cbcmodel.And;
-import de.tu_bs.cs.isf.cbc.cbcmodel.ArrayElement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.BlockStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbCFormula;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbCProblem;
@@ -27,7 +26,6 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.InlineJavaBlockStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JMLAddition;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JMLAnd;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JMLAnnotation;
-import de.tu_bs.cs.isf.cbc.cbcmodel.JMLArrayElement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JMLDivision;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JMLEqual;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JMLExpression;
@@ -178,9 +176,6 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 			case CbcmodelPackage.AND:
 				sequence_Concat(context, (And) semanticObject); 
 				return; 
-			case CbcmodelPackage.ARRAY_ELEMENT:
-				sequence_PrimaryExpression(context, (ArrayElement) semanticObject); 
-				return; 
 			case CbcmodelPackage.BLOCK_STATEMENT:
 				sequence_BlockStatement(context, (BlockStatement) semanticObject); 
 				return; 
@@ -234,9 +229,6 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 				return; 
 			case CbcmodelPackage.JML_ANNOTATION:
 				sequence_JMLAnnotation(context, (JMLAnnotation) semanticObject); 
-				return; 
-			case CbcmodelPackage.JML_ARRAY_ELEMENT:
-				sequence_JMLPrimaryExpression(context, (JMLArrayElement) semanticObject); 
 				return; 
 			case CbcmodelPackage.JML_DIVISION:
 				sequence_JMLMultiMathOperation(context, (JMLDivision) semanticObject); 
@@ -1569,42 +1561,6 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	
 	/**
 	 * Contexts:
-	 *     JMLExpression returns JMLArrayElement
-	 *     JMLImplication returns JMLArrayElement
-	 *     JMLImplication.JMLImpl_1_0_0 returns JMLArrayElement
-	 *     JMLConcat returns JMLArrayElement
-	 *     JMLConcat.JMLAnd_1_0_0_0 returns JMLArrayElement
-	 *     JMLConcat.JMLOr_1_0_1_0 returns JMLArrayElement
-	 *     JMLForeach returns JMLArrayElement
-	 *     JMLExists returns JMLArrayElement
-	 *     JMLRelation returns JMLArrayElement
-	 *     JMLRelation.JMLLower_1_0_0_0 returns JMLArrayElement
-	 *     JMLRelation.JMLGreater_1_0_1_0 returns JMLArrayElement
-	 *     JMLRelation.JMLEqual_1_0_2_0 returns JMLArrayElement
-	 *     JMLRelation.JMLNotEqual_1_0_3_0 returns JMLArrayElement
-	 *     JMLRelation.JMLLowerEqual_1_0_4_0 returns JMLArrayElement
-	 *     JMLRelation.JMLGreaterEqual_1_0_5_0 returns JMLArrayElement
-	 *     JMLMultiMathOperation returns JMLArrayElement
-	 *     JMLMultiMathOperation.JMLMultiplication_1_0_0_0 returns JMLArrayElement
-	 *     JMLMultiMathOperation.JMLDivision_1_0_1_0 returns JMLArrayElement
-	 *     JMLMultiMathOperation.JMLModulo_1_0_2_0 returns JMLArrayElement
-	 *     JMLAddMathOperation returns JMLArrayElement
-	 *     JMLAddMathOperation.JMLAddition_1_0_0_0 returns JMLArrayElement
-	 *     JMLAddMathOperation.JMLSubtraction_1_0_1_0 returns JMLArrayElement
-	 *     JMLQualifiedExpression returns JMLArrayElement
-	 *     JMLQualifiedExpression.JMLQualifier_1_0_0_0 returns JMLArrayElement
-	 *     JMLPrimaryExpression returns JMLArrayElement
-	 *
-	 * Constraint:
-	 *     (array=VariableOrMethodName (element+=JMLExpression element+=JMLExpression*)?)
-	 */
-	protected void sequence_JMLPrimaryExpression(ISerializationContext context, JMLArrayElement semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
 	 *     JMLExpression returns JMLFunctionCall
 	 *     JMLImplication returns JMLFunctionCall
 	 *     JMLImplication.JMLImpl_1_0_0 returns JMLFunctionCall
@@ -1632,7 +1588,7 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	 *     JMLPrimaryExpression returns JMLFunctionCall
 	 *
 	 * Constraint:
-	 *     (func=VariableOrMethodName (args+=JMLExpression args+=JMLExpression*)?)
+	 *     (func=VariableOrMethodName (args+=JMLExpression? (args+=JMLExpression args+=JMLExpression*)?)+)
 	 */
 	protected void sequence_JMLPrimaryExpression(ISerializationContext context, JMLFunctionCall semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -2208,42 +2164,6 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	
 	/**
 	 * Contexts:
-	 *     Expression returns ArrayElement
-	 *     Implication returns ArrayElement
-	 *     Implication.Impl_1_0_0 returns ArrayElement
-	 *     Concat returns ArrayElement
-	 *     Concat.And_1_0_0_0 returns ArrayElement
-	 *     Concat.Or_1_0_1_0 returns ArrayElement
-	 *     Foreach returns ArrayElement
-	 *     Exists returns ArrayElement
-	 *     Relation returns ArrayElement
-	 *     Relation.Lower_1_0_0_0 returns ArrayElement
-	 *     Relation.Greater_1_0_1_0 returns ArrayElement
-	 *     Relation.Equal_1_0_2_0 returns ArrayElement
-	 *     Relation.NotEqual_1_0_3_0 returns ArrayElement
-	 *     Relation.LowerEqual_1_0_4_0 returns ArrayElement
-	 *     Relation.GreaterEqual_1_0_5_0 returns ArrayElement
-	 *     MultiMathOperation returns ArrayElement
-	 *     MultiMathOperation.Multiplication_1_0_0_0 returns ArrayElement
-	 *     MultiMathOperation.Division_1_0_1_0 returns ArrayElement
-	 *     MultiMathOperation.Modulo_1_0_2_0 returns ArrayElement
-	 *     AddMathOperation returns ArrayElement
-	 *     AddMathOperation.Addition_1_0_0_0 returns ArrayElement
-	 *     AddMathOperation.Subtraction_1_0_1_0 returns ArrayElement
-	 *     QualifiedExpression returns ArrayElement
-	 *     QualifiedExpression.Qualifier_1_0_0_0 returns ArrayElement
-	 *     PrimaryExpression returns ArrayElement
-	 *
-	 * Constraint:
-	 *     (array=VariableOrMethodName (element+=Expression element+=Expression*)?)
-	 */
-	protected void sequence_PrimaryExpression(ISerializationContext context, ArrayElement semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
 	 *     Expression returns FunctionCall
 	 *     Implication returns FunctionCall
 	 *     Implication.Impl_1_0_0 returns FunctionCall
@@ -2271,7 +2191,7 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	 *     PrimaryExpression returns FunctionCall
 	 *
 	 * Constraint:
-	 *     (func=VariableOrMethodName (args+=Expression args+=Expression*)?)
+	 *     (func=VariableOrMethodName (args+=Expression? (args+=Expression args+=Expression*)?)+)
 	 */
 	protected void sequence_PrimaryExpression(ISerializationContext context, FunctionCall semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

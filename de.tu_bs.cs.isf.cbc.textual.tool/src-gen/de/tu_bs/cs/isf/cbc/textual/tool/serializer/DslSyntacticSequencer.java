@@ -22,23 +22,28 @@ import org.eclipse.xtext.serializer.sequencer.AbstractSyntacticSequencer;
 public class DslSyntacticSequencer extends AbstractSyntacticSequencer {
 
 	protected DslGrammarAccess grammarAccess;
+	protected AbstractElementAlias match_Implication_LessThanSignKeyword_1_0_1_0_q;
 	protected AbstractElementAlias match_JMLAnnotation_CommercialAtKeyword_1_0_0_p;
 	protected AbstractElementAlias match_JMLAnnotation_CommercialAtKeyword_1_1_0_p;
 	protected AbstractElementAlias match_JMLAnnotation_CommercialAtKeyword_2_a;
-	protected AbstractElementAlias match_JMLPrimaryExpression_CHARACTERTerminalRuleCall_6_1_or_FalseKeyword_0_1_0_0_or_INTTerminalRuleCall_4_1_or_NullKeyword_7_1_or_STRINGTerminalRuleCall_5_1;
+	protected AbstractElementAlias match_JMLPrimaryExpression_CHARACTERTerminalRuleCall_5_1_or_FalseKeyword_0_1_0_0_or_INTTerminalRuleCall_3_1_or_NullKeyword_6_1_or_STRINGTerminalRuleCall_4_1;
 	protected AbstractElementAlias match_JMLPrimaryExpression_ExclamationMarkKeyword_2_1_q;
-	protected AbstractElementAlias match_JMLPrimaryExpression_ExclamationMarkKeyword_3_1_q;
 	protected AbstractElementAlias match_JMLPrimaryExpression___ExclamationMarkKeyword_1_0_q_LeftParenthesisKeyword_1_1__a;
 	protected AbstractElementAlias match_JMLPrimaryExpression___ExclamationMarkKeyword_1_0_q_LeftParenthesisKeyword_1_1__p;
+	protected AbstractElementAlias match_JMLPrimaryExpression___LeftParenthesisKeyword_2_3_0_0_RightParenthesisKeyword_2_3_0_2__a;
+	protected AbstractElementAlias match_JMLPrimaryExpression___RightParenthesisKeyword_2_3_0_2_LeftParenthesisKeyword_2_3_0_0__a;
+	protected AbstractElementAlias match_JMLPrimaryExpression___RightParenthesisKeyword_2_3_0_2_LeftParenthesisKeyword_2_3_0_0__p;
 	protected AbstractElementAlias match_LoopInvariantAnnotation_CommercialAtKeyword_1_0_0_p;
 	protected AbstractElementAlias match_LoopInvariantAnnotation_CommercialAtKeyword_1_1_0_p;
 	protected AbstractElementAlias match_LoopInvariantAnnotation_CommercialAtKeyword_1_2_0_p;
 	protected AbstractElementAlias match_LoopInvariantAnnotation_CommercialAtKeyword_2_a;
-	protected AbstractElementAlias match_PrimaryExpression_CHARACTERTerminalRuleCall_6_1_or_FalseKeyword_0_1_0_0_or_INTTerminalRuleCall_4_1_or_NullKeyword_7_1_or_STRINGTerminalRuleCall_5_1;
+	protected AbstractElementAlias match_PrimaryExpression_CHARACTERTerminalRuleCall_5_1_or_FalseKeyword_0_1_0_0_or_INTTerminalRuleCall_3_1_or_NullKeyword_6_1_or_STRINGTerminalRuleCall_4_1;
 	protected AbstractElementAlias match_PrimaryExpression_ExclamationMarkKeyword_2_1_q;
-	protected AbstractElementAlias match_PrimaryExpression_ExclamationMarkKeyword_3_1_q;
 	protected AbstractElementAlias match_PrimaryExpression___ExclamationMarkKeyword_1_0_q_LeftParenthesisKeyword_1_1__a;
 	protected AbstractElementAlias match_PrimaryExpression___ExclamationMarkKeyword_1_0_q_LeftParenthesisKeyword_1_1__p;
+	protected AbstractElementAlias match_PrimaryExpression___LeftParenthesisKeyword_2_3_0_0_RightParenthesisKeyword_2_3_0_2__a;
+	protected AbstractElementAlias match_PrimaryExpression___RightParenthesisKeyword_2_3_0_2_LeftParenthesisKeyword_2_3_0_0__a;
+	protected AbstractElementAlias match_PrimaryExpression___RightParenthesisKeyword_2_3_0_2_LeftParenthesisKeyword_2_3_0_0__p;
 	protected AbstractElementAlias match_VariableOrMethodName___LeftSquareBracketKeyword_1_0_AsteriskKeyword_1_1_RightSquareBracketKeyword_1_2__q;
 	protected AbstractElementAlias match_XAnnotation___LeftParenthesisKeyword_3_0_RightParenthesisKeyword_3_2__q;
 	protected AbstractElementAlias match_XExpressionInClosure_SemicolonKeyword_1_1_q;
@@ -50,23 +55,28 @@ public class DslSyntacticSequencer extends AbstractSyntacticSequencer {
 	@Inject
 	protected void init(IGrammarAccess access) {
 		grammarAccess = (DslGrammarAccess) access;
+		match_Implication_LessThanSignKeyword_1_0_1_0_q = new TokenAlias(false, true, grammarAccess.getImplicationAccess().getLessThanSignKeyword_1_0_1_0());
 		match_JMLAnnotation_CommercialAtKeyword_1_0_0_p = new TokenAlias(true, false, grammarAccess.getJMLAnnotationAccess().getCommercialAtKeyword_1_0_0());
 		match_JMLAnnotation_CommercialAtKeyword_1_1_0_p = new TokenAlias(true, false, grammarAccess.getJMLAnnotationAccess().getCommercialAtKeyword_1_1_0());
 		match_JMLAnnotation_CommercialAtKeyword_2_a = new TokenAlias(true, true, grammarAccess.getJMLAnnotationAccess().getCommercialAtKeyword_2());
-		match_JMLPrimaryExpression_CHARACTERTerminalRuleCall_6_1_or_FalseKeyword_0_1_0_0_or_INTTerminalRuleCall_4_1_or_NullKeyword_7_1_or_STRINGTerminalRuleCall_5_1 = new AlternativeAlias(false, false, new TokenAlias(false, false, grammarAccess.getJMLPrimaryExpressionAccess().getCHARACTERTerminalRuleCall_6_1()), new TokenAlias(false, false, grammarAccess.getJMLPrimaryExpressionAccess().getFalseKeyword_0_1_0_0()), new TokenAlias(false, false, grammarAccess.getJMLPrimaryExpressionAccess().getINTTerminalRuleCall_4_1()), new TokenAlias(false, false, grammarAccess.getJMLPrimaryExpressionAccess().getNullKeyword_7_1()), new TokenAlias(false, false, grammarAccess.getJMLPrimaryExpressionAccess().getSTRINGTerminalRuleCall_5_1()));
+		match_JMLPrimaryExpression_CHARACTERTerminalRuleCall_5_1_or_FalseKeyword_0_1_0_0_or_INTTerminalRuleCall_3_1_or_NullKeyword_6_1_or_STRINGTerminalRuleCall_4_1 = new AlternativeAlias(false, false, new TokenAlias(false, false, grammarAccess.getJMLPrimaryExpressionAccess().getCHARACTERTerminalRuleCall_5_1()), new TokenAlias(false, false, grammarAccess.getJMLPrimaryExpressionAccess().getFalseKeyword_0_1_0_0()), new TokenAlias(false, false, grammarAccess.getJMLPrimaryExpressionAccess().getINTTerminalRuleCall_3_1()), new TokenAlias(false, false, grammarAccess.getJMLPrimaryExpressionAccess().getNullKeyword_6_1()), new TokenAlias(false, false, grammarAccess.getJMLPrimaryExpressionAccess().getSTRINGTerminalRuleCall_4_1()));
 		match_JMLPrimaryExpression_ExclamationMarkKeyword_2_1_q = new TokenAlias(false, true, grammarAccess.getJMLPrimaryExpressionAccess().getExclamationMarkKeyword_2_1());
-		match_JMLPrimaryExpression_ExclamationMarkKeyword_3_1_q = new TokenAlias(false, true, grammarAccess.getJMLPrimaryExpressionAccess().getExclamationMarkKeyword_3_1());
 		match_JMLPrimaryExpression___ExclamationMarkKeyword_1_0_q_LeftParenthesisKeyword_1_1__a = new GroupAlias(true, true, new TokenAlias(false, true, grammarAccess.getJMLPrimaryExpressionAccess().getExclamationMarkKeyword_1_0()), new TokenAlias(false, false, grammarAccess.getJMLPrimaryExpressionAccess().getLeftParenthesisKeyword_1_1()));
 		match_JMLPrimaryExpression___ExclamationMarkKeyword_1_0_q_LeftParenthesisKeyword_1_1__p = new GroupAlias(true, false, new TokenAlias(false, true, grammarAccess.getJMLPrimaryExpressionAccess().getExclamationMarkKeyword_1_0()), new TokenAlias(false, false, grammarAccess.getJMLPrimaryExpressionAccess().getLeftParenthesisKeyword_1_1()));
+		match_JMLPrimaryExpression___LeftParenthesisKeyword_2_3_0_0_RightParenthesisKeyword_2_3_0_2__a = new GroupAlias(true, true, new TokenAlias(false, false, grammarAccess.getJMLPrimaryExpressionAccess().getLeftParenthesisKeyword_2_3_0_0()), new TokenAlias(false, false, grammarAccess.getJMLPrimaryExpressionAccess().getRightParenthesisKeyword_2_3_0_2()));
+		match_JMLPrimaryExpression___RightParenthesisKeyword_2_3_0_2_LeftParenthesisKeyword_2_3_0_0__a = new GroupAlias(true, true, new TokenAlias(false, false, grammarAccess.getJMLPrimaryExpressionAccess().getRightParenthesisKeyword_2_3_0_2()), new TokenAlias(false, false, grammarAccess.getJMLPrimaryExpressionAccess().getLeftParenthesisKeyword_2_3_0_0()));
+		match_JMLPrimaryExpression___RightParenthesisKeyword_2_3_0_2_LeftParenthesisKeyword_2_3_0_0__p = new GroupAlias(true, false, new TokenAlias(false, false, grammarAccess.getJMLPrimaryExpressionAccess().getRightParenthesisKeyword_2_3_0_2()), new TokenAlias(false, false, grammarAccess.getJMLPrimaryExpressionAccess().getLeftParenthesisKeyword_2_3_0_0()));
 		match_LoopInvariantAnnotation_CommercialAtKeyword_1_0_0_p = new TokenAlias(true, false, grammarAccess.getLoopInvariantAnnotationAccess().getCommercialAtKeyword_1_0_0());
 		match_LoopInvariantAnnotation_CommercialAtKeyword_1_1_0_p = new TokenAlias(true, false, grammarAccess.getLoopInvariantAnnotationAccess().getCommercialAtKeyword_1_1_0());
 		match_LoopInvariantAnnotation_CommercialAtKeyword_1_2_0_p = new TokenAlias(true, false, grammarAccess.getLoopInvariantAnnotationAccess().getCommercialAtKeyword_1_2_0());
 		match_LoopInvariantAnnotation_CommercialAtKeyword_2_a = new TokenAlias(true, true, grammarAccess.getLoopInvariantAnnotationAccess().getCommercialAtKeyword_2());
-		match_PrimaryExpression_CHARACTERTerminalRuleCall_6_1_or_FalseKeyword_0_1_0_0_or_INTTerminalRuleCall_4_1_or_NullKeyword_7_1_or_STRINGTerminalRuleCall_5_1 = new AlternativeAlias(false, false, new TokenAlias(false, false, grammarAccess.getPrimaryExpressionAccess().getCHARACTERTerminalRuleCall_6_1()), new TokenAlias(false, false, grammarAccess.getPrimaryExpressionAccess().getFalseKeyword_0_1_0_0()), new TokenAlias(false, false, grammarAccess.getPrimaryExpressionAccess().getINTTerminalRuleCall_4_1()), new TokenAlias(false, false, grammarAccess.getPrimaryExpressionAccess().getNullKeyword_7_1()), new TokenAlias(false, false, grammarAccess.getPrimaryExpressionAccess().getSTRINGTerminalRuleCall_5_1()));
+		match_PrimaryExpression_CHARACTERTerminalRuleCall_5_1_or_FalseKeyword_0_1_0_0_or_INTTerminalRuleCall_3_1_or_NullKeyword_6_1_or_STRINGTerminalRuleCall_4_1 = new AlternativeAlias(false, false, new TokenAlias(false, false, grammarAccess.getPrimaryExpressionAccess().getCHARACTERTerminalRuleCall_5_1()), new TokenAlias(false, false, grammarAccess.getPrimaryExpressionAccess().getFalseKeyword_0_1_0_0()), new TokenAlias(false, false, grammarAccess.getPrimaryExpressionAccess().getINTTerminalRuleCall_3_1()), new TokenAlias(false, false, grammarAccess.getPrimaryExpressionAccess().getNullKeyword_6_1()), new TokenAlias(false, false, grammarAccess.getPrimaryExpressionAccess().getSTRINGTerminalRuleCall_4_1()));
 		match_PrimaryExpression_ExclamationMarkKeyword_2_1_q = new TokenAlias(false, true, grammarAccess.getPrimaryExpressionAccess().getExclamationMarkKeyword_2_1());
-		match_PrimaryExpression_ExclamationMarkKeyword_3_1_q = new TokenAlias(false, true, grammarAccess.getPrimaryExpressionAccess().getExclamationMarkKeyword_3_1());
 		match_PrimaryExpression___ExclamationMarkKeyword_1_0_q_LeftParenthesisKeyword_1_1__a = new GroupAlias(true, true, new TokenAlias(false, true, grammarAccess.getPrimaryExpressionAccess().getExclamationMarkKeyword_1_0()), new TokenAlias(false, false, grammarAccess.getPrimaryExpressionAccess().getLeftParenthesisKeyword_1_1()));
 		match_PrimaryExpression___ExclamationMarkKeyword_1_0_q_LeftParenthesisKeyword_1_1__p = new GroupAlias(true, false, new TokenAlias(false, true, grammarAccess.getPrimaryExpressionAccess().getExclamationMarkKeyword_1_0()), new TokenAlias(false, false, grammarAccess.getPrimaryExpressionAccess().getLeftParenthesisKeyword_1_1()));
+		match_PrimaryExpression___LeftParenthesisKeyword_2_3_0_0_RightParenthesisKeyword_2_3_0_2__a = new GroupAlias(true, true, new TokenAlias(false, false, grammarAccess.getPrimaryExpressionAccess().getLeftParenthesisKeyword_2_3_0_0()), new TokenAlias(false, false, grammarAccess.getPrimaryExpressionAccess().getRightParenthesisKeyword_2_3_0_2()));
+		match_PrimaryExpression___RightParenthesisKeyword_2_3_0_2_LeftParenthesisKeyword_2_3_0_0__a = new GroupAlias(true, true, new TokenAlias(false, false, grammarAccess.getPrimaryExpressionAccess().getRightParenthesisKeyword_2_3_0_2()), new TokenAlias(false, false, grammarAccess.getPrimaryExpressionAccess().getLeftParenthesisKeyword_2_3_0_0()));
+		match_PrimaryExpression___RightParenthesisKeyword_2_3_0_2_LeftParenthesisKeyword_2_3_0_0__p = new GroupAlias(true, false, new TokenAlias(false, false, grammarAccess.getPrimaryExpressionAccess().getRightParenthesisKeyword_2_3_0_2()), new TokenAlias(false, false, grammarAccess.getPrimaryExpressionAccess().getLeftParenthesisKeyword_2_3_0_0()));
 		match_VariableOrMethodName___LeftSquareBracketKeyword_1_0_AsteriskKeyword_1_1_RightSquareBracketKeyword_1_2__q = new GroupAlias(false, true, new TokenAlias(false, false, grammarAccess.getVariableOrMethodNameAccess().getLeftSquareBracketKeyword_1_0()), new TokenAlias(false, false, grammarAccess.getVariableOrMethodNameAccess().getAsteriskKeyword_1_1()), new TokenAlias(false, false, grammarAccess.getVariableOrMethodNameAccess().getRightSquareBracketKeyword_1_2()));
 		match_XAnnotation___LeftParenthesisKeyword_3_0_RightParenthesisKeyword_3_2__q = new GroupAlias(false, true, new TokenAlias(false, false, grammarAccess.getXAnnotationAccess().getLeftParenthesisKeyword_3_0()), new TokenAlias(false, false, grammarAccess.getXAnnotationAccess().getRightParenthesisKeyword_3_2()));
 		match_XExpressionInClosure_SemicolonKeyword_1_1_q = new TokenAlias(false, true, grammarAccess.getXExpressionInClosureAccess().getSemicolonKeyword_1_1());
@@ -150,22 +160,28 @@ public class DslSyntacticSequencer extends AbstractSyntacticSequencer {
 		List<INode> transitionNodes = collectNodes(fromNode, toNode);
 		for (AbstractElementAlias syntax : transition.getAmbiguousSyntaxes()) {
 			List<INode> syntaxNodes = getNodesFor(transitionNodes, syntax);
-			if (match_JMLAnnotation_CommercialAtKeyword_1_0_0_p.equals(syntax))
+			if (match_Implication_LessThanSignKeyword_1_0_1_0_q.equals(syntax))
+				emit_Implication_LessThanSignKeyword_1_0_1_0_q(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_JMLAnnotation_CommercialAtKeyword_1_0_0_p.equals(syntax))
 				emit_JMLAnnotation_CommercialAtKeyword_1_0_0_p(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_JMLAnnotation_CommercialAtKeyword_1_1_0_p.equals(syntax))
 				emit_JMLAnnotation_CommercialAtKeyword_1_1_0_p(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_JMLAnnotation_CommercialAtKeyword_2_a.equals(syntax))
 				emit_JMLAnnotation_CommercialAtKeyword_2_a(semanticObject, getLastNavigableState(), syntaxNodes);
-			else if (match_JMLPrimaryExpression_CHARACTERTerminalRuleCall_6_1_or_FalseKeyword_0_1_0_0_or_INTTerminalRuleCall_4_1_or_NullKeyword_7_1_or_STRINGTerminalRuleCall_5_1.equals(syntax))
-				emit_JMLPrimaryExpression_CHARACTERTerminalRuleCall_6_1_or_FalseKeyword_0_1_0_0_or_INTTerminalRuleCall_4_1_or_NullKeyword_7_1_or_STRINGTerminalRuleCall_5_1(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_JMLPrimaryExpression_CHARACTERTerminalRuleCall_5_1_or_FalseKeyword_0_1_0_0_or_INTTerminalRuleCall_3_1_or_NullKeyword_6_1_or_STRINGTerminalRuleCall_4_1.equals(syntax))
+				emit_JMLPrimaryExpression_CHARACTERTerminalRuleCall_5_1_or_FalseKeyword_0_1_0_0_or_INTTerminalRuleCall_3_1_or_NullKeyword_6_1_or_STRINGTerminalRuleCall_4_1(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_JMLPrimaryExpression_ExclamationMarkKeyword_2_1_q.equals(syntax))
 				emit_JMLPrimaryExpression_ExclamationMarkKeyword_2_1_q(semanticObject, getLastNavigableState(), syntaxNodes);
-			else if (match_JMLPrimaryExpression_ExclamationMarkKeyword_3_1_q.equals(syntax))
-				emit_JMLPrimaryExpression_ExclamationMarkKeyword_3_1_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_JMLPrimaryExpression___ExclamationMarkKeyword_1_0_q_LeftParenthesisKeyword_1_1__a.equals(syntax))
 				emit_JMLPrimaryExpression___ExclamationMarkKeyword_1_0_q_LeftParenthesisKeyword_1_1__a(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_JMLPrimaryExpression___ExclamationMarkKeyword_1_0_q_LeftParenthesisKeyword_1_1__p.equals(syntax))
 				emit_JMLPrimaryExpression___ExclamationMarkKeyword_1_0_q_LeftParenthesisKeyword_1_1__p(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_JMLPrimaryExpression___LeftParenthesisKeyword_2_3_0_0_RightParenthesisKeyword_2_3_0_2__a.equals(syntax))
+				emit_JMLPrimaryExpression___LeftParenthesisKeyword_2_3_0_0_RightParenthesisKeyword_2_3_0_2__a(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_JMLPrimaryExpression___RightParenthesisKeyword_2_3_0_2_LeftParenthesisKeyword_2_3_0_0__a.equals(syntax))
+				emit_JMLPrimaryExpression___RightParenthesisKeyword_2_3_0_2_LeftParenthesisKeyword_2_3_0_0__a(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_JMLPrimaryExpression___RightParenthesisKeyword_2_3_0_2_LeftParenthesisKeyword_2_3_0_0__p.equals(syntax))
+				emit_JMLPrimaryExpression___RightParenthesisKeyword_2_3_0_2_LeftParenthesisKeyword_2_3_0_0__p(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_LoopInvariantAnnotation_CommercialAtKeyword_1_0_0_p.equals(syntax))
 				emit_LoopInvariantAnnotation_CommercialAtKeyword_1_0_0_p(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_LoopInvariantAnnotation_CommercialAtKeyword_1_1_0_p.equals(syntax))
@@ -174,16 +190,20 @@ public class DslSyntacticSequencer extends AbstractSyntacticSequencer {
 				emit_LoopInvariantAnnotation_CommercialAtKeyword_1_2_0_p(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_LoopInvariantAnnotation_CommercialAtKeyword_2_a.equals(syntax))
 				emit_LoopInvariantAnnotation_CommercialAtKeyword_2_a(semanticObject, getLastNavigableState(), syntaxNodes);
-			else if (match_PrimaryExpression_CHARACTERTerminalRuleCall_6_1_or_FalseKeyword_0_1_0_0_or_INTTerminalRuleCall_4_1_or_NullKeyword_7_1_or_STRINGTerminalRuleCall_5_1.equals(syntax))
-				emit_PrimaryExpression_CHARACTERTerminalRuleCall_6_1_or_FalseKeyword_0_1_0_0_or_INTTerminalRuleCall_4_1_or_NullKeyword_7_1_or_STRINGTerminalRuleCall_5_1(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_PrimaryExpression_CHARACTERTerminalRuleCall_5_1_or_FalseKeyword_0_1_0_0_or_INTTerminalRuleCall_3_1_or_NullKeyword_6_1_or_STRINGTerminalRuleCall_4_1.equals(syntax))
+				emit_PrimaryExpression_CHARACTERTerminalRuleCall_5_1_or_FalseKeyword_0_1_0_0_or_INTTerminalRuleCall_3_1_or_NullKeyword_6_1_or_STRINGTerminalRuleCall_4_1(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_PrimaryExpression_ExclamationMarkKeyword_2_1_q.equals(syntax))
 				emit_PrimaryExpression_ExclamationMarkKeyword_2_1_q(semanticObject, getLastNavigableState(), syntaxNodes);
-			else if (match_PrimaryExpression_ExclamationMarkKeyword_3_1_q.equals(syntax))
-				emit_PrimaryExpression_ExclamationMarkKeyword_3_1_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_PrimaryExpression___ExclamationMarkKeyword_1_0_q_LeftParenthesisKeyword_1_1__a.equals(syntax))
 				emit_PrimaryExpression___ExclamationMarkKeyword_1_0_q_LeftParenthesisKeyword_1_1__a(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_PrimaryExpression___ExclamationMarkKeyword_1_0_q_LeftParenthesisKeyword_1_1__p.equals(syntax))
 				emit_PrimaryExpression___ExclamationMarkKeyword_1_0_q_LeftParenthesisKeyword_1_1__p(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_PrimaryExpression___LeftParenthesisKeyword_2_3_0_0_RightParenthesisKeyword_2_3_0_2__a.equals(syntax))
+				emit_PrimaryExpression___LeftParenthesisKeyword_2_3_0_0_RightParenthesisKeyword_2_3_0_2__a(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_PrimaryExpression___RightParenthesisKeyword_2_3_0_2_LeftParenthesisKeyword_2_3_0_0__a.equals(syntax))
+				emit_PrimaryExpression___RightParenthesisKeyword_2_3_0_2_LeftParenthesisKeyword_2_3_0_0__a(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_PrimaryExpression___RightParenthesisKeyword_2_3_0_2_LeftParenthesisKeyword_2_3_0_0__p.equals(syntax))
+				emit_PrimaryExpression___RightParenthesisKeyword_2_3_0_2_LeftParenthesisKeyword_2_3_0_0__p(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_VariableOrMethodName___LeftSquareBracketKeyword_1_0_AsteriskKeyword_1_1_RightSquareBracketKeyword_1_2__q.equals(syntax))
 				emit_VariableOrMethodName___LeftSquareBracketKeyword_1_0_AsteriskKeyword_1_1_RightSquareBracketKeyword_1_2__q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_XAnnotation___LeftParenthesisKeyword_3_0_RightParenthesisKeyword_3_2__q.equals(syntax))
@@ -202,6 +222,17 @@ public class DslSyntacticSequencer extends AbstractSyntacticSequencer {
 		}
 	}
 
+	/**
+	 * Ambiguous syntax:
+	 *     '<'?
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     {Impl.left=} (ambiguity) '->' right=Concat
+	 */
+	protected void emit_Implication_LessThanSignKeyword_1_0_1_0_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
 	/**
 	 * Ambiguous syntax:
 	 *     '@'+
@@ -241,7 +272,7 @@ public class DslSyntacticSequencer extends AbstractSyntacticSequencer {
 	 * This ambiguous syntax occurs at:
 	 *     (rule start) ('!'? '(')* (ambiguity) (rule start)
 	 */
-	protected void emit_JMLPrimaryExpression_CHARACTERTerminalRuleCall_6_1_or_FalseKeyword_0_1_0_0_or_INTTerminalRuleCall_4_1_or_NullKeyword_7_1_or_STRINGTerminalRuleCall_5_1(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+	protected void emit_JMLPrimaryExpression_CHARACTERTerminalRuleCall_5_1_or_FalseKeyword_0_1_0_0_or_INTTerminalRuleCall_3_1_or_NullKeyword_6_1_or_STRINGTerminalRuleCall_4_1(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	
@@ -258,21 +289,9 @@ public class DslSyntacticSequencer extends AbstractSyntacticSequencer {
 	
 	/**
 	 * Ambiguous syntax:
-	 *     '!'?
-	 *
-	 * This ambiguous syntax occurs at:
-	 *     (rule start) ('!'? '(')* (ambiguity) array=VariableOrMethodName
-	 */
-	protected void emit_JMLPrimaryExpression_ExclamationMarkKeyword_3_1_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
-		acceptNodes(transition, nodes);
-	}
-	
-	/**
-	 * Ambiguous syntax:
 	 *     ('!'? '(')*
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     (rule start) (ambiguity) '!'? array=VariableOrMethodName
 	 *     (rule start) (ambiguity) '!'? func=VariableOrMethodName
 	 *     (rule start) (ambiguity) ('false' | INT | STRING | CHARACTER | 'null') (rule start)
 	 *     (rule start) (ambiguity) exists='(\exists'
@@ -327,6 +346,42 @@ public class DslSyntacticSequencer extends AbstractSyntacticSequencer {
 	
 	/**
 	 * Ambiguous syntax:
+	 *     ('(' ')')*
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     args+=JMLExpression ')' (ambiguity) '[' args+=JMLExpression
+	 *     args+=JMLExpression ']' (ambiguity) '[' args+=JMLExpression
+	 *     func=VariableOrMethodName (ambiguity) '[' args+=JMLExpression
+	 */
+	protected void emit_JMLPrimaryExpression___LeftParenthesisKeyword_2_3_0_0_RightParenthesisKeyword_2_3_0_2__a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Ambiguous syntax:
+	 *     (')' '(')*
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     args+=JMLExpression ']' '(' (ambiguity) args+=JMLExpression
+	 *     func=VariableOrMethodName '(' (ambiguity) args+=JMLExpression
+	 */
+	protected void emit_JMLPrimaryExpression___RightParenthesisKeyword_2_3_0_2_LeftParenthesisKeyword_2_3_0_0__a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Ambiguous syntax:
+	 *     (')' '(')+
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     args+=JMLExpression (ambiguity) args+=JMLExpression
+	 */
+	protected void emit_JMLPrimaryExpression___RightParenthesisKeyword_2_3_0_2_LeftParenthesisKeyword_2_3_0_0__p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Ambiguous syntax:
 	 *     '@'+
 	 *
 	 * This ambiguous syntax occurs at:
@@ -376,7 +431,7 @@ public class DslSyntacticSequencer extends AbstractSyntacticSequencer {
 	 * This ambiguous syntax occurs at:
 	 *     (rule start) ('!'? '(')* (ambiguity) (rule start)
 	 */
-	protected void emit_PrimaryExpression_CHARACTERTerminalRuleCall_6_1_or_FalseKeyword_0_1_0_0_or_INTTerminalRuleCall_4_1_or_NullKeyword_7_1_or_STRINGTerminalRuleCall_5_1(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+	protected void emit_PrimaryExpression_CHARACTERTerminalRuleCall_5_1_or_FalseKeyword_0_1_0_0_or_INTTerminalRuleCall_3_1_or_NullKeyword_6_1_or_STRINGTerminalRuleCall_4_1(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	
@@ -393,21 +448,9 @@ public class DslSyntacticSequencer extends AbstractSyntacticSequencer {
 	
 	/**
 	 * Ambiguous syntax:
-	 *     '!'?
-	 *
-	 * This ambiguous syntax occurs at:
-	 *     (rule start) ('!'? '(')* (ambiguity) array=VariableOrMethodName
-	 */
-	protected void emit_PrimaryExpression_ExclamationMarkKeyword_3_1_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
-		acceptNodes(transition, nodes);
-	}
-	
-	/**
-	 * Ambiguous syntax:
 	 *     ('!'? '(')*
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     (rule start) (ambiguity) '!'? array=VariableOrMethodName
 	 *     (rule start) (ambiguity) '!'? func=VariableOrMethodName
 	 *     (rule start) (ambiguity) ('false' | INT | STRING | CHARACTER | 'null') (rule start)
 	 *     (rule start) (ambiguity) exists='(\exists'
@@ -457,6 +500,42 @@ public class DslSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     (rule start) (ambiguity) {Subtraction.left=}
 	 */
 	protected void emit_PrimaryExpression___ExclamationMarkKeyword_1_0_q_LeftParenthesisKeyword_1_1__p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Ambiguous syntax:
+	 *     ('(' ')')*
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     args+=Expression ')' (ambiguity) '[' args+=Expression
+	 *     args+=Expression ']' (ambiguity) '[' args+=Expression
+	 *     func=VariableOrMethodName (ambiguity) '[' args+=Expression
+	 */
+	protected void emit_PrimaryExpression___LeftParenthesisKeyword_2_3_0_0_RightParenthesisKeyword_2_3_0_2__a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Ambiguous syntax:
+	 *     (')' '(')*
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     args+=Expression ']' '(' (ambiguity) args+=Expression
+	 *     func=VariableOrMethodName '(' (ambiguity) args+=Expression
+	 */
+	protected void emit_PrimaryExpression___RightParenthesisKeyword_2_3_0_2_LeftParenthesisKeyword_2_3_0_0__a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Ambiguous syntax:
+	 *     (')' '(')+
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     args+=Expression (ambiguity) args+=Expression
+	 */
+	protected void emit_PrimaryExpression___RightParenthesisKeyword_2_3_0_2_LeftParenthesisKeyword_2_3_0_0__p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	

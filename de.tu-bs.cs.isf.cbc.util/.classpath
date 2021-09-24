@@ -7,7 +7,5 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="/Users/frederikfroling/Uni/MA/key/key/key.core.symbolic_execution/build/libs/key.core.symbolic_execution-2.9.jar" sourcepath="/key/key.core.symbolic_execution"/>
-	<classpathentry kind="lib" path="/Users/frederikfroling/Uni/MA/key/key/key.core/build/libs/key.core-2.9.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

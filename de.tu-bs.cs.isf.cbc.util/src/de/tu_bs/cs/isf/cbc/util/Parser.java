@@ -435,7 +435,8 @@ public class Parser {
 			System.out.println("found block: " + blockName);
 			statement = statement.replaceAll("Block " + blockName + ";", blockName + ".getBlock();");
 		}
-		return statement.replaceAll("Block\s[a-zA-Z0-9]+;", "{}")
+//		return statement.replaceAll("Block\s[a-zA-Z0-9]+;", "{}")
+		return statement.replaceAll("Block[a-zA-Z0-9]+;", "{}")
 				.replaceAll(" @", "\n@");
 	}
 	

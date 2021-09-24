@@ -19,9 +19,9 @@ class DslProposalProvider extends AbstractDslProposalProvider {
 		super.complete_CompositionStatement(model, ruleCall, context, acceptor)
 		// compute the plain proposal
 			val String proposal = "{\n"
-				+ "\t<statement>\n"
-				+ "} Intm: (<condition>) {\n"
-				+ "\t<statement>\n"
+				+ "\t;n"
+				+ "} Intm: (true) {\n"
+				+ "\t;\n"
 				+ "}";
 
 		acceptor.accept(createCompletionProposal(proposal, "Composition", null, context))
@@ -32,13 +32,13 @@ class DslProposalProvider extends AbstractDslProposalProvider {
 		// call implementation of superclass
 		super.complete_SmallRepetitionStatement(model, ruleCall, context, acceptor)
 		// compute the plain proposal
-			val String proposal = "While (<guard>) Do\n" 
-			+ "\t\tInv: (<invariant>) Var: (<variant>)\n"
+			val String proposal = "While (true) Do\n" 
+			+ "\t\tInv: (true) Var: (<variant>)\n"
 			+ "\t\t{\n"
-			+ "\t\t\t<statement>\n"
+			+ "\t\t\t;\n"
 			+ "\t\t} Od";
 
-		acceptor.accept(createCompletionProposal(proposal, "Repitition", null, context))
+		acceptor.accept(createCompletionProposal(proposal, "Repetition", null, context))
     }
     
     override void complete_SelectionStatement(EObject model, RuleCall ruleCall, ContentAssistContext context,
@@ -46,10 +46,10 @@ class DslProposalProvider extends AbstractDslProposalProvider {
 		// call implementation of superclass
 		super.complete_SelectionStatement(model, ruleCall, context, acceptor)
 		// compute the plain proposal
-			val String proposal = "If (<guard>) Then\n" 
-			+ "\t\t{<statement>}\n"
-			+ "\t\tElseif (<guard>) then\n" 
-			+ "\t\t{<statement>} Fi";
+			val String proposal = "If (true) Then\n" 
+			+ "\t\t{;}\n"
+			+ "\t\tElseif (false) Then\n" 
+			+ "\t\t{;} Fi";
 
 		acceptor.accept(createCompletionProposal(proposal, "Selection", null, context))
     }
@@ -60,10 +60,11 @@ class DslProposalProvider extends AbstractDslProposalProvider {
 		super.complete_SelectionStatement(model, ruleCall, context, acceptor)
 		// compute the plain proposal
 			val String proposal = "Block <name>:\n" 
-			+ "Pre: (<precondition>)\n"
-			+ "Post: (<postcondition>)\n"
+			+ "/*@ requires (true);\n"
+			+ "  @ ensures (true);\n"
+			+ " */\n"
 			+ "{\n"
-			+ "\t<statement>\n"
+			+ "\t;\n"
 			+ "}";
 			
 
@@ -75,10 +76,10 @@ class DslProposalProvider extends AbstractDslProposalProvider {
 		// call implementation of superclass
 		super.complete_CbCFormula(model, ruleCall, context, acceptor)
 		// compute the plain proposal
-			val String proposal = "Formula \"<formula>\"\n"
-			+ "\tPre: (<condition>)\n" 
-			+ "\t{<statement>}\n"
-			+ "\tPost: (<condition>)";
+			val String proposal = "Formula <formula>\n"
+			+ "\tPre: (true)\n" 
+			+ "\t{;}\n"
+			+ "\tPost: (true)";
 
 		acceptor.accept(createCompletionProposal(proposal, "Formula", null, context))
     }
@@ -88,9 +89,9 @@ class DslProposalProvider extends AbstractDslProposalProvider {
 		// call implementation of superclass
 		super.complete_StrengthWeakStatement(model, ruleCall, context, acceptor)
 		// compute the plain proposal
-			val String proposal = "Pre: (<condition>)\n" 
-			+ "\t\t{<statement>}\n"
-			+ "\t\tPost: (<condition>)";
+			val String proposal = "Pre: (true)\n" 
+			+ "\t\t{;}\n"
+			+ "\t\tPost: (true)";
 
 		acceptor.accept(createCompletionProposal(proposal, "StrengthWeak", null, context))
     }
@@ -101,7 +102,7 @@ class DslProposalProvider extends AbstractDslProposalProvider {
 		super.complete_JavaVariables(model, ruleCall, context, acceptor)
 		// compute the plain proposal
 			val String proposal = "JavaVariables\n"
-			+ "\tVariables [<variable>, <variable>]\n";
+			+ "\tVariables [int i]\n";
 
 		acceptor.accept(createCompletionProposal(proposal, "JavaVariables", null, context))
     }
@@ -112,7 +113,7 @@ class DslProposalProvider extends AbstractDslProposalProvider {
 		super.complete_GlobalConditions(model, ruleCall, context, acceptor)
 		// compute the plain proposal
 			val String proposal = "GlobalConditions\n"
-			+ "\tConditions [<condition>, <condition>]\n";
+			+ "\tConditions [true=true]\n";
 
 		acceptor.accept(createCompletionProposal(proposal, "GlobalConditions", null, context))
     }

@@ -32,7 +32,7 @@ EString returns ecore::EString:
 	
 	
 CodeString returns ecore::EString: 
-			(VariableString '=' "("? VariableString (Operation VariableString)* ")"? ';')+
+			(VariableString (Operation VariableString)*'=' (("("? VariableString (Operation VariableString)* ")"?) | =>Boolean) ';')+
 		;
 
 VariableString returns ecore::EString:
@@ -42,8 +42,13 @@ VariableString returns ecore::EString:
 		)?)
 ;
 
+Boolean returns ecore::EString:
+		'true'  | 'false'
+;
+
 Operation:
-	'+' | '-' | '*' | '/' | '%';	
+	'+' | '-' | '*' | '/' | '%';
+	
 
 AbstractStatement_Impl returns AbstractStatement:
 	{AbstractStatement}
@@ -211,7 +216,7 @@ VariableOrMethodName:
 	name=ID ("[" "*" "]")?;
 	
 Implication returns Expression:
-	Concat (( {Impl.left=current} '->') right=Concat)*;
+	Concat (( {Impl.left=current} ('<'?'->')) right=Concat)*;
 
 Concat returns Expression:
 	Foreach (({And.left=current} '&' | {Or.left=current} '|') right=Foreach)*;
@@ -239,8 +244,7 @@ QualifiedExpression returns Expression:
 PrimaryExpression returns Expression:
     {Expression} => ('false' | isTrue?='true') |
 	'!' ? '(' Expression ')' |
-	{FunctionCall} '!' ? func=VariableOrMethodName ('(' (args+=Expression (',' args+=Expression)* )?')')? |
-	{ArrayElement} '!' ? array=VariableOrMethodName ('[' (element+=Expression ']'('[' element+=Expression ']')* )?) |	
+	{FunctionCall} '!' ? func=VariableOrMethodName  (('(' (args+=Expression (',' args+=Expression)* )?')') | ('[' args+=Expression ']'))* |
 	{Expression} INT |
 	{Expression} STRING |
 	{Expression} CHARACTER |
@@ -282,8 +286,8 @@ JMLQualifiedExpression returns JMLExpression:
 JMLPrimaryExpression returns JMLExpression:
     {JMLExpression} => ('false' | isTrue?='true') |
 	'!' ? '(' JMLExpression ')' |
-	{JMLFunctionCall} '!' ? func=VariableOrMethodName ('(' (args+=JMLExpression (',' args+=JMLExpression)* )?')')? |
-	{JMLArrayElement} '!' ? array=VariableOrMethodName ('[' (element+=JMLExpression ']'('[' element+=JMLExpression ']')* )?) |	
+	{JMLFunctionCall} '!' ? func=VariableOrMethodName (('(' (args+=JMLExpression (',' args+=JMLExpression)* )?')') | ('[' args+=JMLExpression ']'))*  |
+//	{JMLArrayElement} '!' ? array=VariableOrMethodName ('[' (element+=JMLExpression ']'('[' element+=JMLExpression ']')* )?) |	
 	{JMLExpression} INT |
 	{JMLExpression} STRING |
 	{JMLExpression} CHARACTER |

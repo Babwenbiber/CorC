@@ -90,8 +90,8 @@ public class HashTable {
 	            		!file.getName().equals(OVERVIEW_FILENAME) &&
 	            		!file.getName().equals(OVERVIEW_TMP_FILENAME) &&
 	            		!file.getName().equals("helper.key") &&
-	            		!file.getName().equals("GlobalJavaVariables.java") &&
-	            		!file.getName().equals("GlobalJavaVariables.class")
+	            		!file.getName().contains(".java") &&
+	            		!file.getName().contains(".class")
 	            		) {
 		    	    System.out.println("delete" + file.getName());
 	            	file.delete();
