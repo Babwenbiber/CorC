@@ -1,5 +1,7 @@
 package de.tu_bs.cs.isf.cbc.cbcmodel.string_saver;
 
+import java.util.List;
+
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
@@ -61,5 +63,22 @@ public class ConditionExtension extends ConditionImpl{
 			secondCondString = "true";
 		}
 		stringRepresentation += "(" + secondCondString + ")";
+	}
+	
+	public ConditionExtension(Condition condition1, List<Condition> condition2) {
+		this(condition1);
+		stringRepresentation = "(" + stringRepresentation + ")";
+		for (Condition cond: condition2) {
+			String secondCondString  = "";
+			if (cond instanceof ConditionExtension) {
+				secondCondString = ((ConditionExtension)cond).stringRepresentation;
+			} else if (cond instanceof ConditionImpl) {
+				secondCondString = NodeModelUtils.getTokenText(NodeModelUtils.findActualNodeFor(cond));
+			}
+			if (secondCondString.isEmpty()) {
+				secondCondString = "true";
+			}
+			stringRepresentation += " & (" + secondCondString + ")";
+		}
 	}
 }

@@ -5,6 +5,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.BlockStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbCFormula;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Composition3Statement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CompositionStatement;
+import de.tu_bs.cs.isf.cbc.cbcmodel.InlineBlockStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariable;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariables;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Rename;
@@ -16,6 +17,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.impl.AbstractStatementImpl;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.BlockStatementImpl;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.Composition3StatementImpl;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.CompositionStatementImpl;
+import de.tu_bs.cs.isf.cbc.cbcmodel.impl.InlineBlockStatementImpl;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.MethodStatementImpl;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.RepetitionStatementImpl;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.ReturnStatementImpl;
@@ -23,6 +25,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.impl.SelectionStatementImpl;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.SkipStatementImpl;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.SmallRepetitionStatementImpl;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.StrengthWeakStatementImpl;
+import de.tu_bs.cs.isf.cbc.cbcmodel.string_saver.ConditionExtension;
 
 public class ConstructCodeBlock {
 
@@ -87,6 +90,8 @@ public class ConstructCodeBlock {
 			} else {
 				code.append(constructCodeBlockOfChildStatement(repStatement.getLoopStatement()));
 			}
+		} else if (statement instanceof BlockStatement) {
+			code.append(constructCodeBlockOfChildStatement(statement));
 		}
 		return code.toString();
 	}
@@ -247,6 +252,8 @@ public class ConstructCodeBlock {
 			return constructSelection((SelectionStatement) refinement);
 		} else if (refinement.getClass().equals(BlockStatementImpl.class)) {
 			return constructBlock((BlockStatement) refinement);
+		} else if (refinement.getClass().equals(InlineBlockStatementImpl.class)) {
+			return constructCodeBlockOfChildStatement(((InlineBlockStatement) refinement).getReferences());
 		} else if (refinement.getClass().equals(CompositionStatementImpl.class)) {
 			return constructComposition((CompositionStatement) refinement);
 		} else if (refinement.getClass().equals(Composition3StatementImpl.class)) {
@@ -269,7 +276,7 @@ public class ConstructCodeBlock {
 		StringBuffer buffer = new StringBuffer();
 
 		if (!statement.getCommands().isEmpty()) {
-			String guard =  Parser.getStringFromObject(statement.getGuards().get(0).getCondition());
+			String guard =  new ConditionExtension(statement.getGuards().get(0)).stringRepresentation;
 
 			guard = rewriteGuardToJavaCode(guard);
 
@@ -300,7 +307,7 @@ public class ConstructCodeBlock {
 		}
 
 		for (int i = 1; i < statement.getCommands().size(); i++) {
-			String guard =  Parser.getStringFromObject(statement.getGuards().get(i).getCondition());
+			String guard =  new ConditionExtension(statement.getGuards().get(i)).stringRepresentation;
 			// guard = guard.replaceAll("\\s=\\s", "==");
 			guard = rewriteGuardToJavaCode(guard);
 			buffer.append(" else if (" + guard + ") {\n");
@@ -347,9 +354,9 @@ public class ConstructCodeBlock {
 
 	private static String constructBlock(BlockStatement statement) {
 		StringBuffer buffer = new StringBuffer();
-
 		
-		buffer.append(statement.getJavaStatement());
+		
+		buffer.append(Parser.getStringFromObject(statement.getJavaStatement()));
 		
 
 		for (int i = 0; i < positionIndex; i++) {
@@ -562,7 +569,7 @@ public class ConstructCodeBlock {
 				}
 				buffer.append("//@ decreases " + statement.getVariant().getName() + ";\n");
 			}
-			String guard =  Parser.getStringFromObject(statement.getGuard().getCondition());
+			String guard =  (new ConditionExtension(statement.getGuard())).stringRepresentation;
 			// guard = guard.replaceAll("\\s=\\s", "==");
 			guard = rewriteGuardToJavaCode(guard);
 			for (int i = 0; i < positionIndex; i++) {

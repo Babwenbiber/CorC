@@ -1142,7 +1142,10 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	 * Contexts:
 	 *     JMLExpression returns JMLAddition
 	 *     JMLImplication returns JMLAddition
-	 *     JMLImplication.JMLImpl_1_0_0 returns JMLAddition
+	 *     JMLImplication.JMLImpl_1_0_0_0 returns JMLAddition
+	 *     JMLImplication.JMLImpl_1_0_1_0 returns JMLAddition
+	 *     JMLImplication.JMLImpl_1_0_2_0 returns JMLAddition
+	 *     JMLImplication.JMLImpl_1_0_3_0 returns JMLAddition
 	 *     JMLConcat returns JMLAddition
 	 *     JMLConcat.JMLAnd_1_0_0_0 returns JMLAddition
 	 *     JMLConcat.JMLOr_1_0_1_0 returns JMLAddition
@@ -1187,7 +1190,10 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	 * Contexts:
 	 *     JMLExpression returns JMLSubtraction
 	 *     JMLImplication returns JMLSubtraction
-	 *     JMLImplication.JMLImpl_1_0_0 returns JMLSubtraction
+	 *     JMLImplication.JMLImpl_1_0_0_0 returns JMLSubtraction
+	 *     JMLImplication.JMLImpl_1_0_1_0 returns JMLSubtraction
+	 *     JMLImplication.JMLImpl_1_0_2_0 returns JMLSubtraction
+	 *     JMLImplication.JMLImpl_1_0_3_0 returns JMLSubtraction
 	 *     JMLConcat returns JMLSubtraction
 	 *     JMLConcat.JMLAnd_1_0_0_0 returns JMLSubtraction
 	 *     JMLConcat.JMLOr_1_0_1_0 returns JMLSubtraction
@@ -1253,7 +1259,10 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	 * Contexts:
 	 *     JMLExpression returns JMLAnd
 	 *     JMLImplication returns JMLAnd
-	 *     JMLImplication.JMLImpl_1_0_0 returns JMLAnd
+	 *     JMLImplication.JMLImpl_1_0_0_0 returns JMLAnd
+	 *     JMLImplication.JMLImpl_1_0_1_0 returns JMLAnd
+	 *     JMLImplication.JMLImpl_1_0_2_0 returns JMLAnd
+	 *     JMLImplication.JMLImpl_1_0_3_0 returns JMLAnd
 	 *     JMLConcat returns JMLAnd
 	 *     JMLConcat.JMLAnd_1_0_0_0 returns JMLAnd
 	 *     JMLConcat.JMLOr_1_0_1_0 returns JMLAnd
@@ -1298,7 +1307,10 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	 * Contexts:
 	 *     JMLExpression returns JMLOr
 	 *     JMLImplication returns JMLOr
-	 *     JMLImplication.JMLImpl_1_0_0 returns JMLOr
+	 *     JMLImplication.JMLImpl_1_0_0_0 returns JMLOr
+	 *     JMLImplication.JMLImpl_1_0_1_0 returns JMLOr
+	 *     JMLImplication.JMLImpl_1_0_2_0 returns JMLOr
+	 *     JMLImplication.JMLImpl_1_0_3_0 returns JMLOr
 	 *     JMLConcat returns JMLOr
 	 *     JMLConcat.JMLAnd_1_0_0_0 returns JMLOr
 	 *     JMLConcat.JMLOr_1_0_1_0 returns JMLOr
@@ -1343,7 +1355,10 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	 * Contexts:
 	 *     JMLExpression returns JMLExpression
 	 *     JMLImplication returns JMLExpression
-	 *     JMLImplication.JMLImpl_1_0_0 returns JMLExpression
+	 *     JMLImplication.JMLImpl_1_0_0_0 returns JMLExpression
+	 *     JMLImplication.JMLImpl_1_0_1_0 returns JMLExpression
+	 *     JMLImplication.JMLImpl_1_0_2_0 returns JMLExpression
+	 *     JMLImplication.JMLImpl_1_0_3_0 returns JMLExpression
 	 *     JMLConcat returns JMLExpression
 	 *     JMLConcat.JMLAnd_1_0_0_0 returns JMLExpression
 	 *     JMLConcat.JMLOr_1_0_1_0 returns JMLExpression
@@ -1383,7 +1398,10 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	 * Contexts:
 	 *     JMLExpression returns JMLImpl
 	 *     JMLImplication returns JMLImpl
-	 *     JMLImplication.JMLImpl_1_0_0 returns JMLImpl
+	 *     JMLImplication.JMLImpl_1_0_0_0 returns JMLImpl
+	 *     JMLImplication.JMLImpl_1_0_1_0 returns JMLImpl
+	 *     JMLImplication.JMLImpl_1_0_2_0 returns JMLImpl
+	 *     JMLImplication.JMLImpl_1_0_3_0 returns JMLImpl
 	 *     JMLConcat returns JMLImpl
 	 *     JMLConcat.JMLAnd_1_0_0_0 returns JMLImpl
 	 *     JMLConcat.JMLOr_1_0_1_0 returns JMLImpl
@@ -1408,19 +1426,13 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	 *     JMLPrimaryExpression returns JMLImpl
 	 *
 	 * Constraint:
-	 *     (left=JMLImplication_JMLImpl_1_0_0 right=JMLConcat)
+	 *     (
+	 *         (left=JMLImplication_JMLImpl_1_0_0_0 | left=JMLImplication_JMLImpl_1_0_1_0 | left=JMLImplication_JMLImpl_1_0_2_0 | left=JMLImplication_JMLImpl_1_0_3_0) 
+	 *         right=JMLConcat
+	 *     )
 	 */
 	protected void sequence_JMLImplication(ISerializationContext context, JMLImpl semanticObject) {
-		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.JML_IMPL__LEFT) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.JML_IMPL__LEFT));
-			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.JML_EXPRESSION__RIGHT) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.JML_EXPRESSION__RIGHT));
-		}
-		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getJMLImplicationAccess().getJMLImplLeftAction_1_0_0(), semanticObject.getLeft());
-		feeder.accept(grammarAccess.getJMLImplicationAccess().getRightJMLConcatParserRuleCall_1_1_0(), semanticObject.getRight());
-		feeder.finish();
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	
@@ -1428,7 +1440,10 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	 * Contexts:
 	 *     JMLExpression returns JMLDivision
 	 *     JMLImplication returns JMLDivision
-	 *     JMLImplication.JMLImpl_1_0_0 returns JMLDivision
+	 *     JMLImplication.JMLImpl_1_0_0_0 returns JMLDivision
+	 *     JMLImplication.JMLImpl_1_0_1_0 returns JMLDivision
+	 *     JMLImplication.JMLImpl_1_0_2_0 returns JMLDivision
+	 *     JMLImplication.JMLImpl_1_0_3_0 returns JMLDivision
 	 *     JMLConcat returns JMLDivision
 	 *     JMLConcat.JMLAnd_1_0_0_0 returns JMLDivision
 	 *     JMLConcat.JMLOr_1_0_1_0 returns JMLDivision
@@ -1473,7 +1488,10 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	 * Contexts:
 	 *     JMLExpression returns JMLModulo
 	 *     JMLImplication returns JMLModulo
-	 *     JMLImplication.JMLImpl_1_0_0 returns JMLModulo
+	 *     JMLImplication.JMLImpl_1_0_0_0 returns JMLModulo
+	 *     JMLImplication.JMLImpl_1_0_1_0 returns JMLModulo
+	 *     JMLImplication.JMLImpl_1_0_2_0 returns JMLModulo
+	 *     JMLImplication.JMLImpl_1_0_3_0 returns JMLModulo
 	 *     JMLConcat returns JMLModulo
 	 *     JMLConcat.JMLAnd_1_0_0_0 returns JMLModulo
 	 *     JMLConcat.JMLOr_1_0_1_0 returns JMLModulo
@@ -1518,7 +1536,10 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	 * Contexts:
 	 *     JMLExpression returns JMLMultiplication
 	 *     JMLImplication returns JMLMultiplication
-	 *     JMLImplication.JMLImpl_1_0_0 returns JMLMultiplication
+	 *     JMLImplication.JMLImpl_1_0_0_0 returns JMLMultiplication
+	 *     JMLImplication.JMLImpl_1_0_1_0 returns JMLMultiplication
+	 *     JMLImplication.JMLImpl_1_0_2_0 returns JMLMultiplication
+	 *     JMLImplication.JMLImpl_1_0_3_0 returns JMLMultiplication
 	 *     JMLConcat returns JMLMultiplication
 	 *     JMLConcat.JMLAnd_1_0_0_0 returns JMLMultiplication
 	 *     JMLConcat.JMLOr_1_0_1_0 returns JMLMultiplication
@@ -1563,7 +1584,10 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	 * Contexts:
 	 *     JMLExpression returns JMLFunctionCall
 	 *     JMLImplication returns JMLFunctionCall
-	 *     JMLImplication.JMLImpl_1_0_0 returns JMLFunctionCall
+	 *     JMLImplication.JMLImpl_1_0_0_0 returns JMLFunctionCall
+	 *     JMLImplication.JMLImpl_1_0_1_0 returns JMLFunctionCall
+	 *     JMLImplication.JMLImpl_1_0_2_0 returns JMLFunctionCall
+	 *     JMLImplication.JMLImpl_1_0_3_0 returns JMLFunctionCall
 	 *     JMLConcat returns JMLFunctionCall
 	 *     JMLConcat.JMLAnd_1_0_0_0 returns JMLFunctionCall
 	 *     JMLConcat.JMLOr_1_0_1_0 returns JMLFunctionCall
@@ -1599,7 +1623,10 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	 * Contexts:
 	 *     JMLExpression returns JMLQualifier
 	 *     JMLImplication returns JMLQualifier
-	 *     JMLImplication.JMLImpl_1_0_0 returns JMLQualifier
+	 *     JMLImplication.JMLImpl_1_0_0_0 returns JMLQualifier
+	 *     JMLImplication.JMLImpl_1_0_1_0 returns JMLQualifier
+	 *     JMLImplication.JMLImpl_1_0_2_0 returns JMLQualifier
+	 *     JMLImplication.JMLImpl_1_0_3_0 returns JMLQualifier
 	 *     JMLConcat returns JMLQualifier
 	 *     JMLConcat.JMLAnd_1_0_0_0 returns JMLQualifier
 	 *     JMLConcat.JMLOr_1_0_1_0 returns JMLQualifier
@@ -1644,7 +1671,10 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	 * Contexts:
 	 *     JMLExpression returns JMLEqual
 	 *     JMLImplication returns JMLEqual
-	 *     JMLImplication.JMLImpl_1_0_0 returns JMLEqual
+	 *     JMLImplication.JMLImpl_1_0_0_0 returns JMLEqual
+	 *     JMLImplication.JMLImpl_1_0_1_0 returns JMLEqual
+	 *     JMLImplication.JMLImpl_1_0_2_0 returns JMLEqual
+	 *     JMLImplication.JMLImpl_1_0_3_0 returns JMLEqual
 	 *     JMLConcat returns JMLEqual
 	 *     JMLConcat.JMLAnd_1_0_0_0 returns JMLEqual
 	 *     JMLConcat.JMLOr_1_0_1_0 returns JMLEqual
@@ -1689,7 +1719,10 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	 * Contexts:
 	 *     JMLExpression returns JMLGreater
 	 *     JMLImplication returns JMLGreater
-	 *     JMLImplication.JMLImpl_1_0_0 returns JMLGreater
+	 *     JMLImplication.JMLImpl_1_0_0_0 returns JMLGreater
+	 *     JMLImplication.JMLImpl_1_0_1_0 returns JMLGreater
+	 *     JMLImplication.JMLImpl_1_0_2_0 returns JMLGreater
+	 *     JMLImplication.JMLImpl_1_0_3_0 returns JMLGreater
 	 *     JMLConcat returns JMLGreater
 	 *     JMLConcat.JMLAnd_1_0_0_0 returns JMLGreater
 	 *     JMLConcat.JMLOr_1_0_1_0 returns JMLGreater
@@ -1734,7 +1767,10 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	 * Contexts:
 	 *     JMLExpression returns JMLGreaterEqual
 	 *     JMLImplication returns JMLGreaterEqual
-	 *     JMLImplication.JMLImpl_1_0_0 returns JMLGreaterEqual
+	 *     JMLImplication.JMLImpl_1_0_0_0 returns JMLGreaterEqual
+	 *     JMLImplication.JMLImpl_1_0_1_0 returns JMLGreaterEqual
+	 *     JMLImplication.JMLImpl_1_0_2_0 returns JMLGreaterEqual
+	 *     JMLImplication.JMLImpl_1_0_3_0 returns JMLGreaterEqual
 	 *     JMLConcat returns JMLGreaterEqual
 	 *     JMLConcat.JMLAnd_1_0_0_0 returns JMLGreaterEqual
 	 *     JMLConcat.JMLOr_1_0_1_0 returns JMLGreaterEqual
@@ -1779,7 +1815,10 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	 * Contexts:
 	 *     JMLExpression returns JMLLower
 	 *     JMLImplication returns JMLLower
-	 *     JMLImplication.JMLImpl_1_0_0 returns JMLLower
+	 *     JMLImplication.JMLImpl_1_0_0_0 returns JMLLower
+	 *     JMLImplication.JMLImpl_1_0_1_0 returns JMLLower
+	 *     JMLImplication.JMLImpl_1_0_2_0 returns JMLLower
+	 *     JMLImplication.JMLImpl_1_0_3_0 returns JMLLower
 	 *     JMLConcat returns JMLLower
 	 *     JMLConcat.JMLAnd_1_0_0_0 returns JMLLower
 	 *     JMLConcat.JMLOr_1_0_1_0 returns JMLLower
@@ -1824,7 +1863,10 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	 * Contexts:
 	 *     JMLExpression returns JMLLowerEqual
 	 *     JMLImplication returns JMLLowerEqual
-	 *     JMLImplication.JMLImpl_1_0_0 returns JMLLowerEqual
+	 *     JMLImplication.JMLImpl_1_0_0_0 returns JMLLowerEqual
+	 *     JMLImplication.JMLImpl_1_0_1_0 returns JMLLowerEqual
+	 *     JMLImplication.JMLImpl_1_0_2_0 returns JMLLowerEqual
+	 *     JMLImplication.JMLImpl_1_0_3_0 returns JMLLowerEqual
 	 *     JMLConcat returns JMLLowerEqual
 	 *     JMLConcat.JMLAnd_1_0_0_0 returns JMLLowerEqual
 	 *     JMLConcat.JMLOr_1_0_1_0 returns JMLLowerEqual
@@ -1869,7 +1911,10 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	 * Contexts:
 	 *     JMLExpression returns JMLNotEqual
 	 *     JMLImplication returns JMLNotEqual
-	 *     JMLImplication.JMLImpl_1_0_0 returns JMLNotEqual
+	 *     JMLImplication.JMLImpl_1_0_0_0 returns JMLNotEqual
+	 *     JMLImplication.JMLImpl_1_0_1_0 returns JMLNotEqual
+	 *     JMLImplication.JMLImpl_1_0_2_0 returns JMLNotEqual
+	 *     JMLImplication.JMLImpl_1_0_3_0 returns JMLNotEqual
 	 *     JMLConcat returns JMLNotEqual
 	 *     JMLConcat.JMLAnd_1_0_0_0 returns JMLNotEqual
 	 *     JMLConcat.JMLOr_1_0_1_0 returns JMLNotEqual
@@ -2657,16 +2702,10 @@ public class DslSemanticSequencer extends JbaseSemanticSequencer {
 	 *     VariableOrMethodName returns VariableOrMethodName
 	 *
 	 * Constraint:
-	 *     name=ID
+	 *     (name=ID | name=ID)
 	 */
 	protected void sequence_VariableOrMethodName(ISerializationContext context, VariableOrMethodName semanticObject) {
-		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, CbcmodelPackage.Literals.VARIABLE_OR_METHOD_NAME__NAME) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, CbcmodelPackage.Literals.VARIABLE_OR_METHOD_NAME__NAME));
-		}
-		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getVariableOrMethodNameAccess().getNameIDTerminalRuleCall_0_0(), semanticObject.getName());
-		feeder.finish();
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	

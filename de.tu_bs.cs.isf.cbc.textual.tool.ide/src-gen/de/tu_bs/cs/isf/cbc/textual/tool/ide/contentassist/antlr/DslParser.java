@@ -45,6 +45,7 @@ public class DslParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getOperationAccess().getAlternatives(), "rule__Operation__Alternatives");
 			builder.put(grammarAccess.getXJSingleStatementAccess().getAlternatives(), "rule__XJSingleStatement__Alternatives");
 			builder.put(grammarAccess.getBlockStatementAccess().getAlternatives_5_1(), "rule__BlockStatement__Alternatives_5_1");
+			builder.put(grammarAccess.getVariableOrMethodNameAccess().getAlternatives(), "rule__VariableOrMethodName__Alternatives");
 			builder.put(grammarAccess.getConcatAccess().getAlternatives_1_0(), "rule__Concat__Alternatives_1_0");
 			builder.put(grammarAccess.getForeachAccess().getAlternatives(), "rule__Foreach__Alternatives");
 			builder.put(grammarAccess.getExistsAccess().getAlternatives(), "rule__Exists__Alternatives");
@@ -54,6 +55,7 @@ public class DslParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getPrimaryExpressionAccess().getAlternatives(), "rule__PrimaryExpression__Alternatives");
 			builder.put(grammarAccess.getPrimaryExpressionAccess().getAlternatives_0_1_0(), "rule__PrimaryExpression__Alternatives_0_1_0");
 			builder.put(grammarAccess.getPrimaryExpressionAccess().getAlternatives_2_3(), "rule__PrimaryExpression__Alternatives_2_3");
+			builder.put(grammarAccess.getJMLImplicationAccess().getAlternatives_1_0(), "rule__JMLImplication__Alternatives_1_0");
 			builder.put(grammarAccess.getJMLConcatAccess().getAlternatives_1_0(), "rule__JMLConcat__Alternatives_1_0");
 			builder.put(grammarAccess.getJMLForeachAccess().getAlternatives(), "rule__JMLForeach__Alternatives");
 			builder.put(grammarAccess.getJMLExistsAccess().getAlternatives(), "rule__JMLExists__Alternatives");
@@ -154,8 +156,11 @@ public class DslParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getRenamingAccess().getGroup(), "rule__Renaming__Group__0");
 			builder.put(grammarAccess.getRenamingAccess().getGroup_2(), "rule__Renaming__Group_2__0");
 			builder.put(grammarAccess.getRenameAccess().getGroup(), "rule__Rename__Group__0");
-			builder.put(grammarAccess.getVariableOrMethodNameAccess().getGroup(), "rule__VariableOrMethodName__Group__0");
+			builder.put(grammarAccess.getVariableOrMethodNameAccess().getGroup_0(), "rule__VariableOrMethodName__Group_0__0");
+			builder.put(grammarAccess.getVariableOrMethodNameAccess().getGroup_0_1(), "rule__VariableOrMethodName__Group_0_1__0");
 			builder.put(grammarAccess.getVariableOrMethodNameAccess().getGroup_1(), "rule__VariableOrMethodName__Group_1__0");
+			builder.put(grammarAccess.getVariableOrMethodNameAccess().getGroup_1_1(), "rule__VariableOrMethodName__Group_1_1__0");
+			builder.put(grammarAccess.getVariableOrMethodNameAccess().getGroup_1_1_1(), "rule__VariableOrMethodName__Group_1_1_1__0");
 			builder.put(grammarAccess.getImplicationAccess().getGroup(), "rule__Implication__Group__0");
 			builder.put(grammarAccess.getImplicationAccess().getGroup_1(), "rule__Implication__Group_1__0");
 			builder.put(grammarAccess.getImplicationAccess().getGroup_1_0(), "rule__Implication__Group_1_0__0");
@@ -201,7 +206,10 @@ public class DslParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getPrimaryExpressionAccess().getGroup_6(), "rule__PrimaryExpression__Group_6__0");
 			builder.put(grammarAccess.getJMLImplicationAccess().getGroup(), "rule__JMLImplication__Group__0");
 			builder.put(grammarAccess.getJMLImplicationAccess().getGroup_1(), "rule__JMLImplication__Group_1__0");
-			builder.put(grammarAccess.getJMLImplicationAccess().getGroup_1_0(), "rule__JMLImplication__Group_1_0__0");
+			builder.put(grammarAccess.getJMLImplicationAccess().getGroup_1_0_0(), "rule__JMLImplication__Group_1_0_0__0");
+			builder.put(grammarAccess.getJMLImplicationAccess().getGroup_1_0_1(), "rule__JMLImplication__Group_1_0_1__0");
+			builder.put(grammarAccess.getJMLImplicationAccess().getGroup_1_0_2(), "rule__JMLImplication__Group_1_0_2__0");
+			builder.put(grammarAccess.getJMLImplicationAccess().getGroup_1_0_3(), "rule__JMLImplication__Group_1_0_3__0");
 			builder.put(grammarAccess.getJMLConcatAccess().getGroup(), "rule__JMLConcat__Group__0");
 			builder.put(grammarAccess.getJMLConcatAccess().getGroup_1(), "rule__JMLConcat__Group_1__0");
 			builder.put(grammarAccess.getJMLConcatAccess().getGroup_1_0_0(), "rule__JMLConcat__Group_1_0_0__0");
@@ -530,7 +538,8 @@ public class DslParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getRenameAccess().getTypeAssignment_3(), "rule__Rename__TypeAssignment_3");
 			builder.put(grammarAccess.getRenameAccess().getFunctionAssignment_5(), "rule__Rename__FunctionAssignment_5");
 			builder.put(grammarAccess.getRenameAccess().getNewNameAssignment_7(), "rule__Rename__NewNameAssignment_7");
-			builder.put(grammarAccess.getVariableOrMethodNameAccess().getNameAssignment_0(), "rule__VariableOrMethodName__NameAssignment_0");
+			builder.put(grammarAccess.getVariableOrMethodNameAccess().getNameAssignment_0_0(), "rule__VariableOrMethodName__NameAssignment_0_0");
+			builder.put(grammarAccess.getVariableOrMethodNameAccess().getNameAssignment_1_1_0(), "rule__VariableOrMethodName__NameAssignment_1_1_0");
 			builder.put(grammarAccess.getImplicationAccess().getRightAssignment_1_1(), "rule__Implication__RightAssignment_1_1");
 			builder.put(grammarAccess.getConcatAccess().getRightAssignment_1_1(), "rule__Concat__RightAssignment_1_1");
 			builder.put(grammarAccess.getForeachAccess().getForeachAssignment_1_0(), "rule__Foreach__ForeachAssignment_1_0");

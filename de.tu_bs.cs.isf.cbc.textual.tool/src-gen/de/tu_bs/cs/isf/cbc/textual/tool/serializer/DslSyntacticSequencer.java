@@ -44,7 +44,8 @@ public class DslSyntacticSequencer extends AbstractSyntacticSequencer {
 	protected AbstractElementAlias match_PrimaryExpression___LeftParenthesisKeyword_2_3_0_0_RightParenthesisKeyword_2_3_0_2__a;
 	protected AbstractElementAlias match_PrimaryExpression___RightParenthesisKeyword_2_3_0_2_LeftParenthesisKeyword_2_3_0_0__a;
 	protected AbstractElementAlias match_PrimaryExpression___RightParenthesisKeyword_2_3_0_2_LeftParenthesisKeyword_2_3_0_0__p;
-	protected AbstractElementAlias match_VariableOrMethodName___LeftSquareBracketKeyword_1_0_AsteriskKeyword_1_1_RightSquareBracketKeyword_1_2__q;
+	protected AbstractElementAlias match_VariableOrMethodName___LeftSquareBracketKeyword_0_1_0_AsteriskKeyword_0_1_1_RightSquareBracketKeyword_0_1_2__q;
+	protected AbstractElementAlias match_VariableOrMethodName___LeftSquareBracketKeyword_1_1_1_0_AsteriskKeyword_1_1_1_1_RightSquareBracketKeyword_1_1_1_2__q;
 	protected AbstractElementAlias match_XAnnotation___LeftParenthesisKeyword_3_0_RightParenthesisKeyword_3_2__q;
 	protected AbstractElementAlias match_XExpressionInClosure_SemicolonKeyword_1_1_q;
 	protected AbstractElementAlias match_XFunctionTypeRef___LeftParenthesisKeyword_0_0_RightParenthesisKeyword_0_2__q;
@@ -77,7 +78,8 @@ public class DslSyntacticSequencer extends AbstractSyntacticSequencer {
 		match_PrimaryExpression___LeftParenthesisKeyword_2_3_0_0_RightParenthesisKeyword_2_3_0_2__a = new GroupAlias(true, true, new TokenAlias(false, false, grammarAccess.getPrimaryExpressionAccess().getLeftParenthesisKeyword_2_3_0_0()), new TokenAlias(false, false, grammarAccess.getPrimaryExpressionAccess().getRightParenthesisKeyword_2_3_0_2()));
 		match_PrimaryExpression___RightParenthesisKeyword_2_3_0_2_LeftParenthesisKeyword_2_3_0_0__a = new GroupAlias(true, true, new TokenAlias(false, false, grammarAccess.getPrimaryExpressionAccess().getRightParenthesisKeyword_2_3_0_2()), new TokenAlias(false, false, grammarAccess.getPrimaryExpressionAccess().getLeftParenthesisKeyword_2_3_0_0()));
 		match_PrimaryExpression___RightParenthesisKeyword_2_3_0_2_LeftParenthesisKeyword_2_3_0_0__p = new GroupAlias(true, false, new TokenAlias(false, false, grammarAccess.getPrimaryExpressionAccess().getRightParenthesisKeyword_2_3_0_2()), new TokenAlias(false, false, grammarAccess.getPrimaryExpressionAccess().getLeftParenthesisKeyword_2_3_0_0()));
-		match_VariableOrMethodName___LeftSquareBracketKeyword_1_0_AsteriskKeyword_1_1_RightSquareBracketKeyword_1_2__q = new GroupAlias(false, true, new TokenAlias(false, false, grammarAccess.getVariableOrMethodNameAccess().getLeftSquareBracketKeyword_1_0()), new TokenAlias(false, false, grammarAccess.getVariableOrMethodNameAccess().getAsteriskKeyword_1_1()), new TokenAlias(false, false, grammarAccess.getVariableOrMethodNameAccess().getRightSquareBracketKeyword_1_2()));
+		match_VariableOrMethodName___LeftSquareBracketKeyword_0_1_0_AsteriskKeyword_0_1_1_RightSquareBracketKeyword_0_1_2__q = new GroupAlias(false, true, new TokenAlias(false, false, grammarAccess.getVariableOrMethodNameAccess().getLeftSquareBracketKeyword_0_1_0()), new TokenAlias(false, false, grammarAccess.getVariableOrMethodNameAccess().getAsteriskKeyword_0_1_1()), new TokenAlias(false, false, grammarAccess.getVariableOrMethodNameAccess().getRightSquareBracketKeyword_0_1_2()));
+		match_VariableOrMethodName___LeftSquareBracketKeyword_1_1_1_0_AsteriskKeyword_1_1_1_1_RightSquareBracketKeyword_1_1_1_2__q = new GroupAlias(false, true, new TokenAlias(false, false, grammarAccess.getVariableOrMethodNameAccess().getLeftSquareBracketKeyword_1_1_1_0()), new TokenAlias(false, false, grammarAccess.getVariableOrMethodNameAccess().getAsteriskKeyword_1_1_1_1()), new TokenAlias(false, false, grammarAccess.getVariableOrMethodNameAccess().getRightSquareBracketKeyword_1_1_1_2()));
 		match_XAnnotation___LeftParenthesisKeyword_3_0_RightParenthesisKeyword_3_2__q = new GroupAlias(false, true, new TokenAlias(false, false, grammarAccess.getXAnnotationAccess().getLeftParenthesisKeyword_3_0()), new TokenAlias(false, false, grammarAccess.getXAnnotationAccess().getRightParenthesisKeyword_3_2()));
 		match_XExpressionInClosure_SemicolonKeyword_1_1_q = new TokenAlias(false, true, grammarAccess.getXExpressionInClosureAccess().getSemicolonKeyword_1_1());
 		match_XFunctionTypeRef___LeftParenthesisKeyword_0_0_RightParenthesisKeyword_0_2__q = new GroupAlias(false, true, new TokenAlias(false, false, grammarAccess.getXFunctionTypeRefAccess().getLeftParenthesisKeyword_0_0()), new TokenAlias(false, false, grammarAccess.getXFunctionTypeRefAccess().getRightParenthesisKeyword_0_2()));
@@ -204,8 +206,10 @@ public class DslSyntacticSequencer extends AbstractSyntacticSequencer {
 				emit_PrimaryExpression___RightParenthesisKeyword_2_3_0_2_LeftParenthesisKeyword_2_3_0_0__a(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_PrimaryExpression___RightParenthesisKeyword_2_3_0_2_LeftParenthesisKeyword_2_3_0_0__p.equals(syntax))
 				emit_PrimaryExpression___RightParenthesisKeyword_2_3_0_2_LeftParenthesisKeyword_2_3_0_0__p(semanticObject, getLastNavigableState(), syntaxNodes);
-			else if (match_VariableOrMethodName___LeftSquareBracketKeyword_1_0_AsteriskKeyword_1_1_RightSquareBracketKeyword_1_2__q.equals(syntax))
-				emit_VariableOrMethodName___LeftSquareBracketKeyword_1_0_AsteriskKeyword_1_1_RightSquareBracketKeyword_1_2__q(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_VariableOrMethodName___LeftSquareBracketKeyword_0_1_0_AsteriskKeyword_0_1_1_RightSquareBracketKeyword_0_1_2__q.equals(syntax))
+				emit_VariableOrMethodName___LeftSquareBracketKeyword_0_1_0_AsteriskKeyword_0_1_1_RightSquareBracketKeyword_0_1_2__q(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_VariableOrMethodName___LeftSquareBracketKeyword_1_1_1_0_AsteriskKeyword_1_1_1_1_RightSquareBracketKeyword_1_1_1_2__q.equals(syntax))
+				emit_VariableOrMethodName___LeftSquareBracketKeyword_1_1_1_0_AsteriskKeyword_1_1_1_1_RightSquareBracketKeyword_1_1_1_2__q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_XAnnotation___LeftParenthesisKeyword_3_0_RightParenthesisKeyword_3_2__q.equals(syntax))
 				emit_XAnnotation___LeftParenthesisKeyword_3_0_RightParenthesisKeyword_3_2__q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_XExpressionInClosure_SemicolonKeyword_1_1_q.equals(syntax))
@@ -546,7 +550,18 @@ public class DslSyntacticSequencer extends AbstractSyntacticSequencer {
 	 * This ambiguous syntax occurs at:
 	 *     name=ID (ambiguity) (rule end)
 	 */
-	protected void emit_VariableOrMethodName___LeftSquareBracketKeyword_1_0_AsteriskKeyword_1_1_RightSquareBracketKeyword_1_2__q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+	protected void emit_VariableOrMethodName___LeftSquareBracketKeyword_0_1_0_AsteriskKeyword_0_1_1_RightSquareBracketKeyword_0_1_2__q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Ambiguous syntax:
+	 *     ('[' '*' ']')?
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     name=ID (ambiguity) ')' (rule end)
+	 */
+	protected void emit_VariableOrMethodName___LeftSquareBracketKeyword_1_1_1_0_AsteriskKeyword_1_1_1_1_RightSquareBracketKeyword_1_1_1_2__q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	

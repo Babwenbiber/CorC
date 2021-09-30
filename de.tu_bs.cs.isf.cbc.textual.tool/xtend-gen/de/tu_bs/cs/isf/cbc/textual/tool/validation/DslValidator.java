@@ -4,6 +4,7 @@
 package de.tu_bs.cs.isf.cbc.textual.tool.validation;
 
 import com.google.common.collect.Iterators;
+import com.google.inject.Inject;
 import de.tu_bs.cs.isf.cbc.cbcmodel.AbstractStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbCFormula;
 import de.tu_bs.cs.isf.cbc.cbcmodel.CbcmodelPackage;
@@ -23,6 +24,7 @@ import de.tu_bs.cs.isf.cbc.util.ProveWithKey;
 import de.tu_bs.cs.isf.toolkit.support.compare.CompareMethodBodies;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.CheckType;
+import org.eclipse.xtext.validation.IResourceValidator;
 
 /**
  * This class contains custom validation rules.
@@ -34,6 +36,9 @@ public class DslValidator extends AbstractDslValidator {
   public static final String INVALID_NAME = "invalidName";
   
   public static final String NOT_PROVED = "notProved";
+  
+  @Inject
+  private IResourceValidator resourceValidator;
   
   @Check
   public void checkSyntaxOfStatement(final AbstractStatement statement) {

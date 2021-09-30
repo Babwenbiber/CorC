@@ -213,7 +213,8 @@ Expression:
 	Implication;
 	
 VariableOrMethodName:
-	name=ID ("[" "*" "]")?;
+		(name=ID ("[" "*" "]")?) |
+	"\\old("(name=ID ("[" "*" "]")?) ")";
 	
 Implication returns Expression:
 	Concat (( {Impl.left=current} ('<'?'->')) right=Concat)*;
@@ -256,7 +257,7 @@ JMLExpression:
 	JMLImplication;
 	
 JMLImplication returns JMLExpression:
-	JMLConcat (( {JMLImpl.left=current} '=>') right=JMLConcat)*;
+	JMLConcat (( {JMLImpl.left=current} '==>' | {JMLImpl.left=current} '<==' | {JMLImpl.left=current} '<==>' | {JMLImpl.left=current} '<=!=>') right=JMLConcat)*;
 
 JMLConcat returns JMLExpression:
 	JMLForeach (({JMLAnd.left=current} '&&' | {JMLOr.left=current} '||') right=JMLForeach)*;

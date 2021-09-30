@@ -21,6 +21,8 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.SkipStatement
 import de.tu_bs.cs.isf.cbc.cbcmodel.StrengthWeakStatement
 import de.tu_bs.cs.isf.cbc.util.FilenamePrefix
 import de.tu_bs.cs.isf.cbc.cbcmodel.string_saver.ConditionExtension
+import org.eclipse.xtext.validation.IResourceValidator
+import com.google.inject.Inject
 
 /**
  * This class contains custom validation rules. 
@@ -31,6 +33,8 @@ class DslValidator extends AbstractDslValidator {
 	
 	public static val INVALID_NAME = 'invalidName'
 	public static val NOT_PROVED = 'notProved'
+	
+	@Inject IResourceValidator resourceValidator
 
 	@Check
 	def checkSyntaxOfStatement(AbstractStatement statement) {
@@ -71,6 +75,8 @@ class DslValidator extends AbstractDslValidator {
 			}
 		}
 	}
+
+	
 	
 	@Check(CheckType.EXPENSIVE)
 	def checkProveOfStatement(AbstractStatement statement) {

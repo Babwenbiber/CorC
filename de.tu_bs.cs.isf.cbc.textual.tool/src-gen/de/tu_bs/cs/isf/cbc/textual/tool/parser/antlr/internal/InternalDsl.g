@@ -2975,36 +2975,83 @@ ruleVariableOrMethodName returns [EObject current=null]
 	(
 		(
 			(
-				lv_name_0_0=RULE_ID
-				{
-					newLeafNode(lv_name_0_0, grammarAccess.getVariableOrMethodNameAccess().getNameIDTerminalRuleCall_0_0());
-				}
-				{
-					if ($current==null) {
-						$current = createModelElement(grammarAccess.getVariableOrMethodNameRule());
+				(
+					lv_name_0_0=RULE_ID
+					{
+						newLeafNode(lv_name_0_0, grammarAccess.getVariableOrMethodNameAccess().getNameIDTerminalRuleCall_0_0_0());
 					}
-					setWithLastConsumed(
-						$current,
-						"name",
-						lv_name_0_0,
-						"org.eclipse.xtext.xbase.Xtype.ID");
-				}
+					{
+						if ($current==null) {
+							$current = createModelElement(grammarAccess.getVariableOrMethodNameRule());
+						}
+						setWithLastConsumed(
+							$current,
+							"name",
+							lv_name_0_0,
+							"org.eclipse.xtext.xbase.Xtype.ID");
+					}
+				)
 			)
+			(
+				otherlv_1='['
+				{
+					newLeafNode(otherlv_1, grammarAccess.getVariableOrMethodNameAccess().getLeftSquareBracketKeyword_0_1_0());
+				}
+				otherlv_2='*'
+				{
+					newLeafNode(otherlv_2, grammarAccess.getVariableOrMethodNameAccess().getAsteriskKeyword_0_1_1());
+				}
+				otherlv_3=']'
+				{
+					newLeafNode(otherlv_3, grammarAccess.getVariableOrMethodNameAccess().getRightSquareBracketKeyword_0_1_2());
+				}
+			)?
 		)
+		    |
 		(
-			otherlv_1='['
+			otherlv_4='\\old('
 			{
-				newLeafNode(otherlv_1, grammarAccess.getVariableOrMethodNameAccess().getLeftSquareBracketKeyword_1_0());
+				newLeafNode(otherlv_4, grammarAccess.getVariableOrMethodNameAccess().getOldKeyword_1_0());
 			}
-			otherlv_2='*'
+			(
+				(
+					(
+						lv_name_5_0=RULE_ID
+						{
+							newLeafNode(lv_name_5_0, grammarAccess.getVariableOrMethodNameAccess().getNameIDTerminalRuleCall_1_1_0_0());
+						}
+						{
+							if ($current==null) {
+								$current = createModelElement(grammarAccess.getVariableOrMethodNameRule());
+							}
+							setWithLastConsumed(
+								$current,
+								"name",
+								lv_name_5_0,
+								"org.eclipse.xtext.xbase.Xtype.ID");
+						}
+					)
+				)
+				(
+					otherlv_6='['
+					{
+						newLeafNode(otherlv_6, grammarAccess.getVariableOrMethodNameAccess().getLeftSquareBracketKeyword_1_1_1_0());
+					}
+					otherlv_7='*'
+					{
+						newLeafNode(otherlv_7, grammarAccess.getVariableOrMethodNameAccess().getAsteriskKeyword_1_1_1_1());
+					}
+					otherlv_8=']'
+					{
+						newLeafNode(otherlv_8, grammarAccess.getVariableOrMethodNameAccess().getRightSquareBracketKeyword_1_1_1_2());
+					}
+				)?
+			)
+			otherlv_9=')'
 			{
-				newLeafNode(otherlv_2, grammarAccess.getVariableOrMethodNameAccess().getAsteriskKeyword_1_1());
+				newLeafNode(otherlv_9, grammarAccess.getVariableOrMethodNameAccess().getRightParenthesisKeyword_1_2());
 			}
-			otherlv_3=']'
-			{
-				newLeafNode(otherlv_3, grammarAccess.getVariableOrMethodNameAccess().getRightSquareBracketKeyword_1_2());
-			}
-		)?
+		)
 	)
 ;
 
@@ -4059,23 +4106,67 @@ ruleJMLImplication returns [EObject current=null]
 		(
 			(
 				(
+					(
+						{
+							$current = forceCreateModelElementAndSet(
+								grammarAccess.getJMLImplicationAccess().getJMLImplLeftAction_1_0_0_0(),
+								$current);
+						}
+					)
+					otherlv_2='==>'
 					{
-						$current = forceCreateModelElementAndSet(
-							grammarAccess.getJMLImplicationAccess().getJMLImplLeftAction_1_0_0(),
-							$current);
+						newLeafNode(otherlv_2, grammarAccess.getJMLImplicationAccess().getEqualsSignEqualsSignGreaterThanSignKeyword_1_0_0_1());
 					}
 				)
-				otherlv_2='=>'
-				{
-					newLeafNode(otherlv_2, grammarAccess.getJMLImplicationAccess().getEqualsSignGreaterThanSignKeyword_1_0_1());
-				}
+				    |
+				(
+					(
+						{
+							$current = forceCreateModelElementAndSet(
+								grammarAccess.getJMLImplicationAccess().getJMLImplLeftAction_1_0_1_0(),
+								$current);
+						}
+					)
+					otherlv_4='<=='
+					{
+						newLeafNode(otherlv_4, grammarAccess.getJMLImplicationAccess().getLessThanSignEqualsSignEqualsSignKeyword_1_0_1_1());
+					}
+				)
+				    |
+				(
+					(
+						{
+							$current = forceCreateModelElementAndSet(
+								grammarAccess.getJMLImplicationAccess().getJMLImplLeftAction_1_0_2_0(),
+								$current);
+						}
+					)
+					otherlv_6='<==>'
+					{
+						newLeafNode(otherlv_6, grammarAccess.getJMLImplicationAccess().getLessThanSignEqualsSignEqualsSignGreaterThanSignKeyword_1_0_2_1());
+					}
+				)
+				    |
+				(
+					(
+						{
+							$current = forceCreateModelElementAndSet(
+								grammarAccess.getJMLImplicationAccess().getJMLImplLeftAction_1_0_3_0(),
+								$current);
+						}
+					)
+					otherlv_8='<=!=>'
+					{
+						newLeafNode(otherlv_8, grammarAccess.getJMLImplicationAccess().getLessThanSignEqualsSignExclamationMarkEqualsSignGreaterThanSignKeyword_1_0_3_1());
+					}
+				)
 			)
 			(
 				(
 					{
 						newCompositeNode(grammarAccess.getJMLImplicationAccess().getRightJMLConcatParserRuleCall_1_1_0());
 					}
-					lv_right_3_0=ruleJMLConcat
+					lv_right_9_0=ruleJMLConcat
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getJMLImplicationRule());
@@ -4083,7 +4174,7 @@ ruleJMLImplication returns [EObject current=null]
 						set(
 							$current,
 							"right",
-							lv_right_3_0,
+							lv_right_9_0,
 							"de.tu_bs.cs.isf.cbc.textual.tool.Dsl.JMLConcat");
 						afterParserOrEnumRuleCall();
 					}

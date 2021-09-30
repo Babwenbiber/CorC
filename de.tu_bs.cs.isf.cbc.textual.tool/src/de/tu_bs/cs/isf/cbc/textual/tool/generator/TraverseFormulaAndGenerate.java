@@ -1,6 +1,7 @@
 package de.tu_bs.cs.isf.cbc.textual.tool.generator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -180,13 +181,16 @@ public class TraverseFormulaAndGenerate {
 		loopStatement.setPreCondition(new ConditionExtension(invariant, guard));
 		
 		loopStatement.setPostCondition(invariant);
+		//pre -> inv
 		ProveWithKey.createProvePreWithKey(invariant.stringRepresentation, pre.stringRepresentation,
-				 ListParser.getListStringFromListVariables(vars.getVariables()),
-					ListParser.getListStringFromListCondition(conds), renaming, uri, numberFile++, false, FilenamePrefix.PRE_IMPL);
+				ListParser.getListStringFromListVariables(vars.getVariables()),
+				ListParser.getListStringFromListCondition(conds), renaming, uri, numberFile++, false, FilenamePrefix.PRE_IMPL, true);
+		//inv&!guard -> post
 		ProveWithKey.createProvePostWithKey(invariant.stringRepresentation, guard.stringRepresentation,
 				post.stringRepresentation,  ListParser.getListStringFromListVariables(vars.getVariables()),
 				ListParser.getListStringFromListCondition(conds), renaming, uri, numberFile++, false, FilenamePrefix.POST_IMPL);
 		String code = ConstructCodeBlock.constructCodeBlockAndVerify3(repetitionStatement);
+		//variant
 		ProveWithKey.createProveVariant2WithKey(code, invariant.stringRepresentation,
 				guard.stringRepresentation, new ExpressionExtension(repetitionStatement.getVariant().getVar()).stringRepresentation,
 				ListParser.getListStringFromListVariables(vars.getVariables()),
@@ -241,11 +245,13 @@ public class TraverseFormulaAndGenerate {
 		}
 		if (!firstBlockSeen) {
 			firstBlockSeen = true;
-			ProveWithKey.createProvePreImplPreWithKey(new ConditionExtension((Condition)blockStatement.getPreCondition()).stringRepresentation,
+			ProveWithKey.createProvePreImplPreWithKeyNoChildRename(new ConditionExtension(
+					(Condition)blockStatement.getPreCondition()).stringRepresentation,
 					Parser.rewriteJMLConditionToKeY(Parser.getStringFromObject(blockStatement.getJmlAnnotation().getRequires())),
 					ListParser.getListStringFromListVariables(vars.getVariables()),
 					ListParser.getListStringFromListCondition(conds), renaming, uri, numberFile++, false, preName, parseFormula);
-			ProveWithKey.createProvePostImplPostWithKey(new ConditionExtension((Condition)blockStatement.getPostCondition()).stringRepresentation,
+			ProveWithKey.createProvePostImplPostWithKeyNoChildRename(new ConditionExtension(
+					(Condition)blockStatement.getPostCondition()).stringRepresentation,
 					Parser.rewriteJMLConditionToKeY(Parser.getStringFromObject(blockStatement.getJmlAnnotation().getEnsures())),
 					ListParser.getListStringFromListVariables(vars.getVariables()),
 					ListParser.getListStringFromListCondition(conds), renaming, uri, numberFile++, false, postName, parseFormula);
