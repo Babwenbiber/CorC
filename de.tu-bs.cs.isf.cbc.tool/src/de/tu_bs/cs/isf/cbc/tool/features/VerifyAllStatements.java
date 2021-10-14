@@ -42,6 +42,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.SelectionStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.SmallRepetitionStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.VariableKind;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Variant;
+import de.tu_bs.cs.isf.cbc.cbcmodel.string_saver.ConditionExtension;
 import de.tu_bs.cs.isf.cbc.tool.helper.StringParser;
 import de.tu_bs.cs.isf.cbc.util.Console;
 import de.tu_bs.cs.isf.cbc.util.ConstructCodeBlock;
@@ -85,9 +86,10 @@ public class VerifyAllStatements extends MyAbstractAsynchronousCustomFeature {
  
     @Override
     public void execute(ICustomContext context, IProgressMonitor monitor) {
-    	String ws = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString();
-    	URI uri = URI.createFileURI(ws + getDiagram().eResource().getURI()
-    			.trimSegments(1).toPlatformString(true)+ "/");
+//    	String ws = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString();
+//    	URI uri = URI.createFileURI(ws + getDiagram().eResource().getURI()
+//    			.trimSegments(1).toPlatformString(true)+ "/");
+    	URI uri = getDiagram().eResource().getURI();
     	JavaVariables vars = null;
 		Renaming renaming = null;
 		CbCFormula formula = null;
@@ -109,10 +111,11 @@ public class VerifyAllStatements extends MyAbstractAsynchronousCustomFeature {
 		prove = proveChildStatement(statement.getRefinement(), vars, conds, renaming, uri, null);	
 		if (prove) {
 			statement.setProven(true);
+			Console.println("All statements verified");
 		} else {
 			statement.setProven(false);
+			Console.println("Couldn't verify all statements");
 		}
-		Console.println("All statements verified");
     }
     
     
@@ -268,34 +271,37 @@ public class VerifyAllStatements extends MyAbstractAsynchronousCustomFeature {
 		boolean provePre, provePost, proveVar = false;
 		RepetitionStatement repStatement = (RepetitionStatement) statement;
 		if (repStatement.getLoopStatement().getRefinement() != null) {
-			prove = (proveChildStatement(repStatement.getLoopStatement().getRefinement(), vars, conds, renaming, uri, monitor) && true);
+			prove = (proveChildStatement(repStatement.getLoopStatement().getRefinement(), vars, conds, renaming, uri, monitor) && prove);
 		}
 		if (repStatement.getStartStatement().getRefinement() != null) {
-			prove = (proveChildStatement(repStatement.getStartStatement().getRefinement(), vars, conds, renaming, uri, monitor) && prove && true);
+			prove = (proveChildStatement(repStatement.getStartStatement().getRefinement(), vars, conds, renaming, uri, monitor) && prove);
 		}
 		if (repStatement.getEndStatement().getRefinement() != null) {
-			prove = (proveChildStatement(repStatement.getEndStatement().getRefinement(), vars, conds, renaming, uri, monitor) && prove && true);
+			prove = (proveChildStatement(repStatement.getEndStatement().getRefinement(), vars, conds, renaming, uri, monitor) && prove);
 		}
-		if (!(repStatement.isVariantProven() && repStatement.isProven()) && true) {
-			String invariant = repStatement.getInvariant().getName();
-			String preCondition = repStatement.getPreCondition().getName();
-			String guard = repStatement.getGuard().getName();
-			String postCondition = repStatement.getPostCondition().getName();
+		if (!(repStatement.isVariantProven() && repStatement.isProven())) {
+			String invariant = new ConditionExtension(repStatement.getInvariant()).stringRepresentation;
+			String preCondition = new ConditionExtension(repStatement.getPreCondition()).stringRepresentation;
+			String guard =new ConditionExtension( repStatement.getGuard()).stringRepresentation;
+			String postCondition = new ConditionExtension(repStatement.getPostCondition()).stringRepresentation;
 			String code = ConstructCodeBlock.constructCodeBlockAndVerify(statement);
 			Variant variant = repStatement.getVariant();
+			Console.println("pre");
 			provePre = ProveWithKey.provePreWithKey(invariant, preCondition,  StringParser.getVariableListToStringList(vars),
 					StringParser.getConditionListToStringList(conds), renaming, uri, monitor, FilenamePrefix.REPETITION);
+			Console.println("post");
 			provePost = ProveWithKey.provePostWithKey(invariant, guard, postCondition,  StringParser.getVariableListToStringList(vars),
 					StringParser.getConditionListToStringList(conds), renaming, uri, monitor, FilenamePrefix.REPETITION);
+			Console.println("var");
 			proveVar = ProveWithKey.proveVariant2WithKey(code, invariant, guard, variant.getName(),  StringParser.getVariableListToStringList(vars),
 					StringParser.getConditionListToStringList(conds), renaming, uri, monitor, FilenamePrefix.REPETITION);
 			repStatement.setVariantProven(proveVar);
-			if (prove && provePre && provePost && proveVar && true) {
+			if (prove && provePre && provePost && proveVar) {
 				statement.setProven(true);
 			} else {
 				statement.setProven(false);
 			}	
-	    	return (provePre && provePost && proveVar && true);
+	    	return (provePre && provePost && proveVar);
 		} else {
 			repStatement.setVariantProven(true);
     		Console.println("Repetition statement already true");
@@ -317,7 +323,8 @@ public class VerifyAllStatements extends MyAbstractAsynchronousCustomFeature {
 			Condition preCondition = repStatement.getParent().getPreCondition();
 			Condition guard = repStatement.getGuard();
 			Condition postCondition = repStatement.getParent().getPostCondition();
-			String code = ConstructCodeBlock.constructCodeBlockAndVerify(statement);
+			String code = ConstructCodeBlock.constructCodeBlockAndVerify2(statement);
+			//String code = ConstructCodeBlock.constructCodeBlockForRepititionLoop(statement);
 			Variant variant = repStatement.getVariant();
 			if (!provePre) {
 				provePre = ProveWithKey.provePreWithKey(invariant.getName(), preCondition.getName(),  StringParser.getVariableListToStringList(vars),
@@ -332,6 +339,7 @@ public class VerifyAllStatements extends MyAbstractAsynchronousCustomFeature {
 			if (!proveVar) {
 				proveVar = ProveWithKey.proveVariant2WithKey(code, invariant.getName(), guard.getName(), variant.getName(),  StringParser.getVariableListToStringList(vars),
 						StringParser.getConditionListToStringList(conds), renaming, uri, monitor, FilenamePrefix.REPETITION);
+				
 				repStatement.setVariantProven(proveVar);	
 			}
 			if (prove && provePre && provePost && proveVar) {
@@ -339,7 +347,7 @@ public class VerifyAllStatements extends MyAbstractAsynchronousCustomFeature {
 			} else {
 				repStatement.setProven(false);
 			} 
-	    	return prove;
+	    	return prove && provePre && provePost && proveVar;
 		} else {
 			repStatement.setPreProven(true);
 			repStatement.setPostProven(true);

@@ -103,13 +103,10 @@ public class VerifyVariant2 extends MyAbstractAsynchronousCustomFeature {
 					variant = repStatement.getVariant();
 
 				}
-				if (CompareMethodBodies.readAndTestMethodBodyWithJaMoPP2(code)) {
-					prove = ProveWithKey.proveVariant2WithKey(code, invariant.getName(), guard.getName(), variant.getName(),
-							StringParser.getVariableListToStringList(vars), 
-							StringParser.getConditionListToStringList(conds), renaming, getDiagram().eResource().getURI(), monitor, FilenamePrefix.REPETITION);
-				} else {
-					Console.println("Statement is not in correct format.");
-				}
+				prove = ProveWithKey.proveVariant2WithKey(code, invariant.getName(), guard.getName(), variant.getName(),
+						StringParser.getVariableListToStringList(vars), 
+						StringParser.getConditionListToStringList(conds), renaming, getDiagram().eResource().getURI(), monitor, FilenamePrefix.REPETITION);
+				
 				if (prove) {
 					if (statement instanceof RepetitionStatement) {
 						RepetitionStatement repStatement = (RepetitionStatement) statement;

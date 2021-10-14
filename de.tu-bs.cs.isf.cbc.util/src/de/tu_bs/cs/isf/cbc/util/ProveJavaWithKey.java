@@ -20,18 +20,6 @@ public class ProveJavaWithKey {
 		
 		IProject thisProject = FileUtil.getProject(uri);
 		String statementBody;
-		if (statement.getJavaStatement() != null) {
-			statementBody = Parser.replaceVariablesWithGlobalVariables(vars, 
-					Parser.replaceBlockStatementsInString(
-							Parser.getStringFromObject(statement.getJavaStatement())));
-		} else {
-			statementBody = "";
-		}
-				
-		String requiresBody = Parser.replaceVariablesWithGlobalVariables(vars,
-				Parser.getStringFromObject(statement.getJmlAnnotation().getRequires()));
-		String ensuresBody = Parser.replaceVariablesWithGlobalVariables(vars,
-				Parser.getStringFromObject(statement.getJmlAnnotation().getEnsures()));
 		String packageName;
 		if (parseFormula) {
 			packageName = "prove" + uri.trimFileExtension().lastSegment();
@@ -39,6 +27,19 @@ public class ProveJavaWithKey {
 			String[] tmp = uri.path().split("/");
 			packageName = tmp[tmp.length - 1];
 		}
+		if (statement.getJavaStatement() != null) {
+			statementBody = Parser.replaceVariablesWithGlobalVariables(vars, 
+					Parser.replaceBlockStatementsInString(
+							Parser.getStringFromObject(statement.getJavaStatement())), packageName);
+		} else {
+			statementBody = "";
+		}
+				
+		String requiresBody = Parser.replaceVariablesWithGlobalVariables(vars,
+				Parser.getStringFromObject(statement.getJmlAnnotation().getRequires()), packageName);
+		String ensuresBody = Parser.replaceVariablesWithGlobalVariables(vars,
+				Parser.getStringFromObject(statement.getJmlAnnotation().getEnsures()), packageName);
+		
 
 		String problem = 
 			"package "+ packageName + ";\n\n" + 
@@ -47,7 +48,7 @@ public class ProveJavaWithKey {
 			"\t  @ requires " + requiresBody + ";\n" +
 			"\t  @ ensures " + ensuresBody + ";\n" +
 			"\t*/\n" +
-			"\tpublic static void getBlock() {\n" +
+			"\tpublic /*@helper@*/ static void getBlock() {\n" +
 			"\t\t" + statementBody + "\n\t}\n"+
 			"}";
 		String location;

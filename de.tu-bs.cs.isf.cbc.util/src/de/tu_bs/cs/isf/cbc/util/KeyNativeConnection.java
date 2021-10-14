@@ -34,6 +34,7 @@ import de.uka.ilkd.key.util.MiscTools;
 
 public class KeyNativeConnection {
 	public static boolean proveWithKey(File location, IProgressMonitor monitor) {
+		Console.println("starting proof: " + location.getName());
 		Proof proof = createKeyProof(location, monitor);
 		if (proof != null) {
 			// Show proof result
@@ -176,12 +177,17 @@ public class KeyNativeConnection {
 					System.out.println("more then one proof " + location.getAbsolutePath());
 				}
 				for (Contract contract : proofContracts) {
+					
+					if (!contract.getTarget().toString().contains("::getBlock")) {
+						continue;
+					}
 					Proof proof = null;
 					try {
 						// Create proof
 						proof = env.createProof(contract.createProofObl(env.getInitConfig(), contract));
 						// Set proof strategy options
 						StrategyProperties sp = proof.getSettings().getStrategySettings().getActiveStrategyProperties();
+						sp.setProperty(StrategyProperties.LOOP_OPTIONS_KEY, StrategyProperties.LOOP_INVARIANT);
 						sp.setProperty(StrategyProperties.METHOD_OPTIONS_KEY, StrategyProperties.METHOD_CONTRACT);
 						sp.setProperty(StrategyProperties.DEP_OPTIONS_KEY, StrategyProperties.DEP_ON);
 						sp.setProperty(StrategyProperties.QUERY_OPTIONS_KEY, StrategyProperties.QUERY_ON);
@@ -223,9 +229,9 @@ public class KeyNativeConnection {
 								"Exception at '" + contract.getDisplayName() + "' of " + contract.getTarget() + ":");
 						e.printStackTrace();
 					} finally {
-						if (proof != null) {
-							proof.dispose(); // Ensure always that all instances of Proof are disposed
-						}
+//						if (proof != null) {
+//							proof.dispose(); // Ensure always that all instances of Proof are disposed
+//						}
 					}
 				}
 			} finally {

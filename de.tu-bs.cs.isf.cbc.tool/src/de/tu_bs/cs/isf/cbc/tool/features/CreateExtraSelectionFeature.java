@@ -32,17 +32,16 @@ public class CreateExtraSelectionFeature extends AbstractCreateFeature {
 
 	@Override
 	public Object[] create(ICreateContext context) {
-		//TODO:
 		SelectionStatement selectionStatement = (SelectionStatement) getBusinessObjectForPictogramElement(context.getTargetContainer());
 		AbstractStatement statement = CbcmodelFactory.eINSTANCE.createAbstractStatement();
 		statement.setName("statement");
 		Condition guard = CbcmodelFactory.eINSTANCE.createCondition();
-//		guard.setName("guard");
+		guard.setName("guard");
 		Condition pre = CbcmodelFactory.eINSTANCE.createCondition();
-//		pre.setName("{}");
+		pre.setName("");
 		statement.setPreCondition(pre);
 		Condition post = CbcmodelFactory.eINSTANCE.createCondition();
-//		post.setName("{}");
+		post.setName("");
 		statement.setPostCondition(post);
 		selectionStatement.getCommands().add(statement);
 		selectionStatement.getGuards().add(guard);

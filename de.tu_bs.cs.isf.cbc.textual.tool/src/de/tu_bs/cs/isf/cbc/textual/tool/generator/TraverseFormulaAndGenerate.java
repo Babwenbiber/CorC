@@ -31,6 +31,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.Condition;
 import de.tu_bs.cs.isf.cbc.cbcmodel.GlobalConditions;
 import de.tu_bs.cs.isf.cbc.cbcmodel.InlineBlockStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.InlineJavaBlockStatement;
+import de.tu_bs.cs.isf.cbc.cbcmodel.JMLExpression;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariable;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariables;
@@ -47,6 +48,7 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.impl.AbstractStatementImpl;
 import de.tu_bs.cs.isf.cbc.cbcmodel.singleton.CbCFormulaSingleton;
 import de.tu_bs.cs.isf.cbc.cbcmodel.string_saver.ConditionExtension;
 import de.tu_bs.cs.isf.cbc.cbcmodel.string_saver.ExpressionExtension;
+import de.tu_bs.cs.isf.cbc.cbcmodel.string_saver.JMLExpressionExtension;
 import de.tu_bs.cs.isf.cbc.util.ConstructCodeBlock;
 import de.tu_bs.cs.isf.cbc.util.FileUtil;
 import de.tu_bs.cs.isf.cbc.util.FilenamePrefix;
@@ -101,6 +103,14 @@ public class TraverseFormulaAndGenerate {
 	}
 
 	protected void castStatementAndTraverse(AbstractStatement statement) {
+		if (!(statement instanceof BlockStatement)) {
+			ConditionExtension c = new ConditionExtension(statement.getPreCondition());
+			c.stringRepresentation = Parser.rewriteJMLConditionToKeY(c.stringRepresentation);
+			statement.setPreCondition(c);
+			c = new ConditionExtension(statement.getPostCondition());
+			c.stringRepresentation = Parser.rewriteJMLConditionToKeY(c.stringRepresentation);
+			statement.setPostCondition(c);
+		}
 		if (statement.getClass().equals(AbstractStatementImpl.class)) {
 			ProveWithKey.createProveStatementWithKey(statement,  ListParser.getListStringFromListVariables(vars.getVariables()),
 					ListParser.getListStringFromListCondition(conds), renaming, null, uri, numberFile++, false, FilenamePrefix.STATEMENT, "");
@@ -182,7 +192,7 @@ public class TraverseFormulaAndGenerate {
 		
 		loopStatement.setPostCondition(invariant);
 		//pre -> inv
-		ProveWithKey.createProvePreWithKey(invariant.stringRepresentation, pre.stringRepresentation,
+		ProveWithKey.createProvePreWithKey(pre.stringRepresentation, invariant.stringRepresentation,
 				ListParser.getListStringFromListVariables(vars.getVariables()),
 				ListParser.getListStringFromListCondition(conds), renaming, uri, numberFile++, false, FilenamePrefix.PRE_IMPL, true);
 		//inv&!guard -> post
@@ -243,6 +253,18 @@ public class TraverseFormulaAndGenerate {
 			preName = blockStatement.getName() + "_pre";
 			postName = blockStatement.getName() + "_post";
 		}
+		if (conds == null) {
+			conds = factory.createGlobalConditions();
+		}
+		if (blockStatement.getJmlAnnotation() == null) {
+			blockStatement.setJmlAnnotation(factory.createJMLAnnotation());
+			JMLExpression expression = new JMLExpressionExtension(blockStatement.getPreCondition(), conds.getConditions());
+			((JMLExpressionExtension)expression).stringRepresentation = Parser.rewriteConditionToJML(((JMLExpressionExtension)expression).stringRepresentation);
+			blockStatement.getJmlAnnotation().setRequires(expression);
+			expression = new JMLExpressionExtension(blockStatement.getPostCondition(), conds.getConditions());
+			((JMLExpressionExtension)expression).stringRepresentation = Parser.rewriteConditionToJML(((JMLExpressionExtension)expression).stringRepresentation);
+			blockStatement.getJmlAnnotation().setEnsures(expression);
+		}		
 		if (!firstBlockSeen) {
 			firstBlockSeen = true;
 			ProveWithKey.createProvePreImplPreWithKeyNoChildRename(new ConditionExtension(
@@ -258,9 +280,10 @@ public class TraverseFormulaAndGenerate {
 		}
 		JavaStatement javaStatement = (JavaStatement) blockStatement.getJavaStatement();
 
-		ProveJavaWithKey.createProveBlockStatementWithKey(blockStatement, ListParser.getListStringFromListVariables(vars.getVariables()),
-				null, uri, numberFile++, false, blockName, parseFormula);
+		
 		if (javaStatement != null) {	
+			ProveJavaWithKey.createProveBlockStatementWithKey(blockStatement, ListParser.getListStringFromListVariables(vars.getVariables()),
+					null, uri, numberFile++, false, blockName, parseFormula);
 			EList<XExpression> statements = javaStatement.getStatement();
 			for (XExpression s: statements) {
 				System.out.println("statement is " + Parser.getStringFromObject(s));

@@ -81,4 +81,5 @@ public class ConditionExtension extends ConditionImpl{
 			stringRepresentation += " & (" + secondCondString + ")";
 		}
 	}
+
 }

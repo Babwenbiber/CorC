@@ -8,8 +8,5 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry kind="lib" path="/home/frede/Documents/Uni/Msc/MA/key/key/key.core/build/libs/key.core-2.9.jar" sourcepath="/home/frede/Documents/Uni/Msc/MA/key/key/key.core.zip"/>
-	<classpathentry kind="lib" path="/home/frede/Documents/Uni/Msc/MA/key/key/key.util/build/libs/key.util-2.9.jar"/>
-	<classpathentry kind="lib" path="/home/frede/Documents/Uni/Msc/MA/key/key/key.ui/build/libs/key.ui-2.9.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

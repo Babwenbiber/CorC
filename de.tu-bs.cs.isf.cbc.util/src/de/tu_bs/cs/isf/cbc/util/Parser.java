@@ -495,79 +495,90 @@ public class Parser {
 		return str.toString();
 	}
 	
-	public static String replaceVariablesWithGlobalVariables(List<String> variables, String statement) {
+	public static String replaceStringWithString(String original, String toReplace, String replacer) {
 		List<String> startSeparator = Arrays.asList(" ", "\n", "\t", ";", "+", "-", "*", "/", "%", "^", ",", "=", "@", "<", ">","(", "[");
-		List<String> endSeparator = Arrays.asList(" ", "\n", "\t", ";", "+", "-", "*", "/", "%", "^", ",", "=", "<", ">", "[", ".",  "!",")", "]");
-		String globalClass = "GlobalJavaVariables.";
+		List<String> endSeparator = Arrays.asList(" ", "\n", "\t", ";", "+", "-", "*", "/", "%", "^", ",", "=", "<", ">", "[", ".",  "!",")", "]", "(");
+		for (String start: startSeparator) {
+			for (String end: endSeparator) {
+//				if (varName.equals("i") && (start.equals("(") || start.equals("\\("))) {
+//					System.out.println("\nTEST " + statement + "\n\n\n");
+//
+//				}
+				String tmpStart = start;
+				while (original.contains(tmpStart + toReplace + end)) {
+					boolean replaceAll = false;
+					if (start.equals("(") || start.equals("*") || start.equals("^") || start.equals("+")|| start.equals("[")) {
+						tmpStart = "\\" + start;
+						replaceAll=true;
+					}
+					if (end.equals("[") || end.equals(")") || end.equals("(") ||end.equals("*") || end.equals("^") || end.equals("+") || end.equals("!")|| end.equals("]")) {
+						//this needs to be handled separately, because regex does some magic with [
+						//Also it needs replaceAll
+						end = "\\" + end;
+						replaceAll=true;
+					}
+					if (replaceAll) {
+//						System.out.println("replacing ALL " + tmpStart + varName + end + " with " + tmpStart + globalClass + varName + end);
+						try {
+							original = original.replaceAll(tmpStart + toReplace + end, tmpStart + replacer + end);
+						} catch (Exception e) {
+							System.err.println("exception parser at start " + start + " end " + end);
+						}
+					} else {
+//						System.out.println("replacing " + start + varName + end + " with " + start + globalClass + varName + end);
+						original = original.replace(start + toReplace + end, start + replacer + end);
+					}
+//					System.out.println("NEW " + statement);
+				}
+			}
+		}
+		return replaceStringWithStringAtStart(original, toReplace, replacer);
+	}
+	
+	private static String replaceStringWithStringAtStart(String original, String toReplace, String replacer) {
+		List<String> endSeparator = Arrays.asList(" ", "\n", "\t", ";", "+", "-", "*", "/", "%", "^", ",", "=", "<", ">", "[", ".",  "!",")", "]", "(");
+		if (original.length() < toReplace.length() + 1) {
+			return original.replace(toReplace, replacer);
+		}
+		String tempStatement = new String(original.substring(0, toReplace.length()+1));
+
+		if (tempStatement.substring(0, toReplace.length()).equals(toReplace)) {
+			System.out.println("tmp " + tempStatement + " " + tempStatement.contains(toReplace + "\\!"));
+
+			for (String end: endSeparator) {
+				boolean replaceAll=false;
+				String tmpEnd = end;
+				if (tempStatement.contains(toReplace + end)) {
+					if (end.equals("[") || end.equals(")") ||end.equals("*") || end.equals("^") || end.equals("+") || end.equals("!")|| end.equals("]")) {
+						replaceAll=true;
+					}  
+					if (replaceAll) {
+//						System.out.println("replacing ALL " + tmpStart + varName + end + " with " + tmpStart + globalClass + varName + end);
+						try {
+							tempStatement = tempStatement.replaceAll(toReplace + tmpEnd, replacer + end);
+						} catch (Exception e) {
+							System.err.println("exception parser at end " + end);
+						}
+					} else {
+						System.out.println("replacing " + toReplace + tmpEnd + " with " + replacer + end);
+						tempStatement = tempStatement.replace(toReplace + tmpEnd, replacer + end);
+					}
+					break;
+				}
+			}
+		}
+	
+		return tempStatement + original.substring(toReplace.length()+1);
+	}
+
+	
+	public static String replaceVariablesWithGlobalVariables(List<String> variables, String statement, String packageName) {
+		String globalClass = packageName + ".GlobalJavaVariables.";
 //		System.out.println("\nTEST " + statement + "\n\n\n");
 		
 		for (String variable: variables) {
 			String varName = variable.split(" ")[1];
-			for (String start: startSeparator) {
-				for (String end: endSeparator) {
-//					if (varName.equals("i") && (start.equals("(") || start.equals("\\("))) {
-//						System.out.println("\nTEST " + statement + "\n\n\n");
-//
-//					}
-					String tmpStart = start;
-					while (statement.contains(tmpStart + varName + end)) {
-						boolean replaceAll = false;
-						if (start.equals("(") || start.equals("*") || start.equals("^") || start.equals("+")|| start.equals("[")) {
-							tmpStart = "\\" + start;
-							replaceAll=true;
-						}
-						if (end.equals("[") || end.equals(")") || end.equals("*") || end.equals("^") || end.equals("+") || end.equals("!")|| end.equals("]")) {
-							//this needs to be handled separately, because regex does some magic with [
-							//Also it needs replaceAll
-							end = "\\" + end;
-							replaceAll=true;
-						}
-						if (replaceAll) {
-//							System.out.println("replacing ALL " + tmpStart + varName + end + " with " + tmpStart + globalClass + varName + end);
-							try {
-							statement = statement.replaceAll(tmpStart + varName + end, tmpStart + globalClass + varName + end);
-							} catch (Exception e) {
-								System.err.println("exception parser at start " + start + " end " + end);
-							}
-						} else {
-//							System.out.println("replacing " + start + varName + end + " with " + start + globalClass + varName + end);
-							statement = statement.replace(start + varName + end, start + globalClass + varName + end);
-						}
-//						System.out.println("NEW " + statement);
-					}
-				}
-			}
-
-			//replace at beginning of the statement
-			String tempStatement = new String(statement.substring(0, varName.length()+1));
-
-			if (tempStatement.substring(0, varName.length()).equals(varName)) {
-				System.out.println("tmp " + tempStatement + " " + tempStatement.contains(varName + "\\!"));
-
-				for (String end: endSeparator) {
-					if (tempStatement.contains(varName + end)) {
-						if (end.equals("[")) {
-							//this needs to be handled separately, because regex does some magic with [
-							//Also it needs replaceAll
-							end = "\\[";
-							tempStatement = tempStatement.replaceAll(varName + end, globalClass + varName + end);
-						} else if (end.equals("!")) {
-							end = "\\!";
-//							System.out.println("b4 " + tempStatement + " " + tempStatement.contains(varName + "!"));
-							tempStatement = tempStatement.replaceAll(varName + end, globalClass + varName + end);
-//							System.out.println("after" + tempStatement + " " + tempStatement.contains(varName + "!"));
-
-						} else {
-//							System.out.println("TMPreplacing " + varName + end + " with " + globalClass + varName + end);
-							tempStatement = tempStatement.replaceAll(varName + end, globalClass + varName + end);
-						}
-						break;
-					}
-				}
-			}
-		
-			statement = tempStatement + statement.substring(varName.length()+1);
-
+			statement = replaceStringWithString(statement, varName, globalClass + varName);
 		}
 		return statement;
 	}

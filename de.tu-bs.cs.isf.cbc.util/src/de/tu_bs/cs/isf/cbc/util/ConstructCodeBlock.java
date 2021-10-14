@@ -8,11 +8,15 @@ import de.tu_bs.cs.isf.cbc.cbcmodel.CompositionStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.InlineBlockStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariable;
 import de.tu_bs.cs.isf.cbc.cbcmodel.JavaVariables;
+import de.tu_bs.cs.isf.cbc.cbcmodel.MethodStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Rename;
 import de.tu_bs.cs.isf.cbc.cbcmodel.Renaming;
 import de.tu_bs.cs.isf.cbc.cbcmodel.RepetitionStatement;
+import de.tu_bs.cs.isf.cbc.cbcmodel.ReturnStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.SelectionStatement;
+import de.tu_bs.cs.isf.cbc.cbcmodel.SkipStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.SmallRepetitionStatement;
+import de.tu_bs.cs.isf.cbc.cbcmodel.StrengthWeakStatement;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.AbstractStatementImpl;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.BlockStatementImpl;
 import de.tu_bs.cs.isf.cbc.cbcmodel.impl.Composition3StatementImpl;
@@ -33,6 +37,27 @@ public class ConstructCodeBlock {
 	private static boolean withInvariants = false;
 	private static Renaming renaming = null;
 	private static int positionIndex = 0;
+	
+	public static String constructCodeBlockForRepititionLoop(AbstractStatement statement) {
+		StringBuffer code = new StringBuffer();
+
+		if (statement instanceof RepetitionStatement) {
+			RepetitionStatement s = (RepetitionStatement) statement;
+			if (s.getLoopStatement().getRefinement() != null) {
+				code.append(constructMethodStubOfChildStatement(s.getLoopStatement().getRefinement()));
+			} else {
+				code.append(constructMethodStubOfChildStatement(s.getLoopStatement()));
+			}
+		} else if (statement instanceof SmallRepetitionStatement) {
+			SmallRepetitionStatement s = (SmallRepetitionStatement) statement;
+			if (s.getLoopStatement().getRefinement() != null) {
+				code.append(constructMethodStubOfChildStatement(s.getLoopStatement().getRefinement()));
+			} else {
+				code.append(constructMethodStubOfChildStatement(s.getLoopStatement()));
+			}
+		}
+		return code.toString();
+	}
 
 	public static String constructCodeBlockAndVerify(AbstractStatement statement) {
 		handleInnerLoops = true;
@@ -191,25 +216,27 @@ public class ConstructCodeBlock {
 
 	// tabea
 	private static String constructMethodStubOfChildStatement(AbstractStatement refinement) {
-		if (refinement.getClass().equals(AbstractStatementImpl.class)) {
+		;
+		;
+		if (refinement instanceof AbstractStatement) {
 			return extractMethodNameFromStatement(refinement.getName());
-		} else if (refinement.getClass().equals(SkipStatementImpl.class)
-				|| refinement.getClass().equals(ReturnStatementImpl.class)
-				|| refinement.getClass().equals(MethodStatementImpl.class)) {
+		} else if (refinement instanceof SkipStatement
+				|| refinement instanceof ReturnStatement
+				|| refinement instanceof MethodStatement) {
 			return "";
-		} else if (refinement.getClass().equals(SelectionStatementImpl.class)) {
+		} else if (refinement instanceof SelectionStatement) {
 			return traverseSelection((SelectionStatement) refinement);
-		} else if (refinement.getClass().equals(BlockStatementImpl.class)) {
+		} else if (refinement instanceof BlockStatement) {
 			return traverseBlock((BlockStatement) refinement);
-		} else if (refinement.getClass().equals(CompositionStatementImpl.class)) {
+		} else if (refinement instanceof CompositionStatement) {
 			return traverseComposition((CompositionStatement) refinement);
-		} else if (refinement.getClass().equals(Composition3StatementImpl.class)) {
+		} else if (refinement instanceof Composition3Statement) {
 			return traverseComposition3((Composition3Statement) refinement);
-		} else if (refinement.getClass().equals(RepetitionStatementImpl.class)) {
+		} else if (refinement instanceof RepetitionStatement) {
 			return traverseRepetition((RepetitionStatement) refinement);
-		} else if (refinement.getClass().equals(SmallRepetitionStatementImpl.class)) {
+		} else if (refinement instanceof SmallRepetitionStatement) {
 			return traverseSmallRepetition((SmallRepetitionStatement) refinement);
-		} else if (refinement.getClass().equals(StrengthWeakStatementImpl.class)) {
+		} else if (refinement instanceof StrengthWeakStatement) {
 			if (refinement.getRefinement() != null) {
 				return constructCodeBlockOfChildStatement(refinement.getRefinement());
 			} else {
@@ -283,27 +310,22 @@ public class ConstructCodeBlock {
 			buffer.append("if (" + guard + ") {\n");
 
 			positionIndex++;
+			AbstractStatement child;
+		
 			if (statement.getCommands().get(0).getRefinement() != null) {
-				for (int i = 0; i < positionIndex; i++) {
-					buffer.append("\t");
-				}
-				buffer.append(constructCodeBlockOfChildStatement(statement.getCommands().get(0).getRefinement()));
-				positionIndex--;
-				for (int i = 0; i < positionIndex; i++) {
-					buffer.append("\t");
-				}
-				buffer.append("}");
+				child = statement.getCommands().get(0).getRefinement();
 			} else {
-				for (int i = 0; i < positionIndex; i++) {
-					buffer.append("\t");
-				}
-				buffer.append(constructCodeBlockOfChildStatement(statement.getCommands().get(0)));
-				positionIndex--;
-				for (int i = 0; i < positionIndex; i++) {
-					buffer.append("\t");
-				}
-				buffer.append("}");
+				child = statement.getCommands().get(0);
 			}
+			for (int i = 0; i < positionIndex; i++) {
+				buffer.append("\t");
+			}
+			buffer.append(constructCodeBlockOfChildStatement(child));
+			positionIndex--;
+			for (int i = 0; i < positionIndex; i++) {
+				buffer.append("\t");
+			}
+			buffer.append("}");
 		}
 
 		for (int i = 1; i < statement.getCommands().size(); i++) {
@@ -312,28 +334,22 @@ public class ConstructCodeBlock {
 			guard = rewriteGuardToJavaCode(guard);
 			buffer.append(" else if (" + guard + ") {\n");
 			positionIndex++;
-			if (statement.getCommands().get(i).getRefinement() != null) {
-				for (int j = 0; j < positionIndex; j++) {
-					buffer.append("\t");
-				}
-				buffer.append(constructCodeBlockOfChildStatement(statement.getCommands().get(i).getRefinement()));
-				positionIndex--;
-				for (int j = 0; j < positionIndex; j++) {
-					buffer.append("\t");
-				}
-				buffer.append("}");
+			AbstractStatement child;
+			if (statement.getCommands().get(0).getRefinement() != null) {
+				child = statement.getCommands().get(0).getRefinement();
 			} else {
-				for (int j = 0; j < positionIndex; j++) {
-					buffer.append("\t");
-				}
-				buffer.append(constructCodeBlockOfChildStatement(statement.getCommands().get(i)) + "}");
-				positionIndex--;
-				for (int j = 0; j < positionIndex; j++) {
-					buffer.append("\t");
-				}
-				buffer.append("}");
+				child = statement.getCommands().get(0);
 			}
-
+			for (int j = 0; j < positionIndex; j++) {
+				buffer.append("\t");
+			}
+			buffer.append(constructCodeBlockOfChildStatement(child));
+			positionIndex--;
+			for (int j = 0; j < positionIndex; j++) {
+				buffer.append("\t");
+			}
+			buffer.append("}");
+			
 		}
 
 		buffer.append("\n");
@@ -355,9 +371,11 @@ public class ConstructCodeBlock {
 	private static String constructBlock(BlockStatement statement) {
 		StringBuffer buffer = new StringBuffer();
 		
-		
-		buffer.append(Parser.getStringFromObject(statement.getJavaStatement()));
-		
+		if (statement.getJavaStatement() != null) {
+			buffer.append(Parser.getStringFromObject(statement.getJavaStatement()));
+		} else {
+			buffer.append(constructCodeBlockOfChildStatement(statement.getCbcStatement()));
+		}
 
 		for (int i = 0; i < positionIndex; i++) {
 			buffer.append("\t");
@@ -491,7 +509,7 @@ public class ConstructCodeBlock {
 				buffer.append("//@ decreases " + statement.getVariant().getName() + ";\n");
 			}
 			
-			String guard =  Parser.getStringFromObject(statement.getGuard().getCondition());
+			String guard =  new ConditionExtension(statement.getGuard()).stringRepresentation;
 
 			// guard = guard.replaceAll("\\s=\\s", "==");
 			guard = rewriteGuardToJavaCode(guard);

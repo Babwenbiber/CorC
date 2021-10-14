@@ -47,7 +47,7 @@ Boolean returns ecore::EString:
 ;
 
 Operation:
-	'+' | '-' | '*' | '/' | '%';
+	'+' | '-' | '*' | '/' | '%' | '==' | "!=" | '<' | '<=' | '>' | '>=' | '&&' | '||';
 	
 
 AbstractStatement_Impl returns AbstractStatement:
@@ -150,7 +150,7 @@ InlineBlockStatement returns AbstractStatement:
 BlockStatement returns AbstractStatement:
 {BlockStatement}
 		'Block' name=EString ':'
-				(jmlAnnotation=JMLAnnotation)
+				(jmlAnnotation=JMLAnnotation)?
 			('{' (javaStatement=JavaStatement  | "CbC:" cbcStatement=AbstractStatement)'}')			
 	;
 
@@ -246,7 +246,7 @@ PrimaryExpression returns Expression:
     {Expression} => ('false' | isTrue?='true') |
 	'!' ? '(' Expression ')' |
 	{FunctionCall} '!' ? func=VariableOrMethodName  (('(' (args+=Expression (',' args+=Expression)* )?')') | ('[' args+=Expression ']'))* |
-	{Expression} INT |
+	{Expression} '-'? INT |
 	{Expression} STRING |
 	{Expression} CHARACTER |
 	{Expression} "null"
@@ -289,7 +289,7 @@ JMLPrimaryExpression returns JMLExpression:
 	'!' ? '(' JMLExpression ')' |
 	{JMLFunctionCall} '!' ? func=VariableOrMethodName (('(' (args+=JMLExpression (',' args+=JMLExpression)* )?')') | ('[' args+=JMLExpression ']'))*  |
 //	{JMLArrayElement} '!' ? array=VariableOrMethodName ('[' (element+=JMLExpression ']'('[' element+=JMLExpression ']')* )?) |	
-	{JMLExpression} INT |
+	{JMLExpression} '-'? INT |
 	{JMLExpression} STRING |
 	{JMLExpression} CHARACTER |
 	{JMLExpression} "null"

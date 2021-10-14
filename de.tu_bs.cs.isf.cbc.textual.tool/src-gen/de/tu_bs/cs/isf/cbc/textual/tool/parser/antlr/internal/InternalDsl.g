@@ -883,6 +883,54 @@ ruleOperation returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken
 			$current.merge(kw);
 			newLeafNode(kw, grammarAccess.getOperationAccess().getPercentSignKeyword_4());
 		}
+		    |
+		kw='=='
+		{
+			$current.merge(kw);
+			newLeafNode(kw, grammarAccess.getOperationAccess().getEqualsSignEqualsSignKeyword_5());
+		}
+		    |
+		kw='!='
+		{
+			$current.merge(kw);
+			newLeafNode(kw, grammarAccess.getOperationAccess().getExclamationMarkEqualsSignKeyword_6());
+		}
+		    |
+		kw='<'
+		{
+			$current.merge(kw);
+			newLeafNode(kw, grammarAccess.getOperationAccess().getLessThanSignKeyword_7());
+		}
+		    |
+		kw='<='
+		{
+			$current.merge(kw);
+			newLeafNode(kw, grammarAccess.getOperationAccess().getLessThanSignEqualsSignKeyword_8());
+		}
+		    |
+		kw='>'
+		{
+			$current.merge(kw);
+			newLeafNode(kw, grammarAccess.getOperationAccess().getGreaterThanSignKeyword_9());
+		}
+		    |
+		kw='>='
+		{
+			$current.merge(kw);
+			newLeafNode(kw, grammarAccess.getOperationAccess().getGreaterThanSignEqualsSignKeyword_10());
+		}
+		    |
+		kw='&&'
+		{
+			$current.merge(kw);
+			newLeafNode(kw, grammarAccess.getOperationAccess().getAmpersandAmpersandKeyword_11());
+		}
+		    |
+		kw='||'
+		{
+			$current.merge(kw);
+			newLeafNode(kw, grammarAccess.getOperationAccess().getVerticalLineVerticalLineKeyword_12());
+		}
 	)
 ;
 
@@ -2025,7 +2073,7 @@ ruleBlockStatement returns [EObject current=null]
 					afterParserOrEnumRuleCall();
 				}
 			)
-		)
+		)?
 		(
 			otherlv_5='{'
 			{
@@ -4004,9 +4052,15 @@ rulePrimaryExpression returns [EObject current=null]
 						$current);
 				}
 			)
-			this_INT_19=RULE_INT
+			(
+				otherlv_19='-'
+				{
+					newLeafNode(otherlv_19, grammarAccess.getPrimaryExpressionAccess().getHyphenMinusKeyword_3_1());
+				}
+			)?
+			this_INT_20=RULE_INT
 			{
-				newLeafNode(this_INT_19, grammarAccess.getPrimaryExpressionAccess().getINTTerminalRuleCall_3_1());
+				newLeafNode(this_INT_20, grammarAccess.getPrimaryExpressionAccess().getINTTerminalRuleCall_3_2());
 			}
 		)
 		    |
@@ -4018,9 +4072,9 @@ rulePrimaryExpression returns [EObject current=null]
 						$current);
 				}
 			)
-			this_STRING_21=RULE_STRING
+			this_STRING_22=RULE_STRING
 			{
-				newLeafNode(this_STRING_21, grammarAccess.getPrimaryExpressionAccess().getSTRINGTerminalRuleCall_4_1());
+				newLeafNode(this_STRING_22, grammarAccess.getPrimaryExpressionAccess().getSTRINGTerminalRuleCall_4_1());
 			}
 		)
 		    |
@@ -4032,9 +4086,9 @@ rulePrimaryExpression returns [EObject current=null]
 						$current);
 				}
 			)
-			this_CHARACTER_23=RULE_CHARACTER
+			this_CHARACTER_24=RULE_CHARACTER
 			{
-				newLeafNode(this_CHARACTER_23, grammarAccess.getPrimaryExpressionAccess().getCHARACTERTerminalRuleCall_5_1());
+				newLeafNode(this_CHARACTER_24, grammarAccess.getPrimaryExpressionAccess().getCHARACTERTerminalRuleCall_5_1());
 			}
 		)
 		    |
@@ -4046,9 +4100,9 @@ rulePrimaryExpression returns [EObject current=null]
 						$current);
 				}
 			)
-			otherlv_25='null'
+			otherlv_26='null'
 			{
-				newLeafNode(otherlv_25, grammarAccess.getPrimaryExpressionAccess().getNullKeyword_6_1());
+				newLeafNode(otherlv_26, grammarAccess.getPrimaryExpressionAccess().getNullKeyword_6_1());
 			}
 		)
 	)
@@ -5064,9 +5118,15 @@ ruleJMLPrimaryExpression returns [EObject current=null]
 						$current);
 				}
 			)
-			this_INT_19=RULE_INT
+			(
+				otherlv_19='-'
+				{
+					newLeafNode(otherlv_19, grammarAccess.getJMLPrimaryExpressionAccess().getHyphenMinusKeyword_3_1());
+				}
+			)?
+			this_INT_20=RULE_INT
 			{
-				newLeafNode(this_INT_19, grammarAccess.getJMLPrimaryExpressionAccess().getINTTerminalRuleCall_3_1());
+				newLeafNode(this_INT_20, grammarAccess.getJMLPrimaryExpressionAccess().getINTTerminalRuleCall_3_2());
 			}
 		)
 		    |
@@ -5078,9 +5138,9 @@ ruleJMLPrimaryExpression returns [EObject current=null]
 						$current);
 				}
 			)
-			this_STRING_21=RULE_STRING
+			this_STRING_22=RULE_STRING
 			{
-				newLeafNode(this_STRING_21, grammarAccess.getJMLPrimaryExpressionAccess().getSTRINGTerminalRuleCall_4_1());
+				newLeafNode(this_STRING_22, grammarAccess.getJMLPrimaryExpressionAccess().getSTRINGTerminalRuleCall_4_1());
 			}
 		)
 		    |
@@ -5092,9 +5152,9 @@ ruleJMLPrimaryExpression returns [EObject current=null]
 						$current);
 				}
 			)
-			this_CHARACTER_23=RULE_CHARACTER
+			this_CHARACTER_24=RULE_CHARACTER
 			{
-				newLeafNode(this_CHARACTER_23, grammarAccess.getJMLPrimaryExpressionAccess().getCHARACTERTerminalRuleCall_5_1());
+				newLeafNode(this_CHARACTER_24, grammarAccess.getJMLPrimaryExpressionAccess().getCHARACTERTerminalRuleCall_5_1());
 			}
 		)
 		    |
@@ -5106,9 +5166,9 @@ ruleJMLPrimaryExpression returns [EObject current=null]
 						$current);
 				}
 			)
-			otherlv_25='null'
+			otherlv_26='null'
 			{
-				newLeafNode(otherlv_25, grammarAccess.getJMLPrimaryExpressionAccess().getNullKeyword_6_1());
+				newLeafNode(otherlv_26, grammarAccess.getJMLPrimaryExpressionAccess().getNullKeyword_6_1());
 			}
 		)
 	)

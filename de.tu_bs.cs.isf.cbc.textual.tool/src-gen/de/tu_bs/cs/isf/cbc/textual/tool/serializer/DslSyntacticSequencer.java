@@ -26,7 +26,7 @@ public class DslSyntacticSequencer extends AbstractSyntacticSequencer {
 	protected AbstractElementAlias match_JMLAnnotation_CommercialAtKeyword_1_0_0_p;
 	protected AbstractElementAlias match_JMLAnnotation_CommercialAtKeyword_1_1_0_p;
 	protected AbstractElementAlias match_JMLAnnotation_CommercialAtKeyword_2_a;
-	protected AbstractElementAlias match_JMLPrimaryExpression_CHARACTERTerminalRuleCall_5_1_or_FalseKeyword_0_1_0_0_or_INTTerminalRuleCall_3_1_or_NullKeyword_6_1_or_STRINGTerminalRuleCall_4_1;
+	protected AbstractElementAlias match_JMLPrimaryExpression_CHARACTERTerminalRuleCall_5_1_or_FalseKeyword_0_1_0_0_or_NullKeyword_6_1_or_STRINGTerminalRuleCall_4_1_or___HyphenMinusKeyword_3_1_q_INTTerminalRuleCall_3_2__;
 	protected AbstractElementAlias match_JMLPrimaryExpression_ExclamationMarkKeyword_2_1_q;
 	protected AbstractElementAlias match_JMLPrimaryExpression___ExclamationMarkKeyword_1_0_q_LeftParenthesisKeyword_1_1__a;
 	protected AbstractElementAlias match_JMLPrimaryExpression___ExclamationMarkKeyword_1_0_q_LeftParenthesisKeyword_1_1__p;
@@ -37,7 +37,7 @@ public class DslSyntacticSequencer extends AbstractSyntacticSequencer {
 	protected AbstractElementAlias match_LoopInvariantAnnotation_CommercialAtKeyword_1_1_0_p;
 	protected AbstractElementAlias match_LoopInvariantAnnotation_CommercialAtKeyword_1_2_0_p;
 	protected AbstractElementAlias match_LoopInvariantAnnotation_CommercialAtKeyword_2_a;
-	protected AbstractElementAlias match_PrimaryExpression_CHARACTERTerminalRuleCall_5_1_or_FalseKeyword_0_1_0_0_or_INTTerminalRuleCall_3_1_or_NullKeyword_6_1_or_STRINGTerminalRuleCall_4_1;
+	protected AbstractElementAlias match_PrimaryExpression_CHARACTERTerminalRuleCall_5_1_or_FalseKeyword_0_1_0_0_or_NullKeyword_6_1_or_STRINGTerminalRuleCall_4_1_or___HyphenMinusKeyword_3_1_q_INTTerminalRuleCall_3_2__;
 	protected AbstractElementAlias match_PrimaryExpression_ExclamationMarkKeyword_2_1_q;
 	protected AbstractElementAlias match_PrimaryExpression___ExclamationMarkKeyword_1_0_q_LeftParenthesisKeyword_1_1__a;
 	protected AbstractElementAlias match_PrimaryExpression___ExclamationMarkKeyword_1_0_q_LeftParenthesisKeyword_1_1__p;
@@ -60,7 +60,7 @@ public class DslSyntacticSequencer extends AbstractSyntacticSequencer {
 		match_JMLAnnotation_CommercialAtKeyword_1_0_0_p = new TokenAlias(true, false, grammarAccess.getJMLAnnotationAccess().getCommercialAtKeyword_1_0_0());
 		match_JMLAnnotation_CommercialAtKeyword_1_1_0_p = new TokenAlias(true, false, grammarAccess.getJMLAnnotationAccess().getCommercialAtKeyword_1_1_0());
 		match_JMLAnnotation_CommercialAtKeyword_2_a = new TokenAlias(true, true, grammarAccess.getJMLAnnotationAccess().getCommercialAtKeyword_2());
-		match_JMLPrimaryExpression_CHARACTERTerminalRuleCall_5_1_or_FalseKeyword_0_1_0_0_or_INTTerminalRuleCall_3_1_or_NullKeyword_6_1_or_STRINGTerminalRuleCall_4_1 = new AlternativeAlias(false, false, new TokenAlias(false, false, grammarAccess.getJMLPrimaryExpressionAccess().getCHARACTERTerminalRuleCall_5_1()), new TokenAlias(false, false, grammarAccess.getJMLPrimaryExpressionAccess().getFalseKeyword_0_1_0_0()), new TokenAlias(false, false, grammarAccess.getJMLPrimaryExpressionAccess().getINTTerminalRuleCall_3_1()), new TokenAlias(false, false, grammarAccess.getJMLPrimaryExpressionAccess().getNullKeyword_6_1()), new TokenAlias(false, false, grammarAccess.getJMLPrimaryExpressionAccess().getSTRINGTerminalRuleCall_4_1()));
+		match_JMLPrimaryExpression_CHARACTERTerminalRuleCall_5_1_or_FalseKeyword_0_1_0_0_or_NullKeyword_6_1_or_STRINGTerminalRuleCall_4_1_or___HyphenMinusKeyword_3_1_q_INTTerminalRuleCall_3_2__ = new AlternativeAlias(false, false, new GroupAlias(false, false, new TokenAlias(false, true, grammarAccess.getJMLPrimaryExpressionAccess().getHyphenMinusKeyword_3_1()), new TokenAlias(false, false, grammarAccess.getJMLPrimaryExpressionAccess().getINTTerminalRuleCall_3_2())), new TokenAlias(false, false, grammarAccess.getJMLPrimaryExpressionAccess().getCHARACTERTerminalRuleCall_5_1()), new TokenAlias(false, false, grammarAccess.getJMLPrimaryExpressionAccess().getFalseKeyword_0_1_0_0()), new TokenAlias(false, false, grammarAccess.getJMLPrimaryExpressionAccess().getNullKeyword_6_1()), new TokenAlias(false, false, grammarAccess.getJMLPrimaryExpressionAccess().getSTRINGTerminalRuleCall_4_1()));
 		match_JMLPrimaryExpression_ExclamationMarkKeyword_2_1_q = new TokenAlias(false, true, grammarAccess.getJMLPrimaryExpressionAccess().getExclamationMarkKeyword_2_1());
 		match_JMLPrimaryExpression___ExclamationMarkKeyword_1_0_q_LeftParenthesisKeyword_1_1__a = new GroupAlias(true, true, new TokenAlias(false, true, grammarAccess.getJMLPrimaryExpressionAccess().getExclamationMarkKeyword_1_0()), new TokenAlias(false, false, grammarAccess.getJMLPrimaryExpressionAccess().getLeftParenthesisKeyword_1_1()));
 		match_JMLPrimaryExpression___ExclamationMarkKeyword_1_0_q_LeftParenthesisKeyword_1_1__p = new GroupAlias(true, false, new TokenAlias(false, true, grammarAccess.getJMLPrimaryExpressionAccess().getExclamationMarkKeyword_1_0()), new TokenAlias(false, false, grammarAccess.getJMLPrimaryExpressionAccess().getLeftParenthesisKeyword_1_1()));
@@ -71,7 +71,7 @@ public class DslSyntacticSequencer extends AbstractSyntacticSequencer {
 		match_LoopInvariantAnnotation_CommercialAtKeyword_1_1_0_p = new TokenAlias(true, false, grammarAccess.getLoopInvariantAnnotationAccess().getCommercialAtKeyword_1_1_0());
 		match_LoopInvariantAnnotation_CommercialAtKeyword_1_2_0_p = new TokenAlias(true, false, grammarAccess.getLoopInvariantAnnotationAccess().getCommercialAtKeyword_1_2_0());
 		match_LoopInvariantAnnotation_CommercialAtKeyword_2_a = new TokenAlias(true, true, grammarAccess.getLoopInvariantAnnotationAccess().getCommercialAtKeyword_2());
-		match_PrimaryExpression_CHARACTERTerminalRuleCall_5_1_or_FalseKeyword_0_1_0_0_or_INTTerminalRuleCall_3_1_or_NullKeyword_6_1_or_STRINGTerminalRuleCall_4_1 = new AlternativeAlias(false, false, new TokenAlias(false, false, grammarAccess.getPrimaryExpressionAccess().getCHARACTERTerminalRuleCall_5_1()), new TokenAlias(false, false, grammarAccess.getPrimaryExpressionAccess().getFalseKeyword_0_1_0_0()), new TokenAlias(false, false, grammarAccess.getPrimaryExpressionAccess().getINTTerminalRuleCall_3_1()), new TokenAlias(false, false, grammarAccess.getPrimaryExpressionAccess().getNullKeyword_6_1()), new TokenAlias(false, false, grammarAccess.getPrimaryExpressionAccess().getSTRINGTerminalRuleCall_4_1()));
+		match_PrimaryExpression_CHARACTERTerminalRuleCall_5_1_or_FalseKeyword_0_1_0_0_or_NullKeyword_6_1_or_STRINGTerminalRuleCall_4_1_or___HyphenMinusKeyword_3_1_q_INTTerminalRuleCall_3_2__ = new AlternativeAlias(false, false, new GroupAlias(false, false, new TokenAlias(false, true, grammarAccess.getPrimaryExpressionAccess().getHyphenMinusKeyword_3_1()), new TokenAlias(false, false, grammarAccess.getPrimaryExpressionAccess().getINTTerminalRuleCall_3_2())), new TokenAlias(false, false, grammarAccess.getPrimaryExpressionAccess().getCHARACTERTerminalRuleCall_5_1()), new TokenAlias(false, false, grammarAccess.getPrimaryExpressionAccess().getFalseKeyword_0_1_0_0()), new TokenAlias(false, false, grammarAccess.getPrimaryExpressionAccess().getNullKeyword_6_1()), new TokenAlias(false, false, grammarAccess.getPrimaryExpressionAccess().getSTRINGTerminalRuleCall_4_1()));
 		match_PrimaryExpression_ExclamationMarkKeyword_2_1_q = new TokenAlias(false, true, grammarAccess.getPrimaryExpressionAccess().getExclamationMarkKeyword_2_1());
 		match_PrimaryExpression___ExclamationMarkKeyword_1_0_q_LeftParenthesisKeyword_1_1__a = new GroupAlias(true, true, new TokenAlias(false, true, grammarAccess.getPrimaryExpressionAccess().getExclamationMarkKeyword_1_0()), new TokenAlias(false, false, grammarAccess.getPrimaryExpressionAccess().getLeftParenthesisKeyword_1_1()));
 		match_PrimaryExpression___ExclamationMarkKeyword_1_0_q_LeftParenthesisKeyword_1_1__p = new GroupAlias(true, false, new TokenAlias(false, true, grammarAccess.getPrimaryExpressionAccess().getExclamationMarkKeyword_1_0()), new TokenAlias(false, false, grammarAccess.getPrimaryExpressionAccess().getLeftParenthesisKeyword_1_1()));
@@ -170,8 +170,8 @@ public class DslSyntacticSequencer extends AbstractSyntacticSequencer {
 				emit_JMLAnnotation_CommercialAtKeyword_1_1_0_p(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_JMLAnnotation_CommercialAtKeyword_2_a.equals(syntax))
 				emit_JMLAnnotation_CommercialAtKeyword_2_a(semanticObject, getLastNavigableState(), syntaxNodes);
-			else if (match_JMLPrimaryExpression_CHARACTERTerminalRuleCall_5_1_or_FalseKeyword_0_1_0_0_or_INTTerminalRuleCall_3_1_or_NullKeyword_6_1_or_STRINGTerminalRuleCall_4_1.equals(syntax))
-				emit_JMLPrimaryExpression_CHARACTERTerminalRuleCall_5_1_or_FalseKeyword_0_1_0_0_or_INTTerminalRuleCall_3_1_or_NullKeyword_6_1_or_STRINGTerminalRuleCall_4_1(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_JMLPrimaryExpression_CHARACTERTerminalRuleCall_5_1_or_FalseKeyword_0_1_0_0_or_NullKeyword_6_1_or_STRINGTerminalRuleCall_4_1_or___HyphenMinusKeyword_3_1_q_INTTerminalRuleCall_3_2__.equals(syntax))
+				emit_JMLPrimaryExpression_CHARACTERTerminalRuleCall_5_1_or_FalseKeyword_0_1_0_0_or_NullKeyword_6_1_or_STRINGTerminalRuleCall_4_1_or___HyphenMinusKeyword_3_1_q_INTTerminalRuleCall_3_2__(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_JMLPrimaryExpression_ExclamationMarkKeyword_2_1_q.equals(syntax))
 				emit_JMLPrimaryExpression_ExclamationMarkKeyword_2_1_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_JMLPrimaryExpression___ExclamationMarkKeyword_1_0_q_LeftParenthesisKeyword_1_1__a.equals(syntax))
@@ -192,8 +192,8 @@ public class DslSyntacticSequencer extends AbstractSyntacticSequencer {
 				emit_LoopInvariantAnnotation_CommercialAtKeyword_1_2_0_p(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_LoopInvariantAnnotation_CommercialAtKeyword_2_a.equals(syntax))
 				emit_LoopInvariantAnnotation_CommercialAtKeyword_2_a(semanticObject, getLastNavigableState(), syntaxNodes);
-			else if (match_PrimaryExpression_CHARACTERTerminalRuleCall_5_1_or_FalseKeyword_0_1_0_0_or_INTTerminalRuleCall_3_1_or_NullKeyword_6_1_or_STRINGTerminalRuleCall_4_1.equals(syntax))
-				emit_PrimaryExpression_CHARACTERTerminalRuleCall_5_1_or_FalseKeyword_0_1_0_0_or_INTTerminalRuleCall_3_1_or_NullKeyword_6_1_or_STRINGTerminalRuleCall_4_1(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_PrimaryExpression_CHARACTERTerminalRuleCall_5_1_or_FalseKeyword_0_1_0_0_or_NullKeyword_6_1_or_STRINGTerminalRuleCall_4_1_or___HyphenMinusKeyword_3_1_q_INTTerminalRuleCall_3_2__.equals(syntax))
+				emit_PrimaryExpression_CHARACTERTerminalRuleCall_5_1_or_FalseKeyword_0_1_0_0_or_NullKeyword_6_1_or_STRINGTerminalRuleCall_4_1_or___HyphenMinusKeyword_3_1_q_INTTerminalRuleCall_3_2__(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_PrimaryExpression_ExclamationMarkKeyword_2_1_q.equals(syntax))
 				emit_PrimaryExpression_ExclamationMarkKeyword_2_1_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_PrimaryExpression___ExclamationMarkKeyword_1_0_q_LeftParenthesisKeyword_1_1__a.equals(syntax))
@@ -271,12 +271,12 @@ public class DslSyntacticSequencer extends AbstractSyntacticSequencer {
 	
 	/**
 	 * Ambiguous syntax:
-	 *     'false' | INT | STRING | CHARACTER | 'null'
+	 *     'false' | ('-'? INT) | STRING | CHARACTER | 'null'
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     (rule start) ('!'? '(')* (ambiguity) (rule start)
 	 */
-	protected void emit_JMLPrimaryExpression_CHARACTERTerminalRuleCall_5_1_or_FalseKeyword_0_1_0_0_or_INTTerminalRuleCall_3_1_or_NullKeyword_6_1_or_STRINGTerminalRuleCall_4_1(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+	protected void emit_JMLPrimaryExpression_CHARACTERTerminalRuleCall_5_1_or_FalseKeyword_0_1_0_0_or_NullKeyword_6_1_or_STRINGTerminalRuleCall_4_1_or___HyphenMinusKeyword_3_1_q_INTTerminalRuleCall_3_2__(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	
@@ -297,7 +297,7 @@ public class DslSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     (rule start) (ambiguity) '!'? func=VariableOrMethodName
-	 *     (rule start) (ambiguity) ('false' | INT | STRING | CHARACTER | 'null') (rule start)
+	 *     (rule start) (ambiguity) ('false' | ('-'? INT) | STRING | CHARACTER | 'null') (rule start)
 	 *     (rule start) (ambiguity) exists='(\exists'
 	 *     (rule start) (ambiguity) foreach='(\forall'
 	 *     (rule start) (ambiguity) isTrue?='true'
@@ -430,12 +430,12 @@ public class DslSyntacticSequencer extends AbstractSyntacticSequencer {
 	
 	/**
 	 * Ambiguous syntax:
-	 *     'false' | INT | STRING | CHARACTER | 'null'
+	 *     'false' | ('-'? INT) | STRING | CHARACTER | 'null'
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     (rule start) ('!'? '(')* (ambiguity) (rule start)
 	 */
-	protected void emit_PrimaryExpression_CHARACTERTerminalRuleCall_5_1_or_FalseKeyword_0_1_0_0_or_INTTerminalRuleCall_3_1_or_NullKeyword_6_1_or_STRINGTerminalRuleCall_4_1(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+	protected void emit_PrimaryExpression_CHARACTERTerminalRuleCall_5_1_or_FalseKeyword_0_1_0_0_or_NullKeyword_6_1_or_STRINGTerminalRuleCall_4_1_or___HyphenMinusKeyword_3_1_q_INTTerminalRuleCall_3_2__(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	
@@ -456,7 +456,7 @@ public class DslSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     (rule start) (ambiguity) '!'? func=VariableOrMethodName
-	 *     (rule start) (ambiguity) ('false' | INT | STRING | CHARACTER | 'null') (rule start)
+	 *     (rule start) (ambiguity) ('false' | ('-'? INT) | STRING | CHARACTER | 'null') (rule start)
 	 *     (rule start) (ambiguity) exists='(\exists'
 	 *     (rule start) (ambiguity) foreach='(\forall'
 	 *     (rule start) (ambiguity) isTrue?='true'

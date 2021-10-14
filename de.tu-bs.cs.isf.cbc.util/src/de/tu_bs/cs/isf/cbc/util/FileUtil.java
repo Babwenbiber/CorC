@@ -122,8 +122,10 @@ public class FileUtil {
 				IWorkspace workspace = ResourcesPlugin.getWorkspace();
 				IPath iLocation = Path.fromOSString(keyFile.getAbsolutePath());
 				IFile ifile = workspace.getRoot().getFileForLocation(iLocation);
-				ifile.refreshLocal(0, null);
-				HashTable.saveHashInTmpTable(location, hash, newFileName);
+				if (ifile != null) {
+					ifile.refreshLocal(0, null);
+					HashTable.saveHashInTmpTable(location, hash, newFileName);
+				}
 				return keyFile;
 			} catch (IOException e1) {
 				e1.printStackTrace();
@@ -169,7 +171,7 @@ public class FileUtil {
 			IPath iLocation = Path.fromOSString(file.getAbsolutePath());
 			IFile ifile = workspace.getRoot().getFileForLocation(iLocation);
 			ifile.refreshLocal(0, null);
-		} catch (CoreException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -190,7 +192,6 @@ public class FileUtil {
 
 			HashTable.saveHashInTmpTable(location, hash, newFileName);
 			return keyFile;
-			
 		} else if (!fileName.equals(newFileName)) {
 			System.out.println("renaming file " + location + "/" + fileName + " -> " + keyFile);
 			new File(location + "/" + fileName).renameTo(keyFile);

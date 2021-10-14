@@ -17,7 +17,7 @@ public class DslProposalProvider extends AbstractDslProposalProvider {
   @Override
   public void complete_CompositionStatement(final EObject model, final RuleCall ruleCall, final ContentAssistContext context, final ICompletionProposalAcceptor acceptor) {
     super.complete_CompositionStatement(model, ruleCall, context, acceptor);
-    final String proposal = (((("{\n" + "\t;n") + "} Intm: (true) {\n") + "\t;\n") + "}");
+    final String proposal = (((("{\n" + "\t;\n") + "} Intm: (true) {\n") + "\t;\n") + "}");
     acceptor.accept(this.createCompletionProposal(proposal, "Composition", null, context));
   }
   
@@ -73,7 +73,7 @@ public class DslProposalProvider extends AbstractDslProposalProvider {
   @Override
   public void complete_Renaming(final EObject model, final RuleCall ruleCall, final ContentAssistContext context, final ICompletionProposalAcceptor acceptor) {
     super.complete_Renaming(model, ruleCall, context, acceptor);
-    final String proposal = ((((("Renaming\n" + "\tRenames {\n") + "\t\t{Type \"<type>\"") + " Function \"<functionName>\"") + " NewName \"<newName>\"}\n") + "\t}");
+    final String proposal = ((((("Renaming\n" + "\tRenames [\n") + "\t\t{Type \"<type>\"") + " Function \"<functionName>\"") + " NewName \"<newName>\"}\n") + "\t]");
     acceptor.accept(this.createCompletionProposal(proposal, "Renames", null, context));
   }
   

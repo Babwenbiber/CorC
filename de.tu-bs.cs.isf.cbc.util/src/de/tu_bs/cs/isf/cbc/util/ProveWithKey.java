@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -413,37 +414,6 @@ public class ProveWithKey {
 
 	}
 
-	private static File writeJavaFile(String problem, String location, int numberFile, boolean override) {
-		File keyFile = new File(location + "/prove" + numberFile + ".java");
-		File keyHelperFile = new File(location + "/helper.key");
-		if (!keyFile.exists() || override) {
-			try {
-				keyFile.getParentFile().mkdirs();
-				keyFile.createNewFile();
-				FileWriter fw = new FileWriter(keyFile);
-				BufferedWriter bw = new BufferedWriter(fw);
-
-				bw.write(problem);
-				bw.close();
-
-				if (!keyHelperFile.exists()) {
-					keyHelperFile.createNewFile();
-				}
-				IWorkspace workspace = ResourcesPlugin.getWorkspace();
-				IPath iLocation = Path.fromOSString(keyFile.getAbsolutePath());
-				IFile ifile = workspace.getRoot().getFileForLocation(iLocation);
-				ifile.refreshLocal(0, null);
-				return keyFile;
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			} catch (CoreException e) {
-				e.printStackTrace();
-			}
-		}
-		return null;
-
-	}
-
 	private static String getRefinementClass(String string, List<String> vars) {
 		if (Character.isLowerCase(string.charAt(0))) {
 			for (String var : vars) {
@@ -607,19 +577,8 @@ public class ProveWithKey {
 		return Parser.rewriteJMLConditionToKeY(condition);
 	}
 
-	private static CbCFormula getCbCFormula(AbstractStatement statement) {
-		EObject parent = getParentOfStatement(statement);
-		if (parent != null) {
-			if (parent instanceof CbCFormula) {
-				return (CbCFormula) parent;
-			} else {
-				return getCbCFormula((AbstractStatement) parent);
-			}
-		}
-		return null;
-	}
-
 	private static String removeModifiableString(String original, List<String> variables) {
+		original = original.replace("modifiable(\\everything,", "modifiable(");
 		for (String var : variables) {
 			String strippedVar = "";
 			if (var.split(" ").length == 2) {
@@ -631,24 +590,24 @@ public class ProveWithKey {
 		return original;
 	}
 
+	private static String renameSingleConditionLoopIteration(Rename rename, String toRename) {
+		if (rename.getType().equalsIgnoreCase("boolean")) {
+			return Parser.replaceStringWithString(toRename, rename.getNewName(), "TRUE=" + rename.getFunction());
+		} else {
+			return Parser.replaceStringWithString(toRename, rename.getNewName(), rename.getFunction());
+		}
+	}
+	
 	private static String useRenamingCondition(Renaming renaming, String toRename) {
 		for (Rename rename : renaming.getRename()) {
-			if (rename.getType().equalsIgnoreCase("boolean")) {
-				toRename = toRename.replaceAll(rename.getNewName(), "TRUE=" + rename.getFunction());
-			} else {
-				toRename = toRename.replaceAll(rename.getNewName(), rename.getFunction());
-			}
+			toRename = renameSingleConditionLoopIteration(rename, toRename);
 		}
 		return toRename;
 	}
-
+	
 	private static String useRenamingCondition(List<Rename> renaming, String toRename) {
 		for (Rename rename : renaming) {
-			if (rename.getType().equalsIgnoreCase("boolean")) {
-				toRename = toRename.replaceAll(rename.getNewName(), "TRUE=" + rename.getFunction());
-			} else {
-				toRename = toRename.replaceAll(rename.getNewName(), rename.getFunction());
-			}
+			toRename = renameSingleConditionLoopIteration(rename, toRename);
 		}
 		return toRename;
 	}
@@ -674,7 +633,7 @@ public class ProveWithKey {
 
 	public static boolean provePreWithKey(String invariant, String preCondition, List<String> vars, List<String> conds,
 			Renaming renaming, URI uri, IProgressMonitor monitor, String name) {
-		File location = createProvePreWithKey(invariant, preCondition, vars, conds, renaming, uri, 0, true, name, false);
+		File location = createProvePreWithKey(invariant, preCondition, vars, conds, renaming, uri, 0, true, name, true);
 		Console.println("Verify Pre -> Invariant");
 		return KeyNativeConnection.proveWithKey(location, monitor);
 	}
@@ -718,8 +677,8 @@ public class ProveWithKey {
 		guardString = removeModifiableString(guardString, vars);
 		postString = removeModifiableString(postString, vars);
 		String problem = "\\javaSource \"" + thisProject.getLocation() + "/\";" + "\\include \"helper.key\";"
-				+ "\\programVariables {" + programVariablesString + " Heap heapAtPre;}" + "\\problem {("
-				+ invariantString + " & !(" + guardString + ") " + globalConditionsString + ") -> {heapAtPre := heap} ("
+				+ "\\programVariables {" + programVariablesString + " Heap heapAtPre;}" + "\n\\problem {(("
+				+ invariantString + ") & !(" + guardString + ") " + globalConditionsString + ") \n-> {heapAtPre := heap} ("
 				+ postString + ")}";
 
 		String location = thisProject.getLocation() + "/src/prove" + uri.trimFileExtension().lastSegment();
@@ -928,10 +887,12 @@ public class ProveWithKey {
 //				programVariablesString += var.getVar().getName() + "; ";
 //			}
 //		}
+		String conditionArraysCreated = "";
 		String programVariablesString = "";
 		if (vars != null) {
 			for (String var : vars) {
 				programVariablesString += var + "; ";
+				conditionArraysCreated += getConditionArrayCreated(var);
 			}
 		}
 
@@ -954,9 +915,11 @@ public class ProveWithKey {
 			}
 		}
 
+
 		String problem = "\\javaSource \"" + thisProject.getLocation() + "/\";\n" 
 				+ "\\include \"helper.key\";"
-				+ "\\programVariables {" + programVariablesString + " Heap heapAtPre;}\n" + "\\problem {(" + preParent
+				+ "\\programVariables {" + programVariablesString + " Heap heapAtPre;}\n" + "\\problem {(wellFormed(heap)"
+				+ conditionArraysCreated + " & " + preParent
 				+ " " + globalConditionsString + ") \n-> {heapAtPre := heap} (" + preChild + ")}";
 
 		String location;
@@ -1045,15 +1008,18 @@ public class ProveWithKey {
 		vars = oldParentVariables.getMergedVariables(vars);
 		vars = oldChildVariables.getMergedVariables(vars);
 		String programVariablesString = "";
+		String conditionArraysCreated = "";
 		if (vars != null) {
 			for (String var : vars) {
 				programVariablesString += var + "; ";
+				conditionArraysCreated += getConditionArrayCreated(var);
 			}
 		}
-
+		
 		String problem = "\\javaSource \"" + thisProject.getLocation() + "/\";\n" 
 		+ "\\include \"helper.key\";"
-				+ "\\programVariables {" + programVariablesString + " Heap heapAtPre;}\n" + "\\problem {(" + postChild
+				+ "\\programVariables {" + programVariablesString + " Heap heapAtPre;}\n" + "\\problem {(wellFormed(heap)" 
+		+ conditionArraysCreated + " & " + postChild
 				+ " " + globalConditionsString + ") \n-> {heapAtPre := heap} (" + postParent + ")}";
 
 		String location;

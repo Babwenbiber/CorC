@@ -1,6 +1,6 @@
 package de.tu_bs.cs.isf.cbc.cbcmodel.string_saver;
 
-import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 
@@ -15,7 +15,7 @@ public class JMLExpressionExtension extends JMLExpressionImpl{
 	public JMLExpressionExtension(Condition condition) {
 		super();
 		if (condition instanceof ConditionExtension) {
-			stringRepresentation = ((JMLExpressionExtension)condition).stringRepresentation;
+			stringRepresentation = ((ConditionExtension)condition).stringRepresentation;
 		} else if (condition instanceof ConditionImpl) {
 			ICompositeNode node = NodeModelUtils.findActualNodeFor(condition);
 			if (node == null) {
@@ -36,18 +36,26 @@ public class JMLExpressionExtension extends JMLExpressionImpl{
 		}
 	}
 	
-//	public JMLExpressionExtension(Condition condition1, Condition condition2) {
-//		this(condition1);
-//		stringRepresentation = "(" + stringRepresentation + ") & ";
-//		String secondCondString  = "";
-//		if (condition2 instanceof JMLExpressionExtension) {
-//			secondCondString = ((JMLExpressionExtension)condition2).stringRepresentation;
-//		} else if (condition2 instanceof ConditionImpl) {
-//			secondCondString = NodeModelUtils.getTokenText(NodeModelUtils.findActualNodeFor(condition2));
-//		}
-//		if (secondCondString.isEmpty()) {
-//			secondCondString = "true";
-//		}
-//		stringRepresentation += "(" + secondCondString + ")";
-//	}
+	public JMLExpressionExtension(Condition condition1, EList<Condition> conditions) {
+		this(condition1);
+		stringRepresentation = "((" + stringRepresentation + ") & ";
+		String secondCondString  = "";
+		boolean init = false;
+		for (Condition cond: conditions) {
+			if (init) {
+				secondCondString += " & ";
+			} else {
+				init = true;
+			}
+			if (cond instanceof JMLExpressionExtension) {
+				secondCondString += ((JMLExpressionExtension)cond).stringRepresentation;
+			} else if (cond instanceof ConditionImpl) {
+				secondCondString += NodeModelUtils.getTokenText(NodeModelUtils.findActualNodeFor(cond));
+			}
+		}
+		if (secondCondString.isEmpty()) {
+			secondCondString = "true";
+		}
+		stringRepresentation += "(" + secondCondString + "))";
+	}
 }

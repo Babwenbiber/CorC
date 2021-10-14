@@ -19,7 +19,7 @@ class DslProposalProvider extends AbstractDslProposalProvider {
 		super.complete_CompositionStatement(model, ruleCall, context, acceptor)
 		// compute the plain proposal
 			val String proposal = "{\n"
-				+ "\t;n"
+				+ "\t;\n"
 				+ "} Intm: (true) {\n"
 				+ "\t;\n"
 				+ "}";
@@ -124,11 +124,11 @@ class DslProposalProvider extends AbstractDslProposalProvider {
 		super.complete_Renaming(model, ruleCall, context, acceptor)
 		// compute the plain proposal
 			val String proposal = "Renaming\n"
-			+ "\tRenames {\n"
+			+ "\tRenames [\n"
 			+ "\t\t{Type \"<type>\""
 			+ " Function \"<functionName>\""
 			+ " NewName \"<newName>\"}\n"
-			+ "\t}";
+			+ "\t]";
 
 		acceptor.accept(createCompletionProposal(proposal, "Renames", null, context))
     }

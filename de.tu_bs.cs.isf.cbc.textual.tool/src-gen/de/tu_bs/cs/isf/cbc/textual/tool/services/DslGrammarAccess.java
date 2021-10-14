@@ -508,12 +508,20 @@ public class DslGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 		private final Keyword cAsteriskKeyword_2 = (Keyword)cAlternatives.eContents().get(2);
 		private final Keyword cSolidusKeyword_3 = (Keyword)cAlternatives.eContents().get(3);
 		private final Keyword cPercentSignKeyword_4 = (Keyword)cAlternatives.eContents().get(4);
+		private final Keyword cEqualsSignEqualsSignKeyword_5 = (Keyword)cAlternatives.eContents().get(5);
+		private final Keyword cExclamationMarkEqualsSignKeyword_6 = (Keyword)cAlternatives.eContents().get(6);
+		private final Keyword cLessThanSignKeyword_7 = (Keyword)cAlternatives.eContents().get(7);
+		private final Keyword cLessThanSignEqualsSignKeyword_8 = (Keyword)cAlternatives.eContents().get(8);
+		private final Keyword cGreaterThanSignKeyword_9 = (Keyword)cAlternatives.eContents().get(9);
+		private final Keyword cGreaterThanSignEqualsSignKeyword_10 = (Keyword)cAlternatives.eContents().get(10);
+		private final Keyword cAmpersandAmpersandKeyword_11 = (Keyword)cAlternatives.eContents().get(11);
+		private final Keyword cVerticalLineVerticalLineKeyword_12 = (Keyword)cAlternatives.eContents().get(12);
 		
 		//Operation:
-		//    '+' | '-' | '*' | '/' | '%';
+		//    '+' | '-' | '*' | '/' | '%' | '==' | "!=" | '<' | '<=' | '>' | '>=' | '&&' | '||';
 		@Override public ParserRule getRule() { return rule; }
 		
-		//'+' | '-' | '*' | '/' | '%'
+		//'+' | '-' | '*' | '/' | '%' | '==' | "!=" | '<' | '<=' | '>' | '>=' | '&&' | '||'
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//'+'
@@ -530,6 +538,30 @@ public class DslGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 		
 		//'%'
 		public Keyword getPercentSignKeyword_4() { return cPercentSignKeyword_4; }
+		
+		//'=='
+		public Keyword getEqualsSignEqualsSignKeyword_5() { return cEqualsSignEqualsSignKeyword_5; }
+		
+		//"!="
+		public Keyword getExclamationMarkEqualsSignKeyword_6() { return cExclamationMarkEqualsSignKeyword_6; }
+		
+		//'<'
+		public Keyword getLessThanSignKeyword_7() { return cLessThanSignKeyword_7; }
+		
+		//'<='
+		public Keyword getLessThanSignEqualsSignKeyword_8() { return cLessThanSignEqualsSignKeyword_8; }
+		
+		//'>'
+		public Keyword getGreaterThanSignKeyword_9() { return cGreaterThanSignKeyword_9; }
+		
+		//'>='
+		public Keyword getGreaterThanSignEqualsSignKeyword_10() { return cGreaterThanSignEqualsSignKeyword_10; }
+		
+		//'&&'
+		public Keyword getAmpersandAmpersandKeyword_11() { return cAmpersandAmpersandKeyword_11; }
+		
+		//'||'
+		public Keyword getVerticalLineVerticalLineKeyword_12() { return cVerticalLineVerticalLineKeyword_12; }
 	}
 	public class AbstractStatement_ImplElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.tu_bs.cs.isf.cbc.textual.tool.Dsl.AbstractStatement_Impl");
@@ -1260,14 +1292,14 @@ public class DslGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 		//BlockStatement returns AbstractStatement:
 		//{BlockStatement}
 		//        'Block' name=EString ':'
-		//                (jmlAnnotation=JMLAnnotation)
+		//                (jmlAnnotation=JMLAnnotation)?
 		//            ('{' (javaStatement=JavaStatement  | "CbC:" cbcStatement=AbstractStatement)'}')
 		//    ;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//{BlockStatement}
 		//        'Block' name=EString ':'
-		//                (jmlAnnotation=JMLAnnotation)
+		//                (jmlAnnotation=JMLAnnotation)?
 		//            ('{' (javaStatement=JavaStatement  | "CbC:" cbcStatement=AbstractStatement)'}')
 		public Group getGroup() { return cGroup; }
 		
@@ -1286,7 +1318,7 @@ public class DslGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 		//':'
 		public Keyword getColonKeyword_3() { return cColonKeyword_3; }
 		
-		//(jmlAnnotation=JMLAnnotation)
+		//(jmlAnnotation=JMLAnnotation)?
 		public Assignment getJmlAnnotationAssignment_4() { return cJmlAnnotationAssignment_4; }
 		
 		//JMLAnnotation
@@ -2534,7 +2566,8 @@ public class DslGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 		private final Keyword cRightSquareBracketKeyword_2_3_1_2 = (Keyword)cGroup_2_3_1.eContents().get(2);
 		private final Group cGroup_3 = (Group)cAlternatives.eContents().get(3);
 		private final Action cExpressionAction_3_0 = (Action)cGroup_3.eContents().get(0);
-		private final RuleCall cINTTerminalRuleCall_3_1 = (RuleCall)cGroup_3.eContents().get(1);
+		private final Keyword cHyphenMinusKeyword_3_1 = (Keyword)cGroup_3.eContents().get(1);
+		private final RuleCall cINTTerminalRuleCall_3_2 = (RuleCall)cGroup_3.eContents().get(2);
 		private final Group cGroup_4 = (Group)cAlternatives.eContents().get(4);
 		private final Action cExpressionAction_4_0 = (Action)cGroup_4.eContents().get(0);
 		private final RuleCall cSTRINGTerminalRuleCall_4_1 = (RuleCall)cGroup_4.eContents().get(1);
@@ -2549,7 +2582,7 @@ public class DslGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 		//    {Expression} => ('false' | isTrue?='true') |
 		//    '!' ? '(' Expression ')' |
 		//    {FunctionCall} '!' ? func=VariableOrMethodName  (('(' (args+=Expression (',' args+=Expression)* )?')') | ('[' args+=Expression ']'))* |
-		//    {Expression} INT |
+		//    {Expression} '-'? INT |
 		//    {Expression} STRING |
 		//    {Expression} CHARACTER |
 		//    {Expression} "null"
@@ -2559,7 +2592,7 @@ public class DslGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 		//{Expression} => ('false' | isTrue?='true') |
 		//'!' ? '(' Expression ')' |
 		//{FunctionCall} '!' ? func=VariableOrMethodName  (('(' (args+=Expression (',' args+=Expression)* )?')') | ('[' args+=Expression ']'))* |
-		//{Expression} INT |
+		//{Expression} '-'? INT |
 		//{Expression} STRING |
 		//{Expression} CHARACTER |
 		//{Expression} "null"
@@ -2664,14 +2697,17 @@ public class DslGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 		//']'
 		public Keyword getRightSquareBracketKeyword_2_3_1_2() { return cRightSquareBracketKeyword_2_3_1_2; }
 		
-		//{Expression} INT
+		//{Expression} '-'? INT
 		public Group getGroup_3() { return cGroup_3; }
 		
 		//{Expression}
 		public Action getExpressionAction_3_0() { return cExpressionAction_3_0; }
 		
+		//'-'?
+		public Keyword getHyphenMinusKeyword_3_1() { return cHyphenMinusKeyword_3_1; }
+		
 		//INT
-		public RuleCall getINTTerminalRuleCall_3_1() { return cINTTerminalRuleCall_3_1; }
+		public RuleCall getINTTerminalRuleCall_3_2() { return cINTTerminalRuleCall_3_2; }
 		
 		//{Expression} STRING
 		public Group getGroup_4() { return cGroup_4; }
@@ -3279,7 +3315,8 @@ public class DslGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 		private final Keyword cRightSquareBracketKeyword_2_3_1_2 = (Keyword)cGroup_2_3_1.eContents().get(2);
 		private final Group cGroup_3 = (Group)cAlternatives.eContents().get(3);
 		private final Action cJMLExpressionAction_3_0 = (Action)cGroup_3.eContents().get(0);
-		private final RuleCall cINTTerminalRuleCall_3_1 = (RuleCall)cGroup_3.eContents().get(1);
+		private final Keyword cHyphenMinusKeyword_3_1 = (Keyword)cGroup_3.eContents().get(1);
+		private final RuleCall cINTTerminalRuleCall_3_2 = (RuleCall)cGroup_3.eContents().get(2);
 		private final Group cGroup_4 = (Group)cAlternatives.eContents().get(4);
 		private final Action cJMLExpressionAction_4_0 = (Action)cGroup_4.eContents().get(0);
 		private final RuleCall cSTRINGTerminalRuleCall_4_1 = (RuleCall)cGroup_4.eContents().get(1);
@@ -3295,7 +3332,7 @@ public class DslGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 		//    '!' ? '(' JMLExpression ')' |
 		//    {JMLFunctionCall} '!' ? func=VariableOrMethodName (('(' (args+=JMLExpression (',' args+=JMLExpression)* )?')') | ('[' args+=JMLExpression ']'))*  |
 		////    {JMLArrayElement} '!' ? array=VariableOrMethodName ('[' (element+=JMLExpression ']'('[' element+=JMLExpression ']')* )?) |
-		//    {JMLExpression} INT |
+		//    {JMLExpression} '-'? INT |
 		//    {JMLExpression} STRING |
 		//    {JMLExpression} CHARACTER |
 		//    {JMLExpression} "null"
@@ -3306,7 +3343,7 @@ public class DslGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 		//    '!' ? '(' JMLExpression ')' |
 		//    {JMLFunctionCall} '!' ? func=VariableOrMethodName (('(' (args+=JMLExpression (',' args+=JMLExpression)* )?')') | ('[' args+=JMLExpression ']'))*  |
 		////    {JMLArrayElement} '!' ? array=VariableOrMethodName ('[' (element+=JMLExpression ']'('[' element+=JMLExpression ']')* )?) |
-		//    {JMLExpression} INT |
+		//    {JMLExpression} '-'? INT |
 		//    {JMLExpression} STRING |
 		//    {JMLExpression} CHARACTER |
 		//    {JMLExpression} "null"
@@ -3412,15 +3449,18 @@ public class DslGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 		public Keyword getRightSquareBracketKeyword_2_3_1_2() { return cRightSquareBracketKeyword_2_3_1_2; }
 		
 		////    {JMLArrayElement} '!' ? array=VariableOrMethodName ('[' (element+=JMLExpression ']'('[' element+=JMLExpression ']')* )?) |
-		//    {JMLExpression} INT
+		//    {JMLExpression} '-'? INT
 		public Group getGroup_3() { return cGroup_3; }
 		
 		////    {JMLArrayElement} '!' ? array=VariableOrMethodName ('[' (element+=JMLExpression ']'('[' element+=JMLExpression ']')* )?) |
 		//    {JMLExpression}
 		public Action getJMLExpressionAction_3_0() { return cJMLExpressionAction_3_0; }
 		
+		//'-'?
+		public Keyword getHyphenMinusKeyword_3_1() { return cHyphenMinusKeyword_3_1; }
+		
 		//INT
-		public RuleCall getINTTerminalRuleCall_3_1() { return cINTTerminalRuleCall_3_1; }
+		public RuleCall getINTTerminalRuleCall_3_2() { return cINTTerminalRuleCall_3_2; }
 		
 		//{JMLExpression} STRING
 		public Group getGroup_4() { return cGroup_4; }
@@ -3714,7 +3754,7 @@ public class DslGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 	}
 	
 	//Operation:
-	//    '+' | '-' | '*' | '/' | '%';
+	//    '+' | '-' | '*' | '/' | '%' | '==' | "!=" | '<' | '<=' | '>' | '>=' | '&&' | '||';
 	public OperationElements getOperationAccess() {
 		return pOperation;
 	}
@@ -3920,7 +3960,7 @@ public class DslGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 	//BlockStatement returns AbstractStatement:
 	//{BlockStatement}
 	//        'Block' name=EString ':'
-	//                (jmlAnnotation=JMLAnnotation)
+	//                (jmlAnnotation=JMLAnnotation)?
 	//            ('{' (javaStatement=JavaStatement  | "CbC:" cbcStatement=AbstractStatement)'}')
 	//    ;
 	public BlockStatementElements getBlockStatementAccess() {
@@ -4163,7 +4203,7 @@ public class DslGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 	//    {Expression} => ('false' | isTrue?='true') |
 	//    '!' ? '(' Expression ')' |
 	//    {FunctionCall} '!' ? func=VariableOrMethodName  (('(' (args+=Expression (',' args+=Expression)* )?')') | ('[' args+=Expression ']'))* |
-	//    {Expression} INT |
+	//    {Expression} '-'? INT |
 	//    {Expression} STRING |
 	//    {Expression} CHARACTER |
 	//    {Expression} "null"
@@ -4275,7 +4315,7 @@ public class DslGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 	//    '!' ? '(' JMLExpression ')' |
 	//    {JMLFunctionCall} '!' ? func=VariableOrMethodName (('(' (args+=JMLExpression (',' args+=JMLExpression)* )?')') | ('[' args+=JMLExpression ']'))*  |
 	////    {JMLArrayElement} '!' ? array=VariableOrMethodName ('[' (element+=JMLExpression ']'('[' element+=JMLExpression ']')* )?) |
-	//    {JMLExpression} INT |
+	//    {JMLExpression} '-'? INT |
 	//    {JMLExpression} STRING |
 	//    {JMLExpression} CHARACTER |
 	//    {JMLExpression} "null"
